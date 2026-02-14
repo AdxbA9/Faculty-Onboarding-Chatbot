@@ -40,18 +40,7 @@ To exit, type:
 exit
 ```
 
----
-How to Run (Web Version)
-Run:
-```bash
-uvicorn app:app --reload
-```
-Then open your browser and go to:
-```
-http://127.0.0.1:8000
-```
-You can now interact with the chatbot in the browser.
----
+
 Project Structure
 ```
 Mini_Chatbot/
