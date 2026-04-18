@@ -1,0 +1,7 @@
+faiss-cpu
+numpy
+sentence-transformers
+pypdf
+pymupdf
+groq
+torch
