@@ -1,0 +1,23 @@
+# --- UI (pure Python, no Node) ---
+nicegui>=1.4.20,<3.0
+
+# --- Retrieval / embeddings ---
+sentence-transformers>=2.7.0
+faiss-cpu>=1.7.4
+numpy>=1.24,<3.0
+
+# --- PDF extraction ---
+pymupdf>=1.23
+pypdf>=4.0
+
+# --- Image + OCR (pure pip, no system Tesseract) ---
+# rapidocr-onnxruntime bundles its own ONNX models and needs no compile step.
+# It's only used when ENABLE_OCR=1 is set in .env.
+rapidocr-onnxruntime>=1.3
+pillow>=10.0
+
+# --- LLM client ---
+groq>=0.9
+
+# --- Config ---
+python-dotenv>=1.0
