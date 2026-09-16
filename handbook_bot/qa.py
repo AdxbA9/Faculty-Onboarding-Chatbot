@@ -35,6 +35,7 @@ from .config import (
     LLM_MAX_TOKENS,
     LLM_TEMPERATURE,
     MIN_RERANK_SCORE,
+    VERIFY_ANSWERS,
 )
 from .extractors import (
     extract_contact_answer,
@@ -352,7 +353,7 @@ def answer_question(
         prompt = build_prompt(question, final_items, query_type)
         raw = ask_groq(groq_client, prompt)
         answer, source_pages = parse_answer_and_pages(raw, final_items)
-        if not answer or not verify_answer(answer, final_items, query_type):
+        if not answer or (VERIFY_ANSWERS and not verify_answer(answer, final_items, query_type)):
             answer = _REFUSAL
         evidence = final_items[0]["chunk"]
         used_llm = True
