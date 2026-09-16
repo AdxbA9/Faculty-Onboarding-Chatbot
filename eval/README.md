@@ -58,7 +58,7 @@ One JSON object per line. `#` comments and blank lines are ignored.
 | `grading` | `must_include`, `any_of`, `exact`, `refusal`, or `judge_only` |
 | `must_include` | Required terms. A nested list means "any one of these is acceptable" |
 | `must_not_include` | Terms whose presence makes the answer wrong |
-| `source` | `part1` if the question comes from the Part 1 manual set, else `new` |
+| `source` | Exactly one of `qa_docx` (Q&A for ChatBots/UOS_Faculty_Handbook_QA.docx), `table_6-2` (report pilot table; its 3 overlaps with qa_docx are labelled qa_docx), `p65_txt` ("some q for the minichatbot v4.txt"), `reconstructed` (written from the handbook) |
 | `part1_verdict` | Part 1 outcome if known: `correct`, `partial`, `incorrect`, or empty |
 | `evidence_quote` | The handbook text the expected answer was taken from |
 | `notes` | Why the case is written the way it is |
