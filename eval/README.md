@@ -121,14 +121,20 @@ These are constraints on the harness, not style preferences.
   out of `data/UOS Faculty Handbook 25-26.pdf`. Nothing is inferred.
 - `judge_only` cases are excluded from the deterministic totals and reported
   separately. A combined figure over graded and ungraded cases would be invented.
-- `part1_verdict` is filled in only where the Part 1 outcome for that exact
-  question is actually known. Where it is empty, the Part 1 vs Part 2 table
-  simply covers fewer cases and says so.
-- `source` separates recovered Part 1 questions from questions added in Part 2.
-  The Part 1 headline figures apply only to the `part1` subset.
+- `part1_verdict` is filled in only where the report's manual score for that
+  exact question is actually known (Table 6-2). Where it is empty, the
+  "manual vs harness" table simply covers fewer cases and says so.
+- `handbook_bot/` is the Part 1 code (MCBV9). The "PART 1 MANUAL (report) vs
+  MCBV9 HARNESS" table therefore compares two *scoring methods* applied to the
+  same system, not two systems. Manual and automated scoring are not directly
+  comparable; the table exists to show where they disagree.
+- `source` records where each question came from (see schema). The report's
+  headline figures apply to its own 56-case manual set, not to this file.
 
 ## Status
 
-23 of the 56 Part 1 questions have been recovered and verified so far. The
-remaining 33 are not yet written; the harness reports on what exists rather than
-padding the set.
+38 cases: 20 from the team's Q&A document, 15 from the report's pilot table
+(Table 6-2), 3 from the MiniChatBot V4 question list. 13 carry a documented
+manual score. The report's 56-case expanded set exists only as screenshots and
+has not been recovered; the harness reports on what exists rather than padding
+the set.
