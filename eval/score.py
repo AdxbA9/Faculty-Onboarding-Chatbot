@@ -282,12 +282,15 @@ def report(cases: List[Dict], results: Dict[str, Dict], verbose: bool = False) -
                   % len(missed_but_retrieved))
             print("    a different one (citation bug, not a retrieval bug)")
 
-    # ---- Part 1 comparison ----------------------------------------------
+    # ---- Manual (report) vs harness comparison ------------------------------
     comparable = [r for r in rows if r["part1_verdict"] and r["verdict"] != UNGRADED]
     if comparable:
         print()
         print("=" * 62)
-        print("  PART 1 vs PART 2  (%d comparable cases)" % len(comparable))
+        print("  PART 1 MANUAL (report) vs MCBV9 HARNESS  (%d comparable cases)" % len(comparable))
+        print("  NOTE: handbook_bot/ IS the Part 1 code (MCBV9). This compares the")
+        print("  report's hand scoring with this harness's string scoring of the same")
+        print("  system; manual and automated scoring are not directly comparable.")
         print("=" * 62)
         improved = [r for r in comparable
                     if r["part1_verdict"] != "correct" and r["verdict"] == CORRECT]
@@ -295,12 +298,12 @@ def report(cases: List[Dict], results: Dict[str, Dict], verbose: bool = False) -
                      if r["part1_verdict"] == "correct" and r["verdict"] != CORRECT]
         p1 = sum(1 for r in comparable if r["part1_verdict"] == "correct")
         p2 = sum(1 for r in comparable if r["verdict"] == CORRECT)
-        print(_row("Part 1 fully correct", p1, len(comparable)))
-        print(_row("Part 2 fully correct", p2, len(comparable)))
-        print("  %-34s %3d" % ("Fixed by Part 2", len(improved)))
-        print("  %-34s %3d" % ("Regressed in Part 2", len(regressed)))
+        print(_row("Manual (report) fully correct", p1, len(comparable)))
+        print(_row("MCBV9 harness fully correct", p2, len(comparable)))
+        print("  %-34s %3d" % ("Manual not-correct -> harness OK", len(improved)))
+        print("  %-34s %3d" % ("Manual correct -> harness not OK", len(regressed)))
         for r in regressed:
-            print("    REGRESSION %s: %s" % (r["id"], r["reason"]))
+            print("    DISAGREEMENT %s: %s" % (r["id"], r["reason"]))
 
     if verbose:
         print()
