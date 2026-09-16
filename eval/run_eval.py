@@ -35,6 +35,7 @@ except Exception:
     pass
 
 from handbook_bot import build_knowledge_base
+from handbook_bot import config as _cfg
 from handbook_bot.qa import answer_question
 
 EVAL_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -116,6 +117,14 @@ def run(cases: List[Dict], out_path: str, *, verbose: bool = True) -> str:
                     {int(it["meta"]["page"]) for it in payload.get("items", [])}
                 ),
                 "wall_ms": (time.perf_counter() - t0) * 1000.0,
+                # Effective tunables, so a run file is self-describing.
+                "config": {
+                    "min_rerank_score": _cfg.MIN_RERANK_SCORE,
+                    "verify_answers": _cfg.VERIFY_ANSWERS,
+                    "final_k": _cfg.FINAL_K,
+                    "groq_model": _cfg.GROQ_MODEL,
+                    "cache_version": _cfg.CACHE_VERSION,
+                },
             }
             out.write(json.dumps(record, ensure_ascii=False) + "\n")
             out.flush()

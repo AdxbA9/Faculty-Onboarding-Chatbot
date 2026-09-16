@@ -37,7 +37,13 @@ TOP_K_DENSE: int = 36
 TOP_K_LEXICAL: int = 18
 RERANK_CANDIDATES: int = 24
 FINAL_K: int = 5
-MIN_RERANK_SCORE: float = -1.4
+# Refusal gate. Overridable from the environment so eval sweeps can vary it
+# without editing this file; the default is the Part 1 (MCBV9) value.
+MIN_RERANK_SCORE: float = float(os.getenv("MIN_RERANK_SCORE", "-1.4"))
+
+# Post-generation grounding check (qa.verify_answer). True is the Part 1
+# behaviour. Set VERIFY_ANSWERS=0 to measure how many refusals it causes.
+VERIFY_ANSWERS: bool = _env_bool("VERIFY_ANSWERS", True)
 
 # ---------------------------------------------------------------------------
 # OCR / image extraction
