@@ -23,7 +23,7 @@ import json
 import os
 import sys
 import time
-from typing import Dict, Iterator, List, Optional
+from typing import Dict, List
 
 # Allow "python eval/run_eval.py" from the repo root.
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -117,6 +117,12 @@ def run(cases: List[Dict], out_path: str, *, verbose: bool = True) -> str:
                     {int(it["meta"]["page"]) for it in payload.get("items", [])}
                 ),
                 "wall_ms": (time.perf_counter() - t0) * 1000.0,
+                # Part 2: what the question cost and what each agent decided.
+                # Absent from Part 1 runs; score.py treats them as optional.
+                "llm_calls": payload.get("llm_calls", 0),
+                "retried": payload.get("retried", False),
+                "sub_questions": payload.get("sub_questions", []),
+                "agent_trace": payload.get("agent_trace", []),
                 # Effective tunables, so a run file is self-describing.
                 "config": {
                     "min_rerank_score": _cfg.MIN_RERANK_SCORE,
@@ -124,6 +130,10 @@ def run(cases: List[Dict], out_path: str, *, verbose: bool = True) -> str:
                     "final_k": _cfg.FINAL_K,
                     "groq_model": _cfg.GROQ_MODEL,
                     "cache_version": _cfg.CACHE_VERSION,
+                    "router_llm_fallback": getattr(_cfg, "ROUTER_LLM_FALLBACK", None),
+                    "max_llm_calls": getattr(_cfg, "MAX_LLM_CALLS", None),
+                    "max_verify_retries": getattr(_cfg, "MAX_VERIFY_RETRIES", None),
+                    "planner_enabled": getattr(_cfg, "PLANNER_ENABLED", None),
                 },
             }
             out.write(json.dumps(record, ensure_ascii=False) + "\n")
