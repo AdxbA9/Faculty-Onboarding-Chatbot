@@ -47,9 +47,13 @@ VERIFIER INTEGRATION (agents/verifier.py is owned by another engineer)
 """
 from __future__ import annotations
 
+import dataclasses
 import importlib
 import importlib.util
+import inspect
+import logging
 import re
+import sys
 import time
 from typing import Callable, Dict, List, Optional, Tuple
 
@@ -69,6 +73,7 @@ from .agents.types import (
 from .config import (
     EVIDENCE_PREVIEW_CHARS,
     FINAL_K,
+    LLM_TRANSPORT_RETRIES,
     MAX_LLM_CALLS,
     MAX_VERIFY_RETRIES,
     MIN_RERANK_SCORE,
@@ -81,6 +86,7 @@ from .extractors import (
     extract_date_answer,
 )
 from .qa import REFUSAL, QAResult, legacy_fallback_pages, verify_answer
+from .retrieval import classify_query as _part1_classify
 from .retrieval import deduplicate_by_text, gather_candidates
 from .text_utils import normalize_text
 
@@ -94,7 +100,17 @@ LLM_UNAVAILABLE_REPLY = (
     "service did not respond. Please try again."
 )
 
+#: Shown when MAX_LLM_CALLS leaves no call for the answer. Also not the refusal
+#: sentence: a configured budget of zero says nothing about the handbook.
+LLM_BUDGET_REPLY = (
+    "I could not answer this question within the configured LLM-call budget "
+    "(MAX_LLM_CALLS)."
+)
+
 VerifierFn = Callable[..., VerifyResult]
+_log = logging.getLogger(__name__)
+_VERIFIER_NAME = "handbook_bot.agents.verifier"
+_VERIFIER_CALL = "verify(question, synthesis, evidence, sub_questions, *, is_retry)"
 
 #: What the count extractor is able to count. ``extract_count_answer`` knows
 #: only the handbook's degree-program totals and returns them for ANY question
@@ -278,6 +294,7 @@ def _gather_evidence(
     # ---- Deterministic extractor fast path (tools, zero LLM calls) ---------
     extracted = None
     tool_applicable = True
+    blocked_by_part1_gate = False
     if route == "contact":
         extracted = extract_contact_answer(question, final_items)
     elif route == "count":
@@ -286,6 +303,13 @@ def _gather_evidence(
             extracted = extract_count_answer(question, final_items, pages)
     elif route == "date":
         extracted = extract_date_answer(question, final_items)
+        # extract_date_answer re-runs the Part 1 first-match classifier and
+        # returns None whenever THAT says anything but "date" - e.g. "When do
+        # classes begin and how many programs are offered?" (Part 1: count).
+        # extractors.py is not this module's to change, so the miss is at least
+        # reported for what it is instead of as "no matching row".
+        if not extracted and _part1_classify(question) != "date":
+            blocked_by_part1_gate = True
 
     if extracted:
         answer, source_pages, snippet = extracted
@@ -294,7 +318,11 @@ def _gather_evidence(
 
     reason = None
     if route in EXTRACTOR_ROUTES:
-        reason = "extractor_no_match" if tool_applicable else "extractor_not_applicable"
+        reason = "extractor_no_match"
+        if not tool_applicable:
+            reason = "extractor_not_applicable"
+        elif blocked_by_part1_gate:
+            reason = "extractor_blocked_by_part1_gate"
     return (EvidenceResult(question, route, final_items, best_score, True, reason, False, None),
             len(candidates), None)
 
@@ -316,20 +344,84 @@ def _legacy_verify(question: str, synthesis: SynthesisResult, evidence: List[Evi
     return VerifyResult(accepted, pages, [], [], None)
 
 
+def _accepts_orchestrator_call(fn: VerifierFn) -> bool:
+    """True when ``fn`` can be called the way this module calls a verifier."""
+    try:
+        inspect.signature(fn).bind("question", None, [], [], is_retry=False)
+    except TypeError:
+        return False
+    except ValueError:            # no introspectable signature (C callable): let the call decide
+        return True
+    return True
+
+
 def _resolve_verifier(injected: Optional[VerifierFn]) -> Tuple[VerifierFn, str]:
-    """Pick the verifier: injected (tests) > agents/verifier.py > Part 1 check."""
+    """Pick the verifier: injected (tests) > agents/verifier.py > Part 1 check.
+
+    Falling back to the Part 1 check is never silent: the reason is returned
+    for the trace and logged, so a teammate whose verifier is not being used
+    can see why on the first question.
+    """
     if injected is not None:
         return injected, "injected"
-    try:
-        if importlib.util.find_spec("handbook_bot.agents.verifier") is None:
-            return _legacy_verify, "legacy-mcbv9"
-        module = importlib.import_module("handbook_bot.agents.verifier")
-    except Exception as exc:       # a broken teammate module must not take the app down
-        return _legacy_verify, "legacy-mcbv9 (agents.verifier failed to import: %s)" % _safe_error(exc)
+    module = sys.modules.get(_VERIFIER_NAME)
+    if module is None:
+        try:
+            if importlib.util.find_spec(_VERIFIER_NAME) is None:
+                return _legacy_verify, "legacy-mcbv9"
+            module = importlib.import_module(_VERIFIER_NAME)
+        except Exception as exc:   # a broken teammate module must not take the app down
+            why = "agents.verifier failed to import: %s" % _safe_error(exc)
+            _log.warning("Using the Part 1 check: %s", why)
+            return _legacy_verify, "legacy-mcbv9 (%s)" % why
     fn = getattr(module, "verify", None)
     if not callable(fn):
+        _log.warning("Using the Part 1 check: agents.verifier has no callable verify()")
         return _legacy_verify, "legacy-mcbv9 (agents.verifier has no verify())"
+    if not _accepts_orchestrator_call(fn):
+        why = "agents.verifier.verify does not accept %s" % _VERIFIER_CALL
+        _log.warning("Using the Part 1 check: %s", why)
+        return _legacy_verify, "legacy-mcbv9 (SIGNATURE MISMATCH: %s)" % why
     return fn, "agents.verifier"
+
+
+def _normalise_verdict(result, allowed_pages: List[int]) -> Tuple[VerifyResult, List]:
+    """Validate a verifier's return value. Raises TypeError/ValueError when it is
+    not a well-formed VerifyResult. Returns a NEW object (the verifier's own
+    object is never mutated) plus the pages that were dropped."""
+    if not isinstance(result, VerifyResult):
+        raise TypeError("verify() returned %s, expected VerifyResult" % type(result).__name__)
+    for name in ("pages", "unsupported_claims", "uncovered_subquestions"):
+        if not isinstance(getattr(result, name), (list, tuple)):
+            raise TypeError("VerifyResult.%s must be a list, got %s"
+                            % (name, type(getattr(result, name)).__name__))
+    feedback = result.retry_feedback
+    if feedback is not None and not isinstance(feedback, str):
+        raise TypeError("VerifyResult.retry_feedback must be str or None, got %s" % type(feedback).__name__)
+    feedback = (feedback or "").strip() or None
+
+    pages: List[int] = []
+    dropped: List = []
+    for raw in result.pages:
+        try:
+            if isinstance(raw, bool):
+                raise ValueError
+            page = int(raw)                  # accepts numpy integers and digit strings
+        except (TypeError, ValueError):
+            dropped.append(raw)
+            continue
+        # Invariant: a page that was never retrieved can never be cited.
+        if page in allowed_pages and page not in pages:
+            pages.append(page)
+        elif page not in allowed_pages:
+            dropped.append(page)
+    return VerifyResult(
+        accepted=bool(result.accepted),
+        pages=pages,
+        unsupported_claims=[str(c) for c in result.unsupported_claims],
+        uncovered_subquestions=[int(i) for i in result.uncovered_subquestions],
+        retry_feedback=None if result.accepted else feedback,
+    ), dropped
 
 
 def _verify(verifier: VerifierFn, impl: str, question: str, synthesis: SynthesisResult,
@@ -338,9 +430,8 @@ def _verify(verifier: VerifierFn, impl: str, question: str, synthesis: Synthesis
     started = time.perf_counter()
     note: Dict = {"impl": impl, "is_retry": is_retry}
     try:
-        result = verifier(question, synthesis, [evidence], [], is_retry=is_retry)
-        if not isinstance(result, VerifyResult):
-            raise TypeError("verify() returned %s, expected VerifyResult" % type(result).__name__)
+        result, dropped = _normalise_verdict(
+            verifier(question, synthesis, [evidence], [], is_retry=is_retry), allowed_pages)
     except Exception as exc:
         if verifier is _legacy_verify:
             raise
@@ -348,13 +439,10 @@ def _verify(verifier: VerifierFn, impl: str, question: str, synthesis: Synthesis
         # or fail closed (a bug in the verifier would look like a refusal).
         note["error"] = _safe_error(exc)
         note["impl"] = "legacy-mcbv9 (after error in %s)" % impl
-        result = _legacy_verify(question, synthesis, [evidence], [], is_retry=is_retry)
-
-    # Invariant: a page that was never retrieved can never be cited.
-    clean = [int(p) for p in result.pages if isinstance(p, int) and p in allowed_pages]
-    if len(clean) != len(result.pages):
-        note["dropped_pages"] = [p for p in result.pages if p not in clean][:5]
-        result.pages = clean
+        result, dropped = _normalise_verdict(
+            _legacy_verify(question, synthesis, [evidence], [], is_retry=is_retry), allowed_pages)
+    if dropped:
+        note["dropped_pages"] = [str(p)[:12] for p in dropped[:5]]
 
     if result.accepted:
         decision = "accepted"
@@ -364,7 +452,7 @@ def _verify(verifier: VerifierFn, impl: str, question: str, synthesis: Synthesis
         decision = "rejected"
     note["pages"] = list(result.pages)
     if result.unsupported_claims:
-        note["unsupported_claims"] = [str(c)[:80] for c in result.unsupported_claims[:3]]
+        note["unsupported_claims"] = [c[:80] for c in result.unsupported_claims[:3]]
     if result.uncovered_subquestions:
         note["uncovered_subquestions"] = list(result.uncovered_subquestions)
     trace.append(TraceEntry("verifier", decision, False, _ms(started), note))
@@ -394,6 +482,7 @@ def _synthesize(question: str, evidence: EvidenceResult, groq_client, budget: LL
         return None
     trace.append(TraceEntry("synthesis", label, True, _ms(started), {
         "path": "llm",
+        "transport_retries_allowed": max(0, LLM_TRANSPORT_RETRIES),
         "prompt_version": draft.prompt_version,
         "claimed_pages": list(draft.claimed_pages),
         "answer_chars": len(draft.answer),
@@ -491,11 +580,12 @@ def run(
         timings["generation_ms"] = _ms(started)
         used_llm = draft is not None or trace[-1].decision == "llm_error"
         if draft is None:
-            reply = REFUSAL if trace[-1].decision == "skipped:llm_budget" else LLM_UNAVAILABLE_REPLY
+            reply = LLM_BUDGET_REPLY if trace[-1].decision == "skipped:llm_budget" else LLM_UNAVAILABLE_REPLY
             return _finish(QAResult(answer=reply, evidence=display_evidence, used_llm=used_llm, **common))
 
     # ---- 4. Verify, with at most one retry -----------------------------------
     retried = False
+    retry_outage = False
     if not VERIFY_ANSWERS:
         trace.append(TraceEntry("verifier", "skipped", False, 0.0, {"reason": "VERIFY_ANSWERS is off"}))
         answer = draft.answer or REFUSAL
@@ -514,10 +604,22 @@ def run(
                 used_llm = True
                 draft = second
                 display_evidence = items[0]["chunk"]
-                verdict = _verify(check, impl, question, draft, evidence, allowed_pages,
+                # The second draft is LLM text even when the first came from an
+                # extractor. It must be checked as such: leaving used_extractor
+                # set would let the Verifier wave an ungrounded answer through.
+                llm_evidence = dataclasses.replace(evidence, used_extractor=False, extractor_answer=None)
+                verdict = _verify(check, impl, question, draft, llm_evidence, _item_pages(items),
                                   is_retry=True, trace=trace)
-        answer = draft.answer if verdict.accepted else REFUSAL
-        cited = list(verdict.pages)
+            elif trace[-1].decision == "llm_error":
+                # The first draft was rejected and the service failed on the second.
+                # That is an outage, not evidence that the handbook lacks the answer.
+                used_llm = True
+                retry_outage = True
+        if retry_outage:
+            answer, cited = LLM_UNAVAILABLE_REPLY, []
+        else:
+            answer = draft.answer if verdict.accepted else REFUSAL
+            cited = list(verdict.pages)
     timings["verify_ms"] = sum(entry.ms for entry in trace if entry.agent == "verifier")
 
     # ---- 5. Result -------------------------------------------------------------
