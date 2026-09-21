@@ -15,6 +15,29 @@ def _env_bool(name: str, default: bool) -> bool:
     return raw.strip().lower() in {"1", "true", "yes", "on"}
 
 
+def _env_float(name: str, default: float) -> float:
+    """Float from the environment. A malformed value falls back to the default
+    instead of crashing the app at import time."""
+    raw = os.getenv(name)
+    if raw is None:
+        return default
+    try:
+        return float(raw.strip())
+    except ValueError:
+        return default
+
+
+def _env_int(name: str, default: int) -> int:
+    """Int from the environment, with the same fall-back-to-default rule."""
+    raw = os.getenv(name)
+    if raw is None:
+        return default
+    try:
+        return int(raw.strip())
+    except ValueError:
+        return default
+
+
 # ---------------------------------------------------------------------------
 # Models
 # ---------------------------------------------------------------------------
@@ -39,11 +62,37 @@ RERANK_CANDIDATES: int = 24
 FINAL_K: int = 5
 # Refusal gate. Overridable from the environment so eval sweeps can vary it
 # without editing this file; the default is the Part 1 (MCBV9) value.
-MIN_RERANK_SCORE: float = float(os.getenv("MIN_RERANK_SCORE", "-1.4"))
+MIN_RERANK_SCORE: float = _env_float("MIN_RERANK_SCORE", -1.4)
 
 # Post-generation grounding check (qa.verify_answer). True is the Part 1
 # behaviour. Set VERIFY_ANSWERS=0 to measure how many refusals it causes.
 VERIFY_ANSWERS: bool = _env_bool("VERIFY_ANSWERS", True)
+
+# ---------------------------------------------------------------------------
+# Agents and orchestration (Part 2)
+# ---------------------------------------------------------------------------
+# Router. Deterministic scoring always runs first. One LLM call arbitrates only
+# when the best two intents are closer than ROUTER_AMBIGUITY_MARGIN.
+ROUTER_LLM_FALLBACK: bool = _env_bool("ROUTER_LLM_FALLBACK", True)
+ROUTER_AMBIGUITY_MARGIN: float = _env_float("ROUTER_AMBIGUITY_MARGIN", 0.15)
+# The router always has a deterministic answer to fall back on, so its LLM call
+# is kept short and is never retried.
+ROUTER_LLM_TIMEOUT_S: float = _env_float("ROUTER_LLM_TIMEOUT_S", 8.0)
+ROUTER_LLM_MAX_TOKENS: int = 60
+
+# Planner (Milestone 2). agents/planner.py does not exist yet, so this is off.
+# The agreed target default is True: flip it when the Planner lands. With it
+# off the system is the Option A pipeline: route -> answer -> verify.
+PLANNER_ENABLED: bool = _env_bool("PLANNER_ENABLED", False)
+
+# LLM-call budget per question. MAX_LLM_CALLS covers the normal calls (router
+# fallback, synthesis; later the planner). A verifier-requested retry draws
+# from its own allowance of MAX_VERIFY_RETRIES, so the hard ceiling per
+# question is MAX_LLM_CALLS + MAX_VERIFY_RETRIES. The orchestrator refuses to
+# issue a call beyond either limit.
+MAX_LLM_CALLS: int = _env_int("MAX_LLM_CALLS", 2)
+# The orchestrator clamps this to at most 1: a draft is retried once or not at all.
+MAX_VERIFY_RETRIES: int = _env_int("MAX_VERIFY_RETRIES", 1)
 
 # ---------------------------------------------------------------------------
 # OCR / image extraction
