@@ -21,3 +21,6 @@ groq>=0.9
 
 # --- Config ---
 python-dotenv>=1.0
+
+# --- Tests ---
+pytest>=7.0
