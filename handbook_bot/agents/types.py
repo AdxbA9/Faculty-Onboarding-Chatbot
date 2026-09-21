@@ -73,7 +73,7 @@ class EvidenceResult:
     items: list[dict]              # existing item dicts: chunk, meta{page, section, chunk_type}, scores
     best_score: Optional[float]
     sufficient: bool
-    reason: Optional[str]          # "rerank_score_below_threshold" | "extractor_no_match" | "no_candidates" | None
+    reason: Optional[str]          # "rerank_score_below_threshold" | "no_candidates" | "extractor_no_match" | "extractor_not_applicable" | None
     used_extractor: bool
     extractor_answer: Optional[str]
     doc_id: Optional[str] = None   # carried, unused while the corpus is a single document
