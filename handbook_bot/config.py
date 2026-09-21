@@ -93,6 +93,11 @@ PLANNER_ENABLED: bool = _env_bool("PLANNER_ENABLED", False)
 MAX_LLM_CALLS: int = _env_int("MAX_LLM_CALLS", 2)
 # The orchestrator clamps this to at most 1: a draft is retried once or not at all.
 MAX_VERIFY_RETRIES: int = _env_int("MAX_VERIFY_RETRIES", 1)
+# HTTP-level repeats of ONE logical answer call by the Groq SDK (429, 5xx,
+# timeouts, with back-off). 2 is the SDK default, stated here so it is a visible
+# setting. These repeats are not counted in llm_calls; set 0 to forbid them.
+# The router's arbitration call never uses them.
+LLM_TRANSPORT_RETRIES: int = _env_int("LLM_TRANSPORT_RETRIES", 2)
 
 # ---------------------------------------------------------------------------
 # OCR / image extraction

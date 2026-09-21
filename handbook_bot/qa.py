@@ -33,6 +33,7 @@ from .config import (
     GROQ_MODEL,
     LLM_MAX_TOKENS,
     LLM_TEMPERATURE,
+    LLM_TRANSPORT_RETRIES,
 )
 from .text_utils import (
     EMAIL_PATTERN,
@@ -67,7 +68,7 @@ class QAResult:
 
     # Part 2: what each agent decided, and what the question cost.
     agent_trace: List[TraceEntry] = field(default_factory=list)
-    llm_calls: int = 0              # every LLM call issued for this question, including the router's
+    llm_calls: int = 0              # logical LLM calls issued for this question, the router's included
     retried: bool = False           # True when the Verifier asked for, and got, a second draft
     sub_questions: List[SubQuestion] = field(default_factory=list)   # filled by the Planner (Milestone 2)
 
@@ -174,8 +175,17 @@ Answer:""".strip()
 # LLM call + parsing
 # ---------------------------------------------------------------------------
 def ask_groq(client, prompt: str) -> str:
-    """Call the Groq chat completion endpoint and return the raw text."""
-    resp = client.chat.completions.create(
+    """Call the Groq chat completion endpoint and return the raw text.
+
+    One call here is ONE logical LLM call, which is what ``QAResult.llm_calls``
+    counts. The Groq SDK may repeat the HTTP request on 429, 5xx and timeouts,
+    with back-off; ``LLM_TRANSPORT_RETRIES`` sets how often and is applied
+    explicitly so that it is a documented setting and not a hidden SDK default.
+    """
+    caller = client
+    if hasattr(client, "with_options"):
+        caller = client.with_options(max_retries=max(0, LLM_TRANSPORT_RETRIES))
+    resp = caller.chat.completions.create(
         model=GROQ_MODEL,
         temperature=LLM_TEMPERATURE,
         max_tokens=LLM_MAX_TOKENS,
@@ -193,6 +203,36 @@ def ask_groq(client, prompt: str) -> str:
     return (resp.choices[0].message.content or "").strip()
 
 
+# En and em dashes as code points, so this source file stays pure ASCII.
+_DASHES = "-" + chr(0x2013) + chr(0x2014)
+_PAGE_ITEM = r"(?:pages?\s*)?\d+"
+_PAGE_SPEC = _PAGE_ITEM + r"(?:\s*(?:,|;|&|\band\b|\bto\b|[" + _DASHES + r"])\s*" + _PAGE_ITEM + r")*"
+# A citation that ends the output: on its own line, or closing the last sentence.
+_TRAILING_PAGES = re.compile(
+    r"(?:^|[\s(\[])(?P<kw>pages?)\s*:\s*(?P<spec>" + _PAGE_SPEC + r")\s*[.)\]]*\s*$", re.I)
+# Otherwise: a line that is nothing but a citation (the last such line wins).
+_PAGES_LINE = re.compile(r"^[ \t]*pages?\s*:\s*(" + _PAGE_SPEC + r")\s*[.)\]]*[ \t]*$", re.I | re.M)
+# "Pages:" with nothing citable after it. The model writes this under a refusal;
+# it must still be stripped or the refusal sentence is no longer recognised.
+_EMPTY_PAGES_LINE = re.compile(r"\n?[ \t]*pages?\s*:\s*(?:none|n/?a|not applicable|[-,\s])*[ \t.]*$", re.I)
+_PAGE_RANGE = re.compile(r"(\d+)(?:\s*(?:\bto\b|[" + _DASHES + r"])\s*(?:pages?\s*)?(\d+))?", re.I)
+#: "Pages: 12-14" means 12, 13 and 14. A span wider than this is read as two
+#: separate numbers, so a stray "1-272" cannot cite the whole handbook.
+_MAX_RANGE_SPAN = 10
+
+
+def _pages_from_spec(spec: str, allowed: List[int]) -> List[int]:
+    pages: List[int] = []
+    for m in _PAGE_RANGE.finditer(spec):
+        first = int(m.group(1))
+        last = int(m.group(2)) if m.group(2) else first
+        span = range(first, last + 1) if 0 <= last - first <= _MAX_RANGE_SPAN else (first, last)
+        for page in span:
+            if page in allowed and page not in pages:
+                pages.append(page)
+    return pages
+
+
 def split_answer_and_claimed_pages(raw: str, items: List[Dict]) -> Tuple[str, List[int]]:
     """Split the LLM output into (answer_body, claimed_pages).
 
@@ -200,18 +240,28 @@ def split_answer_and_claimed_pages(raw: str, items: List[Dict]) -> Tuple[str, Li
     but effective guard against hallucinated citations. When the model wrote
     no usable ``Pages:`` line the list is EMPTY: this function never invents a
     citation. Deciding what to cite then is the Verifier's job.
-    """
-    allowed = sorted({int(item["meta"]["page"]) for item in items})
-    pages: List[int] = []
-    m = re.search(r"Pages:\s*([0-9,\-\s]+)", raw, re.I)
-    if m:
-        for n in re.findall(r"\d+", m.group(1)):
-            val = int(n)
-            if val in allowed and val not in pages:
-                pages.append(val)
 
-    body = re.sub(r"\n?Pages:\s*[0-9,\-\s]+\s*$", "", raw, flags=re.I).strip()
-    return body, pages
+    The citation is the LAST ``Pages:`` expression, because prompt rule 5 puts
+    it after the answer. Part 1 read the FIRST one, so an answer that merely
+    contained the words "two pages: ..." lost its real citation. Ranges
+    ("12-14"), "and", en dashes and a trailing full stop are understood.
+    Prose that mentions pages elsewhere is left in the answer untouched.
+    """
+    raw = raw or ""
+    allowed = sorted({int(item["meta"]["page"]) for item in items})
+
+    m = _TRAILING_PAGES.search(raw)
+    if m:
+        body = raw[:m.start("kw")].rstrip(" \t\r\n([").strip()
+        return body, _pages_from_spec(m.group("spec"), allowed)
+
+    lines = list(_PAGES_LINE.finditer(raw))
+    if lines:
+        last = lines[-1]
+        body = (raw[:last.start()] + raw[last.end():]).strip()
+        return body, _pages_from_spec(last.group(1), allowed)
+
+    return _EMPTY_PAGES_LINE.sub("", raw).strip(), []
 
 
 def legacy_fallback_pages(items: List[Dict]) -> List[int]:
