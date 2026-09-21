@@ -305,6 +305,30 @@ def report(cases: List[Dict], results: Dict[str, Dict], verbose: bool = False) -
         for r in regressed:
             print("    DISAGREEMENT %s: %s" % (r["id"], r["reason"]))
 
+    # ---- Part 2 cost and agent decisions (only when the run recorded them) ----
+    costed = [results[r["id"]] for r in rows if "llm_calls" in results[r["id"]]]
+    if costed:
+        calls = [int(r.get("llm_calls") or 0) for r in costed]
+        retried = sum(1 for r in costed if r.get("retried"))
+        verdicts: Dict[str, int] = {}
+        router_llm = 0
+        for r in costed:
+            for entry in r.get("agent_trace") or []:
+                if entry.get("agent") == "verifier":
+                    verdicts[entry.get("decision", "?")] = verdicts.get(entry.get("decision", "?"), 0) + 1
+                elif entry.get("agent") == "router" and entry.get("used_llm"):
+                    router_llm += 1
+        print()
+        print("=" * 62)
+        print("  LLM CALLS AND AGENT DECISIONS  (Part 2 runs only)")
+        print("=" * 62)
+        print("  %-34s %5.2f" % ("Mean LLM calls per question", sum(calls) / len(calls)))
+        print("  %-34s %3d" % ("Max LLM calls for one question", max(calls)))
+        print(_row("Questions that used a retry", retried, len(costed)))
+        print(_row("Router arbitration calls", router_llm, len(costed)))
+        for decision in sorted(verdicts):
+            print("  %-34s %3d" % ("Verifier: " + decision, verdicts[decision]))
+
     if verbose:
         print()
         print("=" * 62)
