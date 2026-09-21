@@ -71,6 +71,10 @@ BODY_ONLY_CEILING = 0.8
 _SCORED_INTENTS: Tuple[str, ...] = ("contact", "count", "date", "list", "policy_yesno")
 _STRUCTURED: Tuple[str, ...] = ("contact", "count", "date")
 
+#: Auxiliary verbs. An interrogative is recognised by inversion ("when DO classes
+#: begin"), which is what separates it from a conjunction ("when I resign").
+_AUX = r"(?:is|are|was|were|am|do|does|did|can|could|may|might|should|shall|will|would|must|has|have|had)"
+
 
 # ---------------------------------------------------------------------------
 # Cues
@@ -97,11 +101,18 @@ def _cue(intent: str, family: str, weight: float, regex: str, head: bool = False
 _CUES: Tuple[_Cue, ...] = (
     # ---- contact ---------------------------------------------------------
     # "who should I contact ..." - the interrogative itself asks for a contact.
+    # Only the verb "contact". "Who can call a council meeting?" and "who should
+    # I ask about remote work?" expect a role or a rule, not a phone number, and
+    # the contact tooling (extractor, Part 1 check) can only serve the latter:
+    # routing them to contact turned answerable questions into refusals.
     _cue("contact", "who-contact", 1.0,
-         r"^(?:who|whom)\b.{0,60}?\b(?:contact|call|e-?mail|ask|speak|talk)\b", head=True),
+         r"^(?:who|whom)\b.{0,60}?\b(?:contact|get in touch)\b", head=True),
     # One family on purpose: "phone" and "phone number" are the same evidence
     # and must not stack into a score that rivals an interrogative.
-    _cue("contact", "channel", 0.8, r"\b(?:phone|telephone|fax|mobile|e-?mail|extension|hotline)\b"),
+    # "contactnumber" is what _prepare() leaves behind for "<channel> number".
+    # "extension", "mobile" and "hotline" are NOT cues by themselves: "extension
+    # of my contract" and "mobile devices in class" are policy questions.
+    _cue("contact", "channel", 0.8, r"\b(?:phone|telephone|fax|e-?mail|contactnumber)\b"),
     _cue("contact", "contact-verb", 0.8, r"\b(?:contact|get in touch)\b"),
     # "the number for the IT help desk": a number FOR something is a contact
     # number; a number OF something is a count.
@@ -112,20 +123,25 @@ _CUES: Tuple[_Cue, ...] = (
     _cue("count", "number-of", 0.8, r"\b(?:total number|number of|count of)\b"),
     _cue("count", "total", 0.5, r"\btotal\b"),
     # ---- date ------------------------------------------------------------
-    _cue("date", "when", 1.0, r"^when\b", head=True),
+    # "when" is an interrogative only when the verb is inverted ("when do classes
+    # begin"). "When I am sick, who do I contact?" opens with a conjunction.
+    _cue("date", "when", 1.0, r"^when\s+" + _AUX + r"\b", head=True),
     _cue("date", "what-date", 1.0,
-         r"^(?:what|which)\s+(?:(?:is|are|was|were)\s+)?(?:the\s+)?(?:dates?|day|deadlines?)\b", head=True),
-    _cue("date", "calendar-noun", 0.8,
-         r"\b(?:dates?|deadlines?|last day|add/drop|final exams?|midterm exams?|academic calendar)\b"),
+         r"^(?:what|which)(?:'s|\s+is|\s+are|\s+was|\s+were)?\s+(?:the\s+)?(?:dates?|day|deadlines?)\b", head=True),
+    # The Part 1 calendar vocabulary plus plurals, nothing more. A question sent
+    # to `date` is checked by the Part 1 date rule, which refuses any answer
+    # without a date in it, so "what is the policy on midterm exams?" must not
+    # land here.
+    _cue("date", "calendar-noun", 0.8, r"\b(?:dates?|deadlines?|last day|add/drop|final exams?)\b"),
     _cue("date", "begin", 0.6, r"\b(?:begins?|starts?|held)\b"),
     _cue("date", "term", 0.4, r"\b(?:fall|spring|summer)\b"),
     # A "when" that does not open a clause is usually a conjunction
     # ("what should faculty do when ..."), so it is only a hint.
     _cue("date", "when", 0.3, r"\bwhen\b"),
     # ---- list (the Part 1 vocabulary, unchanged) --------------------------
-    _cue("list", "list-head", 0.9, r"^(?:name|list)\b", head=True),
-    # 0.6: "what are the ..." is a weak, structural hint. It must lose clearly
-    # to a real keyword ("what are the ... dates") yet still beat plain policy.
+    # 0.6: "what are the ..." and "name ..." are weak, structural hints. They
+    # must lose clearly to a real keyword ("what are the ... dates", "name the
+    # fax number of ...") yet still beat plain policy.
     _cue("list", "list", 0.6,
          r"\b(?:name|list|which are|what are the|standing committee|categories|core values)\b"),
     # ---- yes/no -----------------------------------------------------------
@@ -140,6 +156,15 @@ _CUES: Tuple[_Cue, ...] = (
 _NEUTRALISE: Tuple[Tuple["re.Pattern[str]", str], ...] = (
     (re.compile(r"\bcontact\s+hours?\b", re.I), "contacthours"),   # a unit of teaching load
     (re.compile(r"\bpoints?\s+of\s+contact\b", re.I), "contact"),   # keep as ONE contact cue
+    # "<channel> number" is one contact expression. Rewriting it stops the count
+    # cue "number of" from firing on "the phone number of the IT Center", which
+    # made the most common contact question a contact/count tie.
+    (re.compile(r"\b(phone|telephone|tel|fax|mobile|cell|contact|extension|hotline|office|whatsapp)"
+                r"\s+(?:numbers?|no\.?)(?=\W|$)", re.I), r"\1 contactnumber"),
+    # "the number of the <office>" asks for a phone number, not for a count.
+    (re.compile(r"\bnumbers?\s+of\s+the\s+((?:[\w'&-]+\s+){0,6}?"
+                r"(?:office|center|centre|desk|department|college|unit|clinic|hospital|library|deanship)\b)",
+                re.I), r"contactnumber for the \1"),
 )
 
 # Politeness in front of the real question: "Can you tell me when ..." is a
@@ -153,12 +178,29 @@ _POLITE_PREFIX = re.compile(
     re.I,
 )
 
-_CLAUSE_SEP = re.compile(r"\s*(?:\?|;|,\s*and\b|\band\b|,|\bas well as\b)\s*", re.I)
-_WH_HEAD = re.compile(r"^(?:what|when|where|who|whom|whose|why|how|which)\b", re.I)
-# "..., which is chaired by the VC" is a relative clause, not a new question.
-_RELATIVE_WHICH = re.compile(r"^which\s+(?:is|are|was|were|has|have|can|will|may)\b", re.I)
+_CLAUSE_SEP = re.compile(r"\s*(?:\?|;|&|,\s*and\b|\band\b|,|\bas well as\b|\.\s+(?=[a-z]))\s*", re.I)
+# The FIRST clause is the main question, so any interrogative opening counts.
+_WH_HEAD = re.compile(r"^(?:what|who|whom|whose|why|how|which)\b|^(?:when|where)\s+" + _AUX + r"\b", re.I)
 _AUX_HEAD = re.compile(
     r"^(?:does|do|did|can|could|is|are|was|were|may|should|will|would|must|has|have)\b", re.I)
+# A LATER clause must really be shaped like a question, because "and" joins far
+# more noun phrases and predicates than questions:
+#   wh-word + an auxiliary within a few words   "what ... are", "how many programs are"
+#   "who" + a verb                               "who approves it"
+#   "when"/"where" + inverted auxiliary          "when is notice required"
+# which rejects noun clauses ("... and what the dean decides"), conjunctions
+# ("... when I resign") and relative clauses ("..., which is chaired by the VC").
+_LATER_WH_QUESTION = re.compile(
+    r"^(?:when|where)\s+" + _AUX + r"\b"
+    r"|^(?:what|whom|whose|why|how)\b(?:\s+\S+){0,5}?\s+" + _AUX + r"\b"
+    r"|^who\s+(?:" + _AUX + r"|[a-z]+s)\b"
+    r"|^which\s+(?!(?:is|are|was|were|has|have|can|will|may)\b)\S+(?:\s+\S+){0,4}?\s+" + _AUX + r"\b",
+    re.I)
+# A later yes/no clause needs an explicit subject straight after the auxiliary:
+# "... and do I need approval?". Without one it is normally a second predicate
+# of the SAME question ("... and have a PhD", "... and are required to sign in").
+_LATER_AUX_QUESTION = re.compile(
+    r"^" + _AUX + r"\s+(?:i|we|you|they|he|she|it|there|faculty|staff|students)\b", re.I)
 
 
 # ---------------------------------------------------------------------------
@@ -181,9 +223,16 @@ class RouterReport:
 # ---------------------------------------------------------------------------
 # Text preparation
 # ---------------------------------------------------------------------------
+# Written as code points so this source file stays pure ASCII: an invisible
+# literal non-breaking space in a regex module is a bug waiting to happen.
+_NBSP = chr(0xA0)
+_CURLY_APOSTROPHE = chr(0x2019)
+
+
 def _prepare(question: str) -> str:
-    q = re.sub(r"\s+", " ", (question or "").replace(" ", " ")).strip().lower()
-    q = q.replace("’", "'")
+    q = (question or "").replace(_NBSP, " ").replace(_CURLY_APOSTROPHE, "'")
+    q = re.sub(r"[\r\n]+", " ; ", q)          # a line break separates two questions
+    q = re.sub(r"\s+", " ", q).strip(" ;").lower()
     for pattern, replacement in _NEUTRALISE:
         q = pattern.sub(replacement, q)
     return q
@@ -278,29 +327,29 @@ def detect_multipart(question: str,
     if not q:
         return False
 
-    # 1. Two question marks with real text before each.
-    if len([p for p in q.split("?") if len(p.split()) >= 2]) >= 2:
+    # 1. Two question marks, each closing at least two words. Counting the marks
+    #    (not the text around them) keeps "What is the policy? Thanks in advance."
+    #    a single question.
+    asked = [part for part in q.split("?")[:-1] if len(part.split()) >= 2]
+    if len(asked) >= 2:
         return True
 
     clauses = _clauses(q)
     if len(clauses) < 2:
         return False
 
-    # 2. Two clauses that each open with an interrogative. wh-words always
-    #    count. Auxiliaries ("is", "can") count only when the first clause is
-    #    itself a yes/no question, which keeps "rules that are fair and are
-    #    applied equally" from looking like two questions.
-    first_is_aux = bool(_AUX_HEAD.match(clauses[0][1]))
-    heads = 0
-    for _, text in clauses:
-        if len(text.split()) < 3:
-            continue
-        if _WH_HEAD.match(text) and not _RELATIVE_WHICH.match(text):
-            heads += 1
-        elif first_is_aux and _AUX_HEAD.match(text):
-            heads += 1
-    if heads >= 2:
-        return True
+    # 2. The first clause is a question and a LATER clause is shaped like one too
+    #    (see _LATER_WH_QUESTION / _LATER_AUX_QUESTION). "and" joins far more
+    #    nouns and predicates than questions, so the later clause carries the
+    #    burden of proof. This misses some real splits on purpose: a false
+    #    positive costs a Planner LLM call, a miss costs nothing in Milestone 1.
+    first_text = clauses[0][1]
+    if _WH_HEAD.match(first_text) or _AUX_HEAD.match(first_text):
+        for _, text in clauses[1:]:
+            if len(text.split()) < 3:
+                continue
+            if _LATER_WH_QUESTION.match(text) or _LATER_AUX_QUESTION.match(text):
+                return True
 
     # 3. Two strong structured intents whose cues sit in different clauses.
     #    In the same clause it is ONE mixed-intent question ("how many
