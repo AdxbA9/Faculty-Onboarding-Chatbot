@@ -9,6 +9,61 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-09-24 - Plan F Coordinator foundation
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/plan-f-coordinator` (created from `feature/plan-f-core`) |
+| Starting commit | `db8f63e` |
+| Ending state | Milestone 2 Coordinator foundation completed, independently reviewed and committed on `feature/plan-f-coordinator`; see Git history for the commit |
+
+### Completed
+
+- `handbook_bot/agents/coordinator.py`: `coordinate(question) ->
+  CoordinatorDecision` and `analyze(question)`. Deterministic-first on top of
+  the existing Router (arbitration off): domain scoring from cue lexicons,
+  level (department, college, university), systems (blackboard, banner,
+  myuos), complexity (greeting, unknown, simple, multipart, cross_domain,
+  journey), specialist selection capped by the Plan F budgets, one task per
+  specialist carrying the full question plus `context["focus_clauses"]`,
+  `requires_synthesis` by rule. Contact questions are conditional (channel
+  lookup: Institutional alone; contact request about a subject: subject
+  specialist plus Institutional). Bare Blackboard or Banner questions go to
+  Teaching; bare MyUOS selects nobody. Confidence is a heuristic ordinal.
+  Uniform metadata shape for every decision. No LLM call; arbitration
+  deferred (D-PLANF-018).
+- Review corrections applied (F-1 MyUOS owner removed, F-2 conditional
+  contact rule, F-3 full question in every task, F-4 uniform metadata,
+  F-5 journey no longer forces Synthesis, F-8 wording).
+- `tests/test_planf_coordinator.py`: the A to Z behaviour list plus the
+  review cases (MyUOS with and without context, contact with a subject,
+  task contextual completeness, metadata shape, journey and Synthesis).
+- `docs/COORDINATOR.md` (rules as implemented), `docs/DECISIONS.md`
+  D-PLANF-015 to 020, one docstring line in `handbook_bot/agents/__init__.py`.
+
+### Not done on purpose (later phases)
+
+No specialist implementation, no retrieval, Synthesis, Verifier or `QAResult`
+change, no handoff execution, no orchestration, no UI or evaluation change.
+The Coordinator is not imported by the production pipeline; `PLAN_F_ENABLED`
+stays False; the Milestone 1 pipeline is unchanged.
+
+### Tests performed
+
+See the phase report: targeted Coordinator tests, all Plan F tests, full
+`pytest -q`, `pip check` and fresh-interpreter imports, all with
+`.\.venv\Scripts\python.exe` on Windows.
+
+### Next task
+
+Phase 2, knowledge layer (source registry, section map from the handbook
+table of contents, chunk metadata, cache version bump, scope filter and
+boosts), then the Teaching Agent once the Blackboard and Banner guides are
+obtained and reviewed.
+
+---
+
 ## 2026-09-24 - Plan F core foundation: contracts, specialist framework, registry
 
 | Field | Value |
