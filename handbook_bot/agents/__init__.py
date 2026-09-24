@@ -11,6 +11,10 @@ plain tool that an agent or the orchestrator calls.
     planner     (Milestone 2) owns: how a multi-part question is split
     evidence    (Milestone 2) owns: whether retrieved evidence is sufficient
 
+    specialists/  (Plan F) the contracts, base class and registry for the four
+                  domain specialists: teaching, research, faculty_services,
+                  institutional. Foundation only; not wired into the runtime yet.
+
 Agents never call each other. ``handbook_bot.orchestrator`` calls an agent,
 receives a structured result from ``agents.types`` and decides what runs next.
 

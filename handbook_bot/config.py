@@ -100,6 +100,32 @@ MAX_VERIFY_RETRIES: int = _env_int("MAX_VERIFY_RETRIES", 1)
 LLM_TRANSPORT_RETRIES: int = _env_int("LLM_TRANSPORT_RETRIES", 2)
 
 # ---------------------------------------------------------------------------
+# Plan F budgets (INACTIVE until the Plan F orchestration path is wired in)
+# ---------------------------------------------------------------------------
+# Plan F is the findings-based multi-specialist architecture whose contracts
+# and registry live in handbook_bot/agents/specialists/. Nothing in the
+# current runtime reads these values: the Milestone 1 pipeline keeps
+# MAX_LLM_CALLS and MAX_VERIFY_RETRIES above, unchanged. They are declared
+# here so the limits are agreed and visible before the Coordinator exists.
+# PLAN_F_ENABLED is the single switch a later phase will consult; it is off.
+PLAN_F_ENABLED: bool = _env_bool("PLAN_F_ENABLED", False)
+# Specialists the Coordinator may select for one question (first round).
+PLAN_F_MAX_SPECIALISTS: int = _env_int("PLAN_F_MAX_SPECIALISTS", 3)
+# Subtasks the Coordinator may create for one question.
+PLAN_F_MAX_SUBTASKS: int = _env_int("PLAN_F_MAX_SUBTASKS", 3)
+# Handoff rounds after the first: specialists request, the orchestrator runs
+# at most this many further rounds. 1 means one handoff round, never more.
+PLAN_F_MAX_HANDOFF_DEPTH: int = _env_int("PLAN_F_MAX_HANDOFF_DEPTH", 1)
+# Verifier-requested retries of the final answer under Plan F.
+PLAN_F_MAX_RETRY: int = _env_int("PLAN_F_MAX_RETRY", 1)
+# Logical LLM calls per question under Plan F (coordinator, specialists,
+# synthesis, retry). Higher than MAX_LLM_CALLS because several specialists
+# may each need one call on a cross-domain question.
+PLAN_F_MAX_LLM_CALLS: int = _env_int("PLAN_F_MAX_LLM_CALLS", 5)
+# Specialist executions per question, handoffs included.
+PLAN_F_MAX_AGENT_CALLS: int = _env_int("PLAN_F_MAX_AGENT_CALLS", 4)
+
+# ---------------------------------------------------------------------------
 # OCR / image extraction
 # ---------------------------------------------------------------------------
 # OCR is OFF by default because it adds minutes to the first-run index build.
