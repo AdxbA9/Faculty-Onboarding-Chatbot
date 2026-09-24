@@ -109,6 +109,12 @@ def test_legacy_parser_keeps_part1_fallback_only_for_compatibility():
     "Answer" + " " * 50000 + "Pages: 3",
     "Pages: " + "3-" * 20000,
     "(" * 20000 + "Pages: 3",
+], ids=[
+    "many_page_numbers",
+    "repeated_pages",
+    "long_whitespace",
+    "many_ranges",
+    "many_parentheses",
 ])
 def test_parser_has_no_catastrophic_backtracking(raw):
     started = time.perf_counter()
