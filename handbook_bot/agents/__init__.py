@@ -14,6 +14,9 @@ plain tool that an agent or the orchestrator calls.
     specialists/  (Plan F) the contracts, base class and registry for the four
                   domain specialists: teaching, research, faculty_services,
                   institutional. Foundation only; not wired into the runtime yet.
+    coordinator   (Plan F) owns: which specialists a question needs, at which
+                  level and for which systems, and how it splits into tasks.
+                  Deterministic, built on the router; not wired into the runtime yet.
 
 Agents never call each other. ``handbook_bot.orchestrator`` calls an agent,
 receives a structured result from ``agents.types`` and decides what runs next.
