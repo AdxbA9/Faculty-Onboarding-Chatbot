@@ -108,3 +108,50 @@ in code today.
 - Decision: `CoordinatorDecision.confidence` is a heuristic ordinal signal for ordering and traces (formula in `docs/COORDINATOR.md`); it is not calibrated, not a probability and not a measured accuracy, and no document or report may present it as such. Every decision, greeting and empty question included, carries the same `metadata` keys (`METADATA_KEYS`), with empty values where nothing applies.
 - Why: a number without calibration invites false precision in the report; a uniform metadata shape lets the orchestrator and the UI read decisions without special cases.
 - Revisit: if routing accuracy is measured and a calibrated score becomes available.
+
+## D-021 One source registry and per-source section maps instead of a heading heuristic
+- Date: 2026-09-28
+- Decision: documents the corpus may be built from are declared in `knowledge/sources.json` (`handbook_bot/sources.py`); the handbook's chapters and level-2 sections are a page-range map in `knowledge/handbook_sections.json`, derived from the document's own table of contents and checked heading by heading. The loader's heading guess (`section`, "Page N" on almost every page) stays untouched and unused.
+- Why: source-scoped retrieval needs a stable source identity and a reliable section label on every chunk; the table of contents is authoritative and machine-checkable, the heuristic is not. Repository-relative paths keep the registry portable across machines.
+- Revisit: when a second document is added (a second map file, same schema) or if a finer, level-3 map is needed.
+
+## D-022 Section ranges share boundary pages; a page carries all its sections plus one primary
+- Decision: ranges are inclusive and a section may share its first page with the section that ends there. `page_section_nos` lists every section on the page; `section_no` is the first section starting on the page, otherwise the one in progress. Section scoping matches any section present on the page.
+- Why: page-granular metadata cannot split a page; excluding boundary pages would lose real content (the academic calendar continues onto page 51, where 1.15 starts; page 222 holds 12.10, 12.11 and 12.12). Recall at the boundary is preferred, the reranker and the Verifier decide relevance.
+- Revisit: if chunk-level heading detection is ever added.
+
+## D-023 Document numbering quirks are recorded as printed, chapter comes from page ranges
+- Decision: the handbook prints 5.2 and 7.8 twice and numbers the copyright policy in chapter 9 as 12.3. The map keeps the printed numbers with a note on each record; `chapter` is always derived from the chapter page ranges, never from the section number.
+- Why: repairing the document's numbering would invent labels that do not appear in the source; deriving the chapter from pages keeps chapter and prefix scoping correct regardless.
+- Revisit: only if a corrected handbook edition is issued.
+
+## D-024 Retrieval scope is generic, optional and enforced at the index level
+- Decision: `RetrievalScope` (source ids, chapters, exact section numbers, dotted section prefixes, page ranges) is an optional argument of `gather_candidates`. Dense search runs as an exact FAISS search restricted by an id selector over the allowed chunks; lexical search scores only allowed chunks; a scope matching nothing returns nothing. `scope=None` is the previous code path, pinned by a snapshot test.
+- Why: post-filtering a global top-k can lose in-scope chunks that rank below the global cut-off, which would turn a scoped search into a silent miss; restricting at the index level cannot. Falling back to the whole corpus on an empty scope would defeat the purpose of scoping and is a hallucination risk, so it is forbidden. The scope names no domain and no specialist: those policies belong to later phases.
+- Revisit: if a non-flat index type is adopted (the fallback scoring assumes an inner-product flat index).
+
+## D-025 Cache version v12; no runtime component uses the new metadata yet
+- Decision: `CACHE_VERSION` v11 to v12 because cached metadata changed; `EvidenceResult.doc_id` stays unpopulated and the orchestrator, Router, Synthesis, Verifier and UI are unchanged. Chunk metadata alone carries source identity for now.
+- Why: the phase adds infrastructure only; wiring it into the pipeline is reviewed separately with the first consumer.
+- Revisit: with the first component that passes a scope or reads `source_id`.
+
+## D-026 Section metadata is source-faithful; section retrieval is chapter-consistent
+- Date: 2026-09-28 (correction pass after independent review)
+- Decision: chunk metadata records section numbers exactly as the document prints them, including the chapter-9 section printed as 12.3. `RetrievalScope` section and prefix constraints accept a printed number only when its leading number equals the chunk's resolved `chapter`, which comes from the chapter page ranges. `chapters={9}` with `section_numbers={"12.3"}` therefore matches nothing, by design; that section is reached by chapter or page range.
+- Why: the review showed `section_prefixes={"12"}` admitting intellectual-property text from chapter 9. Rewriting the printed number would invent a label the source does not contain; matching by resolved chapter keeps source fidelity and closes the leak.
+- Revisit: never for fidelity; the matching rule may change if a unique section-record identifier is introduced.
+
+## D-027 Section scopes are page-granular and section numbers are not identifiers
+- Decision: section constraints restrict pages associated with a section (every section present on the page counts) and do not isolate text on shared pages; `section_no` is metadata as printed and may repeat (5.2, 7.8). Callers prefer `source_ids` plus `chapters`, and page ranges where physical isolation matters.
+- Why: 115 of 272 pages carry more than one section; text-level splitting would need reliable heading detection inside pages, which the loader does not provide. Documenting the contract is safer than implying a precision that does not exist.
+- Revisit: if chunk-level heading detection or a unique section-record identifier is added.
+
+## D-028 Registered-source identity is strict path identity; incompatible section maps are not applied
+- Decision: `find_source_for_path` matches only the file at the registered repository-relative location, in any spelling (the operating system decides when both files exist); a same-named file elsewhere is unregistered. A section map is applied only when the loaded page count and highest page index equal its `page_count`; otherwise the source keeps its identity, chunks get no section labels, and a warning is printed.
+- Why: the file-name fallback let any same-named file claim the handbook's identity, and a different edition would have received wrong section labels silently. Length is a cheap, model-free edition check; content fingerprinting is deferred.
+- Revisit: when a size or hash field is added to source records.
+
+## D-029 Scoped dense fallback supports inner-product indexes only and never masks search failures
+- Decision: the id-selector path is tried first; the direct-scoring fallback runs only when the index cannot take search parameters (`TypeError`, `AttributeError`) and only for an index whose `metric_type` is inner product; any other metric raises `TypeError`. A `RuntimeError` from the index propagates.
+- Why: scoring an L2 index as inner product would return misleading similarities; catching `RuntimeError` hid genuine failures behind a fallback.
+- Revisit: if a non-flat or non-inner-product index is adopted.

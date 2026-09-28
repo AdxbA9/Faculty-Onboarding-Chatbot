@@ -152,8 +152,17 @@ OCR_MIN_TEXT_CHARS: int = 12
 DATA_DIR: str = "data"
 CACHE_DIR: str = "cache"
 
+# Repository-relative folder holding the source registry (SOURCES_FILE) and
+# the section maps it names. Resolved against the repository root by
+# handbook_bot.sources, whatever the working directory.
+KNOWLEDGE_DIR: str = "knowledge"
+SOURCES_FILE: str = "sources.json"
+
 # Bump when ingestion logic changes so old caches invalidate automatically.
-CACHE_VERSION: str = "v11"
+# v12: chunk metadata gained source and section keys (source_id, chapter,
+# section_no, ...). Chunk text, embeddings model and ranking are unchanged,
+# but the cache compares metadata, so every machine rebuilds its cache once.
+CACHE_VERSION: str = "v12"
 
 # ---------------------------------------------------------------------------
 # Prompting
