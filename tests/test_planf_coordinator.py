@@ -451,3 +451,79 @@ def test_greeting_and_empty_metadata_carry_no_invented_measurements():
         m = coordinate(question).metadata
         assert m["scores"] == {} and m["cues"] == {} and m["dropped_domains"] == []
         assert m["uncovered_clauses"] == [] and m["journey"] is False
+
+
+# ---------------------------------------------------------------------------
+# Step 3.12A (F-1): compound institutional wording
+# ---------------------------------------------------------------------------
+def focus(decision: CoordinatorDecision, domain: str):
+    return next(t.context["focus_clauses"] for t in decision.subtasks if t.domain == domain)
+
+
+def test_who_manages_system_support_adds_institutional_with_its_own_clause():
+    q = "Who manages Blackboard support and what is my teaching load?"
+    d = coordinate(q)
+    assert set(selected(d)) == {"teaching", "institutional"} and d.requires_synthesis is True
+    assert focus(d, "institutional") == ["Who manages Blackboard support"]
+    assert "what is my teaching load" in focus(d, "teaching")
+    assert all(t.question == q for t in d.subtasks)
+
+
+def test_where_is_a_named_unit_is_institutional_and_the_rest_stays_teaching():
+    q = "Where is the Registrar and what is the grading policy?"
+    d = coordinate(q)
+    assert selected(d) == ["institutional", "teaching"]
+    assert focus(d, "institutional") == ["Where is the Registrar"]
+    assert focus(d, "teaching") == ["what is the grading policy"]
+
+
+@pytest.mark.parametrize("question", ["Who supports Blackboard?", "Who is responsible for Blackboard support?", "Who manages the LMS help desk?"])
+def test_who_supports_a_system_adds_institutional(question):
+    assert set(selected(coordinate(question))) == {"teaching", "institutional"}
+
+
+@pytest.mark.parametrize("question", ["Where is the Registrar office?", "Where can I find the Registrar?", "Where is the IT services desk?"])
+def test_where_is_a_named_service_is_institutional(question):
+    assert selected(coordinate(question)) == ["institutional"]
+
+
+@pytest.mark.parametrize("question", [
+    "Who manages course grading?",          # "who" plus a teaching object is not navigation
+    "Who teaches the course?",
+    "Who marks the final exam?",
+    "Where are office hours held?",         # "office hours" is a teaching phrase, not a place
+    "Where do I upload the syllabus?",
+])
+def test_bare_who_and_where_are_not_institutional_cues(question):
+    assert selected(coordinate(question)) == ["teaching"]
+
+
+# ---------------------------------------------------------------------------
+# Step 3.12A (F-3): cue normalisation, add/drop and e-learning cues
+# ---------------------------------------------------------------------------
+@pytest.mark.parametrize("hyphenated,spaced", [
+    ("What are the office-hours requirements?", "What are the office hours requirements?"),
+    ("What is the peer-observation process?", "What is the peer observation process?"),
+    ("What is the add-drop deadline?", "What is the add drop deadline?"),
+    ("What is the add/drop deadline?", "What is the add drop deadline?"),
+    ("What is the e-learning policy?", "What is the e learning policy?"),
+    ("What is the h-index requirement?", "What is the h index requirement?"),
+])
+def test_hyphen_like_separators_do_not_change_routing(hyphenated, spaced):
+    a, b = coordinate(hyphenated), coordinate(spaced)
+    assert selected(a) == selected(b) and selected(a)
+    assert a.metadata["scores"] == b.metadata["scores"]
+    assert a.subtasks[0].question == hyphenated                        # stored verbatim
+    assert a.subtasks[0].context["focus_clauses"] == [hyphenated]
+
+
+def test_cue_text_is_classification_only_and_keeps_length():
+    assert coordinator.cue_text("office-hours add/drop e-learning") == "office hours add drop e learning"
+    assert len(coordinator.cue_text("peer-observation")) == len("peer-observation")
+    assert coordinator.cue_text("2025-2026 - 12") == "2025 2026 - 12"      # only separators between word characters
+
+
+@pytest.mark.parametrize("question", ["What is the add/drop deadline?", "What is the add-drop policy?", "What is the e-learning policy?",
+                                      "When does the add and drop period end?", "Is e learning mandatory?"])
+def test_add_drop_and_e_learning_route_to_teaching(question):
+    assert selected(coordinate(question)) == ["teaching"]

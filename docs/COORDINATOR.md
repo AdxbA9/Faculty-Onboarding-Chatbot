@@ -31,15 +31,29 @@ verifies.
 
 | Specialist | Strong cues (1.0 each) | Hints (0.5 each) |
 |---|---|---|
-| `teaching` | teach/teaching/instructor; teaching load, workload, WLAM; course, lecture, class, syllabus, curriculum; Blackboard, LMS, gradebook, SafeAssign, Collaborate; grades, marks, attendance, assignments, quizzes, exams, rubrics, assessment; office hours, credit hours, contact hours; thesis or dissertation supervision; professional development, pedagogy, peer observation, mentoring | students, semester, lesson, academic integrity, plagiarism, Turnitin, training, workshop, Banner |
+| `teaching` | teach/teaching/instructor; teaching load, workload, WLAM; course, lecture, class, syllabus, curriculum; Blackboard, LMS, e-learning, gradebook, SafeAssign, Collaborate; add/drop; grades, marks, attendance, assignments, quizzes, exams, rubrics, assessment; office hours, credit hours, contact hours; thesis or dissertation supervision; professional development, pedagogy, peer observation, mentoring | students, semester, lesson, academic integrity, plagiarism, Turnitin, training, workshop, Banner |
 | `research` | research; grant, funded, funding, principal investigator; research ethics, ethics approval or committee, REC, IRB, ACUC, human subjects, animal use; publication, publishing a paper or article, journal, Scopus, h-index, citations; intellectual property, patent, technology transfer, TTO, commercialization; research institute, group, center, project, committee, board | conference, consultancy, innovation, laboratory |
 | `faculty_services` | HR, human resources, employee services / information / record / portal / self-service, employment; leave, sabbatical, vacation, absence, maternity; contract, resignation, probation, appointment, hiring, termination, renewal; benefits, salary, payroll, payslip, allowance, gratuity, pension, incentives; housing, accommodation, insurance, visa, residency, Emirates ID, passport, relocation, air tickets; promotion, rank, tenure, performance evaluation, FIS | library, parking, child care, clinic, health services, facilities, ID card, onboarding, joining |
-| `institutional` | "who ... approves / authorizes / decides / is responsible / handles / reports to"; "who do I contact / ask / see"; "which office / unit / committee handles"; "where do I go / find / get / submit / apply / register"; "where is the office / department / unit / center / building"; phone, telephone, fax, e-mail address, extension, contact details; approval chain, organizational chart, governance, university structure; colleges, departments, campuses, degree programs, programs offered, accreditation, ranking, mission, vision, core values, councils, standing committees | dean, chair, chancellor, director, head of; department, college, university, office, unit |
+| `institutional` | "who ... approves / authorizes / decides / is responsible / handles / reports to"; "who manages / supports / maintains / administers ... a support, help desk, service, system, portal, office, unit, department or centre" (the object must be a service or unit: "who manages course grading" stays with the subject domain); "who do I contact / ask / see"; "which office / unit / committee handles"; "where do I go / find / get / submit / apply / register"; "where is the office / department / unit / center / building" or a named service (Registrar, registration office, admissions office, finance office, HR, IT services, reception, security, bookstore, cafeteria, parking; "office hours" is never a place); phone, telephone, fax, e-mail address, extension, contact details; approval chain, organizational chart, governance, university structure; colleges, departments, campuses, degree programs, programs offered, accreditation, ranking, mission, vision, core values, councils, standing committees | dean, chair, chancellor, director, head of; department, college, university, office, unit |
 
 A domain's score is the sum of its matched cues (each pattern counts once).
 A domain is a candidate at a score of 1.0 or more: one strong cue, or two
 hints. Scores and matched cues are recorded in `metadata["scores"]` and
-`metadata["cues"]`.
+`metadata["cues"]`. Bare "who" and "where" are never cues: "Who teaches the
+course?", "Who manages course grading?" and "Where are office hours held?"
+select `teaching` alone.
+
+### Cue normalisation
+
+Before cue matching, hyphen-like separators between word characters
+(`-`, the Unicode hyphens and dashes, `/`) are read as spaces
+(`cue_text`), so "office-hours", "peer-observation", "add-drop",
+"add/drop" and "e-learning" score exactly like "office hours", "peer
+observation", "add drop" and "e learning". Each separator is one
+character, so cue positions still refer to the original text. This is
+classification only: the task's `question`, its `focus_clauses` and every
+recorded clause stay verbatim. The matched cue recorded in
+`metadata["cues"]` shows the spaced form.
 
 ## Contact questions (conditional)
 
@@ -169,6 +183,45 @@ The future orchestrator sends such questions through the Milestone 1
 handbook pipeline. Nonsense never receives a fabricated domain. A greeting
 returns intent `greeting` and no specialist. An empty question returns
 `unknown`.
+
+## Dispatch to the Teaching & Learning Specialist (inactive)
+
+`handbook_bot/agents/specialists/dispatch.py` is the deterministic seam
+between the Faculty Onboarding Coordinator and the domain specialists.
+`run_question(question, registry)` coordinates the question and calls
+`dispatch(decision, registry)`, which walks the Coordinator's tasks in order
+and, for each task, either runs the registered specialist or records the
+task as pending. In the current phase only the Teaching & Learning
+Specialist is executable; research, faculty services and institutional
+tasks stay pending with the Coordinator's task intact, so the caller still
+sees the full decision. Tasks are handed over exactly as the Coordinator
+built them (task id, full question, intent, level, system, focus clauses);
+nothing is reinterpreted, reordered or reconstructed, and there is no
+default-to-Teaching fallback. Handoff requests a specialist returns are
+collected and preserved but not executed. A specialist that raises is
+reported as an `error` finding for its task, with secrets and filesystem
+paths removed; the decision and the other tasks are unaffected. No LLM call
+is made in the seam, Synthesis and the independent Verifier are not part of
+it, and nothing in the production runtime imports it (`PLAN_F_ENABLED`
+stays False). Handoff rounds, Synthesis and Verifier collaboration are
+later milestones. Real-model validation of the Teaching path is still
+outstanding.
+
+A decision is validated when it is built; the seam does not re-validate
+it. Two cheap checks catch a decision altered afterwards: a subtask that is
+not a `SpecialistTask` raises `TypeError`, and a repeated task id raises
+`ValueError`. Any other post-construction change (for example a selected
+specialist left without a task) is outside the seam's responsibility and is
+a documented defensive-programming limitation.
+
+For a compound question such as "Who manages Blackboard support and what
+is my teaching load?" the Coordinator selects `teaching` and
+`institutional`; the institutional task's focus is "Who manages Blackboard
+support", and the teaching task's focus holds both clauses because the
+first names Blackboard (a shared clause). The Teaching specialist then
+answers the teaching-load clause, marks the support clause `partial`
+unless the evidence names the responsible party, and returns an
+institutional handoff, so no part of the question is silently absorbed.
 
 ## LLM arbitration: deferred
 
