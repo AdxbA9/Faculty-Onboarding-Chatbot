@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "source_id": "uos_faculty_handbook_2025_26",
+      "title": "UOS Faculty Handbook 2025/26",
+      "relative_path": "data/UOS Faculty Handbook 25-26.pdf",
+      "source_type": "pdf",
+      "version": "2025/2026",
+      "authority": "official_university_source",
+      "verification_status": "verified_local_file",
+      "section_map": "knowledge/handbook_sections.json",
+      "notes": "The only document in the corpus. It contains policy-level references to Blackboard and Banner (for example the grade flow on page 224) but no standalone procedural guide for either system."
+    }
+  ]
+}

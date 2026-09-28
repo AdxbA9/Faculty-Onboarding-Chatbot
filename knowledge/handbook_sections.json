@@ -1,0 +1,1662 @@
+{
+ "source_id": "uos_faculty_handbook_2025_26",
+ "page_count": 272,
+ "page_numbering": "physical 1-based PDF page index; in this document it equals the printed 'Page N' footer",
+ "derived_from": "the document's table of contents (PDF pages 4-13), chapter and level-2 section entries only; every chapter heading and every listed section heading was checked on its listed page",
+ "records": [
+  {
+   "kind": "front_matter",
+   "chapter": null,
+   "section_no": null,
+   "section_title": null,
+   "start_page": 1,
+   "end_page": 1
+  },
+  {
+   "kind": "front_matter",
+   "chapter": null,
+   "section_no": null,
+   "section_title": "Preface",
+   "start_page": 2,
+   "end_page": 2
+  },
+  {
+   "kind": "front_matter",
+   "chapter": null,
+   "section_no": null,
+   "section_title": "Important Notice",
+   "start_page": 3,
+   "end_page": 3
+  },
+  {
+   "kind": "front_matter",
+   "chapter": null,
+   "section_no": null,
+   "section_title": null,
+   "start_page": 4,
+   "end_page": 13
+  },
+  {
+   "kind": "chapter",
+   "chapter": 1,
+   "section_no": "1",
+   "section_title": "The University",
+   "start_page": 14,
+   "end_page": 55
+  },
+  {
+   "kind": "section",
+   "chapter": 1,
+   "section_no": "1.1",
+   "section_title": "Vision, Mission, and Core Values",
+   "start_page": 15,
+   "end_page": 16
+  },
+  {
+   "kind": "section",
+   "chapter": 1,
+   "section_no": "1.2",
+   "section_title": "2024-2030 University Strategic Priorities",
+   "start_page": 16,
+   "end_page": 19
+  },
+  {
+   "kind": "section",
+   "chapter": 1,
+   "section_no": "1.3",
+   "section_title": "Organizational Chart",
+   "start_page": 19,
+   "end_page": 20
+  },
+  {
+   "kind": "section",
+   "chapter": 1,
+   "section_no": "1.4",
+   "section_title": "University Governance",
+   "start_page": 20,
+   "end_page": 20
+  },
+  {
+   "kind": "section",
+   "chapter": 1,
+   "section_no": "1.5",
+   "section_title": "The President",
+   "start_page": 20,
+   "end_page": 21
+  },
+  {
+   "kind": "section",
+   "chapter": 1,
+   "section_no": "1.6",
+   "section_title": "The Board of Trustees",
+   "start_page": 21,
+   "end_page": 23
+  },
+  {
+   "kind": "section",
+   "chapter": 1,
+   "section_no": "1.7",
+   "section_title": "The University Administration",
+   "start_page": 23,
+   "end_page": 30
+  },
+  {
+   "kind": "section",
+   "chapter": 1,
+   "section_no": "1.8",
+   "section_title": "Shared Governance",
+   "start_page": 30,
+   "end_page": 31
+  },
+  {
+   "kind": "section",
+   "chapter": 1,
+   "section_no": "1.9",
+   "section_title": "Campuses, Colleges, Departments, Programs and Degrees",
+   "start_page": 31,
+   "end_page": 44
+  },
+  {
+   "kind": "section",
+   "chapter": 1,
+   "section_no": "1.10",
+   "section_title": "Language Institute",
+   "start_page": 44,
+   "end_page": 45
+  },
+  {
+   "kind": "section",
+   "chapter": 1,
+   "section_no": "1.11",
+   "section_title": "Accreditation",
+   "start_page": 45,
+   "end_page": 47
+  },
+  {
+   "kind": "section",
+   "chapter": 1,
+   "section_no": "1.12",
+   "section_title": "Office of International Relations",
+   "start_page": 47,
+   "end_page": 48
+  },
+  {
+   "kind": "section",
+   "chapter": 1,
+   "section_no": "1.13",
+   "section_title": "University Ranking",
+   "start_page": 48,
+   "end_page": 49
+  },
+  {
+   "kind": "section",
+   "chapter": 1,
+   "section_no": "1.14",
+   "section_title": "Academic Calendar",
+   "start_page": 49,
+   "end_page": 51
+  },
+  {
+   "kind": "section",
+   "chapter": 1,
+   "section_no": "1.15",
+   "section_title": "Statement on Diversity, Equity, and Inclusion",
+   "start_page": 51,
+   "end_page": 52
+  },
+  {
+   "kind": "section",
+   "chapter": 1,
+   "section_no": "1.16",
+   "section_title": "Contact Information",
+   "start_page": 52,
+   "end_page": 55
+  },
+  {
+   "kind": "chapter",
+   "chapter": 2,
+   "section_no": "2",
+   "section_title": "Faculty Appointment",
+   "start_page": 56,
+   "end_page": 74
+  },
+  {
+   "kind": "section",
+   "chapter": 2,
+   "section_no": "2.1",
+   "section_title": "Faculty Appointment Classes",
+   "start_page": 57,
+   "end_page": 58
+  },
+  {
+   "kind": "section",
+   "chapter": 2,
+   "section_no": "2.2",
+   "section_title": "Recruitment and Hiring",
+   "start_page": 58,
+   "end_page": 62
+  },
+  {
+   "kind": "section",
+   "chapter": 2,
+   "section_no": "2.3",
+   "section_title": "Contract Types",
+   "start_page": 62,
+   "end_page": 63
+  },
+  {
+   "kind": "section",
+   "chapter": 2,
+   "section_no": "2.4",
+   "section_title": "Probation and Resignation Notice",
+   "start_page": 63,
+   "end_page": 63
+  },
+  {
+   "kind": "section",
+   "chapter": 2,
+   "section_no": "2.5",
+   "section_title": "Confirmation",
+   "start_page": 63,
+   "end_page": 63
+  },
+  {
+   "kind": "section",
+   "chapter": 2,
+   "section_no": "2.6",
+   "section_title": "Dual Career",
+   "start_page": 63,
+   "end_page": 64
+  },
+  {
+   "kind": "section",
+   "chapter": 2,
+   "section_no": "2.7",
+   "section_title": "Special Appointments for Academic Administrators",
+   "start_page": 64,
+   "end_page": 64
+  },
+  {
+   "kind": "section",
+   "chapter": 2,
+   "section_no": "2.8",
+   "section_title": "Termination for Cause of a Contract",
+   "start_page": 64,
+   "end_page": 64
+  },
+  {
+   "kind": "section",
+   "chapter": 2,
+   "section_no": "2.9",
+   "section_title": "Hiring and Transitioning of Emirati Faculty Members",
+   "start_page": 64,
+   "end_page": 68
+  },
+  {
+   "kind": "section",
+   "chapter": 2,
+   "section_no": "2.10",
+   "section_title": "Clinical Faculty Appointment and Promotion",
+   "start_page": 68,
+   "end_page": 71
+  },
+  {
+   "kind": "section",
+   "chapter": 2,
+   "section_no": "2.11",
+   "section_title": "Emeritus Faculty Appointment",
+   "start_page": 71,
+   "end_page": 71
+  },
+  {
+   "kind": "section",
+   "chapter": 2,
+   "section_no": "2.12",
+   "section_title": "Administrative Appointment of Regular Faculty",
+   "start_page": 71,
+   "end_page": 72
+  },
+  {
+   "kind": "section",
+   "chapter": 2,
+   "section_no": "2.13",
+   "section_title": "Prohibited Nepotism and Employment of Relatives",
+   "start_page": 72,
+   "end_page": 74
+  },
+  {
+   "kind": "chapter",
+   "chapter": 3,
+   "section_no": "3",
+   "section_title": "Responsibilities of the Faculty",
+   "start_page": 75,
+   "end_page": 105
+  },
+  {
+   "kind": "section",
+   "chapter": 3,
+   "section_no": "3.1",
+   "section_title": "Teaching Responsibilities",
+   "start_page": 75,
+   "end_page": 78
+  },
+  {
+   "kind": "section",
+   "chapter": 3,
+   "section_no": "3.2",
+   "section_title": "Responsibilities in Student Advising and Availability",
+   "start_page": 78,
+   "end_page": 78
+  },
+  {
+   "kind": "section",
+   "chapter": 3,
+   "section_no": "3.3",
+   "section_title": "Responsibility to Curriculum Development",
+   "start_page": 78,
+   "end_page": 79
+  },
+  {
+   "kind": "section",
+   "chapter": 3,
+   "section_no": "3.4",
+   "section_title": "Responsibility to Office Hours",
+   "start_page": 79,
+   "end_page": 80
+  },
+  {
+   "kind": "section",
+   "chapter": 3,
+   "section_no": "3.5",
+   "section_title": "Responsibility to Research",
+   "start_page": 80,
+   "end_page": 82
+  },
+  {
+   "kind": "section",
+   "chapter": 3,
+   "section_no": "3.6",
+   "section_title": "Responsibility to Community Service",
+   "start_page": 82,
+   "end_page": 83
+  },
+  {
+   "kind": "section",
+   "chapter": 3,
+   "section_no": "3.7",
+   "section_title": "Professional Development Responsibilities",
+   "start_page": 83,
+   "end_page": 84
+  },
+  {
+   "kind": "section",
+   "chapter": 3,
+   "section_no": "3.8",
+   "section_title": "Responsibility to Quality Assurance and Institutional Effectiveness",
+   "start_page": 84,
+   "end_page": 85
+  },
+  {
+   "kind": "section",
+   "chapter": 3,
+   "section_no": "3.9",
+   "section_title": "Role and Responsibilities of Administrative Faculty",
+   "start_page": 85,
+   "end_page": 88
+  },
+  {
+   "kind": "section",
+   "chapter": 3,
+   "section_no": "3.10",
+   "section_title": "Academic Freedom and Responsibility",
+   "start_page": 88,
+   "end_page": 89
+  },
+  {
+   "kind": "section",
+   "chapter": 3,
+   "section_no": "3.11",
+   "section_title": "Workload Allocation Model (WLAM)",
+   "start_page": 89,
+   "end_page": 97
+  },
+  {
+   "kind": "section",
+   "chapter": 3,
+   "section_no": "3.12",
+   "section_title": "Academic Integrity and Student Honor Code",
+   "start_page": 97,
+   "end_page": 98
+  },
+  {
+   "kind": "section",
+   "chapter": 3,
+   "section_no": "3.13",
+   "section_title": "Professional Ethics and Disciplinary Actions",
+   "start_page": 98,
+   "end_page": 102
+  },
+  {
+   "kind": "section",
+   "chapter": 3,
+   "section_no": "3.14",
+   "section_title": "Faculty Discipline and Grievance",
+   "start_page": 102,
+   "end_page": 105
+  },
+  {
+   "kind": "chapter",
+   "chapter": 4,
+   "section_no": "4",
+   "section_title": "Appointment Benefits",
+   "start_page": 106,
+   "end_page": 111
+  },
+  {
+   "kind": "section",
+   "chapter": 4,
+   "section_no": "4.1",
+   "section_title": "Basic Salary",
+   "start_page": 106,
+   "end_page": 106
+  },
+  {
+   "kind": "section",
+   "chapter": 4,
+   "section_no": "4.2",
+   "section_title": "Monetary Benefits",
+   "start_page": 106,
+   "end_page": 107
+  },
+  {
+   "kind": "section",
+   "chapter": 4,
+   "section_no": "4.3",
+   "section_title": "Leaves and Absences",
+   "start_page": 107,
+   "end_page": 107
+  },
+  {
+   "kind": "section",
+   "chapter": 4,
+   "section_no": "4.4",
+   "section_title": "Duplication of Benefits",
+   "start_page": 107,
+   "end_page": 108
+  },
+  {
+   "kind": "section",
+   "chapter": 4,
+   "section_no": "4.5",
+   "section_title": "Compensation for Administrative Positions",
+   "start_page": 108,
+   "end_page": 108
+  },
+  {
+   "kind": "section",
+   "chapter": 4,
+   "section_no": "4.6",
+   "section_title": "Annual Incentives for Distinguished Faculty Members",
+   "start_page": 108,
+   "end_page": 110
+  },
+  {
+   "kind": "section",
+   "chapter": 4,
+   "section_no": "4.7",
+   "section_title": "Demise Policy",
+   "start_page": 110,
+   "end_page": 111
+  },
+  {
+   "kind": "chapter",
+   "chapter": 5,
+   "section_no": "5",
+   "section_title": "Faculty Development",
+   "start_page": 112,
+   "end_page": 121
+  },
+  {
+   "kind": "section",
+   "chapter": 5,
+   "section_no": "5.1",
+   "section_title": "Goals and Objectives",
+   "start_page": 112,
+   "end_page": 113
+  },
+  {
+   "kind": "section",
+   "chapter": 5,
+   "section_no": "5.2",
+   "section_title": "Categories of Faculty Development",
+   "start_page": 113,
+   "end_page": 113,
+   "note": "section number 5.2 is used twice in the document"
+  },
+  {
+   "kind": "section",
+   "chapter": 5,
+   "section_no": "5.2",
+   "section_title": "New Faculty Development Training",
+   "start_page": 113,
+   "end_page": 115,
+   "note": "section number 5.2 is used twice in the document"
+  },
+  {
+   "kind": "section",
+   "chapter": 5,
+   "section_no": "5.3",
+   "section_title": "Faculty Peer Observation of Teaching",
+   "start_page": 115,
+   "end_page": 117
+  },
+  {
+   "kind": "section",
+   "chapter": 5,
+   "section_no": "5.4",
+   "section_title": "Participation in Conferences",
+   "start_page": 117,
+   "end_page": 119
+  },
+  {
+   "kind": "section",
+   "chapter": 5,
+   "section_no": "5.5",
+   "section_title": "Policy on Offering Courses in the Summer Semester",
+   "start_page": 119,
+   "end_page": 121
+  },
+  {
+   "kind": "chapter",
+   "chapter": 6,
+   "section_no": "6",
+   "section_title": "Performance Evaluation",
+   "start_page": 122,
+   "end_page": 143
+  },
+  {
+   "kind": "section",
+   "chapter": 6,
+   "section_no": "6.1",
+   "section_title": "General Evaluation Considerations",
+   "start_page": 122,
+   "end_page": 122
+  },
+  {
+   "kind": "section",
+   "chapter": 6,
+   "section_no": "6.2",
+   "section_title": "Teaching and Learning Evaluation",
+   "start_page": 122,
+   "end_page": 123
+  },
+  {
+   "kind": "section",
+   "chapter": 6,
+   "section_no": "6.3",
+   "section_title": "Academic Advising",
+   "start_page": 123,
+   "end_page": 123
+  },
+  {
+   "kind": "section",
+   "chapter": 6,
+   "section_no": "6.4",
+   "section_title": "Research and Scholarly Activities Evaluation",
+   "start_page": 123,
+   "end_page": 124
+  },
+  {
+   "kind": "section",
+   "chapter": 6,
+   "section_no": "6.5",
+   "section_title": "Community Service Evaluation",
+   "start_page": 124,
+   "end_page": 124
+  },
+  {
+   "kind": "section",
+   "chapter": 6,
+   "section_no": "6.6",
+   "section_title": "Evaluation Process and Criteria",
+   "start_page": 124,
+   "end_page": 124
+  },
+  {
+   "kind": "section",
+   "chapter": 6,
+   "section_no": "6.7",
+   "section_title": "Special Issues and Considerations",
+   "start_page": 124,
+   "end_page": 126
+  },
+  {
+   "kind": "section",
+   "chapter": 6,
+   "section_no": "6.8",
+   "section_title": "Weights and Grades for each Criteria",
+   "start_page": 126,
+   "end_page": 128
+  },
+  {
+   "kind": "section",
+   "chapter": 6,
+   "section_no": "6.9",
+   "section_title": "The Faculty Information System",
+   "start_page": 128,
+   "end_page": 133
+  },
+  {
+   "kind": "section",
+   "chapter": 6,
+   "section_no": "6.10",
+   "section_title": "Rubric for Contract Renewal",
+   "start_page": 133,
+   "end_page": 133
+  },
+  {
+   "kind": "section",
+   "chapter": 6,
+   "section_no": "6.11",
+   "section_title": "Evaluation Rubric",
+   "start_page": 133,
+   "end_page": 138
+  },
+  {
+   "kind": "section",
+   "chapter": 6,
+   "section_no": "6.12",
+   "section_title": "Continuous Improvement",
+   "start_page": 138,
+   "end_page": 138
+  },
+  {
+   "kind": "section",
+   "chapter": 6,
+   "section_no": "6.13",
+   "section_title": "Faculty Information Systems User Guide",
+   "start_page": 138,
+   "end_page": 143
+  },
+  {
+   "kind": "chapter",
+   "chapter": 7,
+   "section_no": "7",
+   "section_title": "Academic Promotion",
+   "start_page": 144,
+   "end_page": 152
+  },
+  {
+   "kind": "section",
+   "chapter": 7,
+   "section_no": "7.1",
+   "section_title": "Promotion Criteria",
+   "start_page": 144,
+   "end_page": 144
+  },
+  {
+   "kind": "section",
+   "chapter": 7,
+   "section_no": "7.2",
+   "section_title": "Research and Scholarship",
+   "start_page": 144,
+   "end_page": 145
+  },
+  {
+   "kind": "section",
+   "chapter": 7,
+   "section_no": "7.3",
+   "section_title": "Teaching and Academic Advising",
+   "start_page": 145,
+   "end_page": 146
+  },
+  {
+   "kind": "section",
+   "chapter": 7,
+   "section_no": "7.4",
+   "section_title": "University and Community Service",
+   "start_page": 146,
+   "end_page": 146
+  },
+  {
+   "kind": "section",
+   "chapter": 7,
+   "section_no": "7.5",
+   "section_title": "Promotion to the Rank of Associate Professor",
+   "start_page": 146,
+   "end_page": 147
+  },
+  {
+   "kind": "section",
+   "chapter": 7,
+   "section_no": "7.6",
+   "section_title": "Promotion to the Rank of Full Professor",
+   "start_page": 147,
+   "end_page": 147
+  },
+  {
+   "kind": "section",
+   "chapter": 7,
+   "section_no": "7.7",
+   "section_title": "Criteria for Accrediting Periodicals and Journals for Promotion Purpose",
+   "start_page": 147,
+   "end_page": 148
+  },
+  {
+   "kind": "section",
+   "chapter": 7,
+   "section_no": "7.8",
+   "section_title": "Promotion Procedures at the Department Level",
+   "start_page": 148,
+   "end_page": 149,
+   "note": "section number 7.8 is used twice in the document"
+  },
+  {
+   "kind": "section",
+   "chapter": 7,
+   "section_no": "7.8",
+   "section_title": "Promotion Procedures at the College Level",
+   "start_page": 149,
+   "end_page": 150,
+   "note": "section number 7.8 is used twice in the document"
+  },
+  {
+   "kind": "section",
+   "chapter": 7,
+   "section_no": "7.9",
+   "section_title": "Promotion Procedures at the University Level",
+   "start_page": 150,
+   "end_page": 151
+  },
+  {
+   "kind": "section",
+   "chapter": 7,
+   "section_no": "7.10",
+   "section_title": "Preparing the Promotion Dossier",
+   "start_page": 151,
+   "end_page": 151
+  },
+  {
+   "kind": "section",
+   "chapter": 7,
+   "section_no": "7.11",
+   "section_title": "General Provisions",
+   "start_page": 151,
+   "end_page": 152
+  },
+  {
+   "kind": "section",
+   "chapter": 7,
+   "section_no": "7.12",
+   "section_title": "Appeals",
+   "start_page": 152,
+   "end_page": 152
+  },
+  {
+   "kind": "chapter",
+   "chapter": 8,
+   "section_no": "8",
+   "section_title": "Scientific Research",
+   "start_page": 153,
+   "end_page": 174
+  },
+  {
+   "kind": "section",
+   "chapter": 8,
+   "section_no": "8.1",
+   "section_title": "Research Institutes",
+   "start_page": 153,
+   "end_page": 154
+  },
+  {
+   "kind": "section",
+   "chapter": 8,
+   "section_no": "8.2",
+   "section_title": "Research Support Units and Departments",
+   "start_page": 154,
+   "end_page": 156
+  },
+  {
+   "kind": "section",
+   "chapter": 8,
+   "section_no": "8.3",
+   "section_title": "Research Priority Areas",
+   "start_page": 156,
+   "end_page": 157
+  },
+  {
+   "kind": "section",
+   "chapter": 8,
+   "section_no": "8.4",
+   "section_title": "Research Groups",
+   "start_page": 157,
+   "end_page": 159
+  },
+  {
+   "kind": "section",
+   "chapter": 8,
+   "section_no": "8.5",
+   "section_title": "University Research Board",
+   "start_page": 159,
+   "end_page": 160
+  },
+  {
+   "kind": "section",
+   "chapter": 8,
+   "section_no": "8.6",
+   "section_title": "Research Committees",
+   "start_page": 160,
+   "end_page": 160
+  },
+  {
+   "kind": "section",
+   "chapter": 8,
+   "section_no": "8.7",
+   "section_title": "Research Grants",
+   "start_page": 160,
+   "end_page": 161
+  },
+  {
+   "kind": "section",
+   "chapter": 8,
+   "section_no": "8.8",
+   "section_title": "Research Regulations",
+   "start_page": 161,
+   "end_page": 163
+  },
+  {
+   "kind": "section",
+   "chapter": 8,
+   "section_no": "8.9",
+   "section_title": "Scientific Publishing at the University of Sharjah Journal",
+   "start_page": 163,
+   "end_page": 163
+  },
+  {
+   "kind": "section",
+   "chapter": 8,
+   "section_no": "8.10",
+   "section_title": "Collaborative Research Agreements",
+   "start_page": 163,
+   "end_page": 163
+  },
+  {
+   "kind": "section",
+   "chapter": 8,
+   "section_no": "8.11",
+   "section_title": "Scientific Research Procedures and Regulations",
+   "start_page": 163,
+   "end_page": 174
+  },
+  {
+   "kind": "chapter",
+   "chapter": 9,
+   "section_no": "9",
+   "section_title": "Intellectual Properties Management",
+   "start_page": 175,
+   "end_page": 182
+  },
+  {
+   "kind": "section",
+   "chapter": 9,
+   "section_no": "9.1",
+   "section_title": "Intellectual Property Ownership Rights",
+   "start_page": 176,
+   "end_page": 177
+  },
+  {
+   "kind": "section",
+   "chapter": 9,
+   "section_no": "9.2",
+   "section_title": "University Responsibilities",
+   "start_page": 177,
+   "end_page": 177
+  },
+  {
+   "kind": "section",
+   "chapter": 9,
+   "section_no": "9.3",
+   "section_title": "Responsibilities of UoS Inventors",
+   "start_page": 177,
+   "end_page": 178
+  },
+  {
+   "kind": "section",
+   "chapter": 9,
+   "section_no": "9.4",
+   "section_title": "Disclosure of Intellectual Property",
+   "start_page": 178,
+   "end_page": 179
+  },
+  {
+   "kind": "section",
+   "chapter": 9,
+   "section_no": "9.5",
+   "section_title": "Patent Protection",
+   "start_page": 179,
+   "end_page": 180
+  },
+  {
+   "kind": "section",
+   "chapter": 9,
+   "section_no": "12.3",
+   "section_title": "Copyright Protection Policy",
+   "start_page": 180,
+   "end_page": 180,
+   "note": "numbered 12.3 in the document's table of contents and body; located in chapter 9; section number 12.3 is used twice in the document"
+  },
+  {
+   "kind": "section",
+   "chapter": 9,
+   "section_no": "9.7",
+   "section_title": "Tangible Research Property",
+   "start_page": 180,
+   "end_page": 181
+  },
+  {
+   "kind": "section",
+   "chapter": 9,
+   "section_no": "9.8",
+   "section_title": "Commercialization",
+   "start_page": 181,
+   "end_page": 181
+  },
+  {
+   "kind": "section",
+   "chapter": 9,
+   "section_no": "9.9",
+   "section_title": "Distribution of Licensing Revenues",
+   "start_page": 181,
+   "end_page": 182
+  },
+  {
+   "kind": "section",
+   "chapter": 9,
+   "section_no": "9.10",
+   "section_title": "Dispute Resolution",
+   "start_page": 182,
+   "end_page": 182
+  },
+  {
+   "kind": "chapter",
+   "chapter": 10,
+   "section_no": "10",
+   "section_title": "Information Technology",
+   "start_page": 183,
+   "end_page": 194
+  },
+  {
+   "kind": "section",
+   "chapter": 10,
+   "section_no": "10.1",
+   "section_title": "Acceptable Use Policy",
+   "start_page": 184,
+   "end_page": 186
+  },
+  {
+   "kind": "section",
+   "chapter": 10,
+   "section_no": "10.2",
+   "section_title": "Anti-Malware and Anti-Virus Policy",
+   "start_page": 186,
+   "end_page": 188
+  },
+  {
+   "kind": "section",
+   "chapter": 10,
+   "section_no": "10.3",
+   "section_title": "Archiving and Retention",
+   "start_page": 188,
+   "end_page": 189
+  },
+  {
+   "kind": "section",
+   "chapter": 10,
+   "section_no": "10.4",
+   "section_title": "Authentication Policy",
+   "start_page": 189,
+   "end_page": 191
+  },
+  {
+   "kind": "section",
+   "chapter": 10,
+   "section_no": "10.5",
+   "section_title": "Privacy Policy",
+   "start_page": 191,
+   "end_page": 192
+  },
+  {
+   "kind": "section",
+   "chapter": 10,
+   "section_no": "10.6",
+   "section_title": "Learning Management System (LMS) Policy",
+   "start_page": 192,
+   "end_page": 194
+  },
+  {
+   "kind": "chapter",
+   "chapter": 11,
+   "section_no": "11",
+   "section_title": "Library Resources",
+   "start_page": 195,
+   "end_page": 202
+  },
+  {
+   "kind": "section",
+   "chapter": 11,
+   "section_no": "11.1",
+   "section_title": "Library Values",
+   "start_page": 195,
+   "end_page": 196
+  },
+  {
+   "kind": "section",
+   "chapter": 11,
+   "section_no": "11.2",
+   "section_title": "Code of Conduct",
+   "start_page": 196,
+   "end_page": 197
+  },
+  {
+   "kind": "section",
+   "chapter": 11,
+   "section_no": "11.3",
+   "section_title": "Computer Use Policy",
+   "start_page": 197,
+   "end_page": 198
+  },
+  {
+   "kind": "section",
+   "chapter": 11,
+   "section_no": "11.4",
+   "section_title": "Library Staff",
+   "start_page": 198,
+   "end_page": 198
+  },
+  {
+   "kind": "section",
+   "chapter": 11,
+   "section_no": "11.5",
+   "section_title": "Facilities",
+   "start_page": 198,
+   "end_page": 199
+  },
+  {
+   "kind": "section",
+   "chapter": 11,
+   "section_no": "11.6",
+   "section_title": "Locations",
+   "start_page": 199,
+   "end_page": 199
+  },
+  {
+   "kind": "section",
+   "chapter": 11,
+   "section_no": "11.7",
+   "section_title": "Copyright Policy",
+   "start_page": 199,
+   "end_page": 200
+  },
+  {
+   "kind": "section",
+   "chapter": 11,
+   "section_no": "11.8",
+   "section_title": "Printed Materials",
+   "start_page": 200,
+   "end_page": 200
+  },
+  {
+   "kind": "section",
+   "chapter": 11,
+   "section_no": "11.9",
+   "section_title": "Interlibrary Loan",
+   "start_page": 200,
+   "end_page": 200
+  },
+  {
+   "kind": "section",
+   "chapter": 11,
+   "section_no": "11.10",
+   "section_title": "Non-Print/Electronic Information Resources",
+   "start_page": 200,
+   "end_page": 200
+  },
+  {
+   "kind": "section",
+   "chapter": 11,
+   "section_no": "11.11",
+   "section_title": "Circulation Regulations",
+   "start_page": 200,
+   "end_page": 200
+  },
+  {
+   "kind": "section",
+   "chapter": 11,
+   "section_no": "11.12",
+   "section_title": "Loan Periods for Library Resources",
+   "start_page": 200,
+   "end_page": 201
+  },
+  {
+   "kind": "section",
+   "chapter": 11,
+   "section_no": "11.13",
+   "section_title": "Reserved Materials",
+   "start_page": 201,
+   "end_page": 201
+  },
+  {
+   "kind": "section",
+   "chapter": 11,
+   "section_no": "11.14",
+   "section_title": "Reference Collection",
+   "start_page": 201,
+   "end_page": 201
+  },
+  {
+   "kind": "section",
+   "chapter": 11,
+   "section_no": "11.15",
+   "section_title": "Periodicals",
+   "start_page": 201,
+   "end_page": 201
+  },
+  {
+   "kind": "section",
+   "chapter": 11,
+   "section_no": "11.16",
+   "section_title": "Renewals",
+   "start_page": 201,
+   "end_page": 201
+  },
+  {
+   "kind": "section",
+   "chapter": 11,
+   "section_no": "11.17",
+   "section_title": "Hold",
+   "start_page": 201,
+   "end_page": 201
+  },
+  {
+   "kind": "section",
+   "chapter": 11,
+   "section_no": "11.18",
+   "section_title": "Recalls",
+   "start_page": 201,
+   "end_page": 201
+  },
+  {
+   "kind": "section",
+   "chapter": 11,
+   "section_no": "11.19",
+   "section_title": "Reminders",
+   "start_page": 201,
+   "end_page": 202
+  },
+  {
+   "kind": "section",
+   "chapter": 11,
+   "section_no": "11.20",
+   "section_title": "Overdue Materials",
+   "start_page": 202,
+   "end_page": 202
+  },
+  {
+   "kind": "section",
+   "chapter": 11,
+   "section_no": "11.21",
+   "section_title": "Library Fines and Charges",
+   "start_page": 202,
+   "end_page": 202
+  },
+  {
+   "kind": "chapter",
+   "chapter": 12,
+   "section_no": "12",
+   "section_title": "Admission and Instruction Policies",
+   "start_page": 203,
+   "end_page": 236
+  },
+  {
+   "kind": "section",
+   "chapter": 12,
+   "section_no": "12.1",
+   "section_title": "Undergraduate Admission",
+   "start_page": 203,
+   "end_page": 208
+  },
+  {
+   "kind": "section",
+   "chapter": 12,
+   "section_no": "12.2",
+   "section_title": "Graduate Admission",
+   "start_page": 208,
+   "end_page": 212
+  },
+  {
+   "kind": "section",
+   "chapter": 12,
+   "section_no": "12.3",
+   "section_title": "Student Transfer Policy",
+   "start_page": 212,
+   "end_page": 214,
+   "note": "section number 12.3 is used twice in the document"
+  },
+  {
+   "kind": "section",
+   "chapter": 12,
+   "section_no": "12.4",
+   "section_title": "Credit Transfer",
+   "start_page": 214,
+   "end_page": 217
+  },
+  {
+   "kind": "section",
+   "chapter": 12,
+   "section_no": "12.5",
+   "section_title": "Dual and Joint Degrees",
+   "start_page": 217,
+   "end_page": 218
+  },
+  {
+   "kind": "section",
+   "chapter": 12,
+   "section_no": "12.6",
+   "section_title": "Accelerated Programs",
+   "start_page": 218,
+   "end_page": 220
+  },
+  {
+   "kind": "section",
+   "chapter": 12,
+   "section_no": "12.7",
+   "section_title": "Curricula Approval and Revision Policy",
+   "start_page": 220,
+   "end_page": 221
+  },
+  {
+   "kind": "section",
+   "chapter": 12,
+   "section_no": "12.8",
+   "section_title": "Internship Policy",
+   "start_page": 221,
+   "end_page": 221
+  },
+  {
+   "kind": "section",
+   "chapter": 12,
+   "section_no": "12.9",
+   "section_title": "Undergraduate Completion Policy",
+   "start_page": 221,
+   "end_page": 222
+  },
+  {
+   "kind": "section",
+   "chapter": 12,
+   "section_no": "12.10",
+   "section_title": "Graduate Completion Requirements Policy",
+   "start_page": 222,
+   "end_page": 222
+  },
+  {
+   "kind": "section",
+   "chapter": 12,
+   "section_no": "12.11",
+   "section_title": "Academic Progress Policy",
+   "start_page": 222,
+   "end_page": 222
+  },
+  {
+   "kind": "section",
+   "chapter": 12,
+   "section_no": "12.12",
+   "section_title": "Examinations Policy",
+   "start_page": 222,
+   "end_page": 226
+  },
+  {
+   "kind": "section",
+   "chapter": 12,
+   "section_no": "12.13",
+   "section_title": "Student Assessment and Grading System",
+   "start_page": 226,
+   "end_page": 227
+  },
+  {
+   "kind": "section",
+   "chapter": 12,
+   "section_no": "12.14",
+   "section_title": "Grading System",
+   "start_page": 227,
+   "end_page": 228
+  },
+  {
+   "kind": "section",
+   "chapter": 12,
+   "section_no": "12.15",
+   "section_title": "Student Attendance and Assessment Policies",
+   "start_page": 228,
+   "end_page": 228
+  },
+  {
+   "kind": "section",
+   "chapter": 12,
+   "section_no": "12.16",
+   "section_title": "Penalties for Academic Misconduct During Exams",
+   "start_page": 228,
+   "end_page": 229
+  },
+  {
+   "kind": "section",
+   "chapter": 12,
+   "section_no": "12.17",
+   "section_title": "Instructor Responsibilities",
+   "start_page": 229,
+   "end_page": 229
+  },
+  {
+   "kind": "section",
+   "chapter": 12,
+   "section_no": "12.18",
+   "section_title": "Class Size Policy",
+   "start_page": 229,
+   "end_page": 232
+  },
+  {
+   "kind": "section",
+   "chapter": 12,
+   "section_no": "12.19",
+   "section_title": "Student Code of Honor Student Disciplinary Policy",
+   "start_page": 232,
+   "end_page": 236
+  },
+  {
+   "kind": "section",
+   "chapter": 12,
+   "section_no": "12.20",
+   "section_title": "Student Rights and Responsibilities Policy",
+   "start_page": 236,
+   "end_page": 236
+  },
+  {
+   "kind": "chapter",
+   "chapter": 13,
+   "section_no": "13",
+   "section_title": "Health and Safety",
+   "start_page": 237,
+   "end_page": 243
+  },
+  {
+   "kind": "section",
+   "chapter": 13,
+   "section_no": "13.1",
+   "section_title": "Role of the Health and Safety Office",
+   "start_page": 237,
+   "end_page": 238
+  },
+  {
+   "kind": "section",
+   "chapter": 13,
+   "section_no": "13.2",
+   "section_title": "Health and Safety Policy",
+   "start_page": 238,
+   "end_page": 238
+  },
+  {
+   "kind": "section",
+   "chapter": 13,
+   "section_no": "13.3",
+   "section_title": "Performance Standard",
+   "start_page": 238,
+   "end_page": 238
+  },
+  {
+   "kind": "section",
+   "chapter": 13,
+   "section_no": "13.4",
+   "section_title": "Life Safety Personnel",
+   "start_page": 238,
+   "end_page": 239
+  },
+  {
+   "kind": "section",
+   "chapter": 13,
+   "section_no": "13.5",
+   "section_title": "Training and Drills",
+   "start_page": 239,
+   "end_page": 240
+  },
+  {
+   "kind": "section",
+   "chapter": 13,
+   "section_no": "13.6",
+   "section_title": "Emergency Communications",
+   "start_page": 240,
+   "end_page": 240
+  },
+  {
+   "kind": "section",
+   "chapter": 13,
+   "section_no": "13.7",
+   "section_title": "Evacuation Procedures",
+   "start_page": 240,
+   "end_page": 240
+  },
+  {
+   "kind": "section",
+   "chapter": 13,
+   "section_no": "13.8",
+   "section_title": "Laboratory Safety",
+   "start_page": 240,
+   "end_page": 241
+  },
+  {
+   "kind": "section",
+   "chapter": 13,
+   "section_no": "13.9",
+   "section_title": "Health Services Policy",
+   "start_page": 241,
+   "end_page": 242
+  },
+  {
+   "kind": "section",
+   "chapter": 13,
+   "section_no": "13.10",
+   "section_title": "Student Counselling Policy",
+   "start_page": 242,
+   "end_page": 243
+  },
+  {
+   "kind": "chapter",
+   "chapter": 14,
+   "section_no": "14",
+   "section_title": "Student Services",
+   "start_page": 244,
+   "end_page": 249
+  },
+  {
+   "kind": "section",
+   "chapter": 14,
+   "section_no": "14.1",
+   "section_title": "Counseling and Guidance Services",
+   "start_page": 244,
+   "end_page": 244
+  },
+  {
+   "kind": "section",
+   "chapter": 14,
+   "section_no": "14.2",
+   "section_title": "Health Services",
+   "start_page": 244,
+   "end_page": 244
+  },
+  {
+   "kind": "section",
+   "chapter": 14,
+   "section_no": "14.3",
+   "section_title": "Career Development",
+   "start_page": 244,
+   "end_page": 245
+  },
+  {
+   "kind": "section",
+   "chapter": 14,
+   "section_no": "14.4",
+   "section_title": "Student Activities",
+   "start_page": 245,
+   "end_page": 245
+  },
+  {
+   "kind": "section",
+   "chapter": 14,
+   "section_no": "14.5",
+   "section_title": "Sports and Recreation",
+   "start_page": 245,
+   "end_page": 245
+  },
+  {
+   "kind": "section",
+   "chapter": 14,
+   "section_no": "14.6",
+   "section_title": "Disability Resource Center",
+   "start_page": 245,
+   "end_page": 246
+  },
+  {
+   "kind": "section",
+   "chapter": 14,
+   "section_no": "14.7",
+   "section_title": "Library Services",
+   "start_page": 246,
+   "end_page": 246
+  },
+  {
+   "kind": "section",
+   "chapter": 14,
+   "section_no": "14.8",
+   "section_title": "International Student Support",
+   "start_page": 246,
+   "end_page": 246
+  },
+  {
+   "kind": "section",
+   "chapter": 14,
+   "section_no": "14.9",
+   "section_title": "Peer Tutoring Services",
+   "start_page": 246,
+   "end_page": 247
+  },
+  {
+   "kind": "section",
+   "chapter": 14,
+   "section_no": "14.10",
+   "section_title": "Peer Advising Services",
+   "start_page": 247,
+   "end_page": 247
+  },
+  {
+   "kind": "section",
+   "chapter": 14,
+   "section_no": "14.11",
+   "section_title": "Coursera Academy",
+   "start_page": 247,
+   "end_page": 248
+  },
+  {
+   "kind": "section",
+   "chapter": 14,
+   "section_no": "14.12",
+   "section_title": "Interdisciplinary Certificate Programs",
+   "start_page": 248,
+   "end_page": 249
+  },
+  {
+   "kind": "chapter",
+   "chapter": 15,
+   "section_no": "15",
+   "section_title": "Campus Facilities",
+   "start_page": 250,
+   "end_page": 258
+  },
+  {
+   "kind": "section",
+   "chapter": 15,
+   "section_no": "15.1",
+   "section_title": "Central Laboratories",
+   "start_page": 250,
+   "end_page": 251
+  },
+  {
+   "kind": "section",
+   "chapter": 15,
+   "section_no": "15.2",
+   "section_title": "Business Service Department",
+   "start_page": 251,
+   "end_page": 254
+  },
+  {
+   "kind": "section",
+   "chapter": 15,
+   "section_no": "15.3",
+   "section_title": "Facilities Management",
+   "start_page": 254,
+   "end_page": 255
+  },
+  {
+   "kind": "section",
+   "chapter": 15,
+   "section_no": "15.4",
+   "section_title": "Child Care Center",
+   "start_page": 255,
+   "end_page": 255
+  },
+  {
+   "kind": "section",
+   "chapter": 15,
+   "section_no": "15.5",
+   "section_title": "Disability Resource Center",
+   "start_page": 255,
+   "end_page": 257
+  },
+  {
+   "kind": "section",
+   "chapter": 15,
+   "section_no": "15.6",
+   "section_title": "Medical Clinics",
+   "start_page": 257,
+   "end_page": 257
+  },
+  {
+   "kind": "section",
+   "chapter": 15,
+   "section_no": "15.7",
+   "section_title": "Sport Facilities",
+   "start_page": 257,
+   "end_page": 257
+  },
+  {
+   "kind": "section",
+   "chapter": 15,
+   "section_no": "15.8",
+   "section_title": "Food Courts",
+   "start_page": 257,
+   "end_page": 258
+  },
+  {
+   "kind": "chapter",
+   "chapter": 16,
+   "section_no": "16",
+   "section_title": "Other Policies",
+   "start_page": 259,
+   "end_page": 272
+  },
+  {
+   "kind": "section",
+   "chapter": 16,
+   "section_no": "16.1",
+   "section_title": "Faculty Professional Consultancy",
+   "start_page": 259,
+   "end_page": 261
+  },
+  {
+   "kind": "section",
+   "chapter": 16,
+   "section_no": "16.2",
+   "section_title": "Conflict of Interest",
+   "start_page": 261,
+   "end_page": 263
+  },
+  {
+   "kind": "section",
+   "chapter": 16,
+   "section_no": "16.3",
+   "section_title": "Animal Use in Research",
+   "start_page": 263,
+   "end_page": 265
+  },
+  {
+   "kind": "section",
+   "chapter": 16,
+   "section_no": "16.4",
+   "section_title": "Human Use in Research",
+   "start_page": 265,
+   "end_page": 266
+  },
+  {
+   "kind": "section",
+   "chapter": 16,
+   "section_no": "16.5",
+   "section_title": "Policy Prohibiting Sexual Harassment",
+   "start_page": 266,
+   "end_page": 268
+  },
+  {
+   "kind": "section",
+   "chapter": 16,
+   "section_no": "16.6",
+   "section_title": "University of Sharjah Guidelines on Artificial Intelligence and Large Language Models",
+   "start_page": 268,
+   "end_page": 272
+  }
+ ]
+}

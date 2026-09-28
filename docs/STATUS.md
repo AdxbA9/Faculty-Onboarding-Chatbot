@@ -9,6 +9,92 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-09-28 - Source metadata and scoped retrieval foundation (Milestone 3A)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/teaching-specialist` (created from `feature/faculty-coordinator`) |
+| Starting commit | `1a583f8` |
+| Ending state | source-scoped retrieval foundation completed, independently reviewed, corrected and committed on `feature/teaching-specialist`; see Git history for the commit |
+
+### Completed
+
+- `knowledge/sources.json` and `handbook_bot/sources.py`: source registry
+  (`SourceRecord`, `SourceRegistry`, `load_source_registry`,
+  `find_source_for_path`, `validate_source_registry`, `unregistered_source`).
+  One record: `uos_faculty_handbook_2025_26`, repository-relative path.
+- `knowledge/handbook_sections.json`: 206-record page-range map of the
+  handbook (4 front-matter parts, 16 chapters, 186 level-2 sections),
+  derived from the document's table of contents on pages 4 to 13 and
+  checked against every chapter and section heading on its listed page.
+  `SectionMap.resolve(page)` is deterministic; no page is unmapped; document
+  numbering quirks (5.2, 7.8, "12.3" in chapter 9) recorded with notes.
+- `annotate_metadata`: every chunk gains `source_id`, `source_title`,
+  `source_type`, `source_version`, `chapter`, `chapter_title`, `section_no`,
+  `section_title`, `page_section_nos`; old keys and chunk text unchanged
+  (13,688 chunks before and after). Called from `build_knowledge_base`;
+  an unlisted document gets an `unregistered_...` identity and no sections.
+- `handbook_bot/retrieval.py`: optional `RetrievalScope` on
+  `gather_candidates` (source ids, chapters, section numbers, section
+  prefixes, page ranges). Dense search restricted at the index level with a
+  FAISS id selector, lexical search restricted to allowed chunks, empty
+  scope returns nothing, `scope=None` unchanged.
+- `CACHE_VERSION` v11 to v12 (cache rebuilds once per machine).
+- Tests: `tests/test_sources.py`, `tests/test_retrieval_scope.py`.
+- Docs: `docs/SOURCE_INVENTORY.md`, `docs/DECISIONS.md` D-021 to D-025.
+
+### Correction pass (same day, after independent review)
+
+- F-1: section and prefix constraints are chapter-consistent; the section
+  printed as 12.3 on page 180 (chapter 9) is no longer admitted by
+  `section_prefixes={"12"}` or `section_numbers={"12.3"}`; the metadata
+  still records it as printed.
+- F-3: `find_source_for_path` no longer falls back to file-name matching;
+  a same-named file elsewhere is unregistered. A section map is applied
+  only when the loaded page count matches its `page_count`; otherwise the
+  source identity is kept and section labels are left null with a warning.
+- F-4: the scoped dense fallback requires an inner-product index and no
+  longer catches `RuntimeError`.
+- F-2, F-5, F-7: page-granular section scopes, non-unique printed section
+  numbers, strict identity and the single-document runtime are documented
+  in `docs/SOURCE_INVENTORY.md`; decisions D-026 to D-029.
+- F-8: tests added for all of the above, a global scope invariant across
+  scope types, multi-seed brute-force checks, L2 rejection, error
+  propagation, empty corpus and single-chunk cases.
+- Deferred: F-6 (authority and status vocabulary), content fingerprinting,
+  text-level section segmentation, a unique section-record identifier,
+  multi-document ingestion.
+
+### Not done on purpose
+
+No Teaching specialist, no other specialist, no Coordinator, orchestrator,
+Synthesis, Verifier, UI or evaluation change; `EvidenceResult.doc_id` not
+populated; no new source added; no web access. The multi-agent runtime
+stays inactive (`PLAN_F_ENABLED` False, `MAX_LLM_CALLS` 2).
+
+### Source reality
+
+The handbook is the only indexed document. It references Blackboard and
+Banner at policy level only; no standalone procedural guide for either
+system exists locally. Detailed Blackboard or Banner workflow questions must
+return not found or partial until verified guides are added.
+
+### Tests performed
+
+See the phase report: targeted tests, all multi-agent tests, full
+`pytest -q`, `pip check`, fresh-interpreter imports and a real-handbook
+metadata probe, all with `.\.venv\Scripts\python.exe` on Windows.
+
+### Next task
+
+The Teaching specialist on the
+handbook's teaching sections with an explicit `RetrievalScope`, returning
+findings whose `evidence_quote` is verbatim chunk text and whose
+`source_id` and `page` come from chunk metadata.
+
+---
+
 ## 2026-09-24 - Plan F Coordinator foundation
 
 | Field | Value |
