@@ -155,3 +155,154 @@ in code today.
 - Decision: the id-selector path is tried first; the direct-scoring fallback runs only when the index cannot take search parameters (`TypeError`, `AttributeError`) and only for an index whose `metric_type` is inner product; any other metric raises `TypeError`. A `RuntimeError` from the index propagates.
 - Why: scoring an L2 index as inner product would return misleading similarities; catching `RuntimeError` hid genuine failures behind a fallback.
 - Revisit: if a non-flat or non-inner-product index is adopted.
+
+## D-030 The first specialist is deterministic and extractive
+- Date: 2026-09-28
+- Decision: `TeachingLearningSpecialist` makes no LLM call. Every finding's claim is the quoted handbook text and the quote is an exact slice of a retrieved chunk; source id and page come from chunk metadata. Synthesis remains the only place where user-facing prose is written.
+- Why: the specialist is the architecture proof; removing generation from it removes the possibility of invented facts while the contract, scoping, status rules and handoffs are validated. A future reasoning step, if measurements justify one, would sit behind the same quote-validation rule.
+- Revisit: at the Teaching QA gate, with measured evidence quality on the real index.
+
+## D-031 Teaching scope is a curated list of sections compiled to page ranges
+- Decision: the specialist owns the sections in `OWNED_SECTIONS` (chapter and printed number), compiled from the section map into `RetrievalScope(source_ids, page_ranges)` at construction. Chapter 5 is not taken whole: 5.4 (conferences) is excluded. Ambiguous areas (2.9, 3.5, 3.6, 6.2, 6.3, 12.8 to 12.11, 12.19, 12.20) are excluded and listed in `EXCLUDED_SECTIONS`.
+- Why: ownership must follow the text, not chapter titles; excluding an ambiguous area costs recall on a few questions, including one costs leakage of another specialist's material. Compiling from the map keeps the scope in step with the document and fails loudly when a section is missing.
+- Revisit: after the Teaching QA gate, section by section, with recorded evidence.
+
+## D-032 Scope eligibility is not evidence; relevance and the gate decide
+- Decision: a chunk inside the scope becomes a finding only when it passes `MIN_RERANK_SCORE` (applied to every kept item) and one of its sentences shares at least one stemmed content word with the focus clause; the quote is that sentence, extended by the next when it also matches.
+- Why: section labels are page-granular, so an included page may carry a neighbouring section's text. The one-word rule is a simple, documented relevance filter, not a calibrated threshold, and the existing gate is reused rather than a new number invented.
+- Revisit: when the cross-encoder's behaviour on scoped candidates has been measured.
+
+## D-033 System procedures are never generated
+- Decision: a clause asking for a step-by-step procedure in Blackboard, Banner or MyUOS is at most `partial`; policy evidence is returned, `missing` names the absent procedure and `limitations` states that no procedural guide is indexed. Fact questions about a system ("how do grades reach Banner") may be `supported`.
+- Why: the corpus contains policy references only; anything more would be invented.
+- Revisit: when verified guides are registered and indexed.
+
+## D-034 Specialists reason over assigned clauses only and never re-route
+- Decision: the specialist works on `task.context["focus_clauses"]` (the whole question when absent), classifies each clause with its own small cue rules, hands off a misrouted clause and answers a shared clause while also handing it off. It never calls the Coordinator and never scans the full question for other specialists' clauses.
+- Why: re-routing would couple specialist and Coordinator, duplicate handoffs for clauses already assigned elsewhere, and make domain decisions inconsistent.
+- Revisit: when handoff execution is built in the orchestrator.
+
+## D-035 Chunk-level section eligibility is decided from the headings printed on the page
+- Date: 2026-09-28
+- Decision: on an in-scope page that also carries a non-owned section, `SectionGuard` attributes each chunk to a section using the section headings printed on that page (number plus the first two title words, located as printed lines and inside paragraph windows) and the chunk order the chunker emits. Text after a non-owned heading is never quoted. A shared page whose headings cannot be located is rejected whole. The page-range `RetrievalScope` is unchanged and remains the first boundary.
+- Why: the Step 3.9 gate showed excluded-section text on boundary pages (3.5 on page 80, 12.8 and 12.9 to 12.11 on pages 221 and 222, 5.4 on 117 and 119) becoming supported Teaching findings. Every heading on the fifteen shared pages is printed as its own line, so attribution is reliable without positional guesswork; conservative rejection covers the case where it is not.
+- Revisit: if the chunker or the section map changes, or when a chunk-level section label is added to the shared metadata foundation.
+
+## D-036 Relevance requires one anchor concept or two vocabulary concepts; generic words never count
+- Decision: the one-content-word rule is replaced by a small explicit Teaching vocabulary with aliases. A quoted unit qualifies when it shares one anchor concept (syllabus, office hours, teaching load, Blackboard, Banner, LMS, attendance, add/drop, final exams and similar) or two vocabulary concepts (exam, grade, teach, course, class and similar) with the focus clause. Generic terms (policy, process, require, contact, fee, assignment, information, faculty, student, university, semester) carry no concept. No stemmer and no calibrated threshold.
+- Why: one shared generic word made unrelated fragments supported ("payment of a fixed fee" for a make-up exam fee question) and `not_found` was unreachable. Aliases replace fragile suffix stripping for the small vocabulary that matters.
+- Revisit: with measured false negatives on the real cross-encoder; add vocabulary, do not lower the rule.
+
+## D-037 Quote quality rules and sentence units with list-item context
+- Decision: headings, numbered list titles, colon-ending lead-ins, lower-case continuations, prose units under five words, truncated last sentences and printed prose lines are not evidence. Paragraph units are sentences; a sentence inside a list item is quoted with the item's opening; a unit is extended by a relevant following unit that does not open a new item. Table rows are quoted whole. Findings are deduplicated by normalised quote on the same page, so a row and its row window yield one finding. The two-findings-per-clause cap is kept.
+- Why: heading fragments ("3.1 Teaching Responsibilities", "4. Office hours") and duplicate row and row-window quotes consumed the two finding slots and displaced usable evidence.
+- Revisit: at the Teaching QA gate with real ranking; the cap changes only if a real supported question cannot be represented otherwise.
+
+## D-038 The production FINAL_K cut is not applied inside the specialist
+- Decision: all reranked candidates above `MIN_RERANK_SCORE` are examined in rank order; the per-clause finding cap bounds the output.
+- Why: most chunks are printed lines that the quote rules never accept; cutting to five before the quality rules left no eligible paragraph for common questions. `FINAL_K` limits answer context in the production pipeline, not evidence eligibility.
+- Revisit: if candidate examination becomes a measurable cost on the real index.
+
+## D-039 Ownership needs a positive teaching cue; other-domain cues are phrase-level
+- Decision: a clause without a teaching cue is not searched (misrouted clauses are handed off, cue-less clauses are reported as unowned). Faculty-services, research and institutional cues are explicit phrases (annual leave, employment contract, research ethics, "who do I contact about", help desk). Bare "contract", "appointment", "benefits", "funding", "extension" and "who approves" are not cues; approval questions about courses stay with Teaching because the curricula-approval policy is Teaching evidence.
+- Why: the gate found spurious shared handoffs on ordinary Teaching questions and cue-less questions ("internship requirements") being searched inside the Teaching scope.
+- Revisit: alongside the Coordinator's cue tables when handoff execution is built.
+
+## D-040 Calendar lines carry term and academic-year context and are filtered by them
+- Decision: for lines on the Academic Calendar pages the term and year are read from the line or the nearest preceding semester header and recorded in the finding; a line from another academic year than the one asked for (default: the registry version's year) or another term than the one named is not evidence; "classes end" is not evidence for "classes begin". Calendar paragraph chunks are not evidence units. No date extractor.
+- Why: the gate selected the next year's "Classes begin for Fall 2026-2027" line first and rows lacked semester context.
+- Revisit: when a new handbook edition changes the calendar layout.
+
+## D-041 Section labels on findings are page-level and say so
+- Decision: every finding carries `section_label_page_level: True`, `page_section_nos`, `shared_page` and `boundary_guard`; `section_no` remains the page's primary section. No more precise number is fabricated; source and page are authoritative.
+- Why: on shared pages the primary label can differ from the quoted text's section (12.18.5 text labelled 12.19).
+- Revisit: when chunk-level section labels exist in the shared metadata.
+
+## D-042 Paragraph attribution on shared pages is window-independent
+- Date: 2026-09-28
+- Decision: inside a paragraph window, text after a heading belongs to that heading's section until the next heading, and text before the first heading belongs to the section that precedes that heading in the page's section order. A window without any heading lies in the section the previous window ended in. The region before a heading is never attributed from state remembered by an overlapping window. `SectionGuard` also verifies at construction that chunk metadata ids match list order.
+- Why: the Step 3.9B re-test showed that a heading inside the 50-word paragraph overlap let excluded text before it inherit the owned segment reached by the previous window. Windows overlap by more words than a heading marker, so a heading is never missed, and the preceding-section rule attributes every character the same way in every window.
+- Revisit: if the chunker's overlap drops below the marker length or chunk-level section labels arrive in the shared metadata.
+
+## D-043 Relevance and completeness are separate gates
+- Decision: relevance (one anchor or two vocabulary concepts) establishes the topic only. When a clause explicitly asks for a detail, the clause is fully `supported` only when a finding contains that detail in the same local unit as a clause concept; otherwise it is `partial` and `missing` names the detail. Families: fee or cost, penalty or consequence, deadline or date, number or frequency, minimum, maximum, approving authority, percentage or range, part-time and full-time, location or system, and the faculty category named in the clause. Evidence covering more requested details is chosen first, within a chunk and among candidates.
+- Why: one shared anchor made related but incomplete evidence fully `supported` (the full-time office-hours rule for a part-time question, the Regular Faculty load for a research-intensive question). Separating answerability from topic keeps relevance permissive and support honest without a parser or an LLM.
+- Revisit: with real-model evidence quality; add families, do not loosen the local-unit rule.
+
+## D-044 Ownership cues are a superset of the Coordinator's teaching cues
+- Decision: the specialist's positive teaching cues include every Coordinator teaching cue plus natural phrasings (consultation time and student consultations, class sections and a section being cancelled, first week of classes, timetables, learners, generative tools). Positive ownership remains required; internship, research grant, salary, visa, help desk and parking questions stay unowned.
+- Why: a task the Coordinator assigns to Teaching must not be reported unowned because the specialist's vocabulary was narrower.
+- Revisit: whenever the Coordinator cue tables change.
+
+## D-045 Antecedent-dependent sentences and tangential procedure evidence
+- Decision: a sentence opening with Such, They, These, This, Those or It is quoted with the sentence before it when that sentence is inside the same allowed span and list item and is not a heading; otherwise it is not quoted. For a procedural system request, evidence counts only when it names the system asked about or shares an anchor concept with the request; otherwise the clause is `not_found`. Grade-table lines with textual ranges ("F Below 60 0.00") are table rows. Bare "attend" is plain vocabulary; classroom attendance is the noun, absence, or "attend" applied to classes, lectures, sessions or exams.
+- Why: the re-test found antecedent-less quotes, a tangential evening-course sentence making a MyUOS procedure question `partial`, the F grade row rejected, and conference attendance passing as attendance evidence.
+- Revisit: at the Teaching QA gate with real ranking.
+
+## D-046 One intent per task is deferred to Coordinator and orchestration work
+- Decision: the Coordinator assigns one intent per task and the specialist applies it to every focus clause. Per-clause intents are not addressed in the specialist.
+- Why: changing it requires Coordinator and orchestration design, outside the specialist's file boundary.
+- Revisit: during Coordinator to Teaching integration (Step 3.10).
+
+## D-047 Requested details are satisfied only within one local evidence unit
+- Date: 2026-09-28
+- Decision: a clause is fully `supported` only when ONE local evidence unit (a list item, a table row or a sentence) of ONE finding contains every requested detail together with a clause concept. Details found in different units, different findings, different list items or different faculty categories are never combined. `missing` says when a detail is present somewhere but not stated together with the rest.
+- Why: the Step 3.9D re-test showed the union of "part-time" from one page-79 item and "five hours" from the other making a part-time office-hours question fully `supported` on the real handbook.
+- Revisit: only to add qualifier families; the one-unit rule stays.
+
+## D-048 A quantity is a number tied to a count noun that names the counted subject
+- Decision: for "how many", "how much", "number of" and "how long", the evidence unit must contain a number followed by a count noun (hours, credit hours, days, weeks, students, courses, classes, sessions, times, percent, points and similar) whose phrase shares a concept with the counted subject of the question, or its head noun when the subject carries no concept. "How often" is a separate frequency family (weekly, per week, N times). Room, page and section numbers, dates, list markers and counts of something else do not count.
+- Why: any number in a relevant sentence satisfied the quantity check.
+- Revisit: with real-model probes on numeric questions.
+
+## D-049 Requirement questions need an obligation statement; development and training are anchors
+- Decision: questions asking what must be contained, included or provided, what is required or what the requirements are, are answered only by a unit that expresses an obligation (must, shall, required, responsible for, expected to) about the subject. Professional, faculty, teaching or instructional development, development training, training modules, workshops or programmes, training for or of faculty, and "new faculty" are anchor concepts; bare "training" stays plain, so security, safety or compliance training is not faculty-development evidence.
+- Why: topic-only questions were `supported` by topically related lines that answered nothing, and sections 3.7 and 5.2 questions were `not_found` by gate rejection.
+- Revisit: at the Teaching QA gate.
+
+## D-050 List markers are stripped before the antecedent check; error text hides paths
+- Decision: a numbered or lettered list item that opens with a context-dependent word is quoted with the list's lead-in or the preceding plain sentence, never with a sibling item or a heading, and not at all when no such antecedent is inside the allowed span. Error messages in results have key-shaped secrets and filesystem paths (Windows drive paths, home and system trees, other absolute paths) replaced. The section guard's construction-time invariant is unchanged (F-7 stays deferred as documented).
+- Why: "2. These syllabi …" bypassed the antecedent rule, and an index failure message carried a local path.
+- Revisit: none planned.
+
+## D-051 Coordinator to specialist dispatch is a minimal, inactive seam
+- Date: 2026-09-28
+- Decision: `handbook_bot/agents/specialists/dispatch.py` takes the Coordinator's `CoordinatorDecision`, walks its tasks in order, runs each task whose specialist is executable in the current phase (`EXECUTABLE_SPECIALISTS`, Teaching only) through the specialist registry, and records every other task as pending with the Coordinator's task kept intact. Tasks are never reinterpreted, reordered or reconstructed; handoff requests are preserved but not executed; a raising specialist yields an `error` finding with secrets and paths redacted; no LLM call, no Synthesis, no Verifier. The production runtime does not import the module and `PLAN_F_ENABLED` stays False.
+- Why: the Coordinator and the Teaching specialist were validated separately; the smallest seam that proves decision to task to findings, without a general framework, keeps both validated components unchanged and leaves handoff rounds, Synthesis and Verifier collaboration to their own milestones.
+- Revisit: when the next specialist becomes executable (extend `EXECUTABLE_SPECIALISTS`) and when handoff execution is designed.
+
+## D-052 Compound institutional wording is a cue-coverage correction, not a routing redesign
+- Date: 2026-09-28
+- Decision: the Coordinator's institutional cues gain "who manages / supports / maintains / administers / runs / provides ... a support, help desk, service, system, portal, office, unit, department or centre" and "where is / where can I find" a named service (Registrar, registration, admissions or finance office, HR, IT services, reception, security, bookstore, cafeteria, parking); "office hours" is excluded from the place nouns and bare "who" or "where" are never cues. The Teaching specialist recognises the same phrasings as institutional handoff cues, and a "who manages / supports / is responsible for" clause carries a "responsible party or unit" detail: it is fully supported only when one evidence unit names a responsible party with a responsibility verb form ("The IT department administers the LMS"). Only the Coordinator-provided focus clauses are classified.
+- Why: "Who manages Blackboard support and what is my teaching load?" and "Where is the Registrar and what is the grading policy?" reached Teaching whole and the non-teaching half was dropped without a trace (Step 3.11, F-1). A shared clause is still searched by Teaching because it names a Teaching system; the detail rule and the handoff make the gap explicit instead of silent.
+- Revisit: when Institutional Navigation becomes executable and handoff rounds are designed.
+
+## D-053 Grading and exam topic anchors imply their base word
+- Date: 2026-09-28
+- Decision: "grading policy / rules / scheme / criteria / regulations / procedures / guidelines" join the grading-system anchor and "exam(ination) policy / rules / regulations / procedures / guidelines / conduct / instructions" form the exam-policy anchor. Each anchor implies its base word (grade, exam) as plain vocabulary of the clause, and a text that uses the base word shares the anchor's topic (`_ANCHOR_IMPLIES`). Bare "policy", "rules" and "regulations" remain generic. "e-learning" is read as the LMS topic.
+- Why: the Coordinator routes "grading" and "exam" questions to Teaching, but the relevance gate needed one anchor or two concepts and returned `not_found` for "What is the grading policy?" and "What are the exam rules?" (Step 3.11, F-2). The implied base keeps the rule "one anchor or two concepts" while letting a topic question be answered by sentences that do not repeat the topic phrase; research policy, HR policy, parking rules, travel rules and conference regulations still carry no concept.
+- Revisit: if real-model validation shows the implied base admits off-topic grade or exam sentences.
+
+## D-054 Hyphen-like separators are normalised for cue and concept matching only
+- Date: 2026-09-28
+- Decision: before cue matching in the Coordinator (`cue_text`) and before concept and cue matching in the Teaching specialist, hyphen-like separators between word characters (`-`, Unicode hyphens and dashes, `/`) are read as spaces, one character for one, so positions do not shift. The question, its clauses and every quote stay verbatim. The Coordinator gains add/drop ("add/drop", "add-drop", "add drop", "add and drop") and e-learning as teaching cues; the academic calendar's add/drop lines and the LMS policy are Teaching-owned.
+- Why: "office-hours" and "peer-observation" were not routed at all, and "add/drop" and "e-learning" had no cue (Step 3.11, F-3). Normalising the classification text is smaller and safer than duplicating every multi-word cue in hyphenated form.
+- Revisit: none planned.
+
+## D-055 Minimum, maximum and fee details require value-shaped numbers
+- Date: 2026-09-28
+- Decision: a number satisfies a minimum or maximum detail only when it is followed by a count noun, a percent sign or a currency, or is attached to the limit phrase ("not exceed 40"); a year, a dotted section number and an identifier ("room 204", "examination 101", "page 12") are never values, and a table row's numeric cells are its values. A fee or cost detail needs a monetary value: a currency next to a number, an explicit "amount / price / fee of N", or "free of charge". The quantity family additionally accepts "N <unit> of <subject>" when the "of" phrase names the counted subject ("48 hours of office hours", not "48 hours of training").
+- Why: "The minimum is described in section 3.4", "a maximum in 2024" and "fee applies to examination 101" satisfied the families on synthetic sentences (Step 3.11, F-4), and "48 hours of office hours" did not satisfy the quantity family (F-8). The same value principle already applied to quantities is extended, with positive controls kept ("minimum of five office hours per week", "maximum of 20 students", "fee of AED 100", "cost is 100 AED", "90 percent maximum", "not exceed two months' basic salary").
+- Revisit: if the approved source gains a fee table without currency words.
+
+## D-056 "Should" satisfies a requirement question by design
+- Date: 2026-09-28
+- Decision: the obligation check for requirement questions ("what must ... include", "what are the <subject> requirements") accepts must, shall, required, responsible for, expected to and should. Quotes keep the original wording; "should" is never rewritten as "must", and no deontic logic is built. The requirement family also recognises "What are the <subject> requirements?" with a subject of up to four words; requirement detection and ownership stay separate ("What are the research requirements?" is handed off).
+- Why: the handbook states many of its requirements with "should" (Step 3.11, F-5, F-6); refusing them would turn real requirements into `partial`. The choice is recorded so it is deliberate, not accidental.
+- Revisit: only if Synthesis needs to distinguish advisory from mandatory wording.
+
+## D-057 Lettered items, deferred row boundary, minimal dispatch checks, page-level labels
+- Date: 2026-09-28
+- Decision: lettered list markers ("a.", "b.", "A.", "B." after punctuation and before a capital) open list items exactly like numbered markers: the marker stays with its item, a lowercase marker is not a dangling fragment, and a pronoun-opening item never borrows its sibling as antecedent (F-7). The page-224 bullet that flows into a new capitalised sentence without punctuation stays joined (F-9, cosmetic, deferred): the paragraph chunk carries no line boundaries and a capital-letter rule would split proper nouns. The dispatch seam adds two cheap checks for a decision altered after validation, a non-task subtask (`TypeError`) and a repeated task id (`ValueError`), and nothing else (F-10). `section_no` stays page-primary metadata with `page_section_nos` and `boundary_guard` carrying the shared-page truth (F-11).
+- Why: Step 3.11 findings F-7, F-9, F-10 and F-11; each is either a local safe rule or explicitly deferred with its reason.
+- Revisit: F-9 when the chunker exposes row boundaries inside paragraph windows.

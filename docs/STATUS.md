@@ -9,6 +9,375 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-09-28 - Final bounded correction pass after the major adversarial QA gate (Milestone 3B, step 3.12A)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/teaching-specialist` |
+| Starting commit | `2d137cb` |
+| Ending state | corrections implemented locally; not yet committed; architecture inactive |
+
+### Completed
+
+Step 3.11 (major adversarial QA) passed with no blocker and no major
+finding; its minor and cosmetic findings are corrected or deferred here.
+
+- F-1 compound institutional wording: the Faculty Onboarding Coordinator
+  recognises "who manages / supports / maintains ... a support, service,
+  system, office or unit" and "where is / where can I find" a named
+  service (Registrar, admissions, finance, HR, IT services ...); bare
+  "who" and "where" are not cues and "office hours" is never a place. The
+  Teaching & Learning Specialist hands the same phrasings off and treats a
+  "who manages / supports / is responsible for" clause as fully supported
+  only when one evidence unit names the responsible party.
+- F-2 grading and exam topic anchors ("grading policy / rules / scheme",
+  "exam rules / regulations / policy") that imply their base word; bare
+  "policy" and "rules" stay generic; research, HR, parking, travel and
+  conference wording carries no concept; "e-learning" is the LMS topic.
+- F-3 hyphen-like separators are read as spaces for cue and concept
+  matching only (Coordinator and specialist); add/drop and e-learning
+  are Coordinator teaching cues; questions and quotes stay verbatim.
+- F-4 minimum, maximum and fee details need value-shaped numbers (unit,
+  percent, currency or an attached limit phrase); years, section numbers
+  and identifiers never count.
+- F-5 "should" satisfies a requirement question by design, documented and
+  tested; quotes keep the original wording.
+- F-6 "What are the <subject> requirements?" is a requirement question;
+  ownership is unchanged.
+- F-7 lettered list items ("a.", "b.", "A.", "B.") are list items.
+- F-8 "48 hours of office hours" satisfies an office-hours count; "48
+  hours of training" does not.
+- F-9 deferred as cosmetic (row boundary inside a paragraph window needs
+  the chunker); F-10 two cheap dispatch checks for a decision altered
+  after validation; F-11 documented only.
+- Documentation: Coordinator and specialist documents, D-052 to D-057.
+
+### Not done on purpose
+
+No change to Router, retrieval, knowledge base, sources registry, section
+map, Synthesis, Verifier, orchestrator, UI, evaluation or production
+activation. `PLAN_F_ENABLED` stays False, `MAX_LLM_CALLS` 2; the dispatch
+seam stays inactive. No source ingested, no index rebuilt. Real-model
+validation remains outstanding.
+
+### Tests performed
+
+All with `.\.venv\Scripts\python.exe` on Windows: `tests/test_planf_coordinator.py`
+98 passed; `tests/test_teaching_specialist.py` 467 passed;
+`tests/test_teaching_integration.py` 37 passed; sources, retrieval scope,
+contracts, registry, Coordinator, Teaching and integration together 817
+passed; the multi-agent modules 204 passed; full `pytest -q` 947 passed, 0
+failures; `pip check` clean. Mutation checks (scratch, not committed):
+every correction reverted in isolation makes at least one test fail; the
+historical section-guard oracle and mutation set still pass.
+
+### Next task
+
+Step 3.12B: independent freeze re-review of the first specialist pattern.
+
+---
+
+## 2026-09-28 - Coordinator to Teaching & Learning Specialist integration (Milestone 3B, step 3.10)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/teaching-specialist` |
+| Starting commit | `2d137cb` |
+| Ending state | integration seam implemented locally; not yet committed; architecture inactive |
+
+### Completed
+
+- `handbook_bot/agents/specialists/dispatch.py`: `dispatch(decision,
+  registry)` and `run_question(question, registry)` run the Teaching &
+  Learning Specialist on the tasks the Faculty Onboarding Coordinator
+  assigns to it and return the decision plus findings (`DispatchResult`
+  with per-task `SpecialistRun` records in Coordinator order). Other
+  specialists' tasks stay pending and visible; handoff requests are
+  preserved, not executed; a raising specialist becomes an `error` finding
+  with redacted text; no LLM call, no Synthesis, no Verifier.
+- `tests/test_teaching_integration.py`: Teaching-only, single and
+  multi-clause focus, Teaching with research, faculty services and
+  institutional tasks, non-Teaching questions with a call-counting
+  specialist, procedure, not_found, partial, supported, execution error and
+  raising specialist, handoff preserved but not executed, Coordinator
+  specialist limit, Teaching subtask limit, unregistered specialist,
+  no-default-to-Teaching, task identity and order, determinism, and
+  architecture inactivity.
+- Documentation: Coordinator and specialist documents, package docstring,
+  D-051.
+
+### Not done on purpose
+
+No change to the Coordinator, the Teaching specialist, Router, retrieval,
+orchestrator, QA, Synthesis, Verifier, contracts, base, registry, knowledge
+files or UI. No handoff execution, no Synthesis, no Verifier collaboration.
+No new source ingested; `knowledge/sources.json` and
+`knowledge/handbook_sections.json` unchanged. `PLAN_F_ENABLED` stays False,
+`MAX_LLM_CALLS` 2. Step 3.9F MINOR findings (minimum, maximum and fee
+bare-number semantics; "should" versus "must"; "what are the X
+requirements"; lettered list items; a quantity false negative) are deferred
+to Step 3.11. Real-model validation remains outstanding.
+
+### Tests performed
+
+All with `.\.venv\Scripts\python.exe` on Windows: `tests/test_teaching_integration.py`
+25 passed; `tests/test_teaching_specialist.py` 382 passed;
+`tests/test_planf_coordinator.py` 73 passed; sources, scope, contracts,
+registry, Coordinator, Teaching and integration together 695 passed;
+the multi-agent modules 179 passed; full `pytest -q` 825 passed,
+0 failures; `pip check` clean.
+
+### Next task
+
+Step 3.11: major QA of the Coordinator to Teaching path, including the
+deferred Step 3.9F MINOR findings and, once the models are available
+locally, real-model validation.
+
+---
+
+## 2026-09-28 - Teaching specialist final correction pass after the final independent re-test (Milestone 3B, step 3.9E)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/teaching-specialist` |
+| Starting commit | `2d137cb` |
+| Ending state | final corrections implemented locally; not yet committed; awaiting Step 3.9F |
+
+### Completed
+
+- `handbook_bot/agents/specialists/teaching.py`: completeness judged
+  within one local evidence unit of one finding, never unioned across
+  findings, sentences or list items (F-1); quantity requires a number tied
+  to a count noun naming the counted subject, with a separate frequency
+  family (F-2); professional, faculty and teaching development, training
+  modules and workshops, training for faculty and "new faculty" are anchor
+  concepts (F-3); list markers are stripped before the antecedent check
+  and sibling items or headings are never antecedents (F-4); a requirement
+  family for what must be contained, included, provided or required (F-5);
+  filesystem paths redacted from error text (F-6). F-7 unchanged and
+  deferred as documented. Still deterministic, extractive, no LLM.
+- `tests/test_teaching_specialist.py`: the real page-79 layout regression,
+  a same-quote union attack, eight cross-finding union attacks with wrong
+  pieces scored highest, same-unit positive controls, number-semantics
+  negatives, development and training anchors with unrelated-training
+  controls, numbered-pronoun antecedent tests, requirement-family tests and
+  path-redaction tests. Twenty-four in-process mutations are each caught.
+- `docs/TEACHING_SPECIALIST.md` updated; `docs/DECISIONS.md` D-047 to
+  D-050.
+
+### Not done on purpose
+
+No frozen module changed (Router, Coordinator, retrieval, orchestrator,
+QA, Synthesis, Verifier, contracts, base, registry, knowledge files, UI,
+evaluation). No production wiring: `PLAN_F_ENABLED` stays False,
+`MAX_LLM_CALLS` 2. No model download: real-model validation is still
+outstanding. F-7 (construction-time invariant) left as designed.
+
+### Tests performed
+
+All with `.\.venv\Scripts\python.exe` on Windows: `tests/test_teaching_specialist.py`
+382 passed; sources, scope, contracts, registry, Coordinator and
+Teaching together 670 passed; the multi-agent modules 179
+passed; full `pytest -q` 800 passed, 0 failures; `pip check` clean.
+Real-text probes with stand-in ranking: no excluded-section quote, no
+fragment or antecedent-less quote, the page-79 part-time question `partial`
+with the gap named.
+
+### Next task
+
+Step 3.9F: independent re-test of the final corrections, then real-model
+validation once the two models are available locally, then Coordinator to
+Teaching integration testing (Step 3.10).
+
+---
+
+## 2026-09-28 - Teaching specialist second correction pass after the independent re-test (Milestone 3B, step 3.9C)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/teaching-specialist` |
+| Starting commit | `2d137cb` |
+| Ending state | second corrections implemented locally; not yet committed; awaiting the final independent Teaching re-test (step 3.9D) |
+
+### Completed
+
+- `handbook_bot/agents/specialists/teaching.py`: window-independent
+  paragraph attribution in `SectionGuard` with a construction-time id
+  invariant (F-A, F-H); a completeness gate separating relevance from
+  answerability with eleven requested-detail families and faculty
+  categories, plain-language missing entries and detail-first candidate
+  ordering (F-B); ownership cues made a superset of the Coordinator's
+  teaching cues plus natural phrasings (F-C); grade-table lines with
+  textual ranges (F-D); bare "attend" demoted to plain vocabulary (F-E);
+  antecedent-dependent sentences quoted with their antecedent or not at
+  all (F-F); procedural requests `partial` only with evidence about the
+  system or the request (F-G). Still deterministic, extractive, no LLM.
+- `tests/test_teaching_specialist.py`: overlap-layout fixtures at several
+  heading positions with a character-level consistency invariant; a
+  ten-case adversarial completeness matrix where the right evidence is
+  absent and wrong-but-related evidence ranks highest, plus positive
+  controls; ownership, grade-row, attendance, antecedent, procedure and
+  invariant tests. Seventeen in-process mutations (including the old
+  overlap rule, a removed detail gate, ignored part-time, authority and
+  category checks, narrowed ownership, the old grade-row rule, bare attend
+  as an anchor, removed antecedent and procedural gates) are each caught.
+- `docs/TEACHING_SPECIALIST.md` rewritten; `docs/DECISIONS.md` D-042 to
+  D-046 (D-046 defers the one-intent-per-task concern, F-I).
+
+### Not done on purpose
+
+No frozen module changed (Router, Coordinator, retrieval, orchestrator,
+QA, Synthesis, Verifier, contracts, registry, knowledge files, UI,
+evaluation). No production wiring: `PLAN_F_ENABLED` stays False,
+`MAX_LLM_CALLS` 2. No model download: the embedding model and cross-encoder
+remain unavailable locally, so real-model validation is still outstanding.
+F-I (one intent per task) is deferred, not fixed.
+
+### Tests performed
+
+All with `.\.venv\Scripts\python.exe` on Windows: `tests/test_teaching_specialist.py`
+326 passed; sources, scope, contracts, registry, Coordinator and Teaching
+together 614 passed; the multi-agent modules 179 passed; full `pytest -q`
+744 passed, 0 failures; `pip check` clean. Real-text probes with stand-in
+ranking: no excluded-section quote on any shared page, zero quotable
+false allows or rejects against an independent page-text oracle, no leak
+at any synthetic overlap layout.
+
+### Next task
+
+Step 3.9D: final independent Teaching re-test, then real-model validation
+once the two models are available locally, then Coordinator to Teaching
+integration testing (Step 3.10).
+
+---
+
+## 2026-09-28 - Teaching specialist correction pass after the dedicated test gate (Milestone 3B, step 3.9A)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/teaching-specialist` |
+| Starting commit | `2d137cb` |
+| Ending state | corrections implemented locally; not yet committed; awaiting the Step 3.9 re-test |
+
+### Completed
+
+- `handbook_bot/agents/specialists/teaching.py`: five evidence gates. New
+  `SectionGuard` attributes chunks on shared pages to printed sections and
+  rejects excluded-section text (F-1); concept vocabulary with aliases,
+  anchor-or-two-concepts relevance rule and a generic-term list (F-2, F-6);
+  quote quality rules, sentence units with list-item context, table-row
+  detection, quote deduplication (F-3); phrase-level handoff cues,
+  positive-cue ownership, unowned clauses not searched (F-4); calendar
+  term and year context and filtering (F-5); page-level section-label
+  caveat in finding metadata (F-7). `FINAL_K` is no longer applied inside
+  the specialist (D-038). Still deterministic, extractive, no LLM.
+- `tests/test_teaching_specialist.py`: rewritten around synthetic handbook
+  pages chunked by the project's chunker and annotated with the real
+  section map; a raw-overlap reranker independent of the specialist's
+  normalisation and a scripted reranker for adversarial cases (high-scoring
+  wrong candidate, lower-ranked relevant evidence, heading chunks, duplicate
+  row and row window, excluded-section text on shared pages, generic-word
+  distractors, wrong-year calendar line, morphological variants, ambiguous
+  cue words). Mutation checks (guard removed, one-word relevance, heading
+  filter removed, dedupe removed, "who approves" cue restored, calendar
+  year check removed, table-row rule removed, ownership default removed)
+  are each caught by at least one test.
+- `docs/TEACHING_SPECIALIST.md` rewritten; `docs/DECISIONS.md` D-035 to
+  D-041.
+
+### Not done on purpose
+
+No frozen module changed (retrieval, sources, knowledge base, config,
+Router, Coordinator, orchestrator, QA, Synthesis, Verifier, contracts, base,
+registry, knowledge files, UI, evaluation). No other specialist. No
+production wiring: `PLAN_F_ENABLED` stays False, `MAX_LLM_CALLS` 2. No
+model download: the embedding model and cross-encoder remain unavailable
+locally, so real-model validation is still outstanding.
+
+### Tests performed
+
+All with `.\.venv\Scripts\python.exe` on Windows: `tests/test_teaching_specialist.py`
+236 passed; sources, scope, contracts, registry, Coordinator and Teaching
+together 524 passed; the multi-agent modules 179 passed; full `pytest -q`
+654 passed, 0 failures; `pip check` clean; a fresh interpreter with sockets
+blocked imports the specialist without loading a model.
+
+### Next task
+
+Step 3.9 re-test of the corrected specialist, then real-model validation
+once the two models are available locally, then Coordinator to Teaching
+integration testing (Step 3.10).
+
+---
+
+## 2026-09-28 - Teaching & Learning Specialist, deterministic version 1 (Milestone 3B, step 3.8)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/teaching-specialist` |
+| Starting commit | `2d137cb` |
+| Ending state | implemented locally on the branch; not yet committed; awaiting dedicated testing and review (step 3.9) |
+
+### Completed
+
+- `handbook_bot/agents/specialists/teaching.py`: `TeachingLearningSpecialist`
+  (id `teaching`) implementing `Specialist.run(task) -> SpecialistFindings`
+  with no LLM call. Scope compiled from the section map for the owned
+  sections (1.14; 3.1 to 3.4, 3.7, 3.10 to 3.12; 5.1, 5.2, 5.3, 5.5; 10.6;
+  12.7, 12.12 to 12.18; 16.6) into `RetrievalScope(source_ids, page_ranges)`.
+  Per-clause scoped retrieval through the shared `gather_candidates`,
+  production rerank and gate, extractive findings with exact quotes,
+  deterministic status aggregation, handoffs for misrouted or shared
+  clauses, procedure-request detection for Blackboard, Banner and MyUOS,
+  unapproved-source refusal, redacted error results, dependency injection
+  through `TeachingResources` (`from_knowledge_base` available, unused by
+  the runtime).
+- `tests/test_teaching_specialist.py`: import safety, contract and registry,
+  scope compiled from the real map (included and excluded pages, chapter 5
+  handled section by section), supported facts, procedure safety, ownership
+  boundaries and handoffs, no Coordinator call, boundary-page safety, zero
+  evidence, unapproved source, retrieval failure, multi-part tasks,
+  deduplication, clause limit, Coordinator compatibility, quote selection.
+- `docs/TEACHING_SPECIALIST.md`; `docs/DECISIONS.md` D-030 to D-034; one
+  docstring paragraph in `handbook_bot/agents/specialists/__init__.py`.
+
+### Not done on purpose
+
+No orchestrator, QA, retrieval, sources, knowledge base, config, Router,
+Coordinator, Synthesis, Verifier, contract, registry, UI or evaluation
+change. No other specialist. No production wiring: `PLAN_F_ENABLED` stays
+False and `MAX_LLM_CALLS` 2. No date-extractor hook (the calendar row is
+retrieved as evidence directly). No new source.
+
+### Source reality
+
+The handbook remains the only indexed document. Blackboard, Banner and
+MyUOS procedures are not in it; the specialist returns partial or not found
+for them and never generates instructions.
+
+### Tests performed
+
+All with `.\.venv\Scripts\python.exe` on Windows: `tests/test_teaching_specialist.py`
+105 passed; the multi-agent, source and scope modules together 303 passed;
+full `pytest -q` 523 passed, 0 failures; `pip check` clean; a fresh
+interpreter imports the specialist, registry, Coordinator, retrieval,
+orchestrator, Verifier and UI modules without loading a model, with
+`PLAN_F_ENABLED` False, `MAX_LLM_CALLS` 2 and `CACHE_VERSION` v12.
+
+### Next task
+
+Step 3.9: dedicated adversarial testing and independent review of the
+Teaching specialist, then the QA gate that decides whether the specialist
+pattern is frozen for the remaining specialists.
+
+---
+
 ## 2026-09-28 - Source metadata and scoped retrieval foundation (Milestone 3A)
 
 | Field | Value |

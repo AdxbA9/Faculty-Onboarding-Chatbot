@@ -11,10 +11,15 @@ answer. This package holds only the foundation of that design:
                 orchestrator and Verifier
     base        the interface every specialist implements
     registry    resolves a canonical specialist id to an implementation
+    teaching    the Teaching & Learning Specialist, deterministic version 1:
+                source-scoped retrieval, extractive findings, no LLM call
+    dispatch    the seam from a Coordinator decision to specialist findings:
+                runs the executable specialists, keeps the rest pending
 
-No specialist, Coordinator or handoff logic lives here yet, and nothing in the
-current chatbot runtime imports this package. It becomes active only when a
-later phase wires it into ``handbook_bot.orchestrator``.
+The Teaching specialist is the first implemented specialist; no Coordinator
+or handoff execution lives here, and nothing in the current chatbot runtime
+imports this package. It becomes active only when a later phase wires it
+into ``handbook_bot.orchestrator``.
 
 This file deliberately imports nothing, so importing one module of the package
 never drags in another.

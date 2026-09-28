@@ -18,6 +18,9 @@ HOW IT DECIDES (deterministic, no LLM call)
     2. Every domain is scored from regular-expression cues (routing
        vocabulary only, never policy content). A domain is a candidate when
        its score reaches ``SELECT_THRESHOLD``: one strong cue or two hints.
+       Hyphen-like separators between words are read as spaces for cue
+       matching only ("office-hours", "add/drop", "e-learning"); the question
+       and its clauses are stored verbatim.
     3. Level (department > college > university) and systems (blackboard,
        banner, myuos) are detected from their own cue lists. A system is
        never a specialist.
@@ -91,13 +94,27 @@ def _rx(pattern: str) -> "re.Pattern[str]":
     return re.compile(pattern, re.I)
 
 
+#: Hyphen-like separators between word characters ("office-hours",
+#: "peer-observation", "add/drop", "e-learning") are read as spaces before
+#: cue matching. Each separator is one character, so cue positions still
+#: refer to the original text. Classification only: nothing stored changes.
+_CUE_SEPARATORS = re.compile(r"(?<=\w)[-‐‑‒–—/](?=\w)")
+
+
+def cue_text(text: str) -> str:
+    """``text`` as the cue lexicons read it: hyphen-like separators between
+    words replaced by spaces, same length as the original."""
+    return _CUE_SEPARATORS.sub(" ", text)
+
+
 #: (domain, weight, pattern). Each pattern counts once per question.
 _DOMAIN_CUES: Tuple[Tuple[SpecialistId, float, "re.Pattern[str]"], ...] = (
     # ---- teaching & learning ---------------------------------------------
     (SpecialistId.TEACHING, STRONG, _rx(r"\b(?:teach(?:ing|es|er)?|taught|instructor)\b")),
     (SpecialistId.TEACHING, STRONG, _rx(r"\b(?:teaching|instructional)\s+load\b|\bworkload\b|\bwlam\b")),
     (SpecialistId.TEACHING, STRONG, _rx(r"\b(?:courses?|lectures?|classes|class(?:room)?|syllab(?:us|i)|curricul(?:um|a))\b")),
-    (SpecialistId.TEACHING, STRONG, _rx(r"\b(?:blackboard|bb\s+ultra|lms|learning management|gradebook|grade ?center|safeassign|collaborate)\b")),
+    (SpecialistId.TEACHING, STRONG, _rx(r"\b(?:blackboard|bb\s+ultra|lms|learning management|gradebook|grade ?center|safeassign|collaborate|e[- ]?learning|elearning)\b")),
+    (SpecialistId.TEACHING, STRONG, _rx(r"\badd[ /-]?drop\b|\badd\s+(?:and|or)\s+drop\b")),         # the academic calendar's add/drop period
     (SpecialistId.TEACHING, STRONG, _rx(r"\b(?:grades?|grading|marks?|attendance|assignments?|quiz(?:zes)?|exams?|examinations?|midterms?|rubrics?|assessments?)\b")),
     (SpecialistId.TEACHING, STRONG, _rx(r"\boffice hours?\b|\bcredit hours?\b|\bcontact hours?\b")),
     (SpecialistId.TEACHING, STRONG, _rx(r"\b(?:thesis|dissertation)\s+supervis|\bsupervis(?:e|ing|ion)\s+(?:a\s+|the\s+)?(?:thesis|dissertation|students?|theses)\b")),
@@ -108,7 +125,7 @@ _DOMAIN_CUES: Tuple[Tuple[SpecialistId, float, "re.Pattern[str]"], ...] = (
     (SpecialistId.RESEARCH, STRONG, _rx(r"\bresearch(?:er|ers)?\b")),
     (SpecialistId.RESEARCH, STRONG, _rx(r"\b(?:grants?|fund(?:ed|ing)|seed fund|principal investigator|pi)\b")),
     (SpecialistId.RESEARCH, STRONG, _rx(r"\b(?:research ethics|ethics (?:committee|approval|application|review|clearance)|\brec\b|\birb\b|\bacuc\b|human subjects|animal (?:use|care))\b")),
-    (SpecialistId.RESEARCH, STRONG, _rx(r"\b(?:publications?|publishing (?:support|unit)|publish(?:ing|ed)? (?:a |an |my |the |our )?(?:papers?|articles?|research|books?|journal|work)|journals?|scopus|h-?index|citations?)\b")),
+    (SpecialistId.RESEARCH, STRONG, _rx(r"\b(?:publications?|publishing (?:support|unit)|publish(?:ing|ed)? (?:a |an |my |the |our )?(?:papers?|articles?|research|books?|journal|work)|journals?|scopus|h[- ]?index|citations?)\b")),
     (SpecialistId.RESEARCH, STRONG, _rx(r"\b(?:intellectual property|\bip\b|patents?|technology transfer|\btto\b|commerciali[sz]ation|licens(?:e|ing) (?:an? )?(?:invention|patent|technology))\b")),
     (SpecialistId.RESEARCH, STRONG, _rx(r"\bresearch (?:institutes?|groups?|centers?|centres?|projects?|committees?|board)\b")),
     (SpecialistId.RESEARCH, HINT, _rx(r"\b(?:conferences?|consultanc(?:y|ies)|innovation|laborator(?:y|ies)|labs?)\b")),
@@ -124,8 +141,12 @@ _DOMAIN_CUES: Tuple[Tuple[SpecialistId, float, "re.Pattern[str]"], ...] = (
     (SpecialistId.INSTITUTIONAL, STRONG, _rx(r"\bwho\b.{0,40}\b(?:approv|authori[sz]|sign(?:s|ed)? off|decid|responsib|in charge|handles?|oversee|report(?:s)? to)")),
     (SpecialistId.INSTITUTIONAL, STRONG, _rx(r"\b(?:who|whom)\b.{0,30}\b(?:contact|ask|talk to|speak to|reach|see|go to|refer)\b")),
     (SpecialistId.INSTITUTIONAL, STRONG, _rx(r"\b(?:which|what)\s+(?:office|unit|department|committee|council|body)\b.{0,30}\b(?:handles?|responsib|approv|deals?|manages?|in charge|do i)")),
-    (SpecialistId.INSTITUTIONAL, STRONG, _rx(r"\bwhere\s+(?:do|can|should|must)\s+i\s+(?:go|find|get|submit|apply|report|collect|pick up|obtain|register|hand in)\b|\bwhere\s+(?:is|are)\b.{0,30}\b(?:office|located|building|department|unit|cent(?:er|re)|desk|library|clinic|hospital)\b")),
-    (SpecialistId.INSTITUTIONAL, STRONG, _rx(r"\b(?:phone|telephone|fax|e-?mail address|extension|contact (?:number|details|information)|number (?:of|for) the)\b")),
+    # "who manages / supports / maintains ... <support, help desk, service, system, office, unit>":
+    # the object must be a service or unit, so "who manages course grading" stays with the subject domain.
+    (SpecialistId.INSTITUTIONAL, STRONG, _rx(r"\bwho\s+(?:manages|supports|maintains|administers|runs|provides)\b.{0,40}\b(?:support|help ?desk|services?|systems?|portal|blackboard|banner|my ?uos|lms|office|unit|department|cent(?:er|re)|desk)\b")),
+    # "where is / where can I find <office, unit, named service>"; "office hours" is a teaching phrase, not a place.
+    (SpecialistId.INSTITUTIONAL, STRONG, _rx(r"\bwhere\s+(?:do|can|should|must)\s+i\s+(?:go|find|get|submit|apply|report|collect|pick up|obtain|register|hand in)\b|\bwhere\s+(?:is|are)\b.{0,30}\b(?:office(?!\s+hours?)|located|building|department|unit|cent(?:er|re)|desk|library|clinic|hospital|registrar\w*|registration (?:office|department|desk)|admissions? (?:office|department)|finance (?:office|department)|hr|human resources|it (?:services?|support)|reception|security|bookstore|cafeteria|parking)\b")),
+    (SpecialistId.INSTITUTIONAL, STRONG, _rx(r"\b(?:phone|telephone|fax|e[- ]?mail address|extension|contact (?:number|details|information)|number (?:of|for) the)\b")),
     (SpecialistId.INSTITUTIONAL, STRONG, _rx(r"\b(?:approval (?:chain|process|authority)|chain of command|organi[sz]ational (?:chart|structure)|governance|structure of the university|university structure)\b")),
     (SpecialistId.INSTITUTIONAL, STRONG, _rx(r"\b(?:colleges|departments|campuses|degree programs?|programs? (?:are |is )?offered|accreditation|ranking|mission|vision|core values|board of trustees|university council|college council|department council|standing committees?)\b")),
     (SpecialistId.INSTITUTIONAL, HINT, _rx(r"\b(?:dean|deanship|chair|chancellor|vice[- ]chancellor|director|head of)\b")),
@@ -209,6 +230,7 @@ class CoordinatorAnalysis:
 
 
 def _score_domains(text: str) -> Tuple[Dict[str, float], Dict[str, List[str]], Dict[str, int]]:
+    text = cue_text(text)                     # classification only; positions are unchanged
     scores: Dict[str, float] = {}
     cues: Dict[str, List[str]] = {}
     first: Dict[str, int] = {}
@@ -490,4 +512,4 @@ def coordinate(
 
 
 __all__ = ["COMPLEXITIES", "CoordinatorAnalysis", "LEVELS", "METADATA_KEYS", "REQUESTED_BY", "SYSTEMS",
-           "analyze", "coordinate"]
+           "analyze", "coordinate", "cue_text"]
