@@ -20,10 +20,38 @@ with the specialists themselves in later phases.
 """
 from __future__ import annotations
 
+import re
 from abc import ABC, abstractmethod
 from typing import ClassVar, Union
 
 from .contracts import SpecialistFindings, SpecialistId, SpecialistTask
+
+# ---------------------------------------------------------------------------
+# Error redaction (one implementation for the dispatcher and every specialist)
+# ---------------------------------------------------------------------------
+_KEY_SHAPED = re.compile(r"gsk_[A-Za-z0-9]+")
+#: A directory name may hold spaces ("C:\Users\John Smith\", "/home/john smith/"): a
+#: spaced segment counts only when a separator follows it, or as the final name when it
+#: is closed by a quote or carries a file extension (Step 4.5A, SAF-4).
+_SEGMENT = r"[^\\/\s'\"<>|]+(?: +[^\\/\s'\"<>|]+)*"
+_LAST = r"(?:" + _SEGMENT + r"(?=['\"])|" + _SEGMENT + r"\.[A-Za-z0-9]{1,5}(?!\w)|[^\s'\"<>|\\/]*)"
+_PATH_SHAPED = re.compile(
+    r"[A-Za-z]:[\\/]+(?:" + _SEGMENT + r"[\\/]+)*" + _LAST +                 # Windows drive paths
+    r"|[\\]{2,}[\w.$-]+[\\]+(?:" + _SEGMENT + r"[\\]+)*" + _LAST +          # UNC paths (\\server\share\..., also as an escaped repr)
+    r"|(?<![\w:])//[\w.$-]+/+(?:" + _SEGMENT + r"/+)*" + _LAST +            # UNC paths written with forward slashes
+    r"|(?<![\w:./])/(?:home|users|tmp|var|etc|opt|mnt|root|srv|usr|c|d|data|app|workspace)/(?:" + _SEGMENT + r"/)*" + _LAST +   # Unix homes and system trees
+    r"|(?<![\w:./])/[\w.-]+/(?:" + _SEGMENT + r"/)*[^\s'\"<>|/]+",       # any other absolute path
+    re.I)
+
+
+def redact_error(exc: BaseException) -> str:
+    """The exception type and a short message with key-shaped secrets and
+    filesystem paths removed. Used by the dispatcher for a raising
+    specialist and by every specialist for its own ``error`` results."""
+    text = _KEY_SHAPED.sub("gsk_***", str(exc))
+    text = _PATH_SHAPED.sub("<path>", text)
+    text = re.sub(r"\s+", " ", text)[:160]
+    return "%s: %s" % (type(exc).__name__, text) if text else type(exc).__name__
 
 
 class Specialist(ABC):
@@ -81,4 +109,4 @@ def check_findings(
     return findings
 
 
-__all__ = ["Specialist", "check_findings"]
+__all__ = ["Specialist", "check_findings", "redact_error"]

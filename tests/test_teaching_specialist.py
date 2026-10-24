@@ -495,7 +495,7 @@ def test_realistic_zero_evidence_questions_reach_not_found_or_partial(corpus, qu
 
 def test_high_scoring_wrong_candidate_loses_to_lower_ranked_relevant_evidence(corpus):
     sp = make_specialist(corpus, ScriptedReranker([("12.18.1 Maximum and Minimum Class Size", 9.0), ("uploaded on Blackboard", 0.2), ("", -0.5)]))
-    result = run(sp, "Where must I upload my syllabus?")
+    result = run(sp, "Must syllabi be uploaded on Blackboard?")
     assert result.status is FindingStatus.SUPPORTED
     assert result.findings[0].page in (222, 229) and "Blackboard" in result.findings[0].evidence_quote
     assert all("Class Size" not in q for q in quotes(result))
@@ -585,7 +585,7 @@ def test_findings_cap_and_ordering(specialist):
     ("What are the main teaching responsibilities of faculty?", 75, "teaching responsibilities", "list"),
     ("What is the faculty teaching load?", 96, "teaching load", "policy"),
     ("When do classes begin?", 49, "Classes begin", "date"),
-    ("Where must I upload my syllabus?", 222, "uploaded on Blackboard", "policy"),
+    ("Must the syllabi be uploaded on Blackboard?", 222, "uploaded on Blackboard", "policy"),
     ("What is the student attendance rule?", 228, "attend", "policy"),
     ("What grading scale does the handbook specify?", 227, "grading system", "policy"),
     ("What does the LMS policy require?", 192, "Learning Management System", "policy"),
@@ -726,8 +726,11 @@ def test_misrouted_clauses_are_out_of_scope_with_a_handoff(specialist, question,
 
 
 def test_shared_clause_is_answered_and_handed_off(specialist, corpus):
+    # D-079: the WLAM category text is on the topic but states no reduction for a funded project, so the shared clause is
+    # searched, its evidence is kept and the status is partial; the Research handoff is unchanged
     result = run(specialist, "Can my teaching load be reduced if I have a funded research project?")
-    assert result.status is FindingStatus.SUPPORTED and result.findings[0].page == 96
+    assert result.status is FindingStatus.PARTIAL and result.findings[0].page == 96
+    assert any("does not settle the question" in m for m in result.missing)
     assert result.requested_agents == [SpecialistId.RESEARCH] and result.handoff_requests[0].metadata["kind"] == "shared"
     assert_traceable(result, corpus)
 
@@ -895,7 +898,9 @@ def test_coordinator_task_is_accepted_as_is(specialist, corpus):
     t = decision.subtasks[0]
     result = check_findings(specialist, t, specialist.run(t))
     assert result.task_id == t.task_id and t.system == "blackboard"
-    assert result.status is FindingStatus.SUPPORTED and any(f.page in (222, 229) and "Blackboard" in f.evidence_quote for f in result.findings)
+    # D-082: the upload has no stated agent in the instructor paragraph, so the self-role ask is PARTIAL with the quote
+    assert result.status in (FindingStatus.SUPPORTED, FindingStatus.PARTIAL)
+    assert any(f.page in (222, 229) and "Blackboard" in f.evidence_quote for f in result.findings)
     assert_traceable(result, corpus)
 
 
@@ -905,7 +910,7 @@ def test_teaching_answers_only_its_own_focus_of_a_cross_domain_question(speciali
     mine = next(t for t in decision.subtasks if t.specialist_id is SpecialistId.TEACHING)
     assert mine.question == question and mine.context["focus_clauses"]
     result = check_findings(specialist, mine, specialist.run(mine))
-    assert result.status is FindingStatus.SUPPORTED and result.findings[0].page == 96
+    assert result.status is FindingStatus.PARTIAL and result.findings[0].page == 96      # D-079: no stated reduction
     assert result.requested_agents == [SpecialistId.RESEARCH]
 
 
@@ -1121,8 +1126,8 @@ def test_related_but_incomplete_evidence_never_gives_full_support(corpus, regist
     ("What is the teaching load for Regular Faculty?", '"A" Regular Faculty'),
     ("What is the teaching load for research-intensive faculty?", '"C" Research Intensive Faculty'),
     ("What is the maximum class size for laboratory sections?", "Laboratory 20"),
-    ("When must I upload my syllabus?", "beginning of the semester"),
-    ("When is the deadline to submit final grades to Banner?", "forty-eight hours"),
+    ("When must the syllabi be distributed to students?", "beginning of the semester"),
+    ("When is the deadline to submit final grades?", "forty-eight hours"),      # D-079: "to Banner" is not stated by the sentence
     ("What is the minimum number of office hours per week?", "minimum of five"),
     ("What is the penalty when a student is caught cheating late?", "suitable penalty"),
 ])

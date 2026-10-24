@@ -1,0 +1,126 @@
+{
+ "switches": {
+  "_C12_ALTERNATIVE_FILLER": {
+   "killed_by": [
+    "SK-23"
+   ],
+   "survived": false,
+   "seconds": 8.0
+  },
+  "_C12_CLAUSE": {
+   "killed_by": [
+    "SK-16",
+    "SK-17",
+    "SK-18"
+   ],
+   "survived": false,
+   "seconds": 7.9
+  },
+  "_C12_COMPARE": {
+   "killed_by": [
+    "SK-13",
+    "SK-14",
+    "SK-21",
+    "SK-22"
+   ],
+   "survived": false,
+   "seconds": 7.1
+  },
+  "_C12_CONDITION": {
+   "killed_by": [
+    "SK-15",
+    "SK-20"
+   ],
+   "survived": false,
+   "seconds": 6.9
+  },
+  "_C12_COPULAR": {
+   "killed_by": [
+    "SK-19"
+   ],
+   "survived": false,
+   "seconds": 6.5
+  },
+  "_C12_FALLBACK_POLARITY": {
+   "killed_by": [
+    "SK-26"
+   ],
+   "survived": false,
+   "seconds": 7.2
+  },
+  "_C12_GATE": {
+   "killed_by": [
+    "SK-01",
+    "SK-02",
+    "SK-03",
+    "SK-04",
+    "SK-05",
+    "SK-06",
+    "SK-07",
+    "SK-08",
+    "SK-09",
+    "SK-10",
+    "SK-26",
+    "SK-27",
+    "SK-28"
+   ],
+   "survived": false,
+   "seconds": 7.0
+  },
+  "_C12_HEDGE": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 8.2
+  },
+  "_C12_LEADS": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 8.5
+  },
+  "_C12_LEDGER": {
+   "killed_by": [
+    "SK-12"
+   ],
+   "survived": false,
+   "seconds": 8.5
+  },
+  "_C12_MODIFIER": {
+   "killed_by": [
+    "SK-24"
+   ],
+   "survived": false,
+   "seconds": 7.7
+  },
+  "_C12_NEGATIVE_CONDITION": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 6.9
+  },
+  "_C12_OBJECT_ANCHOR": {
+   "killed_by": [
+    "SK-15",
+    "SK-18"
+   ],
+   "survived": false,
+   "seconds": 6.9
+  },
+  "_C12_OBJECT_BINDING": {
+   "killed_by": [
+    "SK-18"
+   ],
+   "survived": false,
+   "seconds": 6.6
+  },
+  "_C12_WRAPPERS": {
+   "killed_by": [
+    "SK-08"
+   ],
+   "survived": false,
+   "seconds": 7.8
+  }
+ },
+ "cases": 35,
+ "baseline_supported": [],
+ "deterministic_replay": true,
+ "seconds": 132.2
+}

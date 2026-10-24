@@ -1,0 +1,46 @@
+{
+ "rounds": {
+  "1": {
+   "cases": 105,
+   "runs": 210,
+   "before": {
+    "as_expected": 172,
+    "conservative_miss": 28,
+    "over_support_vs_preference": 10
+   },
+   "after": {
+    "as_expected": 172,
+    "conservative_miss": 28,
+    "over_support_vs_preference": 10
+   }
+  },
+  "2": {
+   "cases": 69,
+   "runs": 138,
+   "before": {
+    "as_expected": 118,
+    "conservative_miss": 20
+   },
+   "after": {
+    "as_expected": 118,
+    "conservative_miss": 20
+   }
+  },
+  "3": {
+   "cases": 20,
+   "runs": 40,
+   "before": {
+    "as_expected": 34,
+    "conservative_miss": 6
+   },
+   "after": {
+    "as_expected": 34,
+    "conservative_miss": 6
+   }
+  }
+ },
+ "changed_runs": [],
+ "expected_preserved": true,
+ "violations": [],
+ "changed_run_count": 0
+}

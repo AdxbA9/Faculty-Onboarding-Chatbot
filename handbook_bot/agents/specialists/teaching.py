@@ -70,8 +70,24 @@ from ...retrieval import RetrievalScope, deduplicate_by_text, gather_candidates
 from ...sources import SectionMap, SectionRecord, SourceRecord, section_map_for
 from ...text_utils import normalize_text, tokenize
 from ..types import ALL_ROUTES
-from .base import Specialist
+from . import details as _details
+from . import evidence as _evidence
+from . import grounding as _grounding
+from . import scoping as _scoping
+from .base import Specialist, _KEY_SHAPED, _PATH_SHAPED, redact_error
+from .retrieval_intent import resolve_clause_retrieval_intent
+from .details import (  # noqa: F401  (domain-neutral primitives; the names stay available here)
+    Detail, _APPROVAL_VERB, _AUTHORITY_NOUN, _FEE_WORD, _FREQUENCY, _IDENTIFIER_BEFORE, _LIMIT_ATTACHED, _LIMIT_MAX, _LIMIT_MIN, _MONEY,
+    _NUMBER, _NUMBER_WORD, _OBLIGATION, _OF_SUBJECT, _PENALTY_EVIDENCE, _PERCENT, _RESPONSIBLE_VERB, _SUBJECT_AFTER, _TIMING, _UNIT_AFTER,
+    _UNIT_NOUN, _YEAR_SHAPED, _detail_key, _fee_ok, _frequency_ok, _is_value, _limit_ok, authority_check, responsibility_check,
+)
+from .evidence import (  # noqa: F401
+    _BULLET, _DIGIT, _ENDS_WITH_CELL, _HEADING, _ITEM_BREAK, _ITEM_START, _LETTER_MARKER, _LIST_MARKER, _LIST_TITLE, _PRONOUN_START,
+    _ROW_BREAK, _SENTENCE_BREAK, _TERMINAL, _local_units, _spans, _split, _units,
+)
+from .scoping import SectionGuard, _PageSegments, _merge_ranges, heading_marker  # noqa: F401
 from .contracts import Finding, FindingStatus, HandoffRequest, SpecialistFindings, SpecialistId, SpecialistTask
+from .domain_cues import research_owned
 
 #: The only source this specialist may retrieve from.
 APPROVED_SOURCE_ID = "uos_faculty_handbook_2025_26"
@@ -136,8 +152,6 @@ MAX_CLAUSES = PLAN_F_MAX_SUBTASKS
 #: A quote extended by its neighbouring unit may not exceed this many words.
 MAX_QUOTE_WORDS = 90
 
-_KEY_SHAPED = re.compile(r"gsk_[A-Za-z0-9]+")
-
 #: Hyphen-like separators between words are read as spaces before concept
 #: and cue matching ("office-hours", "add/drop", "e-learning", "part-time"),
 #: the rule the Coordinator applies to its own cues. Same length, so nothing
@@ -171,7 +185,7 @@ _CONCEPT_PATTERNS: Tuple[Tuple[str, str, bool], ...] = (
     (r"(?:exam|examination)\s+(?:schedule|period|dates?|timetable|week)", "exam_schedule", True),
     # "exam rules", "examination regulations": the topic anchor; bare "policy" or "rules" is generic
     (r"exam(?:ination)?s?\s+(?:policy|policies|rules|regulations|procedures?|guidelines|conduct|instructions)\b", "exam_policy", True),
-    (r"re-?\s?marking|re-?\s?grad(?:e|es|ing)\b|grade\s+appeals?", "regrade", True),
+    (r"\bre-?\s?marking|\bre-?\s?grad(?:e|es|ing)\b|grade\s+appeals?", "regrade", True),
     (r"peer\s+observation", "peer_observation", True),
     (r"academic\s+integrity", "academic_integrity", True),
     (r"hono?u?r\s+code", "honor_code", True),
@@ -193,7 +207,13 @@ _CONCEPT_PATTERNS: Tuple[Tuple[str, str, bool], ...] = (
     (r"plagiaris\w*", "plagiarism", True),
     (r"cheat\w*", "cheating", True),
     # classroom attendance: the noun, absence, or "attend" applied to classes, lectures, sessions or exams
-    (r"attendance|absences?|\babsent\b|\battend(?:s|ed|ing)?\s+(?:all\s+)?(?:the\s+|their\s+|scheduled\s+)?(?:theoretical\s+|practical\s+|online\s+)?"
+    # "absence" is attendance only in a class or student context ("absences reaching 20%", "student absences"); "the
+    # absence of material errors" is not (Step 4.8T-C2, D-080)
+    (r"attendance|(?:(?<=\bstudent\s)|(?<=\bstudents'\s)|(?<=\bstudents\s)|(?<=\bunexcused\s)|(?<=\bexcused\s)|(?<=\bclass\s))absences?\b|"
+     r"absences?\b(?=\s+(?:from|rates?|percentages?|reaching|exceed\w*|due\s+to|without|will|shall|may|must|is|are|record\w*|"
+     r"polic\w*|limit\w*|in\s+(?:excess|class|lectures?|courses?)|for\s+(?:more|one|two|three|a|the\s+(?:course|class|semester))|"
+     r"during|before|after|of\s+(?:more|students?|up|over|between|\d))|\s*[,.;:)]|\s*$)|"
+     r"\babsent\b|\battend(?:s|ed|ing)?\s+(?:all\s+)?(?:the\s+|their\s+|scheduled\s+)?(?:theoretical\s+|practical\s+|online\s+)?"
      r"(?:lectures?|classes|class|sessions?|labs?|laborator(?:y|ies)|examinations?|exams?|courses?|tutorials?|seminars?)\b", "attendance", True),
     (r"syllab(?:us|i|uses)\b", "syllabus", True),
     (r"curricul(?:um|a|ar)\b", "curriculum", True),
@@ -298,9 +318,8 @@ class Concepts:
     vocab: FrozenSet[str]
 
 
-def concepts(text: str) -> Concepts:
-    """Teaching concepts found in ``text`` after normalisation (aliases such
-    as syllabi/syllabus, grading/grade, examinations/exam)."""
+def _consume_concepts(text: str) -> Tuple[List[Tuple[str, bool]], str]:
+    """(concepts found in order, the text with every concept span blanked)."""
     work = cue_text(text.lower())
     found: List[Tuple[str, bool]] = []
 
@@ -312,6 +331,19 @@ def concepts(text: str) -> Concepts:
 
     for pattern, concept, anchor in _COMPILED_CONCEPTS:
         work = pattern.sub(consume(concept, anchor), work)
+    return found, work
+
+
+def concept_residue(text: str) -> str:
+    """``text`` with every Teaching concept span blanked: what a clause says
+    beyond its topic words (the specifics the answering unit must state)."""
+    return _consume_concepts(text)[1]
+
+
+def concepts(text: str) -> Concepts:
+    """Teaching concepts found in ``text`` after normalisation (aliases such
+    as syllabi/syllabus, grading/grade, examinations/exam)."""
+    found, _work = _consume_concepts(text)
     anchors = frozenset(c for c, a in found if a)
     vocab = {c for c, _ in found}
     vocab.update(_ANCHOR_IMPLIES[a] for a in anchors if a in _ANCHOR_IMPLIES)
@@ -347,48 +379,14 @@ def is_relevant(clause: Concepts, text: str) -> bool:
 # ---------------------------------------------------------------------------
 # Requested details (completeness)
 # ---------------------------------------------------------------------------
-_NUMBER_WORD = (r"(?:\d+(?:[.,]\d+)?|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|"
-                r"sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred)"
-                r"(?:-(?:one|two|three|four|five|six|seven|eight|nine))?")
-_NUMBER = re.compile(r"(?<![\d.])\b" + _NUMBER_WORD + r"\b(?!\.\d)", re.I)     # not a section number such as 12.18.1
-_FREQUENCY = re.compile(r"\bper\s+(?:week|semester|day|month|year|course|section)\b|\b(?:weekly|daily|monthly|twice|once)\b|"
-                        r"\b(?:each|every)\s+(?:week|semester|day|month|year)\b", re.I)
-_TIMING = re.compile(
-    r"\b(?:january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sept?|oct|nov|dec)\b|"
-    r"\b(?:mon|tue|wed|thu|fri|sat|sun)\b|\bwithin\s+" + _NUMBER_WORD + r"\s+(?:working\s+)?(?:hours?|days?|weeks?|months?)\b|"
-    r"\b(?:at\s+the\s+)?(?:beginning|start|end)\s+of\s+(?:the\s+|each\s+|every\s+)?(?:semester|term|course|academic\s+year|first\s+week|year)\b|"
-    r"\bfirst\s+(?:week|day)\b|\blast\s+day\b|\bno\s+later\s+than\b|\bprior\s+to\b|\bbefore\s+the\b|\bby\s+the\s+(?:end|start|beginning)\b|"
-    r"\b\d{1,2}\s+\w+\s+20\d\d\b", re.I)
-_APPROVAL_VERB = re.compile(r"\bapprov\w*|\bauthori[sz]\w*|\bendors\w*|\bsign(?:ed|s)?\s+off\b|\bratif\w*", re.I)
-_AUTHORITY_NOUN = re.compile(r"\b(?:deans?|chairs?|chairpersons?|councils?|committees?|vice[- ]chancellor|chancellor|president|registrar\w*|"
-                             r"department|college|head|directors?|provost|vcaa|board|coordinator)\b", re.I)
-_PERCENT = re.compile(r"%|\bpercent(?:age)?\b|\b\d{1,3}\s*-\s*\d{1,3}\b|\b(?:below|above|under|over)\s+\d{1,3}\b", re.I)
-_LIMIT_MAX = re.compile(r"\b(?:maximum|maximal|at\s+most|exceed\w*|no\s+more\s+than|up\s+to|limited\s+to|not\s+more\s+than|caps?|ceiling)\b", re.I)
-_LIMIT_MIN = re.compile(r"\b(?:minimum|minimal|at\s+least|no\s+fewer\s+than|not\s+less\s+than|not\s+fewer\s+than)\b", re.I)
-_FEE_WORD = re.compile(r"\b(?:fees?|costs?|charges?|payment|paid|pay|price)\b", re.I)
-#: A monetary value: a currency next to a number, an explicit amount, or a
-#: "free of charge" statement. A bare number ("examination 101") is not money.
-_CURRENCY_FIRST = r"(?:aed|dhs\.?|dirhams?|usd|us\$|\$|€|£|eur|gbp)"
-_CURRENCY_AFTER = r"(?:aed|dhs\.?|dirhams?|usd|dollars?|euros?|pounds?|\$)"
-_MONEY = re.compile(
-    r"(?<!\w)" + _CURRENCY_FIRST + r"\s*" + _NUMBER_WORD + r"\b|"
-    r"\b" + _NUMBER_WORD + r"\s*" + _CURRENCY_AFTER + r"(?!\w)|"
-    r"\b(?:free\s+of\s+charge|no\s+fee|no\s+charge|without\s+charge|at\s+no\s+cost|waived|free)\b|"
-    r"\b(?:amount|sum|price|costs?|fees?|charges?|payment)\s+(?:of\s+|is\s+|are\s+|will\s+be\s+|shall\s+be\s+)" + _NUMBER_WORD + r"\b(?!\.\d)", re.I)
-#: A number is a value when a count noun, a percent sign or a limit phrase
-#: is tied to it; a year, a section number and an identifier are not values.
-_YEAR_SHAPED = re.compile(r"^(?:19|20)\d\d$")
-_IDENTIFIER_BEFORE = re.compile(r"\b(?:room|building|course|section|chapter|page|exam|examination|article|clause|form|item|level|floor|"
-                                r"extension|ext\.?|code|id|phone|tel\.?|box|unit|no\.?|number|#)\s*$", re.I)
-_UNIT_AFTER = re.compile(r"^\s*(?:%|percent(?:age)?\b|aed\b|dhs\b|dirhams?\b|usd\b|dollars?\b)", re.I)
-_LIMIT_ATTACHED = re.compile(r"\b(?:maximum|maximal|minimum|minimal|at\s+least|at\s+most|up\s+to|not\s+(?:to\s+)?exceed(?:ing)?|exceed(?:s|ing)?|"
-                             r"no\s+(?:more|fewer|less)\s+than|not\s+(?:more|fewer|less)\s+than|limited\s+to|capped\s+at|ceiling\s+of|caps?\s+(?:at|of))"
-                             r"\s+(?:of\s+|is\s+|are\s+|to\s+|the\s+|a\s+|an\s+)?$", re.I)
-_OF_SUBJECT = re.compile(r"^\s+of\s+((?:[\w'/-]+\s*){1,4})", re.I)
-_PENALTY_EVIDENCE = re.compile(r"\bpenalt\w*|\bsanction\w*|\bdisciplinary\b|\bwarning\b|\bbarred\b|\bforfeit\w*|\bdeduct\w*|\bdismiss\w*|\bsuspend\w*|"
-                               r"\bconsequence\w*|\bheld\s+accountable\b|\bfail(?:ing)?\s+grade\b|\b\"?f\"?\s+grade\b|\breferred\s+to\b|\bnot\s+(?:be\s+)?allowed\b", re.I)
-_LOCATION_EVIDENCE = re.compile(r"\b(?:blackboard|banner|my\s?uos|lms|portal|course\s+files?|department\w*|registrar\w*|office|college|online|system|website|"
-                                r"campus|room|building|library)\b", re.I)
+#: A location or system stated as such: a named system, an electronic place, or a locative phrase ("in the department
+#: office", "room 204", "located at"). A bare "department", "office" or "college" inside a sentence about something
+#: else names no place (Step 4.8T-C, D-079).
+_LOCATION_EVIDENCE = re.compile(
+    r"\b(?:blackboard|bb\s+ultra|banner|my\s?uos|\blms\b|portal|website|web\s?page|e-?\s?services?|e-?\s?course\s+files?|online|electronically|"
+    r"rooms?\s+\w?\d+|room\s+(?:no\.?\s*)?\d+|buildings?\s+\w?\d+|(?:\d+(?:st|nd|rd|th)|ground|first|second|third)\s+floor|"
+    r"located\s+(?:in|at|on)|(?:in|at|to)\s+the\s+(?:[\w'-]+\s+){0,3}?(?:office|department|building|library|desk|cent(?:er|re)|hall|campus|"
+    r"registrar\w*)\b(?!\s+hours?)|main\s+campus|campus\b)", re.I)
 
 #: Faculty categories and ranks. A clause naming one asks for that category;
 #: evidence must name the same category (any alias) next to the subject.
@@ -406,110 +404,42 @@ CATEGORY_GROUPS: Tuple[Tuple[str, str], ...] = (
 _COMPILED_CATEGORIES = tuple((label, re.compile(p, re.I)) for label, p in CATEGORY_GROUPS)
 
 
-@dataclass(frozen=True)
-class Detail:
-    """A detail the clause explicitly asks for."""
-
-    family: str
-    label: str
-    check: Callable[[str], bool]
-
-
-_UNIT_NOUN = re.compile(
-    r"^(?:\(\d+\)\s*)?(?:credit\s+|contact\s+|office\s+|class\s+|working\s+|regular\s+|theoretical\s+|teaching\s+|instructional\s+|consultation\s+|"
-    r"academic\s+|calendar\s+|business\s+)?"
-    r"(?:hours?|days?|weeks?|months?|semesters?|years?|students?|learners?|courses?|classes|sections?|lectures?|sessions?|times|credits?|points?|"
-    r"percent|%|assignments?|exams?|examinations?|quizzes|tutorials?|labs?|laboratories|participants?|members?|minutes?|papers?|copies|meetings?)\b", re.I)
-_SUBJECT_AFTER = re.compile(r"\b(?:how\s+many|how\s+much|number\s+of|count\s+of|how\s+long)\s+((?:[\w'/-]+\s*){1,5})", re.I)
-_OBLIGATION = re.compile(r"\b(?:must|shall|required|requirements?|obligat\w*|mandatory|expected\s+to|responsible\s+for|responsibility\s+to|"
-                         r"needs?\s+to|should|are\s+to\s+be|is\s+to\s+be)\b", re.I)
-_LIST_MARKER = re.compile(r"^(?:[•�▪-]\s+|o\s+(?=[\"“A-Z])|\d{1,2}\.\s+|[a-z]\.\s+|[A-Z]\.\s+(?=[A-Z])|\d+(?:\.\d+){1,3}\s+)")
-
-
-def _fee_ok(unit: str) -> bool:
-    """A fee word with a monetary value ("fee of AED 100", "cost is 100
-    AED", "free of charge"); "fee applies to examination 101" has none."""
-    return bool(_FEE_WORD.search(unit) and _MONEY.search(unit))
-
-
-def _is_value(unit: str, m: "re.Match[str]") -> bool:
-    """Whether the number matched by ``m`` denotes a value: a count noun or
-    a percent sign follows it, or it is attached to a limit phrase ("not
-    exceed 40"). A year ("in 2024"), a dotted section number ("section
-    3.4") or an identifier ("room 204", "examination 101") is not a value."""
-    token, before, tail = m.group(0), unit[:m.start()], unit[m.end():].lstrip(" -")
-    if _IDENTIFIER_BEFORE.search(before):
-        return False
-    if _UNIT_AFTER.match(tail) or _UNIT_NOUN.match(tail):
-        return True
-    if _YEAR_SHAPED.match(token) or "." in token or "," in token:
-        return False
-    return bool(_LIMIT_ATTACHED.search(before))
-
-
-def _limit_ok(unit: str, limit: "re.Pattern[str]") -> bool:
-    """A limit word with a value-shaped number in the same unit. A table row's
-    numeric cells are its values ("Laboratory 20 10")."""
-    if not limit.search(unit):
-        return False
-    if is_table_row(unit):
-        return bool(_NUMBER.search(unit))
-    return any(_is_value(unit, m) for m in _NUMBER.finditer(unit))
-
-
-def _frequency_ok(unit: str) -> bool:
-    return bool(_FREQUENCY.search(unit) or re.search(r"\b" + _NUMBER_WORD + r"\s+times\b", unit, re.I))
-
-
 def _quantity_ok(unit: str, subject: Concepts, subject_tokens: FrozenSet[str]) -> bool:
-    """A number tied to a count noun ("five office hours", "12 credit hours",
-    "20 students"), whose noun phrase names the counted subject of the
-    question. Bare numbers (rooms, pages, sections, dates, list markers) and
-    counts of something else ("3 credit hours" for an office-hours question)
-    do not count."""
-    def names_subject(text: str) -> bool:
-        if concepts(text).vocab & subject.vocab:
-            return True
-        return not subject.vocab and bool(set(tokenize(text)) & subject_tokens)
-
-    for m in _NUMBER.finditer(unit):
-        tail = unit[m.end():].lstrip()
-        noun = _UNIT_NOUN.match(tail)
-        if not noun:
-            continue
-        phrase = tail[:noun.end()]
-        if not subject.vocab and not subject_tokens:
-            return True
-        if names_subject(phrase):
-            return True
-        # "48 hours of office hours": the counted subject follows the unit noun
-        of_phrase = _OF_SUBJECT.match(tail[noun.end():])
-        if of_phrase and names_subject(of_phrase.group(1)):
-            return True
-    return False
+    """The shared count rule, read with Teaching's concept vocabulary."""
+    return _details._quantity_ok(unit, subject, subject_tokens, concepts)
 
 
 def _max_ok(unit: str) -> bool:
-    return _limit_ok(unit, _LIMIT_MAX)
+    return _details._limit_ok(unit, _LIMIT_MAX, is_table_row)
 
 
 def _min_ok(unit: str) -> bool:
-    return _limit_ok(unit, _LIMIT_MIN)
+    return _details._limit_ok(unit, _LIMIT_MIN, is_table_row)
 
 
-#: Evidence for "who manages / supports / is responsible for ...": a
-#: responsibility verb and a named party or unit in the same unit.
-#: Verb forms only: "Management System" and the noun "support" name nobody.
-_RESPONSIBLE_VERB = re.compile(r"\bmanag(?:es|ed|ing)\b|\bsupport(?:s|ed)\b|\bmaintain(?:s|ed)\b|\badminister(?:s|ed)\b|\bresponsible\s+for\b|"
-                               r"\bresponsibility\s+(?:for|of|as|to)\b|\bin\s+charge\s+of\b|\bhandl(?:es|ed)\b|\boversee(?:s|n)\b|\boperat(?:es|ed)\b|"
-                               r"\bprovid(?:es|ed)\b|\brun\s+by\b|\bcoordinat(?:es|ed)\b|\bassist(?:s|ed)\b", re.I)
+#: Approval verb and authority noun in one unit (the shared rule with the default bodies).
+_authority_ok = authority_check()
+
+#: A percentage stated as one: a percent sign or the word, a grade-table line (its ranges are percentages), never a
+#: calendar line, whose day and date ranges are not values (Step 4.8T-C2, D-080).
+_PERCENT_STATED = re.compile(r"\d\s*%|\bpercent(?:age)?s?\b", re.I)
+
+
+def _percent_ok(unit: str) -> bool:
+    if _weekday_shape(unit) or _CALENDAR_LINE.search(unit):
+        return False
+    return bool(_PERCENT_STATED.search(unit)) or _grade_shape(unit)
+
+
+_CALENDAR_LINE = re.compile(r"\b(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|"
+                            r"nov(?:ember)?|dec(?:ember)?)\b\s*\d|\b\d{1,2}\s+(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|"
+                            r"aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b", re.I)
+
+#: Parties the handbook names for "who manages / supports / is responsible for ..." clauses.
 _RESPONSIBLE_PARTY = re.compile(r"\b(?:it\s+(?:department|services?|support|unit|team)|help\s*desk|registrar\w*|registration\s+department|deans?|chairs?|"
                                 r"chairpersons?|department|college|councils?|committees?|directors?|coordinators?|administrators?|faculty\s+members?|"
                                 r"instructors?|lecturers?|units?|offices?(?!\s+hours?)|teams?|cent(?:er|re)s?|division|services)\b", re.I)
-
-
-def _authority_ok(unit: str) -> bool:
-    return bool(_APPROVAL_VERB.search(unit) and _AUTHORITY_NOUN.search(unit))
+_responsibility_ok = responsibility_check(_RESPONSIBLE_PARTY)
 
 
 #: (family, label, clause pattern, evidence check). The clause pattern says
@@ -532,7 +462,7 @@ _DETAIL_FAMILIES: Tuple[Tuple[str, str, str, Callable[[str], bool]], ...] = (
     ("responsibility", "responsible party or unit",
      r"\bwho\s+(?:manages|supports|maintains|administers|runs|operates|provides|handles|oversees|looks\s+after|is\s+responsible\s+for|is\s+in\s+charge\s+of)\b",
      lambda u: bool(_RESPONSIBLE_VERB.search(u) and _RESPONSIBLE_PARTY.search(u))),
-    ("percentage", "percentage or range", r"\b(?:percent(?:age)?s?|%|what\s+range|score\s+range)\b", lambda u: bool(_PERCENT.search(u))),
+    ("percentage", "percentage or range", r"\b(?:percent(?:age)?s?|%|what\s+range|score\s+range)\b", lambda u: _percent_ok(u)),
     ("part_time", "part-time distinction", r"\bpart[- ]time\b", lambda u: bool(re.search(r"\bpart[- ]time\b", u, re.I))),
     ("full_time", "full-time distinction", r"\bfull[- ]time\b", lambda u: bool(re.search(r"\bfull[- ]time\b", u, re.I))),
     ("location", "location or system", r"\bwhere\s+(?:do|must|should|can|are|is|to)\b|\bin\s+which\s+(?:system|platform|office)\b|\bwhich\s+system\b",
@@ -546,174 +476,78 @@ _DETAIL_FAMILIES: Tuple[Tuple[str, str, str, Callable[[str], bool]], ...] = (
 _COMPILED_FAMILIES = tuple((f, label, re.compile(p, re.I), check) for f, label, p, check in _DETAIL_FAMILIES)
 
 
-def _detail_key(detail: "Detail") -> str:
-    return "category:" + detail.label if detail.family == "category" else detail.family
-
-
 def requested_details(clause: str) -> List[Detail]:
     """The details a clause explicitly asks for, in a fixed order. A quantity
     detail carries the counted subject ("office hours" in "how many office
     hours"); a faculty category named in the clause is a detail of its own
     (the evidence must name the same category)."""
-    details: List[Detail] = []
-    for family, label, pattern, check in _COMPILED_FAMILIES:
-        if not pattern.search(clause):
-            continue
-        if family == "quantity":
-            m = _SUBJECT_AFTER.search(clause)
-            subject_text = m.group(1) if m else ""
-            subject, tokens = concepts(subject_text), frozenset(tokenize(subject_text))
-            details.append(Detail(family, label, (lambda u, s=subject, k=tokens: _quantity_ok(u, s, k))))
-        else:
-            details.append(Detail(family, label, check))
-    for label, pattern in _COMPILED_CATEGORIES:
-        if pattern.search(clause):
-            details.append(Detail("category", "the requested faculty category (%s)" % label, (lambda p: (lambda u: bool(p.search(u))))(pattern)))
-    return details
+    return _details.requested_details(clause, _COMPILED_FAMILIES, _COMPILED_CATEGORIES, concepts)
 
 
-def _local_units(quote: str) -> List[str]:
-    """Evidence units for the completeness check: a list item whole, else a
-    sentence. Every requested detail must sit in one such unit together
-    with the subject."""
-    units: List[str] = []
-    for start, end in _split(quote, _ITEM_BREAK):
-        piece = quote[start:end]
-        if _ITEM_START.match(piece):
-            units.append(piece)
-        else:
-            units.extend(piece[a:b] for a, b in _split(piece, _SENTENCE_BREAK))
-    return [u.strip() for u in units if u.strip()] or [quote]
+#: A sentence that opens with a context-dependent word is one statement with the sentence before it (select_quote
+#: joins them): the grounding detail reads the pair, the detail families stay per unit.
+_CONTEXT_START = re.compile(r"^\s*(?:such|these|this|those|it|they)\b", re.I)
 
 
 def unit_coverage(details: Sequence[Detail], clause: Concepts, quote: str) -> FrozenSet[str]:
     """The largest set of requested details that ONE local unit of ``quote``
-    contains while sharing a concept with the clause. Details found in
-    different units are never combined: "part-time" in one sentence and
-    "five hours" in another do not answer a part-time quantity."""
-    best: FrozenSet[str] = frozenset()
-    for unit in _local_units(quote):
-        if relevance(clause, unit)[1] < 1:
+    contains while sharing a concept with the clause (shared rule). The
+    grounding detail of a pronoun-initial sentence may also be stated by
+    that sentence together with its antecedent (Step 4.8T-C, D-079); no
+    other detail is ever combined across units."""
+    shared = _evidence.unit_coverage(details, lambda text: relevance(clause, text), quote)
+    grounding = [d for d in details if d.family == "grounding"]
+    if not grounding or "grounding" in shared:
+        return shared
+    units = [_evidence._LIST_MARKER.sub("", u) for u in _evidence._local_units(quote)]
+    for index, unit in enumerate(units[1:], start=1):
+        if not _CONTEXT_START.match(unit) or relevance(clause, unit)[1] < 1:
             continue
-        stripped = _LIST_MARKER.sub("", unit)
-        got = frozenset(_detail_key(d) for d in details if d.check(stripped))
-        if len(got) > len(best):
-            best = got
-    return best
+        pair = units[index - 1] + " " + unit
+        if all(d.check(pair) for d in grounding):
+            others = frozenset(_detail_key(d) for d in details if d.family != "grounding" and d.check(unit))
+            candidate = others | {"grounding"}
+            if len(candidate) > len(shared):
+                shared = candidate
+    return shared
 
 
 def detail_covered(detail: Detail, clause: Concepts, quote: str) -> bool:
     """True when some local unit of ``quote`` contains the detail and shares
-    a concept with the clause. Use ``unit_coverage`` for completeness: this
-    looks at one detail at a time."""
-    return _detail_key(detail) in frozenset().union(*[unit_coverage([detail], clause, u) for u in _local_units(quote)]) if _local_units(quote) else False
+    a concept with the clause (shared rule)."""
+    return _evidence.detail_covered(detail, lambda text: relevance(clause, text), quote)
 
 
 # ---------------------------------------------------------------------------
-# Quote units and quote quality
+# Quote units and quote quality (shared rules in evidence.py; Teaching adds its table-row shapes)
 # ---------------------------------------------------------------------------
-_ROW_BREAK = re.compile(r"\s+\|\s+")
-#: Items: bullets, "o " items, numbered items ("2. "), lettered items ("b. ",
-#: "B. ") after punctuation, and section numbers. A lettered marker opens an
-#: item only when a capital follows it.
-_ITEM_BREAK = re.compile(
-    r"\s+(?=[•�▪]\s)|\s+(?=o\s+[\"“A-Z])|(?<=[.:;!?])\s+(?=\d{1,2}\.\s+[A-Z])|(?<=[.:;!?])\s+(?=[A-Za-z]\.\s+[A-Z])|"
-    r"\s+(?=\d+(?:\.\d+){1,3}\s+[A-Z])|\s+(?=Chapter\s+\d+\.)|"
-    r"(?<=^Page \d)\s+|(?<=^Page \d\d)\s+|(?<=^Page \d\d\d)\s+")
-_ITEM_START = re.compile(r"^(?:[•�▪]\s+|o\s+(?=[\"“A-Z])|\d{1,2}\.\s+(?=[A-Z])|[A-Za-z]\.\s+(?=[A-Z]))")
-#: A sentence ends at .!? before a capital, except after a list marker
-#: ("2.", "b.", or "B." opening the piece) so the marker stays with its item.
-_SENTENCE_BREAK = re.compile(r"(?<=[.!?])(?<!\b\d\.)(?<!\b\d\d\.)(?<!\b[a-z]\.)(?<!^[A-Z]\.)\s+(?=[A-Z\"“(\[\d])")
-_BULLET = re.compile(r"^(?:[•�▪-]\s+|o\s+(?=[\"“A-Z]))")
-_LETTER_MARKER = re.compile(r"^[A-Za-z]\.\s+(?=[A-Z])")
-_HEADING = re.compile(r"^(?:chapter\s+\d+\.?|\d+(?:\.\d+){1,3}\.?)\s+[A-Za-z(][^.!?]{0,110}:?$", re.I)
-_LIST_TITLE = re.compile(r"^\d{1,2}\.\s+[A-Z][^.!?]{0,60}:?$")
 _WEEKDAY_ROW = re.compile(r"^(?:mon|tue|wed|thu|fri|sat|sun)\b", re.I)
 #: A grade-table line: a grade letter, then a numeric or textual range ("90-100", "Below 60") and grade points.
 _GRADE_ROW = re.compile(r"^[A-F][+-]?\s+(?:\d{1,3}\s*-\s*\d{1,3}|(?:below|above|under|over|less\s+than|more\s+than)\s+\d{1,3})\b", re.I)
-_TERMINAL = re.compile(r"[.!?:;]['\")\]]?$")
-_ENDS_WITH_CELL = re.compile(r"\d\S*$")
-_DIGIT = re.compile(r"\d")
-_PRONOUN_START = re.compile(r"^(?:such|they|these|this|those|it|their|its|both)\b", re.I)
 _SEMESTER_HEADER = re.compile(r"\b(fall|spring|summer|winter)\s+semester\s+(20\d\d)\s*[/\-–]\s*(20\d\d)", re.I)
 _TERM_IN_TEXT = re.compile(r"\b(fall|spring|summer|winter)\b(?:\s+(?:semester\s+)?(20\d\d)\s*[/\-–]\s*(20\d\d))?", re.I)
 _YEAR_SPAN = re.compile(r"(20\d\d)\s*[/\-–]\s*(?:20)?(\d\d)\b")
 
 
-def _split(text: str, breaker: "re.Pattern[str]") -> List[Tuple[int, int]]:
-    spans: List[Tuple[int, int]] = []
-    start = 0
-    for m in breaker.finditer(text):
-        if m.start() > start:
-            spans.append((start, m.start()))
-        start = m.end()
-    if start < len(text):
-        spans.append((start, len(text)))
-    return spans
+def _weekday_shape(text: str) -> bool:
+    return bool(_WEEKDAY_ROW.match(text)) and any(_DIGIT.search(w) for w in text.split())
 
 
-def _units(text: str, chunk_type: Optional[str]) -> List[Tuple[int, int, int]]:
-    """Quotable units of a chunk as ``(start, end, item_start)``: the whole
-    chunk for a row; the rows of a row window; the sentences of a paragraph,
-    each knowing where its bullet or numbered item begins (``item_start`` is
-    the unit's own start outside a list item)."""
-    if chunk_type == "row":
-        return [(0, len(text), 0)]
-    if chunk_type == "row_window":
-        return [(s, e, s) for s, e in _split(text, _ROW_BREAK)] or [(0, len(text), 0)]
-    units: List[Tuple[int, int, int]] = []
-    for start, end in _split(text, _ITEM_BREAK):
-        piece = text[start:end]
-        is_item = bool(_ITEM_START.match(piece))
-        for a, b in _split(piece, _SENTENCE_BREAK):
-            units.append((start + a, start + b, start if is_item else start + a))
-    return units or [(0, len(text), 0)]
-
-
-def _spans(text: str, chunk_type: Optional[str]) -> List[Tuple[int, int]]:
-    """Character spans of the quotable units of a chunk (see ``_units``)."""
-    return [(s, e) for s, e, _ in _units(text, chunk_type)]
+def _grade_shape(text: str) -> bool:
+    return bool(_GRADE_ROW.match(text))
 
 
 def is_table_row(text: str) -> bool:
     """A printed line that is table data rather than prose: a weekday-led
     calendar line, a grade-table line, or at least three digit-bearing cells
     with a label, within a table-like length."""
-    words = text.split()
-    if not 2 <= len(words) <= 24:
-        return False
-    if _WEEKDAY_ROW.match(text) and any(_DIGIT.search(w) for w in words):
-        return True
-    if _GRADE_ROW.match(text):
-        return True
-    digit_cells = sum(1 for w in words if _DIGIT.search(w))
-    alpha_words = sum(1 for w in words if len(w) >= 3 and w.isalpha())
-    return digit_cells >= 3 and alpha_words >= 1
+    return _evidence.is_table_row(text, (_weekday_shape, _grade_shape))
 
 
 def quote_problem(quote: str, unit_kind: str, last_unit: bool = False) -> Optional[str]:
     """Why ``quote`` is not usable evidence, or None. ``unit_kind`` is
     "prose" (a unit of a paragraph) or "line" (a printed row)."""
-    q = quote.strip()
-    words = q.split()
-    if not words:
-        return "empty"
-    core = _BULLET.sub("", q).strip()
-    if not core:
-        return "empty"
-    if _HEADING.match(core) or _LIST_TITLE.match(core):
-        return "heading"
-    if core.endswith(":"):
-        return "lead-in"                                   # "...include the following:" states nothing itself
-    if _LETTER_MARKER.sub("", core)[0].islower():           # "b. These ..." is an item, not a fragment
-        return "dangling"
-    if unit_kind == "line":
-        return None if is_table_row(core) else "line fragment"
-    if len(words) < 5:
-        return "too short"
-    if last_unit and not _TERMINAL.search(q) and not _ENDS_WITH_CELL.search(q):
-        return "truncated"                                 # a window cut mid-sentence; table cells may end a unit
-    return None
+    return _evidence.quote_problem(quote, unit_kind, last_unit, table_row=is_table_row)
 
 
 def calendar_context(rows_before: Sequence[str], row_text: str) -> Optional[Dict[str, Optional[str]]]:
@@ -775,6 +609,10 @@ _OTHER_CUES: Tuple[Tuple[SpecialistId, "re.Pattern[str]"], ...] = (
     (SpecialistId.INSTITUTIONAL, re.compile(
         r"\b(?:who(?:m)?\s+(?:do|should|can|could|must|would)\s+i\s+(?:contact|ask|call|e-?mail|talk\s+to|speak\s+to|reach|see|go\s+to|refer\s+to|approach)|"
         r"who\s+(?:is|are)\s+the\s+(?:contact|person|people)\s+(?:for|to)|"
+        # Step 4.5A (NAV-12): where to submit a research form, which office handles it: navigation, handed to Institutional
+        r"where\s+(?:do|can|should|must)\s+i\s+(?:submit|send|file)\s+(?:my\s+|the\s+|a\s+)?(?:research|grant|ethics|irb|conference|ip|patent|disclosure)|"
+        r"which\s+(?:office|department|unit)\s+(?:handles|deals\s+with|processes)|"
+        r"how\s+(?:do|does|can|could|should)\s+(?:i|we|one)\s+(?:contact|reach|get\s+in\s+touch\s+with)|to\s+whom\s+(?:should|do|can)\s+i\s+(?:send|submit|address)|"
         r"contact\s+(?:person|details|information|numbers?)|phone|telephone|fax|e-?\s?mail\s+address|extension\s+number|"
         # "where is / where can I find <office, unit, named service>"; "office hours" is a teaching phrase, not a place
         r"where\s+(?:is|are|can\s+i\s+find|do\s+i\s+find)\s+(?:the\s+)?[\w' ]{0,30}?(?:office(?!\s+hours?)|department|unit|cent(?:er|re)|building|desk|help\s*desk|library|clinic|"
@@ -787,9 +625,27 @@ _OTHER_CUES: Tuple[Tuple[SpecialistId, "re.Pattern[str]"], ...] = (
         r"organi[sz]ational\s+(?:chart|structure)|governance|chain\s+of\s+command|board\s+of\s+trustees|university\s+council|"
         r"help\s*desk|it\s+support|service\s+desk)\b", re.I)),
     (SpecialistId.RESEARCH, re.compile(
-        r"\b(?:research\w*|grants?|seed\s+fund\w*|external\s+fund\w*|principal\s+investigator|"
-        r"ethics\s+(?:committee|approval|application|review|clearance)|irb|publications?|publish\w*|journals?|"
-        r"patents?|intellectual\s+property|scopus|citations?|h-?\s?index)\b", re.I)),
+        r"\b(?:research\w*|(?<!who\s)(?<!to\s)(?<!\bi\s)grants?(?!\s+(?:tenure|leave|access|permission|an?\s|students?\b|them\b|extensions?))|"
+        r"seed\s+fund\w*|external\s+fund\w*|principal\s+investigator|co-?\s?investigators?|"
+        r"ethics\s+(?:committee|approval|application|review|clearance)|irb|publications?|"
+        r"publish\w*(?!\s+(?:the\s+|my\s+|a\s+|an\s+)?(?:grades?|marks?|course|announcements?|syllab\w*|results?|lecture))|"
+        r"(?<!library\s)journals?(?!\s+(?:in\s+the\s+library|for\s+(?:my\s+)?assignments?))|"
+        r"patents?|intellectual\s+property|scopus|citations?|h-?\s?index|"
+        r"materials?\s+transfer\s+agreements?|mtas?|copyright\w*|conflicts?\s+of\s+(?:interest|commitment)|"
+        r"(?:final|progress|annual)\s+(?:research|project)\s+reports?|licen[cs](?:e|es|ing)\s+agreements?|"
+        r"approv\w*\s+(?:my\s+|the\s+|a\s+)?conferences?|conferences?\b[^.?]{0,40}\b(?:registration|documents?|deadline|funding|reimburs\w*|approv\w*)|"
+        r"(?:registration\s+fees?|documents?)\b[^.?]{0,40}\bconferences?|"
+        # Milestone 4 (Step 4.5A): conference policy (5.4) and research-only terms, so that a compound clause sent here
+        # whole ("the per diem for conferences and my teaching load") keeps its research half as a handoff
+        r"per\s+diem|conferences?\s+(?:registration|fees?|funding|funds?|travel|trips?|support|attendance|allowances?|expenses?|costs?|requests?|"
+        r"documents?|documentation|deadlines?|budget|participation|papers?|proceedings)|"
+        r"(?:local|international|external|overseas|scientific|academic|university\s+supported)\s+conferences?(?!\s+(?:calls?|rooms?|halls?))|"
+        r"conferences?\s+(?:abroad|overseas)|"
+        r"(?:attend(?:ing)?|participat\w*\s+in|present(?:ing)?\s+(?:a\s+paper\s+)?at|travel(?:l?ing)?\s+to)\s+(?:an?\s+|the\s+|my\s+)?conferences?"
+        r"(?!\s+(?:calls?|rooms?|halls?|cent(?:er|re)s?))|"
+        r"how\s+many\s+conferences|licens(?:e|es|ing)\s+(?:revenues?|income|agreements?)|licensing\s+(?:of\s+)?(?:inventions?|patents?|technolog\w*|ip|intellectual)|"
+        r"petty\s+cash|royalt\w*|inventions?|iacuc|informed\s+consent|seed\s+(?:projects?|grants?)|tech(?:nology)?\s+transfer|tto|consultanc\w*|"
+        r"consulting\s+(?:work|services|activities|contracts?|income|fees?|projects?|engagements?)|paid\s+consultants?)\b", re.I)),
     (SpecialistId.FACULTY_SERVICES, re.compile(
         r"\b(?:(?:annual|sick|maternity|paternity|emergency|unpaid|study|compassionate|casual)\s+leaves?|leave\s+(?:of\s+absence|entitlement|balance|request|application|days)|"
         r"days?\s+of\s+leave|vacation|sabbatical|employment\s+contracts?|contract\s+(?:renewal|termination|period|expiry|duration)|probation\w*|"
@@ -809,14 +665,35 @@ _PROCEDURE_CUES = re.compile(
 _SYSTEM_CUES = re.compile(r"\b(?:blackboard|bb\s+ultra|banner|my\s?uos|lms|learning\s+management\s+system|self[- ]service)\b", re.I)
 
 
+#: WLAM faculty categories name a teaching-load category, never research
+#: (the Coordinator and the Research specialist read them the same way).
+_WLAM_CATEGORY = re.compile(r"\b(?:research[- ]intensive|active[- ]research|research[- ]active)\s+faculty\b", re.I)
+
+
+def other_domains(clause: str) -> List[SpecialistId]:
+    """Every other-domain specialist whose cue fires on the clause: Institutional
+    Navigation first when its cue fires, then by cue count (ties: Research,
+    Faculty Services & HR)."""
+    clause = cue_text(clause)
+    hits = []
+    for order, (sid, pattern) in enumerate(_OTHER_CUES):
+        text = _WLAM_CATEGORY.sub(lambda m: " " * len(m.group(0)), clause) if sid is SpecialistId.RESEARCH else clause
+        count = len(pattern.findall(text))
+        if not count and sid is SpecialistId.RESEARCH and research_owned(clause):
+            count = 1                                           # the shared Research ownership lexicon (Step 4.5A-R)
+        if count:
+            hits.append((count, -order, sid))
+    # navigation first (Step 4.5A, NAV-12): a where / who-to-contact / which-office clause goes to Institutional Navigation
+    # before any subject domain, as the Research specialist does
+    ranked = sorted(hits, key=lambda h: (h[2] is SpecialistId.INSTITUTIONAL, h[0], h[1]), reverse=True)
+    return [sid for _count, _order, sid in ranked]
+
+
 def classify_clause(clause: str) -> Tuple[bool, Optional[SpecialistId]]:
     """(carries a positive teaching cue, strongest other-domain specialist or None)."""
-    clause = cue_text(clause)                                   # "office-hours" reads as "office hours"
-    teaching = bool(_TEACHING_CUES.search(clause))
-    hits = [(len(pattern.findall(clause)), -order, sid) for order, (sid, pattern) in enumerate(_OTHER_CUES)]
-    hits = [h for h in hits if h[0]]
-    other = max(hits)[2] if hits else None
-    return teaching, other
+    teaching = bool(_TEACHING_CUES.search(cue_text(clause)))    # "office-hours" reads as "office hours"
+    others = other_domains(clause)
+    return teaching, (others[0] if others else None)
 
 
 def system_named(text: str) -> Optional[str]:
@@ -842,272 +719,154 @@ def is_procedure_request(clause: str, system_hint: Optional[str]) -> Tuple[bool,
     return procedural, system
 
 
+#: A place, contact channel or "who do I contact" ask (the Institutional Navigation cue read on one segment), a click,
+#: menu or screen step excepted (that is a procedure request).
+_NAVIGATION_CUES = re.compile(
+    # "where is the curriculum committee office", "where's the registrar": a place; "where is the syllabus posted / kept /
+    # uploaded" asks where a teaching artefact goes, a policy fact answered from teaching text
+    r"\b(?:where(?:'s|\s+(?:is|are|was|were))\b(?![^.?]{0,50}\b(?:posted|uploaded|stored|kept|published|entered|recorded|submitted|"
+    r"available|listed|shown|displayed|announced|distributed|documented|archived|saved|filed)\b)|"
+    r"where\s+(?:can|could|do|does|should|shall|would|will|must|to)\s+(?:i|we|one|faculty|students?|the|a|an|my|our)\s+"
+    r"(?:find|get|go|locate|visit|contact|reach|collect|pick|meet|obtain|see)\b|"
+    r"\blocated\b|\blocations?\b|\bwhereabouts\b|\b(?:what|which)\s+(?:floor|building|room|campus)\b|\baddress\s+of\b|"
+    r"\b(?:mailing|postal|office|physical|street|e\s?mail|email|web)\s+address\b|"
+    r"\bhow\s+(?:do|does|can|could|should|would|to)\s+(?:i\s+|we\s+|one\s+)?(?:contact|reach|call|e\s?mail|get\s+in\s+touch|find|get\s+to|"
+    r"go\s+to|locate|visit)\b|\bwho(?:m)?\s+(?:do|should|can|could|must|would)\s+(?:i|we)\s+(?:contact|ask|call|e\s?mail|see|go\s+to|refer\s+to|"
+    r"approach|reach|talk\s+to|speak\s+to)\b|\bto\s+whom\s+(?:should|do|can|must|may)\s+(?:i|we)\b|"
+    r"\bcontact\s+(?:person|details|information|numbers?)\b|\b(?:tele)?phone\b|\bfax\b|\bhotline\b|\bextension\s+(?:numbers?|no)\b|"
+    r"\b(?:e\s?mail|email)\s+(?:address|id)\b|\bwhat\s+is\s+(?:the|their|its|his|her)\s+(?:e\s?mail|email|phone|telephone|website|url|extension|"
+    r"hotline|number)\b|\b(?:its|their|the\s+office's|the\s+department's)\s+(?:e\s?mail|email|phone|telephone|website|extension|number)\b|"
+    r"\b(?:which|what)\s+(?:office|unit|department|desk)\s+(?:handles?|deals?|is\s+(?:in\s+charge|responsible)|manages?|should|do|does|can|"
+    r"to\s+contact|takes?\s+care|looks?\s+after)\b|\bto\s+which\s+(?:office|department|unit)\b|\bhelp\s*desk\b|\bservice\s+desk\b|"
+    r"\bopening\s+hours\b)", re.I)
+_CLICK_CUES = re.compile(r"\b(?:click\w*|press|select|tap|buttons?|screens?|menus?|tabs?|icons?|dropdown|log\s?in|login|upload\w*|links?|fields?)\b",
+                         re.I)
+_SEGMENT_SPLIT = re.compile(
+    r"\s*(?:,\s*(?:and\s+|or\s+)?|;\s*|\s+and\s+(?:also\s+)?|\s+or\s+|\?\s*)"
+    r"(?=(?:what|who|whom|whose|which|how|when|where|why|is|are|can|could|does|do|did|may|must|should|will|would)\b)|"
+    r"\s*,?\s+and\s+(?=(?:(?:its|their|the|his|her|your|our)\s+)?(?:(?:tele)?phone|e\s?mail|email|fax|contact|location|address|"
+    r"extension|website|hotline|whereabouts|opening\s+hours)\b)|^\s*how\s+and\s+(?=where\b)", re.I)
+#: Contact or location evidence for a mixed clause: an e-mail address, a telephone number, a room, building or floor,
+#: a web address, or a stated location.
+_CONTACT_EVIDENCE = re.compile(
+    r"[\w.+-]+@[\w-]+\.[\w.]+|\+\s?\d[\d\s()-]{6,}\d|\b(?:tel|phone|telephone|fax|ext)\.?\s*:?\s*\+?\d|"
+    r"\b(?:room|office|building|floor|block)\s+(?:no\.?\s*)?[A-Z]?\d+\b|\bwww\.|https?://|\blocated\s+(?:in|at|on)\b", re.I)
+
+
+def clause_segments(clause: str) -> List[str]:
+    """The segments of a clause (the clause itself when it has one)."""
+    parts = [p.strip(" ,;?") for p in _SEGMENT_SPLIT.split(cue_text(clause))]
+    return [p for p in parts if p] or [clause.strip()]
+
+
+def navigation_intent(clause: str) -> Tuple[bool, bool]:
+    """(asks for a place or a contact channel, also asks something
+    substantive). A click, screen or upload step is a procedure request, not
+    navigation. A pure navigation clause is Institutional Navigation's alone
+    and is never answered from teaching text (Step 4.8T-C, D-079)."""
+    nav = substantive = False
+    for segment in clause_segments(clause):
+        if _NAVIGATION_CUES.search(segment) and not _CLICK_CUES.search(segment):
+            nav = True
+        elif len(segment.split()) >= 2:
+            substantive = True
+    if re.match(r"^\s*how\s+and\s+where\b", cue_text(clause), re.I):
+        nav = substantive = True
+    return nav, substantive
+
+
+def contact_evidence(unit: str) -> bool:
+    """A contact channel or a location stated in the unit."""
+    return bool(_CONTACT_EVIDENCE.search(unit))
+
+
+# ---------------------------------------------------------------------------
+# The ask gate: general / specific recognised / specific unknown (D-079)
+# ---------------------------------------------------------------------------
+#: Concepts verified elsewhere and not demanded of the answering unit: a calendar term (the calendar rule checks it)
+#: and the words of a detail family (the family's own check verifies them).
+_LOOSE_CONCEPTS: FrozenSet[str] = frozenset({"fall", "spring", "summer", "academic_year", "deadline", "penalty", "limit"})
+#: Role words for grounding (Step 4.8T-C2, D-080), in priority order: a department chair is a chair, the registration
+#: department is not the registrar, the Deans' Council is a council. Instructors, professors and faculty members are one
+#: role, as the handbook uses the words; lecturers, a workload category, are their own. The person asking is faculty.
+GROUNDING_ROLES: Tuple[Tuple[str, str], ...] = (
+    # composite bodies first, so that "Deans' Council" is a council and "department chair" a chair, not a department
+    (r"\b(?:department|college|university|academic|deans'?)\s+councils?(?!\w)|\bcouncils?(?!\w)", "council"),
+    (r"\b(?:curricul\w+|study\s+plans?\s+and\s+curricula|teaching\s+and\s+learning|accreditation)\s+committees?(?!\w)|\bcommittees?(?!\w)", "committee"),
+    (r"\b(?:department|departmental|program(?:me)?|college)\s+chair(?:s|persons?|person|man|men)?(?:'s)?(?!\w)|\bchair(?:s|persons?|person|man|men)?(?:'s)?(?!\w)|"
+     r"\bhead\s+of\s+(?:the\s+)?department(?!\w)|\bhods?(?!\w)", "chair"),
+    (r"\bvice[- ]chancellor\w*|\bvcaa\b|\bvcrgs\b|\bchancellor(?:'s)?(?!\w)", "vice_chancellor"),
+    (r"\bdeans?(?:'s|')?(?!\w)", "dean"),
+    (r"\bregistrar(?:'s|')?(?!\w)", "registrar"),
+    (r"\bregistration\s+(?:department|office|system|unit)(?!\w)", "registration"),
+    (r"\bcoordinators?\b", "coordinator"),
+    (r"\b(?:it|information\s+technology)\s+(?:department|services?|support|unit|team)\b|\bhelp\s*desk\b", "it"),
+    (r"\bblackboard\b|\bbb\s+ultra\b|\blms\b|\blearning\s+management\s+system\b", "blackboard"),
+    (r"\bbanner\b", "banner"),
+    (r"\bmy\s?uos\b", "myuos"),
+    (r"\bteaching\s+assistants?\b", "teaching_assistant"),
+    (r"\bstudents?(?:'s|')?(?!\w)|\blearners?(?!\w)|\badvisees?(?!\w)", "student"),
+    (r"\b(?:part[- ]time|full[- ]time|regular|visiting|adjunct|new)?\s*(?:instructors?(?:'s|')?|teachers?|professors?|faculty(?:\s+members?(?:'s|')?)?|"
+     r"academic\s+staff|teaching\s+staff)(?!\w)", "faculty"),
+    (r"\b(?:senior\s+)?lecturers?(?:'s|')?(?!\w)", "lecturer"),
+    (r"\b(?:the\s+)?university\s+of\s+sharjah\b(?:\s*\(\s*uos\s*\))?|\bthe\s+university\b|\buos\b", "university"),
+    (r"\bdepartments?\b", "department"),
+    (r"\bcolleges?\b", "college"),
+)
+#: Concepts that stand for roles: checked by role, never by the shared concept.
+_ROLE_CONCEPTS: FrozenSet[str] = frozenset({"dean_chair", "council", "registration", "instructor", "lecturer", "teaching_assistant"})
+
+
+def concept_spans(text: str) -> List[Tuple[int, int]]:
+    """The spans of Teaching concept phrases in ``text`` (a subject that is no role: "course files", "office hours")."""
+    lowered = cue_text(text.lower())
+    spans: List[Tuple[int, int]] = []
+    for pattern, _concept, _anchor in _COMPILED_CONCEPTS:
+        for m in pattern.finditer(lowered):
+            if not any(not (m.end() <= a or m.start() >= b) for a, b in spans):
+                spans.append((m.start(), m.end()))
+    return sorted(spans)
+
+
+ASK_GATE = _grounding.AskGate(concepts, concept_residue, generic=GENERIC_TERMS, party=_RESPONSIBLE_PARTY, implies=_ANCHOR_IMPLIES,
+                              loose=_LOOSE_CONCEPTS, table_row=is_table_row, roles=GROUNDING_ROLES, self_role="faculty",
+                              role_concepts=_ROLE_CONCEPTS, calendar_row=lambda unit: _weekday_shape(unit) or bool(_CALENDAR_LINE.search(unit)),
+                              phrases=concept_spans)
+ASK_GENERAL, ASK_RECOGNISED, ASK_UNKNOWN = _grounding.GENERAL, _grounding.SPECIFIC_RECOGNISED, _grounding.SPECIFIC_UNKNOWN
+
+
+def assess_ask(clause: str) -> _grounding.AskAssessment:
+    """The shape of a clause and the grounding detail it adds: a general
+    overview is grounded by its concepts, a specific recognised ask by its
+    concepts, its remaining content words, a normative marker for a deontic
+    proposition, a party with the asked action and a value where asked; a
+    specific unknown ask receives a detail no evidence covers."""
+    return ASK_GATE.assess(clause)
+
+
 # ---------------------------------------------------------------------------
 # Scope and the section guard
 # ---------------------------------------------------------------------------
-def _merge_ranges(ranges: Sequence[Tuple[int, int]]) -> List[Tuple[int, int]]:
-    merged: List[Tuple[int, int]] = []
-    for first, last in sorted(ranges):
-        if merged and first <= merged[-1][1] + 1:
-            merged[-1] = (merged[-1][0], max(merged[-1][1], last))
-        else:
-            merged.append((first, last))
-    return merged
-
-
 def compile_scope(section_map: SectionMap, source_id: str = APPROVED_SOURCE_ID,
                   owned: Sequence[Tuple[int, str, str]] = OWNED_SECTIONS) -> RetrievalScope:
     """The retrieval scope for the owned sections, as page ranges read from the
-    section map. Raises ``ValueError`` when the map is not the approved
-    source's or lacks an owned section: the scope is never silently smaller."""
-    if section_map.source_id != source_id:
-        raise ValueError("section map belongs to %s, not %s" % (section_map.source_id, source_id))
-    ranges: List[Tuple[int, int]] = []
-    absent: List[str] = []
-    for chapter, number, _label in owned:
-        records = [r for r in section_map.sections() if r.chapter == chapter and r.section_no == number]
-        if not records:
-            absent.append("chapter %d section %s" % (chapter, number))
-        ranges.extend((r.start_page, r.end_page) for r in records)
-    if absent:
-        raise ValueError("owned sections absent from the section map: " + ", ".join(absent))
-    return RetrievalScope(source_ids=[source_id], page_ranges=_merge_ranges(ranges))
-
-
-def heading_marker(record: SectionRecord) -> "re.Pattern[str]":
-    """Regex for the printed heading of a section: its number followed by the
-    first two title words, e.g. "3.5 Responsibility to"."""
-    words = [re.sub(r"[^\w()/-]", "", w) for w in re.split(r"\s+", record.section_title or "") if w][:2]
-    parts = [re.escape(record.section_no or "")] + [re.escape(w) for w in words if w]
-    return re.compile(r"(?<![\d.])" + r"\W+".join(parts) + r"(?![\w])", re.I)
-
-
-@dataclass
-class _PageSegments:
-    """Sections printed on one shared page, in document order, with the row
-    index at which each begins (-1 for the section already in progress)."""
-
-    page: int
-    segments: List[Tuple[Tuple[int, str], int, bool]]          # ((chapter, number), first row id, owned)
-    markers: List[Tuple["re.Pattern[str]", int]]               # heading regex -> segment index (starting sections)
-    para_spans: Dict[int, List[Tuple[int, int, bool]]]         # chunk id -> [(start, end, owned)]
-
-    def row_owned(self, row_id: int) -> bool:
-        owned = self.segments[0][2]
-        for _key, first_row, is_owned in self.segments:
-            if first_row <= row_id:
-                owned = is_owned
-        return owned
-
-
-class SectionGuard:
-    """Chunk-level section eligibility on pages that carry a non-owned section.
-
-    Built once from the chunks, their metadata and the section map. On a
-    shared page the printed section headings are located: as row chunks (row
-    ids) and inside paragraph chunks (character offsets). A row belongs to the
-    last section whose heading precedes it; a row window is checked row by
-    row; a paragraph window is split at the headings it contains. Inside a
-    window, text after a heading belongs to that heading's section until the
-    next heading, and text before the first heading belongs to the section
-    that precedes that heading in the page's section order, never to a state
-    remembered from an overlapping window. A window without any heading lies
-    inside the section that the previous window ended in (the windows overlap
-    by more than a heading marker, so a heading is never missed). Text of a
-    non-owned section is not Teaching evidence. A shared page whose headings
-    cannot be located is rejected whole: false ``not_found`` is preferred to
-    a supported claim from an excluded section.
-    """
-
-    def __init__(self, chunks: Sequence[str], metadata: Sequence[Dict[str, Any]], section_map: SectionMap,
-                 owned: Sequence[Tuple[int, str, str]], scope: RetrievalScope) -> None:
-        if len(chunks) != len(metadata):
-            raise ValueError("chunks and metadata differ in length (%d vs %d)" % (len(chunks), len(metadata)))
-        for i, meta in enumerate(metadata):                         # paragraph spans are keyed by list index
-            cid = meta.get("chunk_id")
-            if cid is not None and cid != i:
-                raise ValueError("chunk metadata is out of order: metadata[%d]['chunk_id'] == %r" % (i, cid))
-        self.owned = {(c, n) for c, n, _ in owned}
-        self.shared_pages: Dict[int, _PageSegments] = {}
-        self.unresolved_pages: List[int] = []
-        pages = sorted({p for first, last in (scope.page_ranges or ()) for p in range(first, last + 1)})
-        sections = section_map.sections()
-        by_page: Dict[int, List[int]] = {}
-        for i, meta in enumerate(metadata):
-            page = meta.get("page")
-            if isinstance(page, int) and page in pages:
-                by_page.setdefault(page, []).append(i)
-        for page in pages:
-            on_page = [r for r in sections if r.start_page <= page <= r.end_page]
-            if not on_page or all((r.chapter, r.section_no) in self.owned for r in on_page):
-                continue                                            # nothing non-owned printed here
-            if not by_page.get(page):
-                continue                                            # no chunk carries this page: nothing to attribute
-            built = self._build(page, on_page, by_page[page], chunks, metadata)
-            if built is None:
-                self.unresolved_pages.append(page)
-            else:
-                self.shared_pages[page] = built
-
-    def _build(self, page: int, on_page: List[SectionRecord], ids: List[int], chunks: Sequence[str],
-               metadata: Sequence[Dict[str, Any]]) -> Optional[_PageSegments]:
-        segments: List[Tuple[Tuple[int, str], int, bool]] = []
-        markers: List[Tuple["re.Pattern[str]", int]] = []
-        rows = [(metadata[i].get("row_id"), chunks[i]) for i in ids if metadata[i].get("chunk_type") == "row"]
-        for record in on_page:
-            key = (record.chapter, record.section_no)
-            owned = key in self.owned
-            if record.start_page < page:
-                segments.append((key, -1, owned))
-                continue
-            marker = heading_marker(record)
-            hits = [rid for rid, text in rows if isinstance(rid, int) and marker.match(text)]
-            if not hits:
-                return None                                         # heading not printed as a row: unresolved
-            segments.append((key, min(hits), owned))
-            markers.append((marker, len(segments) - 1))
-        starts = [first for _k, first, _o in segments]
-        if starts != sorted(starts) or len(set(starts)) != len(starts):
-            return None                                             # headings out of document order
-        para_spans: Dict[int, List[Tuple[int, int, bool]]] = {}
-        paragraphs = sorted(
-            (i for i in ids if metadata[i].get("chunk_type") == "paragraph"),
-            key=lambda i: (metadata[i]["chunk_id_on_page"] if isinstance(metadata[i].get("chunk_id_on_page"), int) else i, i))
-        current = 0                                                 # section a window without headings lies in
-        for i in paragraphs:                                        # paragraph windows are emitted in document order
-            text = chunks[i]
-            cuts: List[Tuple[int, int]] = []
-            for marker, seg_index in markers:
-                m = marker.search(text)
-                if m:
-                    cuts.append((m.start(), seg_index))
-            cuts.sort()
-            spans: List[Tuple[int, int, bool]] = []
-            if not cuts:
-                spans.append((0, len(text), segments[current][2]))
-            else:
-                first_pos, first_seg = cuts[0]
-                if first_pos > 0:                                   # text before the first heading: the preceding section
-                    spans.append((0, first_pos, segments[max(first_seg - 1, 0)][2]))
-                for k, (pos, seg_index) in enumerate(cuts):
-                    end = cuts[k + 1][0] if k + 1 < len(cuts) else len(text)
-                    if end > pos:
-                        spans.append((pos, end, segments[seg_index][2]))
-                current = max(current, cuts[-1][1])
-            para_spans[i] = spans
-        return _PageSegments(page=page, segments=segments, markers=markers, para_spans=para_spans)
-
-    def is_shared(self, meta: Dict[str, Any]) -> bool:
-        return meta.get("page") in self.shared_pages or meta.get("page") in self.unresolved_pages
-
-    def owned_spans(self, chunk_id: Any, chunk: str, meta: Dict[str, Any]) -> Optional[List[Tuple[int, int]]]:
-        """Character spans of ``chunk`` that are Teaching's, or None when the
-        whole chunk is (page without a non-owned section). An empty list
-        means nothing in the chunk may be quoted."""
-        page = meta.get("page")
-        if page in self.unresolved_pages:
-            return []
-        segs = self.shared_pages.get(page)
-        if segs is None:
-            return None
-        kind = meta.get("chunk_type")
-        if kind == "row":
-            rid = meta.get("row_id")
-            return [(0, len(chunk))] if isinstance(rid, int) and segs.row_owned(rid) else []
-        if kind == "row_window":
-            first, last = meta.get("row_start"), meta.get("row_end")
-            units = _spans(chunk, "row_window")
-            if not isinstance(first, int) or not isinstance(last, int) or len(units) != last - first + 1:
-                return []                                           # misaligned window: reject
-            return [(s, e) for (s, e), rid in zip(units, range(first, last + 1)) if segs.row_owned(rid)]
-        if kind == "paragraph":
-            spans = segs.para_spans.get(chunk_id)
-            if spans is None:
-                return []
-            return [(s, e) for s, e, owned in spans if owned]
-        return []
+    section map (shared rule). Raises ``ValueError`` when the map is not the
+    approved source's or lacks an owned section: the scope is never silently
+    smaller."""
+    return _scoping.compile_scope(section_map, source_id, owned)
 
 
 # ---------------------------------------------------------------------------
-# Quote selection
+# Quote selection (shared rule, read with Teaching's relevance and table-row shapes)
 # ---------------------------------------------------------------------------
 def select_quote(text: str, chunk_type: Optional[str], clause: Concepts,
                  allowed: Optional[Sequence[Tuple[int, int]]] = None,
                  details: Sequence["Detail"] = ()) -> Optional[Tuple[str, int, int]]:
     """The best quotable unit of ``text`` for the clause as ``(quote, shared
     anchors, shared vocabulary)``, or None when no unit is both relevant and
-    quotable. ``allowed`` restricts units to character spans attributed to
-    Teaching (None = whole chunk). A sentence inside a list item is quoted
-    with the item's opening; a sentence that opens with a context-dependent
-    word (Such, They, These, This, Those, It) is quoted with the sentence
-    before it when that sentence is allowed and usable, and is rejected
-    otherwise; a prose unit is extended by the next unit when that one is
-    allowed, quotable, shares a concept and does not open a new item. The
-    quote is an exact substring of ``text``. Among relevant units, one that
-    contains more of the requested ``details`` wins, then relevance, then
-    document order."""
-    units = _units(text, chunk_type)
-    kind = "line" if chunk_type in ("row", "row_window") else "prose"
-
-    def permitted(span: Tuple[int, int]) -> bool:
-        return allowed is None or any(s <= span[0] and span[1] <= e for s, e in allowed)
-
-    def bad(index: int) -> Optional[str]:
-        s, e, _ = units[index]
-        last = kind == "prose" and chunk_type == "paragraph" and index == len(units) - 1
-        return quote_problem(text[s:e].strip(), kind, last_unit=last)
-
-    def is_item_head(index: int) -> bool:
-        s, e, item_start = units[index]
-        return item_start == s and bool(_ITEM_START.match(text[s:e]))
-
-    best: Optional[Tuple[Tuple[int, int, int, int], str]] = None
-    for index, (start, end, item_start) in enumerate(units):
-        if not permitted((start, end)) or bad(index) or relevance(clause, text[start:end])[1] < 1:
-            continue                                                # a unit must share a concept itself
-        core = _LIST_MARKER.sub("", text[start:end].strip())
-        if kind == "prose" and _PRONOUN_START.match(core):
-            # The sentence depends on its antecedent: quote it with the unit
-            # before it, or not at all. A list item's antecedent is the list's
-            # lead-in or a plain sentence, never a sibling item; a sentence
-            # inside an item takes the item's own earlier sentence.
-            if index == 0:
-                continue
-            p_start, p_end, p_item = units[index - 1]
-            prev = text[p_start:p_end].strip()
-            prev_is_item = p_item == p_start and bool(_ITEM_START.match(prev))
-            if item_start == start:
-                usable = p_item == p_start and not prev_is_item
-            else:
-                usable = p_item == item_start
-            prev_core = _LIST_MARKER.sub("", prev)
-            if not (usable and permitted((p_start, end)) and prev_core and not prev_core[0].islower()
-                    and not _HEADING.match(prev) and len(text[p_start:end].split()) <= MAX_QUOTE_WORDS):
-                continue                                            # a heading is never an antecedent
-            start = p_start
-        # A sentence inside a bullet or numbered item is quoted with the item's
-        # opening, so "The load for this category is 12 hours" keeps its category.
-        if item_start < start and permitted((item_start, end)) and len(text[item_start:end].split()) <= MAX_QUOTE_WORDS:
-            start = item_start
-        # A prose unit is extended by the next unit when that one is allowed,
-        # quotable and shares a concept. Printed lines are never joined.
-        if kind == "prose" and index + 1 < len(units) and not is_item_head(index + 1) and permitted(units[index + 1][:2]) and not bad(index + 1):
-            nxt_end = units[index + 1][1]
-            if relevance(clause, text[units[index + 1][0]:nxt_end])[1] >= 1 and len(text[start:nxt_end].split()) <= MAX_QUOTE_WORDS:
-                end = nxt_end
-        quote = text[start:end].strip()
-        if quote_problem(quote, kind, last_unit=(kind == "prose" and chunk_type == "paragraph" and end == units[-1][1])):
-            continue
-        anchors, vocab = relevance(clause, quote)
-        if anchors >= 1 or vocab >= 2:
-            covered = len(unit_coverage(details, clause, quote))
-            score = (covered, anchors, vocab, -index)
-            if best is None or score > best[0]:
-                best = (score, quote)
-    if best is None:
-        return None
-    (_, anchors, vocab, _), quote = best
-    return quote, anchors, vocab
+    quotable (see ``evidence.select_quote``; relevance is Teaching's)."""
+    return _evidence.select_quote(text, chunk_type, lambda t: relevance(clause, t), allowed, details,
+                                  max_words=MAX_QUOTE_WORDS, table_row=is_table_row)
 
 
 # ---------------------------------------------------------------------------
@@ -1147,20 +906,7 @@ class TeachingResources:
 # ---------------------------------------------------------------------------
 # The specialist
 # ---------------------------------------------------------------------------
-_PATH_SHAPED = re.compile(
-    r"[A-Za-z]:[\\/][^\s'\"<>|]+"                                       # Windows drive paths
-    r"|(?<![\w:./])/(?:home|users|tmp|var|etc|opt|mnt|root|srv|usr|c|d|data|app|workspace)/[^\s'\"<>|]*"   # Unix homes and system trees
-    r"|(?<![\w:./])/[\w.-]+(?:/[\w.-]+)+",                                # any other absolute path
-    re.I)
-
-
-def _safe_error(exc: BaseException) -> str:
-    """The exception type and a short message with key-shaped secrets and
-    filesystem paths removed."""
-    text = _KEY_SHAPED.sub("gsk_***", str(exc))
-    text = _PATH_SHAPED.sub("<path>", text)
-    text = re.sub(r"\s+", " ", text)[:160]
-    return "%s: %s" % (type(exc).__name__, text) if text else type(exc).__name__
+_safe_error = redact_error
 
 
 def _quote_key(quote: str) -> str:
@@ -1370,12 +1116,13 @@ class TeachingLearningSpecialist(Specialist):
             metadata=metadata,
         )
 
-    def _handoff(self, task: SpecialistTask, target: SpecialistId, clause: str, index: int, kind: str) -> HandoffRequest:
+    def _handoff(self, task: SpecialistTask, target: SpecialistId, clause: str, index: int, kind: str, ordinal: int = 0) -> HandoffRequest:
+        suffix = "%d" % index if ordinal == 0 else "%d-%d" % (index, ordinal)   # the first handoff keeps the historical id
         return HandoffRequest(
             from_specialist=self.specialist_id, requested_specialist=target,
             reason="%s clause %d belongs to %s: %s" % (kind, index, target.value, clause[:120]),
             task=SpecialistTask(
-                task_id="%s-handoff-%d" % (task.task_id, index), question=task.question, specialist_id=target,
+                task_id="%s-handoff-%s" % (task.task_id, suffix), question=task.question, specialist_id=target,
                 domain=target.value, intent=task.intent, level=task.level, system=task.system,
                 context={"full_question": task.question, "focus_clauses": [clause]},
                 requested_by=self.specialist_id.value,
@@ -1443,6 +1190,11 @@ class TeachingLearningSpecialist(Specialist):
         try:
             for index, clause in enumerate(processed):
                 teaching, other = classify_clause(clause)
+                navigation, substantive = navigation_intent(clause)
+                if navigation and not substantive:
+                    # "where is the curriculum committee office": a pure place or contact ask is Institutional Navigation's
+                    # alone and is never answered from teaching text, whatever unit it names (Step 4.8T-C, D-079)
+                    teaching, other = False, SpecialistId.INSTITUTIONAL
                 if not teaching:
                     if other is not None:
                         handoffs.append(self._handoff(task, other, clause, index, "misrouted"))
@@ -1452,18 +1204,30 @@ class TeachingLearningSpecialist(Specialist):
                         missing.append("clause %d carries no teaching cue and was not searched: %s" % (index, clause[:120]))
                     continue
                 owned_clauses += 1
-                if other is not None:
-                    handoffs.append(self._handoff(task, other, clause, index, "shared"))
+                # the retrieval route of THIS clause (Step 4.7, D-078): a contact clause beside a substantive one must not
+                # make it retrieve as a contact lookup
+                clause_route = resolve_clause_retrieval_intent(clause, task.intent, sole_clause=len(processed) == 1,
+                                                               substantive=substantive)
+                # a shared clause keeps every foreign intent it names as a handoff (Milestone 4, Step 4.5A)
+                handoffs.extend(self._handoff(task, o, clause, index, "shared", n) for n, o in enumerate(other_domains(clause)))
                 procedural, system = is_procedure_request(clause, task.system)
                 if system and system not in systems_seen:
                     systems_seen.append(system)
                 clause_concepts = concepts(clause)
                 details = requested_details(clause)
+                # the ask gate (Step 4.8T-C, D-079): topic relevance alone never supports a specific ask; the answering
+                # unit must state the asked specifics, and an unrecognised ask is never supported
+                ask = assess_ask(clause)
+                if not procedural:
+                    details = list(details) + list(ask.details)      # a procedure request is never supported: its own rule
+                if navigation:
+                    # the substantive half is answered; the contact or location half needs contact evidence
+                    details.append(Detail("contact", "contact or location details", contact_evidence))
                 rejected: List[Dict[str, Any]] = []
                 clause_findings: List[str] = []
                 best_covered: FrozenSet[str] = frozenset()      # the most complete single evidence unit
                 seen_anywhere: set = set()                       # details present somewhere, for the message
-                for cand in self._candidates(clause, route, clause_concepts, details, procedural, system, rejected):
+                for cand in self._candidates(clause, clause_route, clause_concepts, details, procedural, system, rejected):
                     if len(clause_findings) >= MAX_FINDINGS_PER_CLAUSE:
                         break
                     key = _quote_key(cand.quote)
@@ -1479,7 +1243,7 @@ class TeachingLearningSpecialist(Specialist):
                             best_covered = cand.covered
                         seen_anywhere |= set(cand.covered)
                         continue
-                    finding = self._finding(task, len(findings) + 1, cand, index, route, details)
+                    finding = self._finding(task, len(findings) + 1, cand, index, clause_route, details)
                     findings.append(finding)
                     clause_findings.append(finding.finding_id)
                     if len(cand.covered) > len(best_covered):
@@ -1499,7 +1263,16 @@ class TeachingLearningSpecialist(Specialist):
                         missing.append("step-by-step procedure for %s requested by clause %d is not in the indexed sources: %s"
                                        % (system, index, clause[:120]))
                     for d in uncovered:
-                        if _detail_key(d) in seen_anywhere:
+                        if d.family == "ask_unknown":
+                            missing.append("the specific ask of clause %d is not recognised by the Teaching specialist; the quoted evidence is "
+                                           "related to the topic but does not confirm the answer: %s" % (index, clause[:120]))
+                        elif d.family == "grounding":
+                            missing.append("%s: the quoted evidence is on the topic but does not settle the question for clause %d: %s"
+                                           % (d.label, index, clause[:120]))
+                        elif d.family == "contact":
+                            missing.append("contact or location details are not in the Teaching evidence for clause %d; Institutional "
+                                           "Navigation holds them: %s" % (index, clause[:120]))
+                        elif _detail_key(d) in seen_anywhere:
                             missing.append("%s is not stated together with the other requested details in one place for clause %d: %s"
                                            % (d.label, index, clause[:120]))
                         else:
@@ -1509,6 +1282,7 @@ class TeachingLearningSpecialist(Specialist):
                 reports.append({"index": index, "clause": clause, "outcome": outcome, "procedural": procedural,
                                 "system": system, "findings": clause_findings, "rejected": rejected,
                                 "requested_details": [d.label for d in details], "uncovered_details": [d.label for d in uncovered],
+                                "ask_shape": ask.shape, "route": clause_route,
                                 "shared_with": other.value if other is not None else None})
         except Exception as exc:                          # retrieval, reranking or construction failed
             return self._result(task, FindingStatus.ERROR, summary="execution failed", handoffs=handoffs,
@@ -1542,7 +1316,9 @@ class TeachingLearningSpecialist(Specialist):
 
 
 __all__ = [
-    "ANCHOR_CONCEPTS", "APPROVED_SOURCE_ID", "CATEGORY_GROUPS", "Concepts", "Detail", "EXCLUDED_SECTIONS", "GENERIC_TERMS",
+    "ANCHOR_CONCEPTS", "APPROVED_SOURCE_ID", "ASK_GATE", "ASK_GENERAL", "ASK_RECOGNISED", "ASK_UNKNOWN", "CATEGORY_GROUPS", "Concepts",
+    "GROUNDING_ROLES",
+    "Detail", "EXCLUDED_SECTIONS", "GENERIC_TERMS", "assess_ask", "concept_residue", "contact_evidence", "navigation_intent",
     "MAX_CANDIDATES_PER_CLAUSE", "MAX_CLAUSES", "MAX_FINDINGS_PER_CLAUSE", "MAX_QUOTE_WORDS", "OWNED_SECTIONS", "SYSTEMS",
     "SectionGuard", "TeachingLearningSpecialist", "TeachingResources", "VOCABULARY_CONCEPTS", "calendar_context",
     "classify_clause", "compile_scope", "concepts", "detail_covered", "heading_marker", "is_procedure_request", "is_relevant",

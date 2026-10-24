@@ -10,60 +10,48 @@ DECISION OWNED
     routes, never answers, never writes prose and never verifies.
 
 WHAT IT DOES IN THIS PHASE
-    * Only the Teaching & Learning Specialist is executable
-      (``EXECUTABLE_SPECIALISTS``). A task assigned to any other specialist
-      is kept, in Coordinator order, as ``pending``: it is never executed,
-      never faked and never handed to Teaching. There is no default-to-
-      Teaching fallback.
+    * The Teaching & Learning and the Research & Innovation Specialists are
+      executable (``EXECUTABLE_SPECIALISTS``); each runs only when it is
+      also registered. A task assigned to Faculty Services & HR or
+      Institutional Navigation is kept, in Coordinator order, as
+      ``pending``: it is never executed, never faked and never handed to
+      another specialist. There is no default-to-Teaching fallback.
     * Tasks are passed to the specialist exactly as the Coordinator built
       them (task id, full question, intent, level, system and
       ``context["focus_clauses"]``); nothing is reconstructed.
     * Handoff requests a specialist returns are collected and preserved;
-      they are not executed (handoff rounds are a later milestone).
+      they are not executed (handoff rounds are a later milestone). A task
+      whose ``requested_by`` is not the Coordinator (a handoff task placed in
+      a decision) is kept ``pending`` and never executed.
     * A specialist that raises is reported as an ``error`` finding for its
       task, with key-shaped secrets and filesystem paths removed; the
       decision and the other tasks are unaffected.
     * No LLM call is made here; ``DispatchResult.llm_calls`` counts the
       specialists' own ``llm_used`` flags (0 for the deterministic Teaching
-      specialist).
+      and Research specialists).
 
 NOT WIRED INTO THE RUNTIME
     Nothing in ``handbook_bot.orchestrator`` or ``answer_question`` imports
     this module. ``PLAN_F_ENABLED`` stays False. The seam exists so that the
-    Coordinator to Teaching path can be tested end to end.
+    Coordinator to specialist path can be tested end to end.
 """
 from __future__ import annotations
 
-import re
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
-from ..coordinator import coordinate
-from .base import Specialist, check_findings
+from ..coordinator import REQUESTED_BY, coordinate
+from .base import Specialist, check_findings, redact_error
 from .contracts import CoordinatorDecision, FindingStatus, HandoffRequest, SpecialistFindings, SpecialistId, SpecialistTask
 from .registry import SpecialistRegistry
 
-#: Specialists that may be executed in this phase (Step 3.10: Teaching only).
-EXECUTABLE_SPECIALISTS: Tuple[SpecialistId, ...] = (SpecialistId.TEACHING,)
+#: Specialists that may be executed in this phase (Step 3.10: Teaching;
+#: Milestone 4 Step 4.4: Research added). Faculty Services & HR and
+#: Institutional Navigation stay pending until they are implemented.
+EXECUTABLE_SPECIALISTS: Tuple[SpecialistId, ...] = (SpecialistId.TEACHING, SpecialistId.RESEARCH, SpecialistId.FACULTY_SERVICES)
 
 STATE_EXECUTED = "executed"
 STATE_PENDING = "pending"
-
-_KEY_SHAPED = re.compile(r"gsk_[A-Za-z0-9]+")
-_PATH_SHAPED = re.compile(
-    r"[A-Za-z]:[\\/][^\s'\"<>|]+"
-    r"|(?<![\w:./])/(?:home|users|tmp|var|etc|opt|mnt|root|srv|usr|c|d|data|app|workspace)/[^\s'\"<>|]*"
-    r"|(?<![\w:./])/[\w.-]+(?:/[\w.-]+)+",
-    re.I)
-
-
-def redact_error(exc: BaseException) -> str:
-    """The exception type and a short message with key-shaped secrets and
-    filesystem paths removed (the specialists' own error convention)."""
-    text = _KEY_SHAPED.sub("gsk_***", str(exc))
-    text = _PATH_SHAPED.sub("<path>", text)
-    text = re.sub(r"\s+", " ", text)[:160]
-    return "%s: %s" % (type(exc).__name__, text) if text else type(exc).__name__
 
 
 def error_findings(specialist_id: SpecialistId, task: SpecialistTask, exc: BaseException) -> SpecialistFindings:
@@ -169,6 +157,12 @@ def dispatch(decision: CoordinatorDecision, registry: SpecialistRegistry, *,
         sid = task.specialist_id
         if sid is None:                                   # cannot happen for a valid decision; kept as a guard
             raise ValueError("Coordinator task %s has no specialist id" % task.task_id)
+        if task.requested_by != REQUESTED_BY:
+            # a handoff task placed in a decision is data, never a second round (Step 4.5A, SAF-5)
+            runs.append(SpecialistRun(task, sid, STATE_PENDING, None,
+                                      "task %s was not issued by the Faculty Onboarding Coordinator (requested by %s); "
+                                      "handoff rounds are not executed in this phase" % (task.task_id, task.requested_by)))
+            continue
         if sid not in allowed:
             runs.append(SpecialistRun(task, sid, STATE_PENDING, None,
                                       "%s is not executable in this phase" % sid.value))

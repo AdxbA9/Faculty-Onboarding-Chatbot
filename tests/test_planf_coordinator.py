@@ -527,3 +527,75 @@ def test_cue_text_is_classification_only_and_keeps_length():
                                       "When does the add and drop period end?", "Is e learning mandatory?"])
 def test_add_drop_and_e_learning_route_to_teaching(question):
     assert selected(coordinate(question)) == ["teaching"]
+
+
+# ---------------------------------------------------------------------------
+# Milestone 4 (Step 4.4): Research & Innovation routing
+# ---------------------------------------------------------------------------
+@pytest.mark.parametrize("question", [
+    "Can I do paid consultancy?", "Do I need approval before consultancy?",
+    "What percentage of licensing revenue goes to the inventor?", "How are royalties shared with inventors?",
+    "Who owns an invention disclosure?", "Is commercialisation of my invention allowed?", "What does the Technology Transfer Office do?",
+    "Which body reviews research on animals?", "Does the IACUC review my protocol?", "Does the Institutional Review Board approve surveys?",
+    "What does the Research Funding Department do?", "What are the research priority areas?", "Who chairs the University Research Board?",
+    "What is the policy on research misconduct?", "Can I hire a research assistant?", "What does the VCRGS approve?",
+    "How does scientific publishing work at the university?", "What are the research regulations?",
+])
+def test_research_strong_cues_select_research_alone(question):
+    assert selected(coordinate(question)) == ["research"]
+
+
+@pytest.mark.parametrize("question,expected", [
+    ("How many theses can I supervise at once?", ["research"]),
+    ("What is the maximum number of dissertations I can supervise?", ["research"]),
+    ("How many students can a supervisor take?", ["research"]),
+    ("How many PhD candidates may I supervise?", ["research"]),
+    ("Who supervises postgraduate research?", ["research"]),
+    ("How are research projects supervised?", ["research"]),
+    ("How is thesis supervision calculated?", ["teaching"]),
+    ("How many thesis supervision credits count toward workload?", ["teaching"]),
+    ("Am I eligible to supervise theses?", ["teaching"]),
+])
+def test_supervision_routes_by_detail_cue(question, expected):
+    assert selected(coordinate(question)) == expected
+
+
+@pytest.mark.parametrize("question,expected", [
+    ("What is the teaching load for research-intensive faculty?", ["teaching"]),
+    ("What is the teaching load for research intensive faculty?", ["teaching"]),
+    ("How many credits does research-intensive faculty teach?", ["teaching"]),
+    ("How is the active research faculty category defined?", ["teaching"]),
+    ("What is the load for teaching-track faculty?", ["teaching"]),
+    ("What research output is expected of research-intensive faculty?", ["research", "teaching"]),
+    ("Can research reduce my teaching load?", ["teaching", "research"]),
+])
+def test_wlam_category_phrases_are_teaching_and_never_alone_a_research_cue(question, expected):
+    assert selected(coordinate(question)) == expected
+
+
+def test_wlam_demotion_is_research_only_and_length_preserving():
+    text = coordinator.cue_text("load for research-intensive faculty")
+    assert len(coordinator._research_view(text)) == len(text)
+    assert "research" not in coordinator._research_view(text)
+    assert coordinator._research_view("What research is expected of research-intensive faculty?").startswith("What research is expected of")
+
+
+@pytest.mark.parametrize("question,expected", [
+    ("What is my teaching load?", ["teaching"]),
+    ("Who do I ask about Blackboard?", ["institutional", "teaching"]),
+    ("How do I publish my course materials on Blackboard?", ["teaching"]),
+    ("Can I take a sabbatical for research?", ["faculty_services", "research"]),
+    ("What research counts for promotion?", ["research", "faculty_services"]),
+    ("Where is the research office?", ["research", "institutional"]),
+    ("Who handles technology transfer?", ["institutional", "research"]),
+    ("What is the project timeline for the strategic plan?", []),
+    ("Hello", []),
+])
+def test_research_cues_do_not_widen_the_other_domains(question, expected):
+    assert selected(coordinate(question)) == expected
+
+
+def test_research_routing_is_deterministic():
+    for question in ("How many theses can I supervise at once?", "What is the teaching load for research-intensive faculty?", "Can I do paid consultancy?"):
+        first = coordinate(question).to_dict()
+        assert all(coordinate(question).to_dict() == first for _ in range(3))

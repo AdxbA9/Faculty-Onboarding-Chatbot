@@ -158,6 +158,176 @@ Coordinator did), does not write prose (Synthesis will), does not verify
    chunk, and among candidates of a clause, evidence whose single unit
    covers more requested details is chosen first.
 
+## Ask shape and grounding (Step 4.8T-C, D-079)
+
+The six gates establish the topic and the explicitly requested details. A
+seventh gate settles the ask itself. Every clause is read by the shared ask
+gate (`specialists/grounding.py`, injected with the Teaching vocabulary,
+`assess_ask`):
+
+- **General** ("What are faculty office-hour responsibilities?", "Tell me
+  about course syllabi.", "What does the LMS policy require?"): an overview
+  whose content words are all Teaching concepts, generic or filler words. It
+  is grounded by its concepts: the answering unit names them all.
+- **Specific recognised** (a yes/no proposition, who, when, where, how
+  many, what must, a value ask, a manner ask): `supported` only when ONE
+  local unit states the ask's specifics with the answer: every concept of
+  the clause and every remaining content word (by stem, with a small table
+  of verb classes: "reviews" is stated by "assessing"); a normative marker
+  (must, may, allowed, prohibited, optional ...) when the proposition is a
+  permission, obligation or prohibition, so a description never settles it;
+  a named party stated with the asked action, as a verb form or as its noun
+  bound to the party ("approval of the department council"), for a "who"
+  ask; a number for a value ask; a contents statement (outline, include,
+  list ...) for a contents ask. A calendar, grade or class-size row names at
+  least one specific and never settles a rule; what an exclusion phrase
+  names ("four hours per week, excluding academic advising") is not stated.
+  Detail-family words and calendar terms are verified by their own checks.
+- **Specific unknown** ("Why must I hold office hours?"): a detail no
+  evidence covers; never `supported`, `partial` at most.
+
+The grounding detail joins the requested details and is covered per local
+unit like them, so a deadline, a quantity or a location binds to the asked
+process or object in the same unit. One exception: a sentence that opens
+with a context-dependent word (Such, These, This, Those, It, They) is
+grounded together with its antecedent, which `select_quote` already joined;
+no other detail is ever combined across units. `metadata["clauses"][i]`
+carries `ask_shape`; an uncovered grounding detail is reported as "the asked
+specifics stated with the answer (...): the quoted evidence is on the topic
+but does not settle the question". Word-bag grounding does not bind
+grammatical positions: "Must I take attendance in every lecture?" is stated
+by a sentence that requires students to attend lectures. That semantic
+check remains the Milestone 5 Verifier's.
+
+Location evidence is a named system (Blackboard, Banner, MyUOS, LMS, a
+portal, a website), an electronic place (online, an E-Course File) or a
+locative phrase ("in the department office", "room 204", "located at");
+a bare "department", "office" or "college" inside a sentence about
+something else names no place.
+
+**Relation binding (Step 4.8T-C2, D-080).** Presence of the right words is
+not enough when they sit in the wrong roles. An ask that names an actor
+("Must faculty attend all theoretical lectures?", "Does the dean review
+course files?"), asks "who", is passive ("Is the workload plan approved by
+the dean?") or names a destination ("Does Banner forward grades to
+Blackboard?") is parsed into actor, action, adjective, object and target,
+and one evidence clause must state that relation: an occurrence of the
+action whose grammatical subject is the asked actor (the agent after "by",
+the antecedent of "which" or of "he/she", the role bound to an action noun
+by "of", "by", "with" or a possessive), with the object in that clause and
+the destination after a preposition of the asked class ("to" is not
+"from"). A clause naming another subject disqualifies ("Students are
+required to attend" answers no faculty question); a clause naming no
+subject counts only when none names another; "distributed to students"
+makes students the recipient, not the agent. A subject that is no role
+("course files", "the workload plan", "office hours") must be the subject
+of the evidence clause, so "Do course files assess department chairs?" is
+not answered by the chairs' duty. A light verb ("give final approval",
+"hold office hours") binds the rule's subject and the object's words. Roles
+come from `GROUNDING_ROLES`: a department chair is a chair, the Deans'
+Council a council, a registration system is not the Registrar, instructors
+and faculty members are one role, lecturers their own, the person asking is
+faculty; the roles a relation names must be named in the unit by role.
+"Absence" is attendance only in a class or student context. A percentage
+needs a percent sign, the word or a grade-table line, never a calendar
+line. The antecedent pair still grounds a pronoun-initial sentence, but its
+actor cannot migrate to the other sentence's action. Safe misses that
+remain: "Who supervises laboratory sessions?" on a one-vocabulary clause,
+"How many service hours are expected per week?" without a teaching cue,
+"Who reviews the workload allocation each year?" against the annual
+evaluation of performance (a different object).
+
+**Actor applicability, agents, receiving and frequency (Step 4.8T-C3,
+D-081).** The person asking ("I", "my", faculty, instructors) is a role like
+any other: a unit supports a faculty ask only when faculty is a grammatical
+subject in it (before a modal, copula or normative marker, at the head of a
+sentence, or after "by"), or when the unit is an imperative addressed to
+the reader; a student rule phrased impersonally ("Failure to attend the
+final examination ... may result in a failing grade") answers no faculty
+question, and an impersonal rule that names no faculty subject is PARTIAL.
+An occurrence with no subject counts for the asked actor only when that
+actor is a subject somewhere in the unit: "distributed to students ... and
+uploaded on Blackboard" never makes students the uploaders, while "Faculty
+prepare, upload and keep the syllabus" binds all three. The agent phrase of
+a passive ask keeps its tail ("by faculty members of the department", "by
+instructors whose courses ...", "by the instructor to the Registrar"), and
+an agentless passive ask must find its object in the patient of the
+occurrence, not anywhere in the unit. receive / get / obtain bind recipient,
+object and source ("X receives Y from Z" is not "Z receives Y from X"; "Any
+student receiving an Incomplete" answers no instructor). Frequency units
+are typed: "per week" satisfies neither "per semester" nor "per day",
+"periodically" satisfies no exact unit, "annually" equals "each year" and
+"weekly" equals "per week"; "each semester" and "each term" stay distinct.
+Safe misses that remain: an impersonal rule with no faculty subject, a
+"from"-source stated only as "to"-destination, and "each semester" against
+"each term".
+
+**Generic subjects, irregular passives and sentence scope (Step 4.8T-C4,
+D-082).** A subject outside the role lexicon and the concept vocabulary
+("the quality office", "the academic advisor", "the assessment team") is
+kept as a generic subject phrase: the evidence clause must have the same
+phrase as its subject, a clause whose subject is a named role disqualifies
+("Department Chairs are responsible for assessing ... course files" answers
+no quality-office question), and a generic subject never falls to the word
+bag. A table row settles no ask that names an actor ("Last day to remove
+Incomplete grade" answers a date, not "Does the academic advisor remove the
+Incomplete mark?"). Passive asks with "sent", "kept", "held", "made" and the
+other irregular participles the parser knows are bound like regular ones
+("sent to the Registrar and approved by the dean" does not state "sent to
+the dean"). A subject-less occurrence counts for the asked actor only when
+that actor is a grammatical subject of the same sentence: "Faculty enter
+grades in Blackboard. They are transferred to Banner." makes faculty no
+transfer agent, while "Faculty enter and transfer grades" and "Faculty
+prepare course files. They submit them to the chair." keep faculty, and the
+patient of a passive ("They are transferred", "Students are informed by")
+is never an agent. A consequence: an instructor duty stated in one sentence
+no longer supports an agentless action in the next ("Must I upload the
+syllabus on Blackboard?" against "Instructors are required to prepare ...
+These syllabi shall be ... uploaded" is PARTIAL).
+
+**Numeric facts (Step 4.8T-C5, D-083).** A specific ask with a number is
+one fact: value, the object it qualifies and its period (stated after the
+number, or before it as a modifier: "the semester workload"). The evidence
+must state that fact in one clause: "24 credit hours per semester" is not
+stated by "12 credit hours per regular semester or 24 credit hours per
+academic year", and "two office hours per week" is not stated by "five
+office hours per week, spread over a minimum of two days"; the correct
+pairings stay SUPPORTED. The number stays with its object ("12 credit
+hours" is not "12 office hours"), the period stays with its value up to the
+next comma or clause boundary ("teach 12 credit hours, hold five office
+hours per week" states no weekly 12), an action's period sits in the
+clause of that action by the asked actor ("update the course page weekly
+and check the discussion board daily" states no daily update; "the dean
+reviews them each year" states no yearly chair review), and the named
+subject of the fact's clause must be the asked actor, category included
+("the lecturer has 15 teaching hours" says nothing about the chair;
+"full-time faculty hold 5 office hours" says nothing about part-time
+instructors; "a lecture course meets 3 contact hours" says nothing about
+the laboratory course). When the ask names an action, a number of another
+independent clause (its own subject and verb, no occurrence of the asked
+action) never counts ("re-marking requests are filed within 7 days" states
+no 48-hour submission of results), while subordinate and coordinated
+clauses keep their numbers ("if absences exceed 10% ..., the instructor
+will issue a warning"; "correct ... and submit the results ... within
+forty-eight hours"). Table rows keep their date, grade and workload answers
+for the pairing they state. Safe misses that remain: an ask with a relative
+clause before its verb ("a student who misses 25 percent ... is barred",
+which the D-080 parser does not read), and a constructed prose line with
+three or more digit cells, which reads as a table row (D-082) and settles
+no ask that names an actor. A hyphenated period in the question
+("per-semester", "each-year") is read as the spaced one (Step 4.8T-C6,
+D-084).
+
+A pure place or contact clause ("Where is the curriculum committee
+office?", "What is the Blackboard help desk phone number?", "Where do I
+find the course file portal?") is Institutional Navigation's alone: it is
+handed off and never answered from teaching text, whatever cue it carries.
+A clause with a substantive half beside a contact half answers the
+substantive half and adds a contact detail that only an e-mail address, a
+telephone number, a room or a stated location covers. "Where is the
+syllabus posted / uploaded / kept" asks where a teaching artefact goes and
+is a policy fact. A click, menu or screen step stays a procedure request.
+
 ## Quote units
 
 A row chunk is one unit; a row window's units are its rows; a paragraph's
@@ -230,7 +400,25 @@ leave of absence, vacation, sabbatical, employment contract, contract
 renewal, probation, payroll, salary, employment benefits, allowances,
 housing, health insurance, visa, passport, promotion, tenure, HR. Research:
 research, grants, seed or external funding, research ethics, publications,
-journals, patents, intellectual property. Institutional: "who do I contact
+journals, patents, intellectual property; since Milestone 4 (Step 4.5A)
+also conference policy in context (per diem; conference registration,
+funding, travel, support, documents, deadlines, papers or proceedings;
+local, international, external or university-supported conferences;
+attending or presenting at a conference; "how many conferences"),
+licensing, petty cash, royalties, inventions, IACUC, informed consent, seed
+projects, technology transfer, TTO and consultancy, so that a compound
+clause sent to Teaching whole ("What is the per diem for international
+conferences and what is my teaching load?") keeps its research half as a
+handoff. The handoff is data and is never executed. Since Step 4.5A-R the
+Research intent is also read from the shared Research ownership lexicon
+(`specialists/domain_cues.py`), so a research half the Coordinator could not
+give to Research (specialist cap) is still handed off. Since round 2 of Step
+4.5A a shared clause is handed to every other domain it names (the first
+handoff keeps the historical id, the others are numbered), Institutional
+Navigation is ranked first whenever its cue fires (navigation first, as in
+the Research specialist), conference calls, rooms and halls are never
+research, and the WLAM categories are blanked before the Research cue is
+read. Institutional: "who do I contact
 about", "where is / where can I find the ... office, department, unit,
 centre, desk, library, clinic" or a named service (the Registrar, the
 registration, admissions or finance office, HR, IT services, reception,
@@ -256,11 +444,18 @@ never re-scanned.
   full question is never re-scanned for other specialists' clauses.
 - At most `PLAN_F_MAX_SUBTASKS` clauses per task; further clauses are
   reported in `missing` and `metadata["unprocessed_clauses"]`.
-- `task.intent` selects the retrieval route when it is an existing route;
-  otherwise `policy`. One intent applies to every clause of a task; a
-  per-clause intent is a Coordinator and orchestration matter and is
-  deferred (D-046). `task.system` supplies the system for the procedure
-  rule when the clause does not name one.
+- `task.intent` is one per task (D-046). It is the retrieval route of a task
+  with one focus clause when it is an existing route, otherwise `policy`.
+  Each clause of a multi-clause task takes its own route from
+  `retrieval_intent.resolve_clause_retrieval_intent` (Step 4.7, D-078,
+  shared with Research): the clause classified by the Coordinator's
+  deterministic router, with `contact` kept only by a clause that is itself
+  a contact ask. A contact clause carrying a teaching cue ("what is the
+  phone number of the Blackboard support office") therefore no longer makes
+  the substantive clause beside it retrieve as a contact lookup. The clause
+  report carries `route`; `metadata["route"]` is the task intent as given.
+  `task.system` supplies the system for the procedure rule when the clause
+  does not name one.
 - A task assigned to another specialist raises `ValueError`. A
   `source_scope` naming any source other than the handbook is refused with
   status `error` before any retrieval.
@@ -280,9 +475,10 @@ Instructions are never generated.
 ## Status semantics
 
 - `supported`: every assigned clause is Teaching's, each has at least one
-  finding that passed all six gates, every explicitly requested detail is
-  covered, no clause asked for an unavailable procedure, no clause was
-  unowned or unprocessed; `missing` is empty.
+  finding that passed all six gates, every explicitly requested detail and
+  the ask gate's grounding detail are covered in one local unit (D-079),
+  no clause asked for an unavailable procedure, no clause was unowned or
+  unprocessed; `missing` is empty.
 - `partial`: at least one valid finding, and at least one gap in `missing`
   (a clause without evidence, a requested detail not covered, a procedural
   request, an unowned clause or an unprocessed clause).
@@ -313,6 +509,21 @@ index, chunks, metadata, the registered source record and the section map.
 knowledge base and refuses an unregistered document or one whose section map
 was not applied. Importing the module loads no model and opens no
 connection; there is no module-level registry.
+
+## Shared helpers (Milestone 4)
+
+The domain-free mechanisms described above (scope compilation and the
+section guard, quote units and quote quality, quote selection, per-unit
+detail coverage, value-shaped numbers, money, timing, limits, authority and
+redaction) now live in `scoping.py`, `evidence.py`, `details.py` and
+`base.redact_error`, shared with the Research & Innovation Specialist.
+Teaching keeps every name documented here, bound to its own vocabulary and
+table-row shapes (D-058). Teaching does not use the opt-in lead-in join of
+`evidence.select_quote`. The retrieval route of a focus clause
+(`retrieval_intent.py`, Step 4.7, D-078) and the ask gate
+(`grounding.py`, Step 4.8T-C, D-079) are the two rules shared beyond the
+domain-free evidence mechanisms; Research keeps its own ask-shape and
+relation code and is frozen.
 
 ## Integration with the Faculty Onboarding Coordinator
 
