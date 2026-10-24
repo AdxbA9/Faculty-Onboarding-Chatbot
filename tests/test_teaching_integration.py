@@ -36,6 +36,11 @@ from test_teaching_specialist import GRADING_AND_EXAM_PAGES, PAGES, RawOverlapRe
 
 REPO = Path(__file__).resolve().parents[1]
 
+#: The Teaching-only phase (Step 3.10). Tests that assert research stays pending
+#: describe that phase and pin it explicitly; since Milestone 4 Step 4.4 the
+#: default executable set also contains Research.
+TEACHING_ONLY = (SpecialistId.TEACHING,)
+
 
 @pytest.fixture(scope="module")
 def corpus():
@@ -127,7 +132,9 @@ def test_teaching_only_question_is_executed_and_supported(registry, corpus):
     f = result.results[0]
     assert f.status is FindingStatus.SUPPORTED and f.missing == [] and f.confidence == 1.0
     assert any('"A" Regular Faculty' in x.evidence_quote and x.page == 96 for x in f.findings)
-    assert f.findings[0].metadata["details_covered"] == ["the requested faculty category (regular faculty)"]
+    covered = f.findings[0].metadata["details_covered"]
+    assert "the requested faculty category (regular faculty)" in covered
+    assert any(d.startswith("the asked specifics stated with the answer") for d in covered)      # D-079 grounding
     assert result.llm_calls == 0 and result.question == q
     assert_teaching_result(result, corpus)
     assert result.to_dict()["executed_specialists"] == ["teaching"]
@@ -180,7 +187,7 @@ def test_multi_clause_teaching_task_reports_each_clause(registry, corpus):
     ("Where is the Registrar's office and what is my teaching load?", SpecialistId.INSTITUTIONAL),
 ])
 def test_mixed_domain_question_executes_teaching_and_keeps_the_other_pending(registry, corpus, question, other):
-    result = D.run_question(question, registry)
+    result = D.run_question(question, registry, executable=TEACHING_ONLY)
     assert_routing_preserved(result, question)
     assert set(result.decision.selected_specialists) == {SpecialistId.TEACHING, other}
     assert result.executed_specialists == [SpecialistId.TEACHING] and result.pending_specialists == [other]
@@ -269,10 +276,11 @@ def test_specialist_that_raises_becomes_an_error_result(corpus):
     q = "How many office hours must faculty hold and how do I apply for annual leave?"
     result = D.run_question(q, registry_with(RaisingTeaching()))
     f = result.results[0]
-    assert f.status is FindingStatus.ERROR and f.task_id == "task-1" and f.specialist_id is SpecialistId.TEACHING
+    # since Step 4.11 the shared HR lexicon scores "apply for annual leave" above "office hours", so HR is task-1
+    assert f.status is FindingStatus.ERROR and f.task_id == "task-2" and f.specialist_id is SpecialistId.TEACHING
     assert f.metadata["error"].startswith("RuntimeError:") and "<path>" in f.metadata["error"] and "gsk_***" in f.metadata["error"]
     assert "Users" not in f.metadata["error"] and "gsk_ABC" not in f.metadata["error"]
-    assert result.pending_specialists == [SpecialistId.FACULTY_SERVICES] and result.decision.subtasks[1].specialist_id is SpecialistId.FACULTY_SERVICES
+    assert result.pending_specialists == [SpecialistId.FACULTY_SERVICES] and result.decision.subtasks[0].specialist_id is SpecialistId.FACULTY_SERVICES
     assert D.redact_error(RuntimeError("cannot open /home/user/private/file")) == "RuntimeError: cannot open <path>"
 
 
@@ -283,7 +291,7 @@ def test_handoff_is_preserved_but_not_executed(corpus):
     spy = CountingTeaching(teaching_for(corpus).resources)
     registry = registry_with(spy)
     q = "Can my teaching load be reduced if I have a funded research project?"
-    result = D.run_question(q, registry)
+    result = D.run_question(q, registry, executable=TEACHING_ONLY)
     assert_routing_preserved(result, q)
     teaching = next(r for r in result.runs if r.specialist_id is SpecialistId.TEACHING)
     assert teaching.findings.requested_agents == [SpecialistId.RESEARCH]
@@ -299,10 +307,10 @@ def test_handoff_is_preserved_but_not_executed(corpus):
 # ---------------------------------------------------------------------------
 def test_coordinator_specialist_limit_is_respected_not_reinterpreted(registry):
     q = "What is my teaching load, how do I apply for a research grant, and when is my salary paid?"
-    full = D.run_question(q, registry)
+    full = D.run_question(q, registry, executable=TEACHING_ONLY)
     assert [s.value for s in full.decision.selected_specialists] == ["teaching", "research", "faculty_services"]
     assert full.executed_specialists == [SpecialistId.TEACHING] and full.pending_specialists == [SpecialistId.RESEARCH, SpecialistId.FACULTY_SERVICES]
-    limited = D.run_question(q, registry, max_specialists=1)
+    limited = D.run_question(q, registry, executable=TEACHING_ONLY, max_specialists=1)
     assert [s.value for s in limited.decision.selected_specialists] == ["teaching"] and len(limited.runs) == 1
     assert limited.decision.metadata["limits"]["specialists"] == 1
     assert len(full.runs) == len(full.decision.subtasks)                 # never more tasks than the Coordinator produced
@@ -340,7 +348,7 @@ def test_no_default_to_teaching_for_other_specialists(registry):
 
 def test_task_identity_and_order_are_preserved(registry):
     q = "Can I reduce my teaching load if I have a funded research project, and how do I apply for a research grant?"
-    result = D.run_question(q, registry)
+    result = D.run_question(q, registry, executable=TEACHING_ONLY)
     ids = [t.task_id for t in result.decision.subtasks]
     assert [r.task.task_id for r in result.runs] == ids == ["task-1", "task-2"]
     assert result.decision.subtasks[0].specialist_id is SpecialistId.RESEARCH and result.runs[0].state == D.STATE_PENDING
@@ -494,4 +502,4 @@ def test_dispatch_rejects_a_decision_altered_after_validation(registry):
     altered.subtasks.append("not a task")                                     # a non-task
     with pytest.raises(TypeError):
         D.dispatch(altered, registry, question=q)
-    assert D.dispatch(decision, registry, question=q).to_dict()["executed_specialists"] == ["teaching"]   # the normal path is unchanged
+    assert D.dispatch(decision, registry, executable=TEACHING_ONLY, question=q).to_dict()["executed_specialists"] == ["teaching"]   # the normal path is unchanged

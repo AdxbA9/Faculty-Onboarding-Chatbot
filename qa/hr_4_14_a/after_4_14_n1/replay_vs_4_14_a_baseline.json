@@ -1,0 +1,188 @@
+{
+ "rounds": {
+  "1": {
+   "cases": 105,
+   "runs": 210,
+   "before": {
+    "as_expected": 172,
+    "conservative_miss": 28,
+    "over_support_vs_preference": 10
+   },
+   "after": {
+    "as_expected": 172,
+    "conservative_miss": 28,
+    "over_support_vs_preference": 10
+   }
+  },
+  "2": {
+   "cases": 69,
+   "runs": 138,
+   "before": {
+    "as_expected": 114,
+    "materially_wrong_supported": 4,
+    "conservative_miss": 20
+   },
+   "after": {
+    "as_expected": 118,
+    "conservative_miss": 20
+   }
+  },
+  "3": {
+   "cases": 20,
+   "runs": 40,
+   "before": {
+    "as_expected": 34,
+    "conservative_miss": 6
+   },
+   "after": {
+    "as_expected": 34,
+    "conservative_miss": 6
+   }
+  }
+ },
+ "changed_runs": [
+  {
+   "round": 2,
+   "case_id": "R2-07a",
+   "ranking": "raw",
+   "question": "Is the housing allowance paid once?",
+   "expected": "NOT_SUPPORTED",
+   "before": {
+    "status": "supported",
+    "outcome": "materially_wrong_supported",
+    "quotes": [
+     [
+      107,
+      "Faculty members receive the housing allowance monthly and the furniture allowance is paid once."
+     ],
+     [
+      106,
+      "• Housing: Suitable free housing with electricity and water is provided in UoS housing compounds. In case suitable accommodation is unavailable, a housing allowance shall be given according to university regulations."
+     ]
+    ]
+   },
+   "after": {
+    "status": "partial",
+    "outcome": "as_expected",
+    "quotes": [
+     [
+      107,
+      "Faculty members receive the housing allowance monthly and the furniture allowance is paid once."
+     ],
+     [
+      106,
+      "• Housing: Suitable free housing with electricity and water is provided in UoS housing compounds. In case suitable accommodation is unavailable, a housing allowance shall be given according to university regulations."
+     ]
+    ]
+   }
+  },
+  {
+   "round": 2,
+   "case_id": "R2-07a",
+   "ranking": "high",
+   "question": "Is the housing allowance paid once?",
+   "expected": "NOT_SUPPORTED",
+   "before": {
+    "status": "supported",
+    "outcome": "materially_wrong_supported",
+    "quotes": [
+     [
+      107,
+      "Faculty members receive the housing allowance monthly and the furniture allowance is paid once."
+     ],
+     [
+      106,
+      "• Housing: Suitable free housing with electricity and water is provided in UoS housing compounds. In case suitable accommodation is unavailable, a housing allowance shall be given according to university regulations."
+     ]
+    ]
+   },
+   "after": {
+    "status": "partial",
+    "outcome": "as_expected",
+    "quotes": [
+     [
+      107,
+      "Faculty members receive the housing allowance monthly and the furniture allowance is paid once."
+     ],
+     [
+      106,
+      "• Housing: Suitable free housing with electricity and water is provided in UoS housing compounds. In case suitable accommodation is unavailable, a housing allowance shall be given according to university regulations."
+     ]
+    ]
+   }
+  },
+  {
+   "round": 2,
+   "case_id": "R2-12j",
+   "ranking": "raw",
+   "question": "Is the probation period two (2) years?",
+   "expected": "NOT_SUPPORTED",
+   "before": {
+    "status": "supported",
+    "outcome": "materially_wrong_supported",
+    "quotes": [
+     [
+      63,
+      "• Visiting Appointment: Involves a definite term contract of up to two years, including a probation year. Renewal for the second year is subject to department needs and successful annual evaluations as per UoS policies."
+     ],
+     [
+      62,
+      "• Definite Contract: Initial appointment for regular faculty is a two-year offer, including a probation year. The contract may be renewed for three years upon successful annual evaluations as per UoS policies."
+     ]
+    ]
+   },
+   "after": {
+    "status": "partial",
+    "outcome": "as_expected",
+    "quotes": [
+     [
+      63,
+      "• Visiting Appointment: Involves a definite term contract of up to two years, including a probation year. Renewal for the second year is subject to department needs and successful annual evaluations as per UoS policies."
+     ],
+     [
+      62,
+      "• Definite Contract: Initial appointment for regular faculty is a two-year offer, including a probation year. The contract may be renewed for three years upon successful annual evaluations as per UoS policies."
+     ]
+    ]
+   }
+  },
+  {
+   "round": 2,
+   "case_id": "R2-12j",
+   "ranking": "high",
+   "question": "Is the probation period two (2) years?",
+   "expected": "NOT_SUPPORTED",
+   "before": {
+    "status": "supported",
+    "outcome": "materially_wrong_supported",
+    "quotes": [
+     [
+      63,
+      "• Visiting Appointment: Involves a definite term contract of up to two years, including a probation year. Renewal for the second year is subject to department needs and successful annual evaluations as per UoS policies."
+     ],
+     [
+      62,
+      "• Definite Contract: Initial appointment for regular faculty is a two-year offer, including a probation year. The contract may be renewed for three years upon successful annual evaluations as per UoS policies."
+     ]
+    ]
+   },
+   "after": {
+    "status": "partial",
+    "outcome": "as_expected",
+    "quotes": [
+     [
+      63,
+      "• Visiting Appointment: Involves a definite term contract of up to two years, including a probation year. Renewal for the second year is subject to department needs and successful annual evaluations as per UoS policies."
+     ],
+     [
+      62,
+      "• Definite Contract: Initial appointment for regular faculty is a two-year offer, including a probation year. The contract may be renewed for three years upon successful annual evaluations as per UoS policies."
+     ]
+    ]
+   }
+  }
+ ],
+ "expected_preserved": true,
+ "violations": [],
+ "changed_run_count": 4
+}

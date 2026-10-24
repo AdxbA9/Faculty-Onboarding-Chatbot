@@ -1,0 +1,86 @@
+{
+ "switches": {
+  "_C12_ALTERNATIVE_FILLER": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 25.5
+  },
+  "_C12_CLAUSE": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 26.4
+  },
+  "_C12_COMPARE": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 34.2
+  },
+  "_C12_CONDITION": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 33.8
+  },
+  "_C12_COPULAR": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 35.2
+  },
+  "_C12_FALLBACK_POLARITY": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 32.8
+  },
+  "_C12_GATE": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 32.0
+  },
+  "_C12_HEDGE": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 32.1
+  },
+  "_C12_LEADS": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 27.7
+  },
+  "_C12_LEDGER": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 25.2
+  },
+  "_C12_MODIFIER": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 31.5
+  },
+  "_C12_NEGATIVE_CONDITION": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 43.7
+  },
+  "_C12_OBJECT_ANCHOR": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 36.5
+  },
+  "_C12_OBJECT_BINDING": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 40.4
+  },
+  "_C12_WRAPPERS": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 38.9
+  }
+ },
+ "cases": 136,
+ "baseline_supported": [
+  "R2-07a",
+  "R2-12j"
+ ],
+ "deterministic_replay": true,
+ "seconds": 557.0
+}

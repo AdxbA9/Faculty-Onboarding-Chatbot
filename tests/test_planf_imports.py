@@ -23,6 +23,7 @@ NEW_MODULES = [
     "handbook_bot.agents.specialists.contracts",
     "handbook_bot.agents.specialists.base",
     "handbook_bot.agents.specialists.registry",
+    "handbook_bot.agents.specialists.retrieval_intent",
 ]
 EXISTING_MODULES = [
     "handbook_bot",
@@ -123,9 +124,15 @@ def test_contracts_module_imports_only_the_standard_library():
 
 
 def test_base_and_registry_import_only_the_foundation():
-    assert _import_roots(SPECIALISTS / "base.py") <= {"__future__", "abc", "typing", ".contracts"}
+    # base.py hosts the shared error redaction (Milestone 4), hence the standard-library ``re``.
+    assert _import_roots(SPECIALISTS / "base.py") <= {"__future__", "abc", "re", "typing", ".contracts"}
     assert _import_roots(SPECIALISTS / "registry.py") <= {"__future__", "typing", ".base", ".contracts"}
     assert _import_roots(SPECIALISTS / "__init__.py") == set()
+
+
+def test_retrieval_intent_module_imports_only_the_router_and_the_route_names():
+    # the per-clause retrieval route (Step 4.7, D-078) uses the Coordinator's deterministic router and nothing else
+    assert _import_roots(SPECIALISTS / "retrieval_intent.py") <= {"__future__", "typing", "..router", "..types"}
 
 
 # ---------------------------------------------------------------------------

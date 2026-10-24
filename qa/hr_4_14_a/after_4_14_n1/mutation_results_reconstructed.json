@@ -1,0 +1,106 @@
+{
+ "switches": {
+  "_C12_ALTERNATIVE_FILLER": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 33.2
+  },
+  "_C12_CLAUSE": {
+   "killed_by": [
+    "R2-07a"
+   ],
+   "survived": false,
+   "seconds": 30.4
+  },
+  "_C12_COMPARE": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 29.3
+  },
+  "_C12_CONDITION": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 32.0
+  },
+  "_C12_COPULAR": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 30.4
+  },
+  "_C12_ENTITY_SUBJECT": {
+   "killed_by": [
+    "R2-07a"
+   ],
+   "survived": false,
+   "seconds": 32.8
+  },
+  "_C12_FALLBACK_POLARITY": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 31.1
+  },
+  "_C12_GATE": {
+   "killed_by": [
+    "R2-12j"
+   ],
+   "survived": false,
+   "seconds": 30.4
+  },
+  "_C12_HEDGE": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 30.3
+  },
+  "_C12_LEADS": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 30.2
+  },
+  "_C12_LEDGER": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 30.5
+  },
+  "_C12_MODIFIER": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 30.1
+  },
+  "_C12_NEGATIVE_CONDITION": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 27.4
+  },
+  "_C12_OBJECT_ANCHOR": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 23.6
+  },
+  "_C12_OBJECT_BINDING": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 23.7
+  },
+  "_C12_OWN_CONTENT": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 23.1
+  },
+  "_C12_PAREN_NUMERAL": {
+   "killed_by": [
+    "R2-12j"
+   ],
+   "survived": false,
+   "seconds": 23.9
+  },
+  "_C12_WRAPPERS": {
+   "killed_by": [],
+   "survived": true,
+   "seconds": 23.2
+  }
+ },
+ "cases": 136,
+ "baseline_supported": [],
+ "deterministic_replay": true,
+ "seconds": 577.4
+}

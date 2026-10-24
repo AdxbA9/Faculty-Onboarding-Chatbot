@@ -20,7 +20,12 @@ HOW IT DECIDES (deterministic, no LLM call)
        its score reaches ``SELECT_THRESHOLD``: one strong cue or two hints.
        Hyphen-like separators between words are read as spaces for cue
        matching only ("office-hours", "add/drop", "e-learning"); the question
-       and its clauses are stored verbatim.
+       and its clauses are stored verbatim. Research cues score a view of the
+       text in which the WLAM category phrases ("research-intensive faculty",
+       "active research faculty") are blanked, so a teaching-load question
+       about a faculty category is not a research question; every other
+       domain scores the normal text, and the category phrase is itself a
+       Teaching cue.
     3. Level (department > college > university) and systems (blackboard,
        banner, myuos) are detected from their own cue lists. A system is
        never a specialist.
@@ -68,6 +73,8 @@ from typing import Dict, List, Optional, Tuple
 from ..config import PLAN_F_MAX_SPECIALISTS, PLAN_F_MAX_SUBTASKS
 from . import router as router_agent
 from .specialists.contracts import CoordinatorDecision, SpecialistId, SpecialistTask
+from .specialists.domain_cues import (DEVELOPMENT_FUNDING, HR_CONTEXT_PATTERNS, HR_OWNERSHIP_PATTERNS,  # noqa: F401
+                                      RESEARCH_OWNERSHIP_PATTERNS, WLAM_CATEGORY, research_view)
 
 #: A domain becomes a candidate at this score: one strong cue, or two hints.
 SELECT_THRESHOLD = 1.0
@@ -107,6 +114,16 @@ def cue_text(text: str) -> str:
     return _CUE_SEPARATORS.sub(" ", text)
 
 
+#: WLAM faculty categories and development funding are blanked from the research
+#: view (see specialists/domain_cues.py, shared with the specialists).
+_WLAM_CATEGORY = WLAM_CATEGORY
+_DEVELOPMENT_FUNDING = DEVELOPMENT_FUNDING
+
+
+def _research_view(text: str) -> str:
+    return research_view(text)
+
+
 #: (domain, weight, pattern). Each pattern counts once per question.
 _DOMAIN_CUES: Tuple[Tuple[SpecialistId, float, "re.Pattern[str]"], ...] = (
     # ---- teaching & learning ---------------------------------------------
@@ -117,26 +134,21 @@ _DOMAIN_CUES: Tuple[Tuple[SpecialistId, float, "re.Pattern[str]"], ...] = (
     (SpecialistId.TEACHING, STRONG, _rx(r"\badd[ /-]?drop\b|\badd\s+(?:and|or)\s+drop\b")),         # the academic calendar's add/drop period
     (SpecialistId.TEACHING, STRONG, _rx(r"\b(?:grades?|grading|marks?|attendance|assignments?|quiz(?:zes)?|exams?|examinations?|midterms?|rubrics?|assessments?)\b")),
     (SpecialistId.TEACHING, STRONG, _rx(r"\boffice hours?\b|\bcredit hours?\b|\bcontact hours?\b")),
+    (SpecialistId.TEACHING, STRONG, _rx(r"\b(?:research[- ]intensive|active[- ]research|research[- ]active|teaching[- ]track)\s+faculty\b")),   # WLAM categories
     (SpecialistId.TEACHING, STRONG, _rx(r"\b(?:thesis|dissertation)\s+supervis|\bsupervis(?:e|ing|ion)\s+(?:a\s+|the\s+)?(?:thesis|dissertation|students?|theses)\b")),
     (SpecialistId.TEACHING, STRONG, _rx(r"\b(?:professional development|faculty development|pedagog(?:y|ical)|peer observation|mentor(?:s|ing|ship)?|teaching (?:award|excellence|workshop))\b")),
     (SpecialistId.TEACHING, HINT, _rx(r"\b(?:students?|semester|lesson|academic integrity|plagiarism|turnitin|training|workshops?)\b")),
     (SpecialistId.TEACHING, HINT, _rx(r"\bbanner\b")),                       # Banner is mostly grade entry and class lists
     # ---- research & innovation -------------------------------------------
-    (SpecialistId.RESEARCH, STRONG, _rx(r"\bresearch(?:er|ers)?\b")),
-    (SpecialistId.RESEARCH, STRONG, _rx(r"\b(?:grants?|fund(?:ed|ing)|seed fund|principal investigator|pi)\b")),
-    (SpecialistId.RESEARCH, STRONG, _rx(r"\b(?:research ethics|ethics (?:committee|approval|application|review|clearance)|\brec\b|\birb\b|\bacuc\b|human subjects|animal (?:use|care))\b")),
-    (SpecialistId.RESEARCH, STRONG, _rx(r"\b(?:publications?|publishing (?:support|unit)|publish(?:ing|ed)? (?:a |an |my |the |our )?(?:papers?|articles?|research|books?|journal|work)|journals?|scopus|h[- ]?index|citations?)\b")),
-    (SpecialistId.RESEARCH, STRONG, _rx(r"\b(?:intellectual property|\bip\b|patents?|technology transfer|\btto\b|commerciali[sz]ation|licens(?:e|ing) (?:an? )?(?:invention|patent|technology))\b")),
-    (SpecialistId.RESEARCH, STRONG, _rx(r"\bresearch (?:institutes?|groups?|centers?|centres?|projects?|committees?|board)\b")),
-    (SpecialistId.RESEARCH, HINT, _rx(r"\b(?:conferences?|consultanc(?:y|ies)|innovation|laborator(?:y|ies)|labs?)\b")),
+    # Research ownership terms live in specialists/domain_cues.py (Step 4.5A-R), shared with the Research and
+    # Teaching specialists so that the three never drift apart
+    *((SpecialistId.RESEARCH, STRONG, _rx(p)) for p in RESEARCH_OWNERSHIP_PATTERNS),
+    (SpecialistId.RESEARCH, HINT, _rx(r"\b(?:conferences?|innovation|laborator(?:y|ies)|labs?)\b")),
     # ---- faculty services & hr -------------------------------------------
-    (SpecialistId.FACULTY_SERVICES, STRONG, _rx(r"\b(?:hr|human resources?|employee (?:services?|information|records?|portal|self[- ]service|details|profile)|employment|personnel)\b")),
-    (SpecialistId.FACULTY_SERVICES, STRONG, _rx(r"\b(?:leaves?|sabbatical|vacation|absence|sick days?|maternity|paternity)\b")),
-    (SpecialistId.FACULTY_SERVICES, STRONG, _rx(r"\b(?:contracts?|resign(?:ation|ing)?|probation(?:ary)?|appointment|hiring|recruitment|termination|renewal|confirmation)\b")),
-    (SpecialistId.FACULTY_SERVICES, STRONG, _rx(r"\b(?:benefits?|salary|salaries|payroll|payslips?|pay slips?|pay|allowances?|gratuity|end of service|pension|bonus|incentives?)\b")),
-    (SpecialistId.FACULTY_SERVICES, STRONG, _rx(r"\b(?:housing|accommodation|insurance|medical cover|visa|residenc[ey]|emirates id|passport|relocation|air ?tickets?|airfare)\b")),
-    (SpecialistId.FACULTY_SERVICES, STRONG, _rx(r"\b(?:promotion|promoted|rank|tenure|performance evaluation|annual evaluation|contract renewal|faculty information system|fis)\b")),
-    (SpecialistId.FACULTY_SERVICES, HINT, _rx(r"\b(?:librar(?:y|ies)|parking|child ?care|clinic|health services?|facilities|id card|onboarding|joining)\b")),
+    # HR ownership terms live in specialists/domain_cues.py (Step 4.11, D-085), shared with the Faculty Services & HR
+    # specialist so that a question routed here is never rejected there; context terms count only beside another cue
+    *((SpecialistId.FACULTY_SERVICES, STRONG, _rx(p)) for p in HR_OWNERSHIP_PATTERNS),
+    *((SpecialistId.FACULTY_SERVICES, HINT, _rx(p)) for p in HR_CONTEXT_PATTERNS),
     # ---- institutional navigation ----------------------------------------
     (SpecialistId.INSTITUTIONAL, STRONG, _rx(r"\bwho\b.{0,40}\b(?:approv|authori[sz]|sign(?:s|ed)? off|decid|responsib|in charge|handles?|oversee|report(?:s)? to)")),
     (SpecialistId.INSTITUTIONAL, STRONG, _rx(r"\b(?:who|whom)\b.{0,30}\b(?:contact|ask|talk to|speak to|reach|see|go to|refer)\b")),
@@ -147,6 +159,15 @@ _DOMAIN_CUES: Tuple[Tuple[SpecialistId, float, "re.Pattern[str]"], ...] = (
     # "where is / where can I find <office, unit, named service>"; "office hours" is a teaching phrase, not a place.
     (SpecialistId.INSTITUTIONAL, STRONG, _rx(r"\bwhere\s+(?:do|can|should|must)\s+i\s+(?:go|find|get|submit|apply|report|collect|pick up|obtain|register|hand in)\b|\bwhere\s+(?:is|are)\b.{0,30}\b(?:office(?!\s+hours?)|located|building|department|unit|cent(?:er|re)|desk|library|clinic|hospital|registrar\w*|registration (?:office|department|desk)|admissions? (?:office|department)|finance (?:office|department)|hr|human resources|it (?:services?|support)|reception|security|bookstore|cafeteria|parking)\b")),
     (SpecialistId.INSTITUTIONAL, STRONG, _rx(r"\b(?:phone|telephone|fax|e[- ]?mail address|extension|contact (?:number|details|information)|number (?:of|for) the)\b")),
+    # Step 4.5A: "where is X located", "how do I contact / reach X", "who is the contact person", floors, buildings,
+    # addresses, finding or getting to a place, opening hours
+    (SpecialistId.INSTITUTIONAL, STRONG, _rx(r"\bwhere\b[^.?]{0,80}\blocated\b|\blocations? of the (?:office|department|unit|cent(?:er|re)|institute|building|tto|irb|rfd)\b|"
+                                             r"\bhow (?:do|does|can|could|should) (?:i|we|one) (?:contact|reach|get in touch with|e ?mail|call)\b|\bcontact (?:person|persons|people|point)\b|"
+                                             r"\bpoint of contact\b|\b(?:someone|somebody|anyone) (?:i|we) can (?:contact|ask)\b|\b(?:what|which) (?:floor|building|room)\b|\bon which floor\b|"
+                                             r"\b(?:mailing|postal|office|physical|street) address\b|\baddress of the\b|"
+                                             r"\bhow (?:do|can|could|should) (?:i|we|one) (?:find|get to|go to|locate|visit) (?:the |a |an )?[\w' ]{0,40}?"
+                                             r"(?:office|department|unit|cent(?:er|re)|building|institute|desk|room|committee|board|lab(?:oratory)?|tto|rfd|irb)\b|"
+                                             r"\b(?:office|department|unit|desk|library|tto|rfd) (?:is )?open (?:during|on|at|until)\b|\bopening hours\b")),
     (SpecialistId.INSTITUTIONAL, STRONG, _rx(r"\b(?:approval (?:chain|process|authority)|chain of command|organi[sz]ational (?:chart|structure)|governance|structure of the university|university structure)\b")),
     (SpecialistId.INSTITUTIONAL, STRONG, _rx(r"\b(?:colleges|departments|campuses|degree programs?|programs? (?:are |is )?offered|accreditation|ranking|mission|vision|core values|board of trustees|university council|college council|department council|standing committees?)\b")),
     (SpecialistId.INSTITUTIONAL, HINT, _rx(r"\b(?:dean|deanship|chair|chancellor|vice[- ]chancellor|director|head of)\b")),
@@ -231,11 +252,12 @@ class CoordinatorAnalysis:
 
 def _score_domains(text: str) -> Tuple[Dict[str, float], Dict[str, List[str]], Dict[str, int]]:
     text = cue_text(text)                     # classification only; positions are unchanged
+    research_text = _research_view(text)      # WLAM category phrases blanked, same length
     scores: Dict[str, float] = {}
     cues: Dict[str, List[str]] = {}
     first: Dict[str, int] = {}
     for domain, weight, pattern in _DOMAIN_CUES:
-        m = pattern.search(text)
+        m = pattern.search(research_text if domain is SpecialistId.RESEARCH else text)
         if not m:
             continue
         key = domain.value
@@ -262,11 +284,49 @@ def _detect_systems(text: str) -> List[str]:
     return [system for _, system in sorted(found)]
 
 
+#: A piece that opens a question or a request of its own ("... and how many
+#: programs are offered", "..., and who approves it"). A piece that does not
+#: ("... and conference travel claims", "... local and international
+#: conferences") continues the previous clause.
+_CLAUSE_HEAD = re.compile(
+    r"^(?:what|who|whom|whose|which|how|when|where|why|is|are|was|were|can|could|do|does|did|may|might|must|should|shall|will|would|has|have|"
+    r"i|we|my|our|your|tell|explain|describe|list|give|show|please|also)\b", re.I)
+_HARD_SEPARATOR = re.compile(r"[?;]|\.\s")
+
+
+_GREETING_PIECE = re.compile(r"^(?:(?:hi|hello|hey|greetings|good (?:morning|afternoon|evening|day))(?: there| all| everyone| team| again)?|"
+                             r"dear \w+|thanks?(?: you)?(?: (?:so|very) much)?(?: in advance)?|"
+                             r"please|salam|assalamu? ?alaikum)[\s,!.]*$", re.I)
+
+
 def _split_clauses(question: str) -> List[str]:
     """Clauses of the original text, using the Router's separator so that
-    multipart detection and decomposition agree on where a question splits."""
-    parts = [part.strip(" \t\r\n\"'()") for part in router_agent._CLAUSE_SEP.split(question)]
-    return [part for part in parts if part]
+    multipart detection and decomposition agree on where a question splits.
+    A piece joined by "and", a comma or "as well as" that does not open a
+    question of its own is kept with the previous clause, so the shared
+    head of "What is the due date for course syllabi and the conference travel
+    form?" is never lost. Every clause is a slice of the question."""
+    spans: List[List[int]] = []
+    pos, separator = 0, ""
+    for m in router_agent._CLAUSE_SEP.finditer(question):
+        if m.start() > pos:
+            spans.append([pos, m.start(), separator])
+        separator, pos = m.group(0), m.end()
+    if pos < len(question):
+        spans.append([pos, len(question), separator])
+    merged: List[List[int]] = []
+    for start, end, sep in spans:
+        piece = question[start:end].strip(" \t\r\n\"'()")
+        if not piece:
+            continue
+        if merged and not _HARD_SEPARATOR.search(sep) and not _CLAUSE_HEAD.match(piece):
+            merged[-1][1] = end                                     # a continuation of the previous clause
+        else:
+            merged.append([start, end, sep])
+    parts = [question[start:end].strip(" \t\r\n\"'()") for start, end, _sep in merged]
+    parts = [part for part in parts if part]
+    # a greeting or thanks fragment ("Good morning, what is ...") is no clause of its own
+    return [part for part in parts if not _GREETING_PIECE.match(part)] or parts
 
 
 def analyze(question: str) -> CoordinatorAnalysis:
@@ -313,6 +373,13 @@ def _rank(analysis: CoordinatorAnalysis) -> List[str]:
     )
 
 
+#: A channel clause that also asks a subject question ("What is the TTO's role and contact details?", "What is the
+#: per diem for conferences and the email of the research office?") keeps its subject specialist (Step 4.5A-R).
+_SUBSTANCE_ASK = _rx(r"\b(?:roles?|responsibilit\w*|dut(?:y|ies)|functions?|purpose|mission|polic(?:y|ies)|rules?|requirements?|process|procedures?|"
+                     r"deadlines?|per diem|fees?|budget|percentage|share|eligib\w*|approv\w*|how much|how many)\b|"
+                     r"\bwhat\s+(?:does|do)\b[^?]{0,40}\b(?:do|review|handle|manage|cover|offer|provide|approve|fund)\b")
+
+
 def _select(analysis: CoordinatorAnalysis, limit: int) -> Tuple[List[str], List[str], Optional[str]]:
     """Returns (selected, dropped, override_reason)."""
     ranked = _rank(analysis)
@@ -322,7 +389,12 @@ def _select(analysis: CoordinatorAnalysis, limit: int) -> Tuple[List[str], List[
         return [], candidates, None
     if analysis.route == _CONTACT_ROUTE:
         subjects = [d for d in candidates if d != institutional]
-        if analysis.channel_lookup or not subjects:
+        # a channel lookup is Institutional's alone unless another clause asks a subject question
+        # ("What does the IRB review, and what is its email?" keeps Research for the first clause)
+        subject_clause = any((not _CHANNEL_CUES.search(c) or _SUBSTANCE_ASK.search(_CHANNEL_CUES.sub(" ", c)))
+                             and any(_score_domains(c)[0].get(d, 0.0) >= SELECT_THRESHOLD for d in subjects)
+                             for c in analysis.clauses)
+        if (analysis.channel_lookup and not subject_clause) or not subjects:
             return ([institutional], subjects,
                     "contact channel lookup is handled by institutional navigation alone")
         kept = subjects[:limit - 1]                 # institutional always keeps one slot

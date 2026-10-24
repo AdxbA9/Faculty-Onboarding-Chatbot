@@ -32,7 +32,7 @@ verifies.
 | Specialist | Strong cues (1.0 each) | Hints (0.5 each) |
 |---|---|---|
 | `teaching` | teach/teaching/instructor; teaching load, workload, WLAM; course, lecture, class, syllabus, curriculum; Blackboard, LMS, e-learning, gradebook, SafeAssign, Collaborate; add/drop; grades, marks, attendance, assignments, quizzes, exams, rubrics, assessment; office hours, credit hours, contact hours; thesis or dissertation supervision; professional development, pedagogy, peer observation, mentoring | students, semester, lesson, academic integrity, plagiarism, Turnitin, training, workshop, Banner |
-| `research` | research; grant, funded, funding, principal investigator; research ethics, ethics approval or committee, REC, IRB, ACUC, human subjects, animal use; publication, publishing a paper or article, journal, Scopus, h-index, citations; intellectual property, patent, technology transfer, TTO, commercialization; research institute, group, center, project, committee, board | conference, consultancy, innovation, laboratory |
+| `research` | research; grant, funded, funding, principal investigator; research ethics, ethics approval or committee, REC, IRB, IACUC, Institutional Review Board, animal care and use committee, human subjects, animal use; publication, publishing a paper or article, journal, Scopus, h-index, citations; intellectual property, patent, technology transfer, TTO, commercialisation, royalty, inventor, invention disclosure, licensing of revenue, inventions, patents, technology or IP; research institute, group, center, project, committee, board; research priority areas, misconduct, assistant, advance, budget, portal, office, support unit, funding department, publishing, regulations, agreements, leave; University Research Board, VCRGS, scientific publishing or research, UoS journal; consultancy; a cap or count of theses, dissertations, students or candidates supervised, and supervision of research projects, postgraduate research or PhD candidates | conference, innovation, laboratory |
 | `faculty_services` | HR, human resources, employee services / information / record / portal / self-service, employment; leave, sabbatical, vacation, absence, maternity; contract, resignation, probation, appointment, hiring, termination, renewal; benefits, salary, payroll, payslip, allowance, gratuity, pension, incentives; housing, accommodation, insurance, visa, residency, Emirates ID, passport, relocation, air tickets; promotion, rank, tenure, performance evaluation, FIS | library, parking, child care, clinic, health services, facilities, ID card, onboarding, joining |
 | `institutional` | "who ... approves / authorizes / decides / is responsible / handles / reports to"; "who manages / supports / maintains / administers ... a support, help desk, service, system, portal, office, unit, department or centre" (the object must be a service or unit: "who manages course grading" stays with the subject domain); "who do I contact / ask / see"; "which office / unit / committee handles"; "where do I go / find / get / submit / apply / register"; "where is the office / department / unit / center / building" or a named service (Registrar, registration office, admissions office, finance office, HR, IT services, reception, security, bookstore, cafeteria, parking; "office hours" is never a place); phone, telephone, fax, e-mail address, extension, contact details; approval chain, organizational chart, governance, university structure; colleges, departments, campuses, degree programs, programs offered, accreditation, ranking, mission, vision, core values, councils, standing committees | dean, chair, chancellor, director, head of; department, college, university, office, unit |
 
@@ -42,6 +42,88 @@ hints. Scores and matched cues are recorded in `metadata["scores"]` and
 `metadata["cues"]`. Bare "who" and "where" are never cues: "Who teaches the
 course?", "Who manages course grading?" and "Where are office hours held?"
 select `teaching` alone.
+
+### Research routing (Milestone 4)
+
+- **WLAM demotion.** The research cues score a view of the question in which
+  the WLAM faculty categories ("research-intensive faculty", "active research
+  faculty", "research active faculty") are blanked, same length; every other
+  domain scores the normal text, and those category phrases (with
+  "teaching-track faculty") are themselves a Teaching cue. "What is the
+  teaching load for research-intensive faculty?" and "How many credits does
+  research-intensive faculty teach?" select `teaching` alone; "What research
+  output is expected of research-intensive faculty?" still selects
+  `research` (with `teaching`), because "research" also appears outside the
+  category phrase. "research" is never stripped globally.
+- **Supervision split by detail cue.** A cap or count ("How many theses can I
+  supervise at once?", "the maximum number of dissertations", "How many
+  students can a supervisor take?", "How many PhD candidates may I
+  supervise?") and the supervision of research projects or postgraduate
+  research select `research` (the 3.5 cap). Supervision credit, workload and
+  eligibility ("How is thesis supervision calculated?", "How many thesis
+  supervision credits count toward workload?", "Am I eligible to supervise
+  theses?") stay with `teaching` (3.1 and 3.11). There is no broad
+  "supervision" cue.
+- **Consultancy** is a strong research cue (it was a hint), and so is
+  "consulting".
+- **Conference policy in context (Step 4.5A).** Per diem; conference
+  registration, fees, funding, travel, support, attendance, allowances,
+  expenses, requests, documents, deadlines, budget, participation, papers,
+  proceedings or approval; attending, participating in, presenting at,
+  travelling to, registering for or funding a conference; local,
+  international, external, overseas, scientific, academic or
+  university-supported conferences; presenting a paper; "how many
+  conferences". A bare "conference" stays a hint, and video conferences,
+  conference rooms and conference calls never select `research`.
+- **Other research-owned phrasings (Step 4.5A).** Chief editor,
+  editor-in-chief, editorial board or secretary; petty cash; seed projects,
+  grants, research or funding; inventions; copyright; Materials Transfer
+  Agreements (MTA); licence agreements and signing a licence; conflict of
+  interest or commitment; informed consent; co-investigators; final or
+  progress project reports; publishing costs, fees or charges; open access;
+  "tech transfer". Hyphenated forms are read with spaces ("per-diem",
+  "tech-transfer", "co-investigator", "editor-in-chief").
+- **Development funding is not research funding.** Funding or grants for
+  professional, faculty, teaching or staff development are blanked from the
+  research view, so "What funding is available for professional development
+  workshops?" selects `teaching` alone. "Publication of course materials"
+  and library journals are not scientific publishing.
+- **Location and contact (Step 4.5A).** "Where ... located", "location of
+  the office / department / unit / institute", "how do I contact / reach / get
+  in touch with" and "contact person" are Institutional cues, so "How do I
+  contact the IRB?" and "Where is the Research Institute for Medical and
+  Health Sciences located?" also select `institutional`.
+- **Round 2 (Step 4.5A).** Floors, buildings, addresses, "how do I find /
+  get to the <place>", "is the office open during", "point of contact" and
+  "someone I can contact" are Institutional cues. A channel lookup (phone,
+  e-mail, fax, extension) goes to `institutional` alone only when no other
+  clause names a subject domain; otherwise the subject specialist keeps the
+  substantive clause. Research conference cues add symposium, congress,
+  "take part in", "join", conference details within a short window on either
+  side, "before the conference" and "conferences per year", while conference
+  calls, rooms, halls and centres stay excluded; the verb "grant" (who grants
+  tenure, grant access), "professional ethics committee", the rec center and
+  an IP address are not research. RFD, RIMHS, RIHSS and OVCRGS, open access
+  and page charges, book awards, tangible research property, disclosure
+  evaluation, project closure, paid consultants and "who owns software"
+  reach `research`.
+
+- **Shared Research lexicon (Step 4.5A-R).** The Research strong cues are
+  built from `specialists/domain_cues.py`, the lexicon the Research and
+  Teaching specialists also read, so the Coordinator never routes to Research
+  a phrase that Research would reject. A channel clause that also asks a
+  subject question (role, responsibilities, policy, requirements, deadlines,
+  per diem, fees, approvals, "what does X do") keeps its subject specialist
+  beside Institutional Navigation.
+
+### Clause splitting (Step 4.5A round 2)
+
+A piece joined by "and", a comma or "as well as" that does not open a
+question of its own (no interrogative, auxiliary or pronoun head) continues
+the previous clause, so "What is the due date for course syllabi and the
+conference travel form?" keeps its shared head. Every clause is still a slice
+of the question. A greeting or thanks fragment ("Good morning", "Thanks")
+is not a clause; a question made only of a greeting keeps it.
 
 ### Cue normalisation
 
@@ -126,7 +208,10 @@ a dropped domain is reported in `metadata["uncovered_clauses"]` instead of
 being attached to another task; a clause with no cue continues the previous
 clause; a specialist left without a clause has the whole question as focus.
 `intent` (from `router.classify`) and `system` are derived from the focus
-text when it is a real subset, otherwise from the whole question.
+text when it is a real subset, otherwise from the whole question. The intent
+is one per task; a specialist with several focus clauses resolves the
+retrieval route of each clause from that clause (`retrieval_intent.py`,
+D-078), so a contact clause does not set the route of a substantive one.
 Each task has `task_id` `task-1..3`, `specialist_id`, `domain`, `intent`,
 `level`, `system`, `requested_by="coordinator"` and `metadata["scoped"]`
 (True when the focus is a real subset of the question).
@@ -184,17 +269,21 @@ handbook pipeline. Nonsense never receives a fabricated domain. A greeting
 returns intent `greeting` and no specialist. An empty question returns
 `unknown`.
 
-## Dispatch to the Teaching & Learning Specialist (inactive)
+## Dispatch to the specialists (inactive)
 
 `handbook_bot/agents/specialists/dispatch.py` is the deterministic seam
 between the Faculty Onboarding Coordinator and the domain specialists.
 `run_question(question, registry)` coordinates the question and calls
 `dispatch(decision, registry)`, which walks the Coordinator's tasks in order
 and, for each task, either runs the registered specialist or records the
-task as pending. In the current phase only the Teaching & Learning
-Specialist is executable; research, faculty services and institutional
-tasks stay pending with the Coordinator's task intact, so the caller still
-sees the full decision. Tasks are handed over exactly as the Coordinator
+task as pending. In the current phase the Teaching & Learning and the
+Research & Innovation Specialists are executable (`EXECUTABLE_SPECIALISTS`;
+since Step 4.11 the Faculty Services & HR Specialist as well)
+and each runs only when it is registered ("executable but not registered"
+otherwise); faculty services and institutional tasks stay pending ("not
+executable in this phase") with the Coordinator's task intact, so the
+caller still sees the full decision. Tests that describe the Teaching-only
+phase pin `executable=(SpecialistId.TEACHING,)`. Tasks are handed over exactly as the Coordinator
 built them (task id, full question, intent, level, system, focus clauses);
 nothing is reinterpreted, reordered or reconstructed, and there is no
 default-to-Teaching fallback. Handoff requests a specialist returns are
