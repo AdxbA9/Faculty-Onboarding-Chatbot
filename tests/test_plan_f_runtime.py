@@ -776,12 +776,17 @@ def test_answer_with_fallback_prefers_plan_f_and_otherwise_returns_the_legacy_re
 
 
 def test_live_runtime_modules_do_not_import_the_adapter():
-    live = ["app.py", "ui/chat.py", "ui/pipeline.py", "handbook_bot/qa.py", "handbook_bot/orchestrator.py", "handbook_bot/agents/router.py",
+    """Since runtime integration phase I-2, ``ui/pipeline.py`` is the one approved seam that may reference the adapter
+    (imported lazily, see ``tests/test_plan_f_pipeline.py``); the legacy core, the UI and the evaluation runner stay
+    free of it."""
+    live = ["app.py", "ui/chat.py", "handbook_bot/qa.py", "handbook_bot/orchestrator.py", "handbook_bot/agents/router.py",
             "handbook_bot/retrieval.py", "handbook_bot/agents/synthesis.py", "handbook_bot/agents/verifier.py", "handbook_bot/agents/types.py",
             "handbook_bot/__init__.py", "handbook_bot/knowledge_base.py", "eval/run_eval.py"]
     for name in live:
         text = (REPO / name).read_text(encoding="utf-8")
         assert "plan_f_runtime" not in text, name
     pipeline = (REPO / "ui" / "pipeline.py").read_text(encoding="utf-8")
-    assert "answer_question(" in pipeline and "PLAN_F" not in pipeline
-    assert re.search(r"^PLAN_F_ENABLED: bool = _env_bool\(\"PLAN_F_ENABLED\", False\)", (REPO / "handbook_bot" / "config.py").read_text(encoding="utf-8"), re.M)
+    assert "answer_question(" in pipeline and "plan_f_runtime" in pipeline
+    config_text = (REPO / "handbook_bot" / "config.py").read_text(encoding="utf-8")
+    assert re.search(r"^PLAN_F_ENABLED: bool = _env_bool\(\"PLAN_F_ENABLED\", False\)", config_text, re.M)
+    assert re.search(r"^PLAN_F_SHADOW: bool = _env_bool\(\"PLAN_F_SHADOW\", False\)", config_text, re.M)
