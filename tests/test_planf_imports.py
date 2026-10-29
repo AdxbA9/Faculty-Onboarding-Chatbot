@@ -24,6 +24,7 @@ NEW_MODULES = [
     "handbook_bot.agents.specialists.base",
     "handbook_bot.agents.specialists.registry",
     "handbook_bot.agents.specialists.retrieval_intent",
+    "handbook_bot.plan_f_runtime",          # runtime integration phase I-1: the adapter, not wired into the application
 ]
 EXISTING_MODULES = [
     "handbook_bot",
