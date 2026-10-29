@@ -9,6 +9,159 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-10-30 - Plan F verified on the real knowledge base (runtime integration, phase I-3)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/remaining-specialists` |
+| Starting commit | `7c7efae` |
+| Ending state | measurement and verification only: no production file changed, both Plan F switches still default to off, the four frozen specialists and the legacy core unchanged (hashes verified); Plan F is CONNECTED BEHIND FLAGS and verified on the real knowledge base, not released; local commit on top of `7c7efae`, pushed by the user; I-4 not started |
+
+### Completed
+
+- Real knowledge base through the production path (`build_knowledge_base`,
+  real embedder and cross-encoder reranker, production chunking, metadata,
+  source registry and section map): source `uos_faculty_handbook_2025_26`
+  (registered), 272 pages, 13,688 chunks (847 paragraph, 8,412 row, 4,429
+  row window), 206 section records, embeddings 13,688 x 768 float32,
+  `IndexFlatIP` with 13,688 vectors, OCR off. First-time model download and
+  load 32.6 s (embedder) and 22.2 s (reranker); first build 331.9 s (the
+  embedding run; the v12 cache files were created, the archived v11 cache is
+  not used); cached rebuild 14.8 s with identical embeddings; no error, the
+  only warnings are Hugging Face notes about symlinks and unauthenticated
+  downloads.
+- All four specialists built from the real knowledge base with their own
+  `from_knowledge_base` builders: Teaching 9 ms, Research 10 ms, Faculty
+  Services & HR 8 ms, Institutional 777 ms for its first construction in a
+  process (it reads the directory and the statements once); the registry
+  through `build_runtime` 97 ms afterwards (88 to 117 ms across runs; 712 ms
+  for the first build inside the running application). Source and section
+  guards passed (shared pages 15, 11, 11 and 10; no unresolved page); no
+  partial registry, no exception, no model call.
+- Runtime cache on the real knowledge base: first attempt built the runtime
+  (97 ms) and the second reused it; a second knowledge-base object and a
+  second cached-build knowledge base each built their own runtime (97 and
+  117 ms); 3 builds, 3 entries, distinct runtimes and registries.
+- 62 realistic questions (Teaching 12, Research 12, HR 14, Institutional 14,
+  special 10: greeting, general handbook question, unsupported, ambiguous,
+  multipart, cross-domain, three-specialist, mutual decline, handoff-producing,
+  out of domain) run through `ui.pipeline.ask_with_diagnostics` in LEGACY,
+  SHADOW and ACTIVE mode, each compared with the direct `answer_question`
+  call where applicable. Runner, analyser, review script and the recorded
+  results are in `qa/plan_f_i3/`.
+- LEGACY: 62 of 62 identical to the direct call in every visible field and
+  in the trace; Plan F neither imported nor built (cache absent). Median
+  wall 827 ms (0 to 1,997 ms): real retrieval and rerank, no model client.
+- SHADOW: 62 of 62 identical to the direct call; Plan F attempted on all 62,
+  accepted 23, 0 model calls; registry built once and reused 61 times.
+  Median wall 1,363 ms; overhead over the legacy wall median +389 ms (range
+  -285 to +792 ms, the spread being run-to-run variation of legacy retrieval).
+  Plan F attempt median 569 ms (max 832): Coordinator under 1 ms, specialist
+  retrieval and rerank with the real cross-encoder median 595 ms, guards and
+  Verifier under 1 ms; Institutional answers in about 1 ms (no retrieval).
+- Outcome distribution (one attempt per question): ACCEPTED 23 (37%);
+  UNSAFE_RESULT 32 (partial 13, multipart or cross-domain or synthesis 7,
+  general ask 6, not found or out of scope 6); NOT_APPLICABLE 5;
+  REJECTED_BY_SUBJECT_GUARD 2; quote guard 0; Verifier 0; errors 0; registry
+  unavailable 0. Fallback 39 (63%). Per domain: Teaching 6 of 12, Research 5
+  of 12, HR 6 of 14, Institutional 6 of 14, special 0 of 10.
+- Every accepted answer reviewed against its production chunk and the
+  printed page (quote present, page and source correct, subject correct, no
+  wrong number, date or contact, no cross-domain contamination): 20 CORRECT,
+  3 ACCEPTABLE BUT LIMITED ("What is the Workload Allocation Model?" quotes
+  its legal basis only; the consultancy quote unit opens with an unrelated
+  liability sentence before the one-day-per-week rule; "What does HR provide
+  to new faculty members?" quotes one of several items), 0 WRONG. With the
+  real reranker the teaching-load answer is the page 91 line (12 credit
+  hours per regular semester for ranked faculty) instead of the fixture-run
+  page 96 line; both are correct.
+- Known HR cases: "What does Human Resources do?" and "What does HR do?" are
+  still returned as `supported` by the frozen HR specialist and rejected by
+  the adapter as general asks; "How many days of annual leave do faculty
+  members get?" is `partial`; all three served by legacy in SHADOW and ACTIVE.
+- ACTIVE: 23 questions served by Plan F (`used_llm` False, `llm_calls` 0 on
+  every one), 39 by legacy; accepted wall median 634 ms (1 to 741 ms),
+  fallback wall median 1,314 ms (max 2,597 ms: Plan F plus legacy).
+- Controlled application smoke test: `app.py` launched locally three times
+  with the switches in the process environment only (never in `.env`) and
+  driven through the browser at localhost. LEGACY: the knowledge base
+  loaded, an extractor answer with page chips, the configured no-key reply
+  for a policy question, the greeting. SHADOW: visible answers identical to
+  legacy for two questions Plan F accepted internally and for the known HR
+  case. ACTIVE: the Human Resources directory row (chips Page 54, Contact
+  Information) and the four-theses quote (chips Page 81, Responsibility to
+  Research) served by Plan F; the known HR and annual-leave questions served
+  by legacy. In-application diagnostics (debug logging enabled by the
+  launcher, no code change): registry built once in 712 ms then reused, 0
+  Plan F model calls, no error. A second SHADOW launch with the same logging showed Plan F accepting the
+  four-theses question internally (page 81, the same page the legacy answer
+  cited) while the visible answer stayed the legacy reply, and the multipart
+  visa question falling back; registry built once in 710 ms then reused. No raw exception, no crash.
+  With Developer mode on, a Plan F answer's panel shows query type, cited
+  pages and best section correctly, labels the answer "Deterministic
+  extractor", shows retrieval and rerank at 0.0 ms (Plan F records its own
+  timing keys) and counts candidates and reranked chunks as 1; the panel of
+  an ACTIVE fallback answer shows the legacy timings only, without the Plan F
+  attempt time.
+- Legacy model path: REAL MODEL EVALUATION BLOCKED - NO AVAILABLE CONFIGURED
+  CLIENT (no key configured; 52 of the 62 legacy answers were the no-key
+  reply). Plan F made 0 model calls throughout.
+- Diagnostics hygiene: 124 records inspected, none holds the question or the
+  answer text; JSON serialisable; buffer capped at 200 (I-2 test); the
+  pipeline writes nothing to disk.
+- Tests added: none; the real-knowledge-base run revealed no missing
+  integration guarantee.
+
+### Tests performed
+
+Full suite after the phase: 6,448 collected, 6,448 passed, 0 failed, 0 skipped,
+0 xfailed (206 s); no test added, so the I-2 baseline count is unchanged.
+`pip check`: no broken requirements. Frozen specialist hashes unchanged
+before and after (Teaching, Research, Faculty Services & HR and its claim
+model, Institutional and its cues; D-103 and D-107 values); every legacy
+core file, the seam, the adapter and the UI unchanged.
+
+### Known issues at handoff
+
+- Acceptance is 37% by design; partial results (13) are the largest fallback
+  class, then multipart and cross-domain questions (7) and general asks (6).
+  These belong to I-4 (findings-aware verification) and I-5 (aggregation).
+- First-question cost in a fresh process: about 0.7 s for the first
+  Institutional construction, about 0.1 s for later registry builds; the
+  one-time real embedding of the handbook takes about 5.5 minutes, after
+  which the cache loads in about 15 s.
+- ACTIVE fallback does double work (Plan F about 0.6 s plus legacy about
+  0.8 s); SHADOW adds about 0.4 s per question. Performance: ACCEPTABLE FOR
+  LOCAL DEMO; no project latency target exists.
+- UI observations for I-7, not changed here: the configured no-key reply
+  loses its underscores in Markdown ("GROQAPIKEY"); a page chip and a section
+  chip can show the same "Page N" label when the section hint is a page; a
+  Plan F answer is not marked as such in the interface; the developer panel calls a Plan F answer "Deterministic extractor",
+  shows its retrieval and rerank as 0.0 ms and its candidate counts as 1, and
+  omits the Plan F attempt time from a fallback answer's total.
+- The known frozen HR defect stands (general asks answered with topical
+  sentences); it stays blocked by the adapter.
+
+### Do not redo
+
+- Do not raise acceptance by loosening the I-1 gates or changing the
+  Coordinator; measure, then design I-4 and I-5.
+- Do not commit the generated model or embedding caches.
+
+### Next task
+
+I-4: findings-aware verification (quote-in-source and subject binding as a
+Verifier mode, coverage by focus clause, conflict detection), after approval.
+
+### Files changed
+
+`qa/plan_f_i3/` (new: `README.md`, `runtime_measure.py`, `analyze.py`,
+`review_accepted.py`, `results_2026-10-30.json`), `docs/STATUS.md` (this
+entry). No production, test or documentation file other than this entry.
+
+---
+
 ## 2026-10-30 - Feature-flagged Plan F runtime seam and shadow mode (runtime integration, phase I-2)
 
 | Field | Value |
