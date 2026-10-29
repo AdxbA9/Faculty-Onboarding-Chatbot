@@ -9,6 +9,111 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-10-30 - Plan F runtime adapter (runtime integration, phase I-1)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/remaining-specialists` |
+| Starting commit | `d95084f` |
+| Ending state | adapter implemented and tested; NOT wired into the live chatbot (`ui/pipeline.ask` still calls `answer_question`, `PLAN_F_ENABLED` is read by nothing, no shadow mode); the four frozen specialists and the legacy runtime modules unchanged (hashes verified before and after); committed as the I-1 commit on top of `d95084f` and pushed with a normal push |
+
+### Completed
+
+- `handbook_bot/plan_f_runtime.py` (new): the safe seam between the Plan F
+  path and the legacy `QAResult` contract. Registry factory from the real
+  `KnowledgeBase` through the four specialists' own `from_knowledge_base`
+  builders, fail-closed (a complete registry or none, every builder failure
+  redacted; no module-level registry or cache). `PlanFRuntime.attempt` runs
+  the Coordinator and the dispatcher on an explicit registry and accepts only
+  the I-1 safe case: one selected specialist, one task, one focus clause, no
+  Synthesis requirement, no multipart question, no uncovered clause; a
+  `supported` result with no handoff and no `missing` entry; a clause report
+  that is a recognised specific ask with every requested detail covered and a
+  strong relation where one is reported, or an Institutional `read` outcome
+  at tier E1, E2 or stated fact. Quote guard: the quote is an exact substring
+  of `chunks[chunk_id]` on the cited page of the cited source, no
+  normalisation. Subject guard: every named entity of the clause is in the
+  quote, the specialist's requested details are covered by the finding and
+  the clause's content words are covered under the unchanged Verifier's
+  rules; an Institutional finding must name the office the clause asks about
+  (or the University) and a contact answer needs a complete directory row.
+  Extractive renderer (verbatim quotes, pages from accepted findings only),
+  the unchanged `agents.verifier.verify` as the final gate, a complete
+  `QAResult` (`used_llm=False`, `llm_calls=0`, `retried=False`, the Plan F
+  trace in `agent_trace`), nine explicit `PlanFOutcome` values, and a
+  test-only `answer_with_fallback` that the application does not call.
+- Required cases blocked: "What does Human Resources do?" and "What does HR
+  do?" (the frozen HR specialist still returns `supported`; the clause is a
+  general ask, so it is not eligible) and "How many days of annual leave do
+  faculty members get?" (`partial`; never rendered, the sixty-day maternity
+  sentence never leaves the trace). The fixture-corpus shape of the HR
+  defect, a supported quote that never names Human Resources, is rejected by
+  the subject guard.
+- `tests/test_plan_f_runtime.py` (new, 79 tests) on a knowledge base built
+  from the full real handbook with the project's loader, chunker and
+  metadata (fake embedder, stand-in reranker): registry (all four builders,
+  the HR builder included; defective knowledge bases; one builder failing;
+  a builder producing the wrong specialist; no partial registry; redaction),
+  evidence adapter, quote guard (13 unsafe shapes), subject guard, status
+  gating for every status and for handoffs, one supported example of each
+  specialist rendered through the adapter, complex questions falling back,
+  Verifier integration, the pinned `QAResult` contract, zero model calls,
+  determinism, the fallback wrapper and live-runtime isolation.
+  `tests/test_planf_imports.py`: the adapter added to the modules that must
+  import alone without loading the orchestrator (one additive line).
+- Fixture facts: registry construction about 0.7 s on the real pages with the
+  fake embedder (Institutional reads its directory and statements at
+  construction); adapter time per question 1 to 260 ms. Real-model timings
+  remain UNKNOWN until I-3.
+
+### Tests performed
+
+Targeted gate (adapter, Plan F Coordinator, registry, contracts, imports,
+four-specialist dispatch, Verifier, compatibility): 598 passed, 0 failed
+(26 s).
+Full suite after the change: 6,382 collected, 6,382 passed, 0 failed, 0 skipped,
+0 xfailed (183 s): the 6,302 baseline plus 79 adapter tests plus one added
+import-isolation case.
+`pip check`: no broken requirements. Frozen and live-runtime hashes
+identical before and after: the six frozen specialist files, the shared
+specialist helpers, `coordinator.py`, `dispatch.py`, `app.py`, `ui/chat.py`,
+`ui/pipeline.py`, `qa.py`, `orchestrator.py`, `router.py`, `retrieval.py`,
+`synthesis.py`, `verifier.py`, `types.py`, `config.py`.
+
+### Known issues at handoff
+
+- The adapter is deliberately narrow: a general ask ("What does the
+  Technology Transfer Office do?") and a topic question whose content words
+  the quote does not cover ("Is attendance mandatory for students?") fall
+  back to the legacy path even when the specialist answered well; coverage
+  is measured in shadow mode (I-2, I-3), not raised by relaxing the gates.
+- A Research quote unit may span two sentences; both are rendered
+  (extractive by design).
+- Rendered answers are the verbatim quotes with page chips and no
+  attribution sentence; richer deterministic rendering belongs to I-5.
+- Real-model registry construction and latency are unmeasured (I-3).
+
+### Do not redo
+
+- Do not wire the adapter into `ui/pipeline.py`, read `PLAN_F_ENABLED`, add
+  shadow mode, build the registry at startup, execute handoffs or aggregate
+  findings before I-2 is approved.
+- Do not relax the I-1 gates to gain coverage.
+
+### Next task
+
+I-2: the feature-flagged runtime seam in `ui/pipeline.ask` with shadow
+mode, after approval.
+
+### Files changed
+
+`handbook_bot/plan_f_runtime.py` (new), `tests/test_plan_f_runtime.py`
+(new), `tests/test_planf_imports.py` (one additive entry), `docs/STATUS.md`
+(this entry).
+
+---
+
 ## 2026-10-29 - Institutional Navigation freeze review and Step 4.16 closure (Milestone 4, Step 4.16 freeze; D-107)
 
 | Field | Value |
