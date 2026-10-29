@@ -9,6 +9,704 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-10-29 - Institutional Navigation freeze review and Step 4.16 closure (Milestone 4, Step 4.16 freeze; D-107)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/remaining-specialists` |
+| Starting commit | `c316698` |
+| Ending state | Step 4.16 COMPLETE; Institutional Navigation frozen for Milestone 4 (D-107); all four specialists frozen and executable through the default Plan F dispatch; the Step 4.16 work committed on `feature/remaining-specialists` as one completion commit on top of `c316698` (normal push to `origin/feature/remaining-specialists`, no force, no rebase, no amend); Plan F still not wired into the live chatbot (`PLAN_F_ENABLED` False); runtime integration not started |
+
+### Completed
+
+- Independent adversarial freeze review of the Step 4.16-C1 code (read-only;
+  the production manifest unchanged before and after): full suite 6,302
+  passed before and after; Institutional 2,293 and four-specialist 216
+  passed; contact 226/226, evidence 690/690, benchmark byte-identical to the
+  C1 baseline (12/48, 0 wrong), holdout 5/24, 0 wrong; 346 fresh adversarial
+  questions (171 blind, 175 white-box) on both paths and both rankings: 43
+  supported answers, all verified correct, 0 wrong supported answers, 34
+  partial findings on target, 0 non-verbatim quotes, every negative control,
+  ambiguity and cross-specialist case refused or handed off; mutation 6/6
+  and 11/11 killed, the B4 and C1 switches guarded by their flip tests;
+  determinism identical across repeats, fresh instances and rankings; no
+  regressions. Verdict: freeze approved, no blocking finding.
+- D-107 recorded: Institutional Navigation frozen for Milestone 4 with the
+  frozen SHA-256 hashes of `institutional.py` and `navigation_cues.py`, the
+  reviewed hashes, the accepted evidence, the component boundary and the
+  D-103 change-control rule; runtime integration explicitly outside the
+  freeze.
+- Documentation-only corrections found by the review: the `institutional.py`
+  module docstring (C1 paragraph added; "not in the default dispatch"
+  replaced by the B6/D-105, freeze and runtime state), `PHASE = "C1"` and
+  the phase label of the limitation text (five phase-label assertions in
+  the Institutional tests updated from "B4" to "C1"; no other test
+  change); the shadowed duplicate `navigation_cues._ABBREVIATION` (the C1
+  copy, reached by no call) removed, behaviour unchanged;
+  `docs/COORDINATOR.md` dispatch paragraph (all four specialists
+  executable); `docs/INSTITUTIONAL_NAVIGATION_SPECIALIST.md` status header,
+  "Freeze status (D-107)" section and phase list.
+- Step 4.16 closed:
+
+  | Step | State |
+  |---|---|
+  | 4.16-A design | complete |
+  | 4.16-B1 contract, scope, lexicon (D-104) | complete |
+  | 4.16-B2 directory lookups | complete |
+  | 4.16-B3 responsibilities, structure, locations (D-106) | complete |
+  | 4.16-B4 boundaries and handoffs | complete |
+  | 4.16-B5 QA and acceptance | complete |
+  | 4.16-B6 default dispatch (D-105) | complete |
+  | 4.16-C1 natural phrasing | complete |
+  | Independent freeze review | complete |
+  | D-107 Institutional Navigation frozen | recorded |
+
+  Step 4.16: COMPLETE. Runtime integration: NOT started (next stage).
+- Four-specialist state: Teaching & Learning frozen; Research & Innovation
+  frozen; Faculty Services & HR frozen (D-103); Institutional Navigation
+  frozen (D-107); all four in `dispatch.EXECUTABLE_SPECIALISTS` and run by
+  `run_question` when registered (`tests/test_four_specialist_dispatch.py`).
+- Git: the Step 4.16 work (Institutional production files, tests, QA
+  assets, the D-105 dispatcher change, documentation, D-105 to D-107)
+  committed in one commit on top of `c316698`; pushed to `origin/feature/remaining-specialists` with a normal upstream push (the
+  remote branch did not exist before).
+
+### Tests performed
+
+Targeted, after the documentation-only changes: Institutional 2,293, four-specialist
+dispatch 216, Coordinator 143, Plan F contracts/registry/imports 108, the frozen
+specialists' integration and alignment tests 159, shared helpers 65: 2,984 passed,
+0 failed, 0 skipped, 0 xfailed (46.5 s).
+QA replays on the frozen files: contact accuracy 226/226 as expected, 6/6 `_B2_*`
+switches killed, restored replay 113/113; evidence binding 690/690 as expected, 11/11
+`_B3_*` switches killed, restored replay 345/345; the 62-question benchmark through the
+default dispatch byte-identical to `coverage_baseline_c1.jsonl` (system 12/48, direct
+10/48, 0 wrong, 14/14 refusals, routing 34/62 exact); holdout system 5/24, direct 5/24,
+0 wrong, 12/12 refusals. No nondeterministic case.
+Full suite, final gate before the commit: 6,302 collected, 6,302 passed, 0 failed, 0 skipped, 0 xfailed (170.65 s).
+`pip check`: no broken requirements.
+
+### Known issues at handoff
+
+- Coordinator routing gap (DEP-2): Institutional Navigation is not selected
+  for part of the answerable navigation questions (18 of 48 benchmark, 11
+  of 24 holdout, 35 of 107 answerable blind questions, 33 of which the
+  specialist would not answer either); bare structure and count questions
+  reach no specialist; same-domain double asks are not split. Classified in
+  the freeze review, not fixed; a separate approved step.
+- Recall limitations accepted with the freeze (D-107): duty words shared
+  with the office name, synonyms, referral wordings, context outside the
+  closed shapes, lowercase acronyms and typos fail closed; split, sub-row
+  and page 52 directory entries give no number; "Where is the Women's Main
+  Library?" fails closed.
+- Frozen HR specialist, outside this step: "What does Human Resources do?"
+  is routed to HR alone, which returns a supported answer quoting an
+  unrelated page 64 contract-termination sentence; recorded for the HR
+  change log, not corrected (D-103 change control).
+- The live UI issues noted on 2026-10-28 (raw exception text, `0.0.0.0`,
+  no authentication) stay for the integration step.
+
+### Do not redo
+
+- Do not reopen any of the four frozen specialists without a new decision
+  record (D-103, D-107).
+- Do not start runtime integration (adapter, `ui/pipeline.py`,
+  `PLAN_F_ENABLED`, Synthesis aggregation, Verifier findings mode) before
+  its decision record.
+- The holdout (`f6367ccf...`) and the benchmark (`2c2e14cf...`) stay
+  unchanged.
+
+### Next task
+
+Multi-agent runtime integration planning and implementation: the
+integration decision record for the adapter behind `ui/pipeline.ask`
+(`APPLICATION_INTEGRATION_READINESS.md`), then its implementation; the
+Coordinator routing step (DEP-2) separately.
+
+### Files changed
+
+`docs/DECISIONS.md` (D-107), `docs/STATUS.md` (this entry),
+`docs/COORDINATOR.md`, `docs/INSTITUTIONAL_NAVIGATION_SPECIALIST.md`,
+`handbook_bot/agents/specialists/institutional.py` (docstring, `PHASE`,
+limitation text), `handbook_bot/agents/specialists/navigation_cues.py`
+(duplicate `_ABBREVIATION` removed), `tests/test_institutional_contract.py`,
+`tests/test_institutional_directory.py`,
+`tests/test_institutional_integration.py`,
+`tests/test_institutional_offices.py` (phase label). Review deliverables
+outside the repository:
+`SENIOR_PROJECT_HANDOVER/INSTITUTIONAL_STEP_4_16_FREEZE/` (freeze review
+report and baseline manifest).
+
+---
+
+## 2026-10-28 - Application integration readiness analysis (Milestone 4, step 4.16-C1 secondary objective; read-only)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/remaining-specialists` |
+| Starting commit | `c316698` |
+| Ending state | documentation only; no production, test or QA file changed; the C1 work of 2026-10-26 stands unchanged (production hashes identical to its final gate run); Plan F still not wired into the live chatbot; `PLAN_F_ENABLED` False; nothing committed |
+
+### Completed
+
+- Re-verified the C1 state before proceeding: `institutional.py` and
+  `navigation_cues.py` hash-identical to the final C1 gate run, 40/40 frozen
+  files unchanged, nothing staged, HEAD `c316698`.
+- Read-only inspection of the live path (`app.py` -> `ui/chat.py` ->
+  `ui/pipeline.ask` -> `handbook_bot.answer_question` -> `orchestrator.run`)
+  and of the Plan F entry points (`coordinator.coordinate`,
+  `dispatch.run_question` / `dispatch`, the four `from_knowledge_base(kb)`
+  builders, `build_knowledge_base`). Confirmed: no API module, no
+  authentication, in-memory per-tab sessions, `PLAN_F_ENABLED` read by no
+  production module, no production registry builder, no findings renderer,
+  no Milestone 1 fallback in code.
+- Deliverable `SENIOR_PROJECT_HANDOVER/INSTITUTIONAL_STEP_4_16_C1/
+  APPLICATION_INTEGRATION_READINESS.md`: confirmed entry points with
+  file:line references; the minimum safe architecture (an adapter module
+  behind the `ui/pipeline.ask` seam, deterministic rendering of findings
+  into the unchanged `QAResult`, fallback to the Milestone 1 path, the flag
+  as the engine switch); options A (NiceGUI), B (JSON API in the same
+  FastAPI-based process), C (mobile over B); request/response structures,
+  sessions, citations, errors and timeouts, security, configuration,
+  rollback, integration tests, the files likely to change.
+- The C1 QA report gained the gate mapping to the 2026-10-28 brief and the
+  ten acceptance criteria; the C1 handoff gained the integration paragraph.
+
+### Tests performed
+
+None run in this step (no code changed). The C1 gates of 2026-10-26 stand:
+full suite 6302 passed; contact 226/226; evidence 690/690; benchmark 12/48
+system, 10/48 direct, 0 wrong; holdout 5/24 and 5/24, 0 wrong.
+
+### Known issues at handoff
+
+- Setting `PLAN_F_ENABLED=True` connects nothing today; the adapter does not
+  exist.
+- The live UI shows raw exception text in its catch-all (`ui/chat.py`
+  `_submit`), binds `0.0.0.0` and has no authentication: to fix in the
+  integration step, not here.
+- Not solved by the proposed architecture: the Coordinator routing gap
+  (DEP-2), handoff rounds, Synthesis aggregation, the Verifier findings mode,
+  the real-model evaluation.
+
+### Do not redo
+
+- Do not implement the adapter, change `PLAN_F_ENABLED`, or touch the UI
+  before the freeze review and an integration decision record.
+
+### Next task
+
+Institutional freeze review (independent adversarial pass on the final C1
+code); then the integration decision record for the adapter; the Coordinator
+routing step separately.
+
+### Files changed
+
+`docs/STATUS.md` (this entry) only. Deliverables outside the repository:
+`SENIOR_PROJECT_HANDOVER/INSTITUTIONAL_STEP_4_16_C1/APPLICATION_INTEGRATION_READINESS.md`
+(new), `INSTITUTIONAL_C1_QA_REPORT.md` and
+`INSTITUTIONAL_C1_FREEZE_READINESS_HANDOFF.md` (sections added).
+
+---
+
+## 2026-10-26 - Institutional Navigation natural-language coverage correction (Milestone 4, step 4.16-C1)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/remaining-specialists` |
+| Starting commit | `c316698` |
+| Ending state | implemented locally; not yet committed; Institutional Navigation reads polite, introduced and indirect questions through a closed allowlist; not frozen; Coordinator, dispatcher and the three frozen specialists unchanged; Plan F still not wired into the live chatbot |
+
+### Completed
+
+- `navigation_cues.natural_ask`: a focus clause is read as the plain question it
+  asks (request frames, greetings, contractions, filler words in one closed
+  position, embedded order, count phrasing), and every B2/B3 check reads the
+  result. Context is set aside only in closed shapes (before the question: a
+  greeting or thanks, a self-introduction, or the asker's own unit; after it:
+  only thanks). Four switches with negative controls (`_C1_NATURAL_ASK`,
+  `_C1_CONTEXT_GUARD`, `_C1_KIND_CHANGE_CHECK`, `_C1_COMPOSITION_CONTINUES`).
+- Eight `contact=False` chapter units with their own statements added to the
+  lexicon (CLD, SSU, Transport Section, Mail Office, Facilities Management
+  Section, Projects Management Section, Deans Council, UAAC); five
+  never-equivalent pairs; a few general plain-form wordings.
+- A blind 36-question holdout frozen before any code change
+  (`qa/institutional_4_16/holdout_cases.jsonl`); runner option `--cases`;
+  stored C1 benchmark run `coverage_baseline_c1.jsonl`.
+- Four adversarial review rounds (1,523 probes). The first C1 version had
+  4 blockers (corrections, sub-units and fields in the context set aside; the
+  ownership check skipped); the open context handling was replaced by the
+  closed allowlist. Round 4 found one minor issue, fixed.
+- Tests: new `tests/test_institutional_natural_phrasing.py` (102); deliberate
+  updates in the acceptance, four-specialist and offices tests; B3 case
+  expectations D09, U17, S01 changed with the lexicon (handbook evidence
+  recorded). Docs: `docs/INSTITUTIONAL_NAVIGATION_SPECIALIST.md`, the QA
+  README. Deliverables in `SENIOR_PROJECT_HANDOVER/INSTITUTIONAL_STEP_4_16_C1/`.
+
+### Tests performed
+
+Full suite: 6302 collected, 6302 passed, 0 failed, 0 skipped, 0 xfailed
+(6174 before C1; +128 new Institutional tests).
+Institutional family and four-specialist tests: 2509 passed. Contact accuracy
+226/226 and evidence binding 690/690 with every `_B2_*` / `_B3_*` switch
+killed. The unchanged 62-question benchmark through the default dispatcher:
+coverage 12/48 (was 6/48), Institutional alone 10/48 (was 4/48), 0 wrong
+answers, 0 answers lost, 14/14 refusals kept, Coordinator selections
+identical. Holdout: 5/24 system (was 2/24), 5/24 direct (was 0/24), 0 wrong.
+Every run repeated byte-identical. No real-model run, no paid API, no FAISS
+rebuild; the 25 guides not ingested.
+
+### Known issues at handoff
+
+- The Coordinator still does not route 18 of 48 benchmark Institutional
+  questions to Institutional Navigation (DEP-2), most of them to no specialist;
+  Institutional alone answers 5 of the never-routed benchmark and holdout
+  questions, so the rest of the gap also needs Institutional work.
+- Holdout gains are partly contaminated (HS02, HS07, HR08, HS04; see the C1
+  coverage comparison); conservative reading 4/24 system, 1/24 direct.
+- `navigation_cues._ABBREVIATION` (C1 section) is shadowed by an older
+  definition; safe (fails closed); remove at the freeze review.
+- Coverage stays low by design: context outside the closed shapes, name
+  variants the handbook does not print, referral wordings and duty paraphrases
+  fail closed.
+- Stale text recorded for the freeze review: the `institutional.py` module
+  docstring and `PHASE`, `docs/COORDINATOR.md`, two frozen test names.
+
+### Do not redo
+
+- The holdout is frozen (SHA-256 `f6367ccf...`); do not edit it. The benchmark is
+  unchanged (`2c2e14cf...`).
+- Word-list context filters were broken twice by the review; keep context
+  handling to closed shapes.
+
+### Next task
+
+Formal freeze review of Institutional Navigation (with an independent
+adversarial pass on the final code); then a separately approved Coordinator
+routing step.
+
+### Files changed
+
+`handbook_bot/agents/specialists/institutional.py`,
+`handbook_bot/agents/specialists/navigation_cues.py`,
+`tests/test_institutional_natural_phrasing.py` (new),
+`tests/test_institutional_acceptance.py`, `tests/test_four_specialist_dispatch.py`,
+`tests/test_institutional_offices.py`, `qa/institutional_4_16/holdout_cases.jsonl`
+(new), `qa/institutional_4_16/coverage_baseline_c1.jsonl` (new),
+`qa/institutional_4_16/coverage_runner.py`, `qa/institutional_4_16/build_evidence_cases.py`,
+`qa/institutional_4_16/evidence_cases.jsonl`, `qa/institutional_4_16/README.md`,
+`docs/INSTITUTIONAL_NAVIGATION_SPECIALIST.md`, `docs/STATUS.md`.
+
+---
+
+## 2026-10-26 - Institutional Navigation enabled in the default Plan F dispatch (Milestone 4, step 4.16-B6)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/remaining-specialists` |
+| Starting commit | `c316698` |
+| Ending state | implemented locally; not yet committed; four specialists executable in the default Plan F dispatch (D-105); Plan F still not wired into the live chatbot; Teaching, Research and Faculty Services & HR frozen and unchanged; Institutional Navigation not frozen |
+
+### Completed
+
+- D-105: `dispatch.EXECUTABLE_SPECIALISTS` gains `SpecialistId.INSTITUTIONAL`
+  (`handbook_bot/agents/specialists/dispatch.py`: the tuple, its comment and
+  the module docstring; the only production change). All four specialists
+  execute through the default `dispatch()` / `run_question()` when
+  registered; an unregistered specialist or a handoff-produced task stays
+  pending; handoffs remain data.
+- Test updates: the dispatcher change failed 48 cases in 9 test functions,
+  all phase-state assertions (Institutional absent from the executable set or
+  pending by default); only those were updated. Frozen specialists' test
+  files: one assertion each in `tests/test_faculty_services_integration.py`
+  and `tests/test_research_integration.py`; no behaviour assertion changed.
+  The plan-listed `test_teaching_integration.py`, `test_teaching_alignment.py`
+  and `test_clause_retrieval_intent.py` needed no change (their registries do
+  not register Institutional, so it stays pending there).
+- New `tests/test_four_specialist_dispatch.py` (215); benchmark runner option
+  `--default-dispatch`; stored B5 benchmark result
+  `qa/institutional_4_16/coverage_baseline_b5.jsonl`. A bounded review (two
+  lenses, a skeptic per finding) found no blocker or major issue; its minor
+  findings (two tautological test groups, a vacuous assertion, stale comments
+  and names) were fixed or recorded.
+- `docs/AGENT_CONTRACTS.md`, `docs/INSTITUTIONAL_NAVIGATION_SPECIALIST.md`
+  and D-105 updated. Deliverables in
+  `SENIOR_PROJECT_HANDOVER/INSTITUTIONAL_STEP_4_16_B6/`.
+
+### Tests performed
+
+Full suite: 6174 collected, 6174 passed, 0 failed, 0 skipped, 0 xfailed
+(5959 before B6; +215 new). Families: Faculty Services & HR 1309 (the D-103
+count), Research 1221, Teaching 670, Institutional 2166, four-specialist 215,
+Plan F 251. Evidence binding 690/690 and contact accuracy 226/226 with every
+`_B2_*` / `_B3_*` switch killed. The 62-question blind benchmark through the
+default dispatcher is byte-identical to Step 4.16-B5: routing 34/62 exact,
+Institutional recall 25/46, coverage 6/48 (12.5%), 0 wrong or unsafe
+supported answers, citations 6/6. No real-model run, no paid API, no FAISS
+rebuild; the 25 guides not ingested.
+
+### Known issues at handoff
+
+End-to-end coverage stays 12.5% (an integration and readiness risk); the
+Coordinator misses 21 of 46 Institutional-owned questions (DEP-2);
+HR / Research referrals are declined by both specialists in the first round
+and handoffs are not executed yet; no Teaching handoff (DEP-3). Stale text
+recorded for the freeze review: the `institutional.py` docstring,
+`docs/COORDINATOR.md` (dispatch paragraph), two frozen test names.
+Institutional is not frozen; live chatbot integration and real-model
+evaluation not started.
+
+### Files changed
+
+Production: `handbook_bot/agents/specialists/dispatch.py`. Tests:
+`tests/test_faculty_services_integration.py`,
+`tests/test_research_integration.py` (phase-state assertions only),
+`tests/test_institutional_contract.py`, `test_institutional_directory.py`,
+`test_institutional_offices.py`, `test_institutional_integration.py`,
+`test_institutional_alignment.py`; new `tests/test_four_specialist_dispatch.py`.
+QA: `qa/institutional_4_16/coverage_runner.py`, `README.md`, new
+`coverage_baseline_b5.jsonl`. Docs: `docs/DECISIONS.md` (D-105),
+`docs/AGENT_CONTRACTS.md`, `docs/INSTITUTIONAL_NAVIGATION_SPECIALIST.md`,
+`docs/STATUS.md`.
+
+## 2026-10-26 - Institutional Navigation final QA and acceptance (Milestone 4, step 4.16-B5)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/remaining-specialists` |
+| Starting commit | `c316698` |
+| Ending state | QA only, no production change; not yet committed; architecture inactive; Teaching, Research and Faculty Services & HR frozen and unchanged; Institutional Navigation accepted with documented non-blocking limitations, ready for B6 (default dispatch, D-105), not executable by default |
+
+### Completed
+
+- Requirements traceability of C1 to C12, U1 to U4, R1 to R11 and the
+  status semantics to functions, tests, handbook evidence and results; the
+  R9 / routing-document conflict reconciled (R9 authoritative; no
+  information Institutional Navigation could give is lost; the questions
+  stay unanswered for the user until integration).
+- Test groups G (evidence conflicts) and H (determinism independent of
+  retrieval): new `tests/test_institutional_conflicts.py`.
+- Independent evaluation: 62 faculty-style questions written by blind
+  authors from the handbook pages only, expected quotes verified on their
+  pages before any run (`qa/institutional_4_16/coverage_cases.jsonl`,
+  `coverage_runner.py`), run through the Coordinator and the dispatcher with
+  all four specialists and directly; new
+  `tests/test_institutional_acceptance.py` (strict safety assertions,
+  measured coverage, the known limitations A to I, the redacted error path).
+- Findings classified: no P0, no P1; P2 non-blocking for B6: low
+  natural-language coverage (F-01) and Coordinator routing gaps (F-02, frozen
+  Coordinator); ten P3 accepted limitations. Deliverables in
+  `SENIOR_PROJECT_HANDOVER/INSTITUTIONAL_STEP_4_16_B5/`.
+
+### Tests performed
+
+Independent evaluation: answer correctness on answered questions 6/6
+(system) and 4/4 (direct); 0 unsafe supported and 0 wrong answers; 14/14
+correct refusals; citations on their expected pages 6/6 and 4/4; coverage
+of source-answerable questions 6/48 (system) and 4/48 (direct); Coordinator
+exact selection 34/62, Institutional inclusion 38/62; second run
+byte-identical. New B5 tests: 25 passed. B4 gate results reused for the
+unchanged production code (B2 226/226 and B3 690/690 with every switch
+killed; 296 B4 tests; 448 Coordinator, dispatcher and frozen integration
+tests). Full suite, run once from the repository root: 5959 passed, 0
+failed, 0 skipped (5934 before B5). No real-model run, no model download,
+no FAISS rebuild, no paid API; the 25 new documents not ingested.
+
+### Known issues at handoff
+
+The narrow question forms answer few natural phrasings (a greeting, a
+request verb or a context sentence fails closed); the Coordinator does not
+select Institutional Navigation for 21 of 46 Institutional-owned questions
+(DEP-2); HR / Research referrals are declined by both specialists in the
+first round; no Teaching handoff (DEP-3); lexicon gaps for printed units;
+multi-line directory entries; C7, C8 and C10 not answered. A bounded
+coverage correction is recommended after B6 and before the freeze review.
+B6 not started; the live chatbot does not use Plan F.
+
+### Files changed
+
+New: `tests/test_institutional_conflicts.py`,
+`tests/test_institutional_acceptance.py`,
+`qa/institutional_4_16/coverage_cases.jsonl`, `coverage_runner.py`.
+Modified: `qa/institutional_4_16/README.md`,
+`docs/INSTITUTIONAL_NAVIGATION_SPECIALIST.md`, `docs/STATUS.md`. No
+production file changed.
+
+## 2026-10-26 - Institutional Navigation cross-specialist boundaries and handoffs (Milestone 4, step 4.16-B4)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/remaining-specialists` |
+| Starting commit | `c316698` |
+| Ending state | implemented locally; not yet committed; architecture inactive; Teaching, Research and Faculty Services & HR frozen and unchanged; Institutional Navigation in development (phase B4 of B1 to B6), not executable by default |
+
+### Completed
+
+- Phase B4 of the Institutional Navigation specialist (under D-104): before a
+  non-contact clause is answered, its subject is checked with the shared
+  `hr_owned` / `research_owned` cues (unchanged) and the B3 local lists. An
+  HR or Research subject the shared cues name gets no finding and is
+  returned as a `HandoffRequest` to that owner (never executed); a clause
+  is never handed back to the specialist whose handoff task it came in; a
+  Teaching subject, a clause only the local lists claim, and a shared-cue
+  clause that also has a Teaching subject get no finding and no handoff
+  (no target is guessed); contact and location asks are never handed off,
+  and an office's own name never makes a clause another specialist's;
+  approvals are never answered with an office. A task with no clause of its
+  own is `out_of_scope`. Four `_B4_*` switches, each shown necessary.
+- D-106 recorded: the team's four provisional acceptance conditions for the
+  B3 design; no condition violated, condition 3 (real-model coverage) open.
+  D-103 unchanged; D-105 stays reserved for default dispatch.
+- New `tests/test_institutional_integration.py` (a 48-question matrix
+  through the unchanged Coordinator and the dispatcher with all four
+  specialists) and `tests/test_institutional_alignment.py` (Coordinator
+  selections unchanged; every frozen specialist's result identical whether
+  Institutional Navigation runs or stays pending).
+- A bounded review (three lenses, one skeptic each) confirmed two minor text
+  defects (a not-handed-back note and the approval note claimed facts about
+  the handbook the code never checked); both fixed with regression asserts.
+  Its plan and boundary lenses failed four times on network errors; the plan
+  check was done inline and an earlier partial boundary probe led to the
+  shared-cue-only handoff rule.
+
+### Tests performed
+
+Focused B4: 296 passed (integration 185, alignment 111). Institutional B1
+to B3: 1845 passed (scope 132, contract 53, directory 498, offices 1162).
+Coordinator, dispatcher and frozen specialists' integration and alignment
+tests: 448 passed. Evidence binding 690 of 690 runs as expected (110
+supported and 60 partial unchanged; 23 foreign-subject cases now
+out_of_scope, 9 with a handoff), every `_B3_*` switch killed; contact
+accuracy 226 of 226, the same 118 numbers, every `_B2_*` switch killed;
+second replays and case-file rebuilds byte-identical. Full suite: 5934
+passed, 0 failed, 0 skipped (5641 before B4), run from the repository root.
+No real-model run, no model download, no FAISS rebuild, no paid API.
+Passing cases do not prove accuracy on every phrasing.
+
+### Known issues at handoff
+
+Separate tasks: for "which office handles / who should I contact about <HR
+or Research subject>" the subject specialist hands navigation to
+Institutional Navigation and it hands the subject back, so neither answers
+in the first round (bounded by one handoff round). No Teaching handoff
+exists (DEP-3), so a Teaching subject the Coordinator gives only to
+Institutional Navigation is unanswered. Ownership is read with word cues
+(over- and under-reach documented). The routing document's rows for faculty
+housing, employment questions and the leave balance conflict with R9; B4
+follows R9 (for team review). Governance-level authority (C8) is not
+answered. Coordinator cue gaps unchanged (DEP-2). QA campaign (B5) and
+default dispatch (B6) not started; the live chatbot does not use Plan F.
+
+### Files changed
+
+New: `tests/test_institutional_integration.py`,
+`tests/test_institutional_alignment.py`. Modified (all untracked since B1):
+`handbook_bot/agents/specialists/institutional.py`,
+`tests/institutional_support.py`, `tests/test_institutional_contract.py`,
+`tests/test_institutional_directory.py`, `tests/test_institutional_offices.py`,
+`qa/institutional_4_16/build_evidence_cases.py`, `evidence_cases.jsonl`,
+`build_contact_cases.py`, `contact_cases.jsonl`, `README.md`,
+`docs/INSTITUTIONAL_NAVIGATION_SPECIALIST.md`. Modified: `docs/STATUS.md`,
+`docs/DECISIONS.md` (D-106 appended). `navigation_cues.py` unchanged in B4.
+
+## 2026-10-25 - Institutional Navigation responsibilities, structure and locations (Milestone 4, step 4.16-B3)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/remaining-specialists` |
+| Starting commit | `c316698` |
+| Ending state | implemented locally; not yet committed; architecture inactive; Teaching, Research and Faculty Services & HR frozen and unchanged; Institutional Navigation in development (phase B3 of B1 to B6), not executable by default |
+
+### Completed
+
+- Phase B3 of the Institutional Navigation specialist (under D-104; no new
+  decision): office responsibilities (E2), organisational structure (chair,
+  composition, subgroups, the bare organisation ask, counts, colleges) and
+  the four documented library locations (section 11.6), each answered only
+  from a handbook statement that binds the office: the named subject with a
+  responsibility verb, a strict anaphor, or a list lead-in within one
+  passage. Statements are read once from in-scope paragraph passages, never
+  from the directory pages 52 to 55. A clause is answered only in one of the
+  plain question forms; procedures, approvals, other specialists' subjects
+  and mixed asks are read and not answered (phase B4). No floor, room, hour,
+  map, GPS, officeholder or reporting line is given.
+- Eleven evidence-binding protections (`_B3_*`), each shown necessary by
+  mutation. `qa/institutional_4_16/`: 345 evidence-binding cases (15
+  categories, including the confirmed defects of five adversarial reviews),
+  case builder, runner with mutation mode.
+- Team decisions recorded in `docs/INSTITUTIONAL_NAVIGATION_SPECIALIST.md`
+  (no D-number; D-105 stays reserved for default dispatch): Decision A,
+  bounded direct directory reading, accepted with its six properties checked
+  (property 6 on the build path only, Plan F not being live); Decision B,
+  page-52 contact expansion deferred, no telephone or fax answer added.
+- For team review: (1) B3 uses its own statement reader instead of the
+  shared `grounding.AskGate` named in the 4.16-A plan (the unmodified gate
+  cannot bind the handbook's E2 statements; no shared module changed); (2)
+  statement reading extends Decision A; (3) inside `_B2_REFERENT_CHECK`, a
+  contact ask now needs a plain contact form (all 113 B2 cases unchanged, a
+  few natural phrasings now fail closed).
+
+### Tests performed
+
+New `tests/test_institutional_offices.py` (1165 passed). B1/B2 regression:
+`tests/test_institutional_contract.py` (53), `tests/test_institutional_directory.py`
+(498) made phase-aware, `tests/test_institutional_scope.py` unchanged (132,
+parametrised over the 49-entry lexicon): 683 passed. Plan F contracts,
+registry, imports, Coordinator and clause retrieval intent: 289 passed.
+Evidence-binding evaluation: 690 runs (345 cases, two stand-in rankings),
+690 as expected, 0 wrong-office, wrong-location or invented answers,
+deterministic; every `_B3_*` protection switched off alone lets a wrong
+answer out. Contact-accuracy evaluation: 226 of 226 as expected, the same
+118 numbers, every `_B2_*` protection still needed. Case files rebuild
+byte-identical. Full suite: 5641 passed, 0 failed, 0 skipped (4468 before
+B3). No real-model run, no model download, no FAISS rebuild, no paid API.
+Passing cases do not prove accuracy on every phrasing.
+
+### Known issues at handoff
+
+Rule-based English reader: five adversarial reviews found defects in every
+round; all confirmed wrong answers were fixed and kept as cases, and the
+design fails closed outside the plain forms, but new phrasings may find
+gaps. Coverage gaps (fail closed): department lists of colleges, the OIR
+list beyond item 1, British spellings, restricted one-word duties, purpose
+clauses, "health and safety" asks (partial), two-ask clauses, negated
+location asks, "&"/"and" college-name variants, the page-52 directory
+entries. Handoffs and mixed questions (B4), the QA campaign (B5) and default
+dispatch enablement (B6, a separate decision) are not started; the live
+chatbot does not use Plan F.
+
+### Files changed
+
+New: `tests/test_institutional_offices.py`,
+`qa/institutional_4_16/evidence_cases.jsonl`, `build_evidence_cases.py`,
+`evidence_binding_runner.py`. Modified (all untracked since B1):
+`handbook_bot/agents/specialists/institutional.py`,
+`handbook_bot/agents/specialists/navigation_cues.py`,
+`tests/institutional_support.py`, `tests/test_institutional_contract.py`,
+`tests/test_institutional_directory.py`, `qa/institutional_4_16/README.md`,
+`build_contact_cases.py`, `contact_cases.jsonl`,
+`contact_accuracy_runner.py`, `docs/INSTITUTIONAL_NAVIGATION_SPECIALIST.md`.
+Modified: `docs/STATUS.md`. `docs/DECISIONS.md` unchanged in B3.
+
+## 2026-10-24 - Institutional Navigation directory lookups (Milestone 4, step 4.16-B2)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/remaining-specialists` |
+| Starting commit | `c316698` |
+| Ending state | implemented locally; not yet committed; architecture inactive; Teaching, Research and Faculty Services & HR frozen and unchanged; Institutional Navigation in development (phase B2 of B1 to B6), not executable by default |
+
+### Completed
+
+- Phase B2 of the Institutional Navigation specialist (under D-104; no new
+  decision): telephone and fax numbers from the contact directory (section
+  1.16). A number is returned only from one directory line that starts with
+  the asked office's printed name, holds exactly two complete numbers, has no
+  neighbouring line running into it and sits under a header naming the
+  telephone and fax columns; the asked office must be the unit asked about.
+  Seventeen entries are answerable; one-number, labelled, multi-line and
+  split entries are `partial` (office name only, no number) or `not_found`.
+  E-mail and website asks are not answered. Numbers are reported as printed,
+  not as verified to be active; shared numbers are flagged.
+- `qa/institutional_4_16/`: 113 contact-accuracy cases (expected numbers taken
+  from the printed directory rebuilt from the PDF's geometry), case builder,
+  replay runner with a mutation mode for the six row-binding protections.
+
+### Tests performed
+
+New `tests/test_institutional_directory.py` (494); `tests/test_institutional_contract.py`
+made phase-aware (53); `tests/test_institutional_scope.py` unchanged (128):
+675 passed. Plan F contracts, registry, imports, Coordinator and clause
+retrieval intent: 289 passed. Contact-accuracy evaluation: 226 runs, 0
+wrong-office or wrong-number answers, deterministic under both stand-in
+rankings; every protection switched off alone lets a wrong answer out. Full
+suite: 4468 passed, 0 failed, 0 skipped. No real-model run, no model
+download, no FAISS rebuild, no paid API.
+
+### Known issues at handoff
+
+The directory starts on page 52; its page-52 entries (Chancellor's Office,
+Vice Chancellors, Admissions) are not in the office lexicon and are not
+answered. "IT Center" is not printed in the handbook and is not an alias.
+Office responsibility, structure and locations (B3), handoffs (B4) and
+default dispatch enablement (B6, a separate decision) are not started; the
+live chatbot does not use Plan F.
+
+### Files changed
+
+New: `tests/test_institutional_directory.py`, `qa/institutional_4_16/`
+(`README.md`, `contact_cases.jsonl`, `build_contact_cases.py`,
+`contact_accuracy_runner.py`). Modified (all untracked since B1):
+`handbook_bot/agents/specialists/institutional.py`,
+`handbook_bot/agents/specialists/navigation_cues.py`,
+`tests/institutional_support.py`, `tests/test_institutional_contract.py`,
+`docs/INSTITUTIONAL_NAVIGATION_SPECIALIST.md`. Modified: `docs/STATUS.md`.
+
+---
+
+## 2026-10-24 - Institutional Navigation specialist, design and first phase (Milestone 4, steps 4.16-A and 4.16-B1)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/remaining-specialists` |
+| Starting commit | `c316698` |
+| Ending state | implemented locally; not yet committed; architecture inactive; Teaching, Research and Faculty Services & HR frozen and unchanged; Institutional Navigation in development (phase B1 of B1 to B6), not executable by default |
+
+### Completed
+
+- Step 4.16-A (design only): requirements, architecture and contract,
+  routing and boundaries (from the real Coordinator output), test strategy
+  and implementation plan, in
+  `SENIOR_PROJECT_HANDOVER/INSTITUTIONAL_STEP_4_16_A/`.
+- Step 4.16-B1 (D-104): `specialists/institutional.py`
+  (`InstitutionalResources`, `InstitutionalNavigationSpecialist`, scope,
+  the fail-closed phase-B1 run) and `specialists/navigation_cues.py` (ask
+  kinds, evidence tiers E1 / E2 / E3, the 46-entry office lexicon checked
+  against the handbook PDF); `docs/INSTITUTIONAL_NAVIGATION_SPECIALIST.md`.
+  The specialist answers nothing yet: every result is `not_found` with the
+  clause read and recorded.
+
+### Tests performed
+
+New: `tests/test_institutional_scope.py` (128) and
+`tests/test_institutional_contract.py` (56), with
+`tests/institutional_support.py` (real handbook pages, project PDF loader and
+chunker, fake embedder): 184 passed, together with the Plan F contract,
+registry and import tests (108 passed). Full suite: see the Step 4.16-B1
+handover reports. No real-model run, no model download, no FAISS rebuild, no
+paid API.
+
+### Known issues at handoff
+
+Institutional Navigation answers nothing in phase B1. The directory rows are
+chunked unevenly (some name chunks hold part of a row, for example the
+College of Sciences chunk holds only its fax number), so phase B2 must bind a
+number only within one complete row. The handbook has no e-mail address and
+two URLs. The Coordinator selects no specialist for "Who is the
+Chancellor?" and "What does the Business Services Department do?". Default
+dispatch enablement (B6) needs a separate decision and the phase-state
+assertions of five existing test files.
+
+### Files changed
+
+New: `handbook_bot/agents/specialists/institutional.py`,
+`handbook_bot/agents/specialists/navigation_cues.py`,
+`tests/institutional_support.py`, `tests/test_institutional_scope.py`,
+`tests/test_institutional_contract.py`,
+`docs/INSTITUTIONAL_NAVIGATION_SPECIALIST.md`. Modified: `docs/DECISIONS.md`
+(D-104), `docs/STATUS.md`.
+
+---
+
 ## 2026-10-24 - Faculty Services & HR specialist frozen (Milestone 4, step 4.15)
 
 | Field | Value |

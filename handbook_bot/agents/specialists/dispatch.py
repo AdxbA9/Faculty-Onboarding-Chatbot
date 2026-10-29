@@ -10,12 +10,13 @@ DECISION OWNED
     routes, never answers, never writes prose and never verifies.
 
 WHAT IT DOES IN THIS PHASE
-    * The Teaching & Learning and the Research & Innovation Specialists are
-      executable (``EXECUTABLE_SPECIALISTS``); each runs only when it is
-      also registered. A task assigned to Faculty Services & HR or
-      Institutional Navigation is kept, in Coordinator order, as
-      ``pending``: it is never executed, never faked and never handed to
-      another specialist. There is no default-to-Teaching fallback.
+    * The four specialists are executable (``EXECUTABLE_SPECIALISTS``:
+      Teaching & Learning, Research & Innovation, Faculty Services & HR and,
+      since Step 4.16-B6 (D-105), Institutional Navigation); each runs only
+      when it is also registered. A task whose specialist is not registered
+      is kept, in Coordinator order, as ``pending``: it is never executed,
+      never faked and never handed to another specialist. There is no
+      default-to-Teaching fallback.
     * Tasks are passed to the specialist exactly as the Coordinator built
       them (task id, full question, intent, level, system and
       ``context["focus_clauses"]``); nothing is reconstructed.
@@ -27,8 +28,8 @@ WHAT IT DOES IN THIS PHASE
       task, with key-shaped secrets and filesystem paths removed; the
       decision and the other tasks are unaffected.
     * No LLM call is made here; ``DispatchResult.llm_calls`` counts the
-      specialists' own ``llm_used`` flags (0 for the deterministic Teaching
-      and Research specialists).
+      specialists' own ``llm_used`` flags (0 for the four deterministic
+      specialists).
 
 NOT WIRED INTO THE RUNTIME
     Nothing in ``handbook_bot.orchestrator`` or ``answer_question`` imports
@@ -46,9 +47,10 @@ from .contracts import CoordinatorDecision, FindingStatus, HandoffRequest, Speci
 from .registry import SpecialistRegistry
 
 #: Specialists that may be executed in this phase (Step 3.10: Teaching;
-#: Milestone 4 Step 4.4: Research added). Faculty Services & HR and
-#: Institutional Navigation stay pending until they are implemented.
-EXECUTABLE_SPECIALISTS: Tuple[SpecialistId, ...] = (SpecialistId.TEACHING, SpecialistId.RESEARCH, SpecialistId.FACULTY_SERVICES)
+#: Milestone 4 Step 4.4: Research; Step 4.11: Faculty Services & HR; Step
+#: 4.16-B6, D-105: Institutional Navigation). Each runs only when registered.
+EXECUTABLE_SPECIALISTS: Tuple[SpecialistId, ...] = (SpecialistId.TEACHING, SpecialistId.RESEARCH, SpecialistId.FACULTY_SERVICES,
+                                                    SpecialistId.INSTITUTIONAL)
 
 STATE_EXECUTED = "executed"
 STATE_PENDING = "pending"

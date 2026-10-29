@@ -171,7 +171,9 @@ Coordinator (`requested_by == "coordinator"`); a task produced by a
 specialist's handoff and placed in a decision is kept `pending`, so no second
 round runs before handoff depth accounting exists (Step 4.5A). Since Step
 4.11 the Faculty Services & HR Specialist is executable beside Teaching and
-Research (`EXECUTABLE_SPECIALISTS`); Institutional Navigation stays pending.
+Research (`EXECUTABLE_SPECIALISTS`); since Step 4.16-B6 (D-105) Institutional
+Navigation is executable too, so all four specialists run when registered.
+Handoff requests remain data and are never executed by the dispatcher.
 
 Shared evidence helpers (Milestone 4). Domain-neutral mechanisms extracted
 unchanged from the Teaching & Learning Specialist so that no specialist

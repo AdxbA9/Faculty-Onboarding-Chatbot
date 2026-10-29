@@ -30,8 +30,11 @@ def registry(rm):
 
 
 def test_faculty_services_is_executable_institutional_pending():
-    assert D.EXECUTABLE_SPECIALISTS == (SpecialistId.TEACHING, SpecialistId.RESEARCH, SpecialistId.FACULTY_SERVICES)
-    assert SpecialistId.INSTITUTIONAL not in D.EXECUTABLE_SPECIALISTS
+    # Step 4.16-B6 (D-105): Institutional Navigation joined the executable set. It stays pending in this file because the
+    # registry here does not register it ("executable but not registered"); every HR assertion below is unchanged.
+    assert D.EXECUTABLE_SPECIALISTS == (SpecialistId.TEACHING, SpecialistId.RESEARCH, SpecialistId.FACULTY_SERVICES,
+                                        SpecialistId.INSTITUTIONAL)
+    assert SpecialistId.FACULTY_SERVICES in D.EXECUTABLE_SPECIALISTS
 
 
 def test_hr_only_question_runs_the_hr_specialist(registry):

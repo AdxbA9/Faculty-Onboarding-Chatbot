@@ -303,9 +303,11 @@ def test_research_is_never_executed_without_a_research_task(teaching_corpus, res
 # Registration, executable set, identity, determinism, safety
 # ---------------------------------------------------------------------------
 def test_research_is_executable_in_this_phase_and_institutional_is_not():
-    # Step 4.11 added Faculty Services & HR to the executable set; Institutional Navigation stays pending
-    assert D.EXECUTABLE_SPECIALISTS == (SpecialistId.TEACHING, SpecialistId.RESEARCH, SpecialistId.FACULTY_SERVICES)
-    assert SpecialistId.INSTITUTIONAL not in D.EXECUTABLE_SPECIALISTS
+    # Step 4.11 added Faculty Services & HR to the executable set; Step 4.16-B6 (D-105) added Institutional Navigation,
+    # which the registries of this file do not register, so it is never executed here
+    assert D.EXECUTABLE_SPECIALISTS == (SpecialistId.TEACHING, SpecialistId.RESEARCH, SpecialistId.FACULTY_SERVICES,
+                                        SpecialistId.INSTITUTIONAL)
+    assert SpecialistId.RESEARCH in D.EXECUTABLE_SPECIALISTS
 
 
 def test_default_dispatch_runs_a_registered_research_specialist(registry):
