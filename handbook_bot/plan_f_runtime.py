@@ -62,7 +62,9 @@ FAILURE POLICY
 from __future__ import annotations
 
 import re
+import threading
 import time
+import weakref
 from dataclasses import dataclass, field
 from enum import Enum
 from types import MappingProxyType
@@ -735,6 +737,87 @@ def build_runtime(kb: Any, *, builders: Optional[Mapping[SpecialistId, Callable[
 
 
 # ---------------------------------------------------------------------------
+# Per-knowledge-base runtime cache (runtime integration phase I-2; owned by the seam ui/pipeline.py)
+# ---------------------------------------------------------------------------
+@dataclass(frozen=True)
+class CacheEntry:
+    """What the cache holds for one knowledge-base object: the runtime (None when its build failed), the build record
+    and whether this call reused an earlier build."""
+
+    runtime: Optional[PlanFRuntime]
+    build: RegistryBuild
+    reused: bool
+
+    @property
+    def ok(self) -> bool:
+        return self.runtime is not None
+
+
+class RuntimeCache:
+    """Builds a :class:`PlanFRuntime` once per knowledge-base object and reuses it while that object is alive.
+
+    Entries are keyed by the object's identity and validated through a weak reference, so a different knowledge base
+    never inherits another's registry and a collected one releases its specialists. A failed build is remembered for
+    that object (runtime None, the redacted errors kept), so the chatbot does not rebuild on every question; another
+    object builds afresh. The cache is bounded, thread-safe (a build holds the lock, so concurrent askers wait for one
+    build instead of starting their own) and makes no model call. An object that cannot be weakly referenced is built
+    but not cached.
+    """
+
+    def __init__(self, max_entries: int = 4,
+                 builder: Optional[Callable[[Any], Tuple[Optional[PlanFRuntime], RegistryBuild]]] = None) -> None:
+        self._entries: Dict[int, Tuple[Any, Optional[PlanFRuntime], RegistryBuild]] = {}
+        self._order: List[int] = []
+        self._lock = threading.RLock()
+        self._max = max(1, int(max_entries))
+        self._builder = builder                                    # None: this module's build_runtime, resolved at build time
+        self.builds = 0                                            # builds performed, for diagnostics and tests
+
+    def __len__(self) -> int:
+        return len(self._entries)
+
+    def _forget(self, key: int) -> None:
+        """Drop one entry. Also the weak-reference callback, so it takes no lock."""
+        self._entries.pop(key, None)
+        try:
+            self._order.remove(key)
+        except ValueError:
+            pass
+
+    def get_or_build(self, kb: Any) -> CacheEntry:
+        key = id(kb)
+        with self._lock:
+            held = self._entries.get(key)
+            if held is not None:
+                if held[0]() is kb:
+                    return CacheEntry(held[1], held[2], True)
+                self._forget(key)                                  # the id was reused by another object
+            builder = self._builder if self._builder is not None else build_runtime
+            try:
+                runtime, build = builder(kb)
+            except Exception as exc:                               # build_runtime never raises; an injected builder might
+                runtime, build = None, RegistryBuild(None, {"runtime": redact_error(exc)}, 0.0)
+            self.builds += 1
+            try:
+                ref = weakref.ref(kb, lambda _dead, key=key: self._forget(key))
+            except TypeError:
+                return CacheEntry(runtime, build, False)           # not weakly referenceable: built, not cached
+            self._entries[key] = (ref, runtime, build)
+            self._order.append(key)
+            while len(self._order) > self._max:
+                oldest = self._order[0] if self._order else None
+                if oldest is None:
+                    break
+                self._forget(oldest)
+            return CacheEntry(runtime, build, False)
+
+    def clear(self) -> None:
+        with self._lock:
+            self._entries.clear()
+            self._order.clear()
+
+
+# ---------------------------------------------------------------------------
 # Test-only helper: Plan F first, legacy otherwise (not called by the application)
 # ---------------------------------------------------------------------------
 def answer_with_fallback(question: str, kb: Any, runtime: Optional[PlanFRuntime]) -> QAResult:
@@ -751,9 +834,9 @@ def answer_with_fallback(question: str, kb: Any, runtime: Optional[PlanFRuntime]
 
 
 __all__ = [
-    "ASK_SPECIFIC_RECOGNISED", "AdapterResult", "DEFAULT_BUILDERS", "INSTITUTIONAL_BINDINGS", "INSTITUTIONAL_TIERS", "PHASE",
-    "PROMPT_VERSION", "PlanFOutcome", "PlanFRuntime", "REQUIRED_SPECIALISTS", "RELATION_STRONG", "RegistryBuild",
-    "SUBJECT_CHECK_VERSION", "accepted_pages", "adapt_finding", "answer_with_fallback", "build_runtime",
+    "ASK_SPECIFIC_RECOGNISED", "AdapterResult", "CacheEntry", "DEFAULT_BUILDERS", "INSTITUTIONAL_BINDINGS", "INSTITUTIONAL_TIERS",
+    "PHASE", "PROMPT_VERSION", "PlanFOutcome", "PlanFRuntime", "REQUIRED_SPECIALISTS", "RELATION_STRONG", "RegistryBuild",
+    "RuntimeCache", "SUBJECT_CHECK_VERSION", "accepted_pages", "adapt_finding", "answer_with_fallback", "build_runtime",
     "build_specialist_registry", "clause_covered_by", "decision_problem", "entity_in_text", "missing_specialists",
     "named_entities", "quote_problem", "render_answer", "result_problem", "subject_binding",
 ]

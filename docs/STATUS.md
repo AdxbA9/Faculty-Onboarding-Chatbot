@@ -9,6 +9,125 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-10-30 - Feature-flagged Plan F runtime seam and shadow mode (runtime integration, phase I-2)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/remaining-specialists` |
+| Starting commit | `b80afbd` |
+| Ending state | `ui/pipeline.py` is the one approved seam between the legacy pipeline and the Plan F adapter; both switches default to off, so a start without new environment variables is the legacy chatbot exactly as before; SHADOW and ACTIVE modes exist behind the switches and are not enabled anywhere; the four frozen specialists and the legacy core modules unchanged (hashes verified); committed on top of `b80afbd` and pushed with a normal push; I-3 (real knowledge base and models) not started |
+
+### Completed
+
+- `handbook_bot/config.py`: `PLAN_F_SHADOW` (default False) beside the
+  existing `PLAN_F_ENABLED` (default False), both through the existing
+  `_env_bool` convention; the comment block now says that only
+  `ui/pipeline.py` reads them. Modes: LEGACY (both off), SHADOW (`PLAN_F_SHADOW`
+  on; it takes precedence when both are on), ACTIVE (`PLAN_F_ENABLED` on
+  alone).
+- `ui/pipeline.py`: `ask(kb, question) -> QAResult` is unchanged for the UI.
+  LEGACY calls `answer_question` exactly as before and neither imports nor
+  builds Plan F. SHADOW produces the legacy answer first and returns it
+  unchanged, then runs the I-1 adapter for diagnostics only. ACTIVE runs the
+  adapter first and returns its `QAResult` only when the outcome is
+  `PLAN_F_ACCEPTED`; every other outcome, a registry failure or an exception
+  returns the legacy answer. The adapter is imported lazily inside the
+  flagged branch; no Plan F failure can raise through `ask`; legacy failures
+  keep their existing behaviour. `ask_with_diagnostics` returns a
+  JSON-serialisable diagnostic beside the result (mode, served, attempted,
+  outcome, specialist, status, fallback reason, Plan F and legacy pages,
+  answer equality, page overlap, Plan F timings, registry built or reused,
+  Plan F and legacy LLM counts, redacted error); it never holds the question
+  or the answer text. `recent_plan_f_diagnostics` keeps the last 200 records
+  in memory; nothing is written to disk; `reset_plan_f_state` clears the
+  cache and the records.
+- `handbook_bot/plan_f_runtime.py`: `RuntimeCache`, a bounded, thread-safe
+  cache that builds the `PlanFRuntime` once per knowledge-base object (keyed
+  by identity, validated through a weak reference, released when the object
+  is collected), remembers a failed build for that object instead of
+  rebuilding on every question, and never shares a registry between two
+  knowledge bases. The pipeline creates one cache on the first SHADOW or
+  ACTIVE question.
+- `tests/test_plan_f_pipeline.py` (new, 66 tests): the flag matrix and the
+  SHADOW precedence; environment parsing through the existing convention in
+  a fresh interpreter; LEGACY identity against `answer_question` for
+  greeting, contact, count, date, synthesis, refusal, ambiguous and no-key
+  questions (every user-visible field, the trace and the timing keys); no
+  Plan F import or build in LEGACY mode (fresh interpreter); SHADOW returns
+  the legacy answer unchanged for accepted and rejected Plan F outcomes,
+  records the known HR and annual-leave rejections, builds the runtime once
+  and reuses it, adds no model call to the user's question, and survives
+  eleven Plan F failure shapes (registry unavailable, no specialist,
+  rejection, partial, quote guard, subject guard, Verifier rejection,
+  specialist exception, adapter exception, seam exception, import failure)
+  with the legacy answer intact and every error redacted; ACTIVE returns an
+  accepted answer of each specialist and falls back for eleven rejected
+  shapes, never serves a result without an accepted outcome, and shares one
+  cache with SHADOW; a second knowledge base gets its own runtime; the cache
+  unit tests (once per object, failure remembered and isolated, raising
+  builder redacted, collected objects released, bounded, concurrent first
+  use builds once, non-weak-referenceable objects built but not cached); the
+  diagnostics buffer; the legacy core free of Plan F. The I-1 isolation
+  test now names `ui/pipeline.py` as the approved seam (one narrow change).
+
+### Tests performed
+
+Targeted gate (new seam tests, adapter, four-specialist dispatch, Plan F Coordinator,
+registry, contracts, imports, Verifier, compatibility, orchestrator): 687 passed,
+0 failed (51 s); the 66 seam tests and the 79 adapter tests among them.
+Full suite after the change: 6,448 collected, 6,448 passed, 0 failed, 0 skipped,
+0 xfailed (201 s): the 6,382 baseline plus the 66 seam tests.
+`pip check`: no broken requirements. Frozen specialist hashes unchanged
+(Teaching, Research, Faculty Services & HR with its claim model,
+Institutional with its cues). Legacy core unchanged: `qa.py`,
+`orchestrator.py`, `router.py`, `retrieval.py`, `synthesis.py`, `verifier.py`,
+`types.py`, `knowledge_base.py`, `app.py`, `ui/chat.py`. Changed on purpose:
+`ui/pipeline.py`, `config.py`, `plan_f_runtime.py` (cache only).
+Controlled smoke run of `ui.pipeline.ask_with_diagnostics` in all four
+switch combinations on the real-page fixture knowledge base without a
+server: LEGACY served legacy with Plan F unloaded; SHADOW served legacy with
+Plan F recorded (accepted on the HR telephone and theses questions, rejected
+on the known HR and annual-leave cases, fallback on the multipart and
+no-match cases); ACTIVE served the two accepted Plan F answers and legacy
+for the rest; both switches on behaved as SHADOW; 0 Plan F model calls;
+no exception.
+
+### Known issues at handoff
+
+- Plan F is CONNECTED BEHIND FLAGS, not released: nothing has run on the
+  real embedder, reranker or model, and registry construction, latency,
+  accepted and fallback rates on real retrieval are unmeasured (I-3).
+- Fixture timings only: registry build about 0.7 s, adapter 1 to 260 ms per
+  question with the fake embedder.
+- A failed registry build is remembered per knowledge-base object for the
+  life of the process; a rebuilt knowledge base is a new object and builds
+  afresh.
+- The I-1 limits stand: general asks, partial results, handoffs and
+  multipart questions all fall back to the legacy answer.
+
+### Do not redo
+
+- Do not set `PLAN_F_ENABLED` or `PLAN_F_SHADOW` in a committed file or
+  change their defaults; enable them per machine through the environment
+  for I-3 measurement only.
+- Do not add Plan F references to the legacy core, the UI or the evaluation
+  runner; the seam is `ui/pipeline.py`.
+
+### Next task
+
+I-3: run the connected architecture on the real knowledge base and models in
+SHADOW mode and measure registry construction, latency, accepted and
+fallback rates and failure behaviour, after approval.
+
+### Files changed
+
+`ui/pipeline.py`, `handbook_bot/config.py`, `handbook_bot/plan_f_runtime.py`
+(cache), `tests/test_plan_f_pipeline.py` (new), `tests/test_plan_f_runtime.py`
+(one isolation assertion), `docs/STATUS.md` (this entry).
+
+---
+
 ## 2026-10-30 - Plan F runtime adapter (runtime integration, phase I-1)
 
 | Field | Value |

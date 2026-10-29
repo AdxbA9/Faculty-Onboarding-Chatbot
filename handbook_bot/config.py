@@ -100,15 +100,24 @@ MAX_VERIFY_RETRIES: int = _env_int("MAX_VERIFY_RETRIES", 1)
 LLM_TRANSPORT_RETRIES: int = _env_int("LLM_TRANSPORT_RETRIES", 2)
 
 # ---------------------------------------------------------------------------
-# Plan F budgets (INACTIVE until the Plan F orchestration path is wired in)
+# Plan F switches and budgets
 # ---------------------------------------------------------------------------
 # Plan F is the findings-based multi-specialist architecture whose contracts
-# and registry live in handbook_bot/agents/specialists/. Nothing in the
-# current runtime reads these values: the Milestone 1 pipeline keeps
-# MAX_LLM_CALLS and MAX_VERIFY_RETRIES above, unchanged. They are declared
-# here so the limits are agreed and visible before the Coordinator exists.
-# PLAN_F_ENABLED is the single switch a later phase will consult; it is off.
+# and registry live in handbook_bot/agents/specialists/ and whose runtime
+# adapter is handbook_bot/plan_f_runtime.py. The Milestone 1 pipeline keeps
+# MAX_LLM_CALLS and MAX_VERIFY_RETRIES above, unchanged. Since runtime
+# integration phase I-2 the two switches below are read by ONE module, the
+# approved seam ui/pipeline.py; the orchestrator, qa, retrieval, the Router,
+# Synthesis and the Verifier never read them. Both are off by default, so a
+# start without these variables is the legacy chatbot exactly as before.
+#   PLAN_F_ENABLED  ACTIVE: Plan F answers first and only when its adapter
+#                   accepted a safe result; everything else is the legacy answer.
+#   PLAN_F_SHADOW   SHADOW: the legacy answer stays user-visible; Plan F also
+#                   runs for diagnostics only. SHADOW takes precedence when
+#                   both switches are on.
 PLAN_F_ENABLED: bool = _env_bool("PLAN_F_ENABLED", False)
+PLAN_F_SHADOW: bool = _env_bool("PLAN_F_SHADOW", False)
+# The budgets below are declared for the later phases and read by nothing yet.
 # Specialists the Coordinator may select for one question (first round).
 PLAN_F_MAX_SPECIALISTS: int = _env_int("PLAN_F_MAX_SPECIALISTS", 3)
 # Subtasks the Coordinator may create for one question.
