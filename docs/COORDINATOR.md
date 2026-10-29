@@ -276,13 +276,13 @@ between the Faculty Onboarding Coordinator and the domain specialists.
 `run_question(question, registry)` coordinates the question and calls
 `dispatch(decision, registry)`, which walks the Coordinator's tasks in order
 and, for each task, either runs the registered specialist or records the
-task as pending. In the current phase the Teaching & Learning and the
-Research & Innovation Specialists are executable (`EXECUTABLE_SPECIALISTS`;
-since Step 4.11 the Faculty Services & HR Specialist as well)
-and each runs only when it is registered ("executable but not registered"
-otherwise); faculty services and institutional tasks stay pending ("not
-executable in this phase") with the Coordinator's task intact, so the
-caller still sees the full decision. Tests that describe the Teaching-only
+task as pending. All four specialists are executable (`EXECUTABLE_SPECIALISTS`:
+Teaching & Learning and Research & Innovation from the start, the Faculty
+Services & HR Specialist since Step 4.11, Institutional Navigation since
+Step 4.16-B6, D-105) and each runs only when it is registered ("executable
+but not registered" otherwise); a task whose specialist is not registered,
+or that a specialist's handoff produced, stays pending with the
+Coordinator's task intact, so the caller still sees the full decision. Tests that describe the Teaching-only
 phase pin `executable=(SpecialistId.TEACHING,)`. Tasks are handed over exactly as the Coordinator
 built them (task id, full question, intent, level, system, focus clauses);
 nothing is reinterpreted, reordered or reconstructed, and there is no
