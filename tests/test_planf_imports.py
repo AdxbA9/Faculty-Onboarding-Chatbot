@@ -27,6 +27,8 @@ NEW_MODULES = [
     "handbook_bot.plan_f_runtime",          # runtime integration phase I-1: the adapter, not wired into the application
     "handbook_bot.plan_f_verification",     # runtime integration phase I-4: findings-aware verification of a Plan F result
     "handbook_bot.plan_f_aggregation",      # runtime integration phase I-5: deterministic multi-finding aggregation of one execution
+    "handbook_bot.plan_f_routing",          # runtime integration phase I-6: deterministic routing refinement before dispatch
+    "handbook_bot.plan_f_handoff",          # runtime integration phase I-6: one bounded handoff round
 ]
 EXISTING_MODULES = [
     "handbook_bot",

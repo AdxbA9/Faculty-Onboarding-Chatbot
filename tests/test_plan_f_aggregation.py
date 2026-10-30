@@ -189,6 +189,26 @@ def aggregate_direct(kb, decision, **behaviours):
     return A.aggregate(decision, dispatched, kb.chunks, kb.metadata)
 
 
+def per_clause(kb, task, answers, *, requested=("number or amount",)):
+    """A result with one supported clause report per focus clause named in ``answers`` (clause text -> located quote), the
+    shape the frozen specialists return for a clause-scoped task (phase I-6 routing); other clauses are not found."""
+    findings, reports, missing = [], [], []
+    for index, clause in enumerate(task.context["focus_clauses"]):
+        if clause in answers:
+            cid, quote = answers[clause]
+            f = finding(kb, cid, quote, task, number=len(findings) + 1, clauses=(index,), details_covered=list(requested))
+            findings.append(f)
+            reports.append({"index": index, "clause": clause, "outcome": "supported", "ask_shape": "specific_recognised", "requested_details": list(requested),
+                            "uncovered_details": [], "route": "policy", "findings": [f.finding_id]})
+        else:
+            reports.append({"index": index, "clause": clause, "outcome": "not_found", "ask_shape": "specific_recognised", "requested_details": list(requested),
+                            "uncovered_details": list(requested), "findings": []})
+            missing.append("no evidence for clause %d" % index)
+    status = FindingStatus.SUPPORTED if findings and not missing else (FindingStatus.PARTIAL if findings else FindingStatus.NOT_FOUND)
+    return SpecialistFindings(specialist_id=task.specialist_id, task_id=task.task_id, status=status, findings=findings, summary="stub", missing=missing,
+                              metadata={"clauses": reports, "unprocessed_clauses": []})
+
+
 def strip(attempt_):
     """The attempt without wall times, for determinism comparisons."""
     d = attempt_.to_dict()
@@ -278,19 +298,16 @@ def test_request_clauses_ownership_and_applicability():
     (VISAS, G.CROSS_DOMAIN_UNRESOLVED, "institutional, faculty_services"),
     ("Which office handles faculty housing?", G.CROSS_DOMAIN_UNRESOLVED, "assigned to"),
 ])
-def test_shared_clauses_are_rejected_before_any_specialist_runs(kb, question, code, part):
-    calls = []
-
-    def spy(task):
-        calls.append(task.task_id)
-        return not_found(task)
-
-    problem = A.request_problem(coordinate(question))
+def test_shared_clauses_are_rejected_by_the_aggregator_itself(kb, question, code, part):
+    """The aggregator's own pre-dispatch check on the raw Coordinator decision (the adapter's routing refinement of phase I-6
+    settles or rejects these before the aggregator sees them; see tests/test_plan_f_routing.py)."""
+    decision = coordinate(question)
+    problem = A.request_problem(decision)
     assert problem is not None and problem[0] is code and part in problem[1]
-    result = attempt(kb, question, teaching=spy, research=spy, faculty_services=spy, institutional=spy)
-    assert result.outcome is PF.PlanFOutcome.REJECTED_BY_AGGREGATOR and result.reason.startswith(code.value) and result.requires_fallback
-    assert calls == [] and "dispatcher" not in T.trace_agents(result) and result.aggregation.dispatched is False
-    assert result.path == PF.PATH_AGGREGATE and result.verified is False and result.result is None
+    record = A.request_rejection(decision, *problem)
+    assert record.reason is code and record.dispatched is False and record.covered_count == 0 and record.safe_to_render is False
+    direct = A.aggregate(decision, dispatch(decision, T.stub_registry(), question=question), kb.chunks, kb.metadata)
+    assert direct.result.reason is code and not direct.accepted
 
 
 def test_decision_level_problems_are_coded():
@@ -367,7 +384,11 @@ def test_multi_page_evidence_keeps_every_page(kb, Q):
 
 
 def test_same_page_evidence_from_one_shared_report(kb, Q):
-    """One specialist got the whole question as its clause; its two findings are mapped to the two clauses by verification."""
+    """The aggregator's shared-report mechanism: one specialist got the whole question as its clause; its two findings are
+    mapped to the two clauses by verification (direct call on the raw decision; through the adapter the task is now
+    clause-scoped by the phase I-6 routing refinement and the specialist answers per clause)."""
+    travel_clause, visas_clause = A.request_clauses(coordinate(SAME_HR))
+
     def hr(task):
         first = retrieval(kb, task, Q["travel"], requested=("the asked specifics stated with the answer",))
         second = finding(kb, *Q["visas"], task, number=2, details_covered=["the asked specifics stated with the answer"])
@@ -375,22 +396,31 @@ def test_same_page_evidence_from_one_shared_report(kb, Q):
         first.metadata["clauses"][0]["findings"].append(second.finding_id)
         return first
 
-    result = attempt(kb, SAME_HR, faculty_services=hr)
-    assert result.outcome is PF.PlanFOutcome.ACCEPTED, result.reason
-    assert result.result.answer == Q["travel"][1] + "\n\n" + Q["visas"][1] and result.result.pages == [61]
-    record = result.aggregation.to_dict()
+    outcome = aggregate_direct(kb, coordinate(SAME_HR), faculty_services=hr)
+    assert outcome.accepted and A.render_parts(outcome.parts) == Q["travel"][1] + "\n\n" + Q["visas"][1] and outcome.result.pages == (61,)
+    record = outcome.result.to_dict()
     assert [c["shared_report"] for c in record["clauses"]] == [True, True] and [c["finding_ids"] for c in record["clauses"]] == [["task-1-f1"], ["task-1-f2"]]
     assert [(e["finding_id"], e["page"], e["clause_indexes"]) for e in record["evidence"]] == [("task-1-f1", 61, [0]), ("task-1-f2", 61, [1])]
+    scoped = attempt(kb, SAME_HR, faculty_services=lambda task: per_clause(kb, task, {travel_clause: Q["travel"], visas_clause: Q["visas"]},
+                                                                             requested=("the asked specifics stated with the answer",)))
+    assert scoped.outcome is PF.PlanFOutcome.ACCEPTED, scoped.reason
+    assert scoped.result.answer == Q["travel"][1] + "\n\n" + Q["visas"][1] and scoped.result.pages == [61]
+    assert [c["shared_report"] for c in scoped.aggregation.to_dict()["clauses"]] == [False, False] and scoped.routing.reason.value == "ROUTE_CLAUSES_SCOPED"
 
 
 def test_one_verified_finding_may_cover_two_clauses_and_is_rendered_once(kb, Q):
-    result = attempt(kb, OFFICE_TWICE, teaching=lambda task: retrieval(kb, task, Q["office"]))
+    decision = coordinate(OFFICE_TWICE)
+    outcome = aggregate_direct(kb, decision, teaching=lambda task: retrieval(kb, task, Q["office"]))        # shared report: one finding, two clauses
+    assert outcome.accepted and A.render_parts(outcome.parts) == Q["office"][1] and len(outcome.parts) == 1
+    record = outcome.result.to_dict()
+    assert record["covered_count"] == 2 and record["duplicates"] == [["task-1-f1", "task-1-f1", 1]]
+    assert record["evidence"] == [{"finding_id": "task-1-f1", "task_id": "task-1", "specialist_id": "teaching", "source_id": outcome.parts[0].finding.source_id,
+                                   "page": 79, "chunk_id": Q["office"][0], "clause_indexes": [0, 1], "derived_from": None}]
+    first, second = A.request_clauses(decision)
+    result = attempt(kb, OFFICE_TWICE, teaching=lambda task: per_clause(kb, task, {first: Q["office"], second: Q["office"]}))   # clause-scoped: the same sentence twice
     assert result.outcome is PF.PlanFOutcome.ACCEPTED, result.reason
     assert result.result.answer == Q["office"][1] and result.result.pages == [79] and len(result.result.items) == 1
-    record = result.aggregation.to_dict()
-    assert record["covered_count"] == 2 and record["duplicates"] == [["task-1-f1", "task-1-f1", 1]]
-    assert record["evidence"] == [{"finding_id": "task-1-f1", "task_id": "task-1", "specialist_id": "teaching", "source_id": result.result.items[0]["meta"]["source_id"],
-                                   "page": 79, "chunk_id": Q["office"][0], "clause_indexes": [0, 1], "derived_from": None}]
+    assert result.aggregation.duplicates == (("task-1-f2", "task-1-f1", 1),) and result.aggregation.evidence[0].clause_indexes == (0, 1)
 
 
 def test_the_same_quote_returned_twice_is_rendered_once(kb, Q):
@@ -607,12 +637,19 @@ def test_conflicting_contact_values_for_the_same_office_and_field_fall_back(kb, 
 
 
 def test_a_duplicate_never_covers_a_clause_it_did_not_verify_for(kb, Q):
-    result = attempt(kb, SAME_TEACHING, teaching=lambda task: retrieval(kb, task, Q["office"]))
-    assert result.outcome is PF.PlanFOutcome.REJECTED_BY_AGGREGATOR and result.reason.startswith("CHILD_FINDING_REJECTED: clause 1:")
-    assert result.aggregation.clauses[0].covered is True and result.aggregation.clauses[1].covered is False and result.aggregation.evidence == ()
+    decision = coordinate(SAME_TEACHING)
+    outcome = aggregate_direct(kb, decision, teaching=lambda task: retrieval(kb, task, Q["office"]))        # shared report: the office sentence only
+    assert outcome.result.reason is G.CHILD_FINDING_REJECTED and outcome.result.detail.startswith("clause 1:") and not outcome.accepted
+    assert outcome.result.clauses[0].covered is True and outcome.result.clauses[1].covered is False and outcome.result.evidence == ()
+    first, _second = A.request_clauses(decision)
+    result = attempt(kb, SAME_TEACHING, teaching=lambda task: per_clause(kb, task, {first: Q["office"]}))     # clause-scoped: the second clause not found
+    assert result.outcome is PF.PlanFOutcome.REJECTED_BY_AGGREGATOR and result.reason == "MISSING_REQUIRED_CLAUSE: task task-1: status partial"
+    assert result.result is None and result.aggregation.evidence == ()
 
 
 def test_handoff_present_falls_back_and_never_runs_the_target(kb, Q):
+    """A bare handoff request (no task for a declined clause) is never executed: the phase I-6 round rejects it, and the
+    aggregator itself still refuses a dispatch with a pending handoff (``HANDOFF_REQUIRED``)."""
     calls = []
 
     def hr(task):
@@ -623,8 +660,11 @@ def test_handoff_present_falls_back_and_never_runs_the_target(kb, Q):
         raise AssertionError("the handoff target must never run")
 
     result = attempt(kb, CROSS, **dict(cross_stubs(kb, Q, hr=hr), institutional=institutional))
-    assert result.outcome is PF.PlanFOutcome.REJECTED_BY_AGGREGATOR and result.reason == "HANDOFF_REQUIRED: task task-2 requests a handoff to institutional"
+    assert result.outcome is PF.PlanFOutcome.REJECTED_BY_HANDOFF and result.reason.startswith("HANDOFF_TARGET_INVALID: faculty_services -> institutional")
     assert calls == ["faculty_services"] and result.dispatch is not None and len(result.dispatch.handoffs) == 1       # preserved, not executed
+    decision = coordinate(CROSS)
+    dispatched = dispatch(decision, T.stub_registry(**dict(cross_stubs(kb, Q, hr=hr), institutional=institutional)), question=CROSS)
+    assert A.aggregate(decision, dispatched, kb.chunks, kb.metadata).result.reason is G.HANDOFF_REQUIRED
 
 
 def test_general_ask_report_is_rejected_as_a_child(kb, Q):

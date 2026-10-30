@@ -1199,11 +1199,34 @@ def clause_view(findings: SpecialistFindings, index: int, finding_ids: Optional[
         chosen = [f for f in findings.findings if f.finding_id in wanted]
     if not chosen:
         raise ValueError("no finding of %s answers clause report %d" % (findings.task_id, index))
+    chosen = [_project_shared_coverage(f, report) for f in chosen]
     metadata = {"clauses": [report], "unprocessed_clauses": [], "view_of": findings.task_id, "view_index": index}
     return SpecialistFindings(specialist_id=findings.specialist_id, task_id=findings.task_id, status=findings.status, findings=chosen,
                               summary=findings.summary, missing=list(findings.missing), handoff_requests=list(findings.handoff_requests),
                               confidence=findings.confidence, limitations=list(findings.limitations), llm_used=findings.llm_used,
                               ms=findings.ms, metadata=metadata)
+
+
+def _project_shared_coverage(finding: Finding, report: Dict[str, Any]) -> Finding:
+    """A finding the specialist attached to several clause reports keeps the ``details_covered`` of the clause it was first
+    found for. When ``report`` (another of its clauses) is ``supported`` with no uncovered detail and lists the finding
+    FIRST, the specialist's own report asserts that this finding covers every requested detail of that clause (the three
+    retrieval specialists order a clause's findings by coverage and compute the clause's uncovered details from the
+    best one). The clause view carries that coverage, marked ``projected_coverage``; the original finding is untouched
+    and every text check of the verifier still applies to the view (phase I-6)."""
+    md = finding.metadata if isinstance(finding.metadata, dict) else {}
+    shared = isinstance(md.get("clauses"), list) and len(md["clauses"]) > 1
+    listed = report.get("findings") if isinstance(report.get("findings"), list) else []
+    requested = report.get("requested_details") if isinstance(report.get("requested_details"), list) else None
+    if not (shared and requested and report.get("outcome") == FindingStatus.SUPPORTED.value and not report.get("uncovered_details")
+            and listed and listed[0] == finding.finding_id):
+        return finding
+    covered = list(dict.fromkeys([d for d in (md.get("details_covered") or []) if isinstance(d, str)] + [d for d in requested if isinstance(d, str)]))
+    if covered == list(md.get("details_covered") or []):
+        return finding
+    projected = dict(md, details_covered=covered, projected_coverage=True)
+    return Finding(finding_id=finding.finding_id, claim=finding.claim, evidence_quote=finding.evidence_quote, source_id=finding.source_id,
+                   source_title=finding.source_title, page=finding.page, confidence=finding.confidence, metadata=projected)
 
 
 def provision_slice(finding: Finding, unit_index: int) -> Optional[Finding]:

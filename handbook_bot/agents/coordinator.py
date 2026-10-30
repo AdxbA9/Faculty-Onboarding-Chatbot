@@ -267,6 +267,13 @@ def _score_domains(text: str) -> Tuple[Dict[str, float], Dict[str, List[str]], D
     return scores, cues, first
 
 
+def cue_scores(text: str) -> Dict[str, float]:
+    """The domain cue scores of ``text`` (the same lexicons :func:`coordinate` uses to select and assign clauses).
+    Read-only; added for the runtime routing refinement (phase I-6), which applies the Coordinator's own clause
+    assignment rule to a single specialist's multipart task."""
+    return _score_domains(text)[0]
+
+
 def _detect_level(text: str) -> Optional[str]:
     """Most specific level mentioned: department, then college, then university."""
     for level, pattern in _LEVEL_CUES:
@@ -584,4 +591,4 @@ def coordinate(
 
 
 __all__ = ["COMPLEXITIES", "CoordinatorAnalysis", "LEVELS", "METADATA_KEYS", "REQUESTED_BY", "SYSTEMS",
-           "analyze", "coordinate", "cue_text"]
+           "analyze", "coordinate", "cue_scores", "cue_text"]

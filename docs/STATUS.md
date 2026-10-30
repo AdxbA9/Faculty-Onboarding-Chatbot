@@ -9,6 +9,314 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-10-30 - Bounded Plan F handoffs and routing refinement (runtime integration, phase I-6)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/remaining-specialists` |
+| Starting commit | `8b2cc6e` |
+| Ending state | a deterministic routing refinement now settles one owner per request clause before any specialist runs, and a specialist's handoff request is executed once, at depth one, under visited-specialist and second-hop protection; every result still passes the I-1 guards, the I-4 verifier and the I-5 all-or-nothing aggregation; both Plan F switches still default to off; the four frozen specialists, the dispatcher and the legacy core unchanged (hashes verified; the Coordinator gained one additive read-only helper); Plan F is CONNECTED BEHIND FLAGS and verified, not released; local commit on top of `8b2cc6e`, pushed by the user; I-7 not started |
+
+### Completed
+
+- Objective: resolve requests that could not complete because the
+  Coordinator assigned a clause to several specialists (I-5 Category C) or
+  a specialist declined a clause to another specialist (Category D), with
+  one deterministic routing-refinement step before dispatch and ONE bounded
+  handoff round after it. Not an agent conversation: zero model calls, no
+  query invention, no cycles, no second hop. Coverage was not a target.
+- Routing refinement: `handbook_bot/plan_f_routing.py` (new). `refine(decision)`
+  returns the decision to execute (the original object when nothing changed)
+  and an immutable `RoutingResult` (`RoutingCode`: `ROUTE_UNCHANGED`,
+  `ROUTE_CLAUSES_SCOPED`, `ROUTE_REFINED_BY_REQUEST_KIND`, `ROUTE_AMBIGUOUS`,
+  `ROUTE_NO_OWNER`, `ROUTE_ERROR`; owners per clause before and after, the
+  rules applied, dropped and scoped tasks). Ownership policy, derived from
+  the specialists' own boundaries and the Coordinator's rules: (1) a contact
+  or location clause belongs to Institutional Navigation alone (the
+  Coordinator's channel rule; Teaching, Research and HR hand such clauses to
+  Institutional Navigation; Institutional Navigation keeps them "whoever's
+  unit it names"); (2) an authority or responsibility clause about a subject
+  ("who approves / handles / is responsible for X") belongs to the one subject
+  specialist whose cues claim it (Institutional Navigation's own boundary
+  hands every such ask to the subject owner); (3) a "which office / unit ...
+  handles X" clause with a subject claim stays ambiguous (the two hand it to
+  each other): no specialist runs; (4) two subject specialists claiming one
+  clause stay ambiguous: nothing is chosen by score, registration order or
+  chance; (5) a single specialist that received a multipart question as one
+  clause gets one focus clause per request clause, assigned by the
+  Coordinator's own cue rule (`coordinator.cue_scores`, one additive public
+  helper); the clause texts are the Coordinator's split, unchanged. Request
+  kinds come from the I-4 request reader (`read_request`), so domain and
+  requested relation decide together. An unresolved clause rejects the
+  attempt before dispatch (`PLAN_F_REJECTED_BY_ROUTING`, no specialist call).
+- Handoff round: `handbook_bot/plan_f_handoff.py` (new). `run_handoffs`
+  validates every request of the dispatched runs before any execution and
+  runs each valid target exactly once (`MAX_DEPTH` = 1). A request is valid
+  only when: the target is one of the four specialists and registered; it is
+  not the source; it has not executed for this request (first-round runs and
+  earlier targets: no A to B to A, no repeated target); the request carries
+  the specialist's own handoff task (the target's id, the source as requester,
+  exactly one focus clause, passed to the target unchanged); that clause is a
+  request clause the source owned and declined (report outcome `handed_off`;
+  the whole of a multipart question, a clause the source answered itself or
+  text outside the request bind to nothing); and every first-round result
+  the request still depends on is supported (otherwise no target runs). A
+  target that asks for a handoff is the blocked second hop; a target that
+  raises or reports a model call rejects the round. Codes (`HandoffCode`):
+  `HANDOFF_NONE`, `HANDOFF_EXECUTED`, `HANDOFF_TARGET_INVALID`,
+  `HANDOFF_SELF_LOOP`, `HANDOFF_TARGET_ALREADY_VISITED`,
+  `HANDOFF_CLAUSE_UNRESOLVED`, `HANDOFF_REMAINDER_UNSUPPORTED`,
+  `HANDOFF_SECOND_HOP_BLOCKED`, `HANDOFF_UNSAFE_RESULT`, `HANDOFF_EXCEPTION`;
+  after aggregation the adapter reports `HANDOFF_ACCEPTED`,
+  `HANDOFF_TARGET_REJECTED` or `HANDOFF_CONFLICT`. The settled execution the
+  aggregator reads: the source task keeps the clauses it did not hand off (or
+  is dropped), the handoff task joins the decision with a validated stamp,
+  the executed request leaves the source's pending list, the target's run
+  joins the dispatch result. The aggregator (`plan_f_aggregation`) accepts a
+  settled handoff task only with that stamp and the recorded round, skips a
+  source task's handed-off clauses, and still answers `HANDOFF_REQUIRED` for
+  a dispatch with a pending request; the dispatcher never executes handoffs.
+- Seam: `plan_f_runtime.PlanFRuntime.attempt` refines the decision right
+  after the Coordinator (a `routing` trace entry only when something changed,
+  so the pass-through trace of phases I-1 to I-4 is unchanged); a specialist
+  result with handoff requests, on either path, goes to `_handoff_round` and
+  then to the aggregator (`_finish_aggregate`). New outcomes
+  `PLAN_F_REJECTED_BY_ROUTING` and `PLAN_F_REJECTED_BY_HANDOFF`;
+  `AdapterResult.routing`, `handoff`, `handoff_outcome`, `specialist_calls`;
+  timings `routing_ms`, `handoff_ms`, `handoff_specialist_ms`. `ui/pipeline.py`:
+  diagnostics gain `routing_refined`, `routing_reason`, `routing_initial`,
+  `routing_final`, `routing_ms`, `handoff_attempted`, `handoff_source`,
+  `handoff_target`, `handoff_depth`, `handoff_visited`, `handoff_outcome`,
+  `handoff_ms`, `specialist_calls` (codes, ids and numbers only). LEGACY is
+  untouched and imports nothing of Plan F; SHADOW still returns the legacy
+  answer unchanged; ACTIVE serves only what the aggregate or the single
+  verification record accepted.
+- HR as a named entity in contact and location asks (section 22 of the
+  brief): decision A, routing. A contact or location clause names its office;
+  Institutional Navigation owns the ask kind, and HR hands such a clause to
+  Institutional Navigation anyway. Routing it directly saves the HR call and
+  the handoff round for the same answer; HR still runs when the clause is an
+  HR policy, entitlement or benefit ask. The frozen specialists are unchanged.
+- Same-domain multipart questions (section 23): the Coordinator module's
+  decomposition is unchanged; the refinement applies the Coordinator's own
+  clause split and cue rule to the single specialist's task, so the frozen
+  specialist processes each request clause separately and reports per
+  clause. No split happens that the Coordinator does not already make.
+- Real-knowledge-base run (`qa/plan_f_i6/`, 2026-10-30; v12 cache, 272 pages,
+  13,688 chunks; 62 I-3 questions, 14 I-4 probes, the 26-question I-5
+  aggregation set and the 24-question routing and handoff set: 117 unique
+  questions, 126 runs per mode): every one of the 35 answers the I-5 ACTIVE
+  run served is served again with byte-identical text and pages (28 single
+  findings, the 5 aggregates, the 2 provision slices); the two same-fact
+  aggregates now come through the clause-scoped path with the shared finding
+  rendered once. Known cases unchanged: "What does Human Resources do?" and
+  "What does HR do?" stop at the I-1 gate (general ask), "How many days of
+  annual leave do faculty members get?" at `status partial`; the mixed
+  maternity-and-annual-leave question falls back at the HR run's partial
+  status. Over the 126 runs the refinement left 85 decisions unchanged,
+  settled 17 by request kind, scoped 19 single-specialist multipart tasks and
+  rejected 5 as ambiguous before any specialist ran; 12 attempts made no
+  specialist call, 101 one, 13 two, none three.
+- Category C re-evaluation (the 8 unique I-5 cross-domain or shared-routing
+  cases, 11 runs): "Who approves conference travel?" and "Who approves the
+  funding ceiling for research grants?" route to Research alone
+  (`ROUTE_REFINED_BY_REQUEST_KIND`, 1 specialist call each, Institutional
+  Navigation never run) and are served (pages 117 and 165); "How many theses
+  can a faculty member supervise at once and what is the phone number of the
+  Human Resources Department?" routes the contact clause to Institutional
+  Navigation alone (HR dropped) and is served as a two-specialist aggregate
+  (pages 81, 54). "Who approves research leave?" and "Who approves Hajj
+  leave?" route to Research and HR respectively, which return `partial`
+  (1 call each): fallback. "Who handles faculty visas and where is that
+  office?" routes clause 1 to HR and clause 2 to Institutional Navigation;
+  both return nothing usable (not found, partial; 2 calls): fallback. "Which
+  office handles faculty housing?" and "Can I reduce my teaching load if I
+  have a funded research project, and who approves it?" stay
+  `ROUTE_AMBIGUOUS` (an office-selection ask with a subject claim; a clause
+  claimed by Research and Teaching) and run no specialist. Newly resolved: 3
+  of 8 unique cases; the other 5 fall back for a named reason, with fewer or
+  equal specialist calls than in I-5.
+- Category D re-evaluation (the I-5 handoff case, 2 runs): "Where is the
+  Research Institute and what research funding is available?" is now
+  clause-scoped to Research; Research declines the location clause to
+  Institutional Navigation with a well-formed handoff task and returns
+  `not_found` for the funding clause, so the round stops at
+  `HANDOFF_REMAINDER_UNSUPPORTED` without running the target (1 call):
+  fallback. Two real handoffs did execute in the run: "Who do I contact
+  about research grants?" (Research declines to Institutional Navigation,
+  which returns `out_of_scope`) and "Where is the Research Institute?"
+  (Research declines to Institutional Navigation, which returns `not_found`);
+  both complete the round at depth one and fall back on the target's result
+  (2 calls each). No real handoff completed a request.
+- Twenty answers newly served, every one reviewed against the production
+  chunk and the printed page (`review_accepted.py --new-only`): CORRECT 20,
+  ACCEPTABLE BUT LIMITED 0, WRONG 0. By cause: routing by request kind, 3
+  single findings ("Who approves conference travel?", page 117, the last rule
+  of the conference-travel list; "Who approves the funding ceiling for
+  research grants?", page 165; "Who approves the petty cash advance for a
+  principal investigator?", page 166, the sentence stating approval by the
+  VCRGS) and 3 aggregates (theses plus HR telephone, pages 81 and 54; entry
+  visas plus the Passport Unit telephone, pages 61 and 53; theses plus
+  conference-travel approval, pages 81 and 117); clause scoping of a single
+  specialist's multipart task, 9 aggregates (credit hours plus office hours,
+  pages 96, 91, 79; travel plus employment offers, page 61; theses plus
+  petty cash, pages 81 and 166; HR telephone plus Passport Unit fax, pages 54
+  and 53; funding ceiling plus the IRB, pages 165 and 265; lecturers' load
+  plus the 20% absence rule, pages 96 and 228; travel plus entry visas, page
+  61; colleges plus the Finance telephone, pages 24 and 54; HR telephone plus
+  HR fax, the one directory row rendered once, page 54); and 5 questions of
+  the new set that the I-5 machinery already handled (the HR fax row; four
+  cross-domain aggregates: office hours plus petty cash, lecturers' load plus
+  the Registration telephone, sick leave plus the funding ceiling, the 20%
+  absence rule plus maternity leave). Every part is a verbatim quote with its
+  own page; no part was omitted, no connective text was added, every
+  specialist assignment matches the clause's domain and relation.
+- Acceptance (ACTIVE served by Plan F, unique questions): I-3/I-4 corpus 21
+  of 62 (34%) in I-5 to 22 of 62 (35%); I-4 probes 9 to 10 of 14; I-5
+  aggregation set 6 to 16 of 26; routing and handoff set 8 of 24; all 117
+  unique questions: 55 served, 62 fallback. No coverage target was pursued;
+  the 62 fallbacks are ambiguous or two-subject clauses, partial, not-found or
+  general specialist results, declined clauses no specialist supports, and
+  questions no specialist owns.
+- Latency (adapter timings, real knowledge base): routing refinement median
+  0.3 ms (0.2 to 0.5 ms) when a decision changed, below 0.05 ms otherwise; a
+  pre-dispatch routing rejection costs 1.0 ms for the whole attempt (0.4 to
+  1.3 ms) with no specialist call; the handoff round's own work 0.1 ms (0.0
+  to 0.2 ms); the two executed targets 0.1 to 0.2 ms each (Institutional
+  Navigation declining or finding nothing for a clause reads its lexicon and
+  runs no retrieval). First-round specialists median 617 ms (up to 1,946 ms
+  for two specialists); I-4 verification 0.6 ms; aggregation 1.8 ms (1.2 to
+  4.2 ms, 22 aggregates). Total Plan F attempt when served median 644 ms;
+  ACTIVE wall served 644 ms, legacy fallback 1,410 ms (0.1 to 3,223 ms, two
+  specialists plus the legacy path at the top). SHADOW: 117 of 117 unique
+  questions identical to the direct legacy call, 0 exceptions. Plan F model
+  calls: 0 on every attempt, dispatch and diagnostic record. Diagnostics
+  hygiene: 0 of 252 records carry the question or the answer text.
+- Controlled application smoke test: `app.py` launched locally with the
+  switches in the process environment only (never in `.env`) and the
+  pipeline's debug diagnostics logged by the launcher (no code change),
+  driven through the browser at localhost with Developer mode on. ACTIVE:
+  "Who approves conference travel?" rendered the page-117 rule with chips
+  Page 117 and Participation in Conferences (676 ms, registry built once in
+  742 ms; logged `ROUTE_REFINED_BY_REQUEST_KIND`, research and institutional
+  to research, 1 specialist call); "How many theses can a faculty member
+  supervise at once and what is the phone number of the Human Resources
+  Department?" rendered two paragraphs with chips Page 54, Page 81 and
+  Responsibility to Research (678 ms; routing dropped HR, aggregate accepted,
+  2 calls); "What is the phone number of the Human Resources Department and
+  what is the fax number of the Passport Unit?" rendered the two directory
+  rows with chips Page 53, Page 54 and Contact Information (3.5 ms;
+  `ROUTE_CLAUSES_SCOPED`, 1 call); "Which office handles faculty housing?"
+  was served by legacy (the configured no-key reply) after
+  `PLAN_F_REJECTED_BY_ROUTING` with 0 specialist calls. The developer panel
+  stayed usable on every answer; registry reused after the first question;
+  no raw exception, no crash; the logged diagnostics carry the routing and
+  handoff keys and no question or answer text. SHADOW (a second launch): the
+  same two served questions showed the legacy no-key reply (Pages 117, 119;
+  Page 81) while the log recorded Plan F accepting them internally with the
+  same routing records (691 and 672 ms, registry built once in 716 ms); no
+  exception. No UI change was needed; the I-7 observations stand.
+- Tests: `tests/test_plan_f_routing.py` (new, 38 tests): codes and bounds;
+  unchanged decisions returned as the same object with the pass-through trace
+  intact; party asks about a subject routed to the subject specialist and
+  served without running Institutional Navigation; contact and location
+  clauses routed to Institutional Navigation; the office-selection and the
+  two-subject asks ambiguous with no specialist run; same-domain multipart
+  tasks clause-scoped and served per clause, or nothing when a clause is not
+  found; the Coordinator's split followed exactly (no false split, no missed
+  split, conditions kept with their clause, request order); a clause with only
+  foreign cues without owner; a raising refinement redacted; determinism and
+  text-free records. Handoffs: a valid request executed once and verified
+  (trace, record, items, settled dispatch); the target rejected by the
+  verifier; a handoff completing a cross-domain aggregate only when the target
+  answers; a conflict with the target's evidence; a target already executed;
+  a repeated target from two sources; a second hop; a cycle back to the
+  source; the validation edges (no task, two clauses, wrong requester, self
+  loop, unregistered target, text outside the request, a clause the source
+  answered, the whole of a two-clause question); the whole-question binding of
+  a one-clause request; an unsettled handoff task never aggregated; an
+  unsupported remainder blocking the round without a call; a raising or
+  model-reporting target redacted; the I-1 bare request never executed;
+  determinism; SHADOW diagnostics without touching the answer; ACTIVE serving
+  routed and handed-off answers and falling back on blocked rounds; LEGACY
+  untouched; the frozen Research specialist resolving a Category C case on
+  the test corpus. Updated: `tests/test_plan_f_runtime.py` (the bare handoff
+  stub is `PLAN_F_REJECTED_BY_HANDOFF`, never executed; the four complex
+  questions carry the routing or handoff code), `tests/test_plan_f_aggregation.py`
+  (the shared-report mechanism tested through direct aggregator calls; the
+  adapter path now clause-scopes; the bare handoff case), `tests/test_planf_imports.py`
+  (the two new modules).
+
+### Tests performed
+
+Targeted gate (19 files: routing and handoff, aggregation, verifier, adapter,
+pipeline, imports, four-specialist dispatch, Coordinator, contracts,
+registry, legacy Verifier, compatibility, orchestrator, the frozen
+specialists' integration, support-gate and acceptance suites): 1,391
+collected, 1,391 passed, 0 failed, 0 skipped, 0 xfail (81 s).
+Full suite: 6,645 collected, 6,645 passed, 0 failed, 0 skipped, 0 xfail
+(215.9 s): the I-5 baseline of 6,604 plus the 39 new routing and handoff tests
+and two new import-budget cases.
+`pip check`: no broken requirements. Frozen specialist hashes unchanged
+before and after (Teaching, Research, Faculty Services & HR and its claim
+model, Institutional and its cues; D-103 and D-107 values); the dispatcher,
+the legacy core and the shared specialist modules unchanged; the Coordinator
+changed by the one additive helper `cue_scores` only.
+- Actual phase runtime, recorded locally from the first command of the phase to
+  the local commit: 0h 51m 52s. Major measured components: two full
+  real-knowledge-base evaluations of 126 runs in three modes each (527 s the
+  recorded one, about the same for the first run before the shared-coverage
+  projection), the targeted gate 81 s, the full suite 216 s, the four
+  application launches for the smoke tests about 70 s each, the knowledge-base
+  build 22.5 s per process; the rest is design, implementation, the tests and
+  the review.
+
+### Known issues at handoff
+
+- A "which office / unit handles X" ask with a subject claim stays
+  ambiguous by design (the specialists hand it to each other); the
+  Institutional Navigation specialist answers responsible-office asks only
+  from its own statements. A two-subject clause ("reduce my teaching load if
+  I have a funded research project") also stays ambiguous.
+- No real handoff completed a request in the recorded corpus: the frozen
+  specialists decline the clauses whose owner the routing refinement now
+  selects directly, and the two declines that did execute reached a target
+  that holds no evidence for the clause. The round is exercised end to end,
+  acceptance included, by the synthetic fixtures.
+- The legacy model path remains REAL MODEL EVALUATION BLOCKED - NO AVAILABLE
+  CONFIGURED CLIENT (no key configured); I-6 does not depend on it.
+- UI observations stay on the I-7 list: Plan F labelled "Deterministic
+  extractor", retrieval and rerank shown as 0.0 ms for Plan F answers,
+  candidate counts, fallback timing, duplicate-looking page chips, the
+  Markdown underscore rendering. No UI change was needed in I-6.
+
+### Do not redo
+
+- Do not choose between two valid owners by score or order; ambiguous stays
+  fallback.
+- Do not raise the handoff depth or follow a target's handoff.
+- Do not relax the aggregator's stamp check for handoff tasks.
+
+### Next task
+
+I-7: UI compatibility and interface improvement, after approval.
+
+### Files changed
+
+`handbook_bot/plan_f_routing.py` (new), `handbook_bot/plan_f_handoff.py` (new),
+`handbook_bot/plan_f_aggregation.py` (settled handoff tasks, handed-off
+clauses), `handbook_bot/plan_f_runtime.py` (routing before dispatch, the
+handoff round, new outcomes and fields), `handbook_bot/agents/coordinator.py`
+(`cue_scores`), `ui/pipeline.py` (diagnostics keys), `tests/test_plan_f_routing.py`
+(new), `tests/test_plan_f_runtime.py`, `tests/test_plan_f_aggregation.py`,
+`tests/test_planf_imports.py` (expectations), `qa/plan_f_i6/` (new:
+`README.md`, `routing_eval.py`, `analyze.py`, `review_accepted.py`,
+`results_2026-10-30.json`), `docs/STATUS.md` (this entry). No frozen
+specialist, dispatcher, legacy core or shared specialist module changed.
+
+---
+
 ## 2026-10-30 - Deterministic Plan F aggregation (runtime integration, phase I-5)
 
 | Field | Value |

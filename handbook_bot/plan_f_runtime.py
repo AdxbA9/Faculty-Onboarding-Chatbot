@@ -27,6 +27,14 @@ WIRING (phases I-2, I-4 and I-5)
     keeps the pass-through path of phases I-1 to I-4 unchanged, except that
     the findings-aware layer may now accept the provision slice of a quote it
     would otherwise reject as excess evidence (``verify_findings_sliced``).
+    Since phase I-6 the decision passes a deterministic routing refinement
+    before any specialist runs (``plan_f_routing.refine``: one owner per
+    request clause, or ``PLAN_F_REJECTED_BY_ROUTING`` with no specialist
+    call), and a specialist's handoff request is executed ONCE, at depth one,
+    by ``plan_f_handoff.run_handoffs`` (visited-specialist protection, no
+    second hop, no query invention), after which the settled execution goes
+    through the aggregator like any other; a round that cannot run or
+    complete is ``PLAN_F_REJECTED_BY_HANDOFF``.
 
 WHAT IT DOES
     1. ``build_specialist_registry(kb)`` builds the four specialists from a
@@ -151,6 +159,8 @@ class PlanFOutcome(str, Enum):
     REJECTED_BY_SUBJECT_GUARD = "PLAN_F_REJECTED_BY_SUBJECT_GUARD"
     REJECTED_BY_FINDINGS_VERIFIER = "PLAN_F_REJECTED_BY_FINDINGS_VERIFIER"  # phase I-4: the structured finding is not a suitable direct answer
     REJECTED_BY_AGGREGATOR = "PLAN_F_REJECTED_BY_AGGREGATOR"          # phase I-5: the findings of a multi-clause execution do not cover the request
+    REJECTED_BY_ROUTING = "PLAN_F_REJECTED_BY_ROUTING"                # phase I-6: a request clause has no single owner; no specialist ran
+    REJECTED_BY_HANDOFF = "PLAN_F_REJECTED_BY_HANDOFF"                # phase I-6: a handoff request could not be executed within the bounds
     REJECTED_BY_VERIFIER = "PLAN_F_REJECTED_BY_VERIFIER"
     REQUIRES_FALLBACK = "PLAN_F_REQUIRES_FALLBACK"              # Plan F ran but left the task pending or nothing renderable
     ERROR_REDACTED = "PLAN_F_ERROR_REDACTED"
@@ -229,10 +239,21 @@ class AdapterResult:
     dispatch: Optional[DispatchResult] = None
     verification: Any = None                     # plan_f_verification.FindingsVerification once the findings-aware layer ran (phase I-4)
     aggregation: Any = None                      # plan_f_aggregation.AggregationResult once the aggregation path ran (phase I-5)
+    routing: Any = None                          # plan_f_routing.RoutingResult of the decision (phase I-6)
+    handoff: Any = None                          # plan_f_handoff.HandoffRound once a specialist asked for a handoff (phase I-6)
+    handoff_outcome: Optional[str] = None        # the round's code, or HANDOFF_ACCEPTED / HANDOFF_TARGET_REJECTED / HANDOFF_CONFLICT after aggregation
 
     @property
     def requires_fallback(self) -> bool:
         return self.outcome is not PlanFOutcome.ACCEPTED
+
+    @property
+    def specialist_calls(self) -> int:
+        """Specialist executions of this attempt: the dispatched runs plus the handoff targets (phase I-6)."""
+        runs = [r for r in (getattr(self.dispatch, "runs", None) or []) if getattr(r, "state", None) == STATE_EXECUTED]
+        seen = {getattr(getattr(r, "task", None), "task_id", None) for r in runs}
+        extra = [rec for rec in (getattr(self.handoff, "executed", None) or ()) if getattr(rec, "task_id", None) not in seen]
+        return len(runs) + len(extra)
 
     @property
     def path(self) -> Optional[str]:
@@ -269,7 +290,26 @@ class AdapterResult:
             "verification": self.verification.to_dict() if self.verification is not None else None,
             "aggregation": self.aggregation.to_dict() if self.aggregation is not None else None,
             "path": self.path,
+            "routing": self.routing.to_dict() if self.routing is not None else None,
+            "handoff": self.handoff.to_dict() if self.handoff is not None else None,
+            "handoff_outcome": self.handoff_outcome,
+            "specialist_calls": self.specialist_calls,
         }
+
+
+def handoff_outcome(round_: Any, record: Any) -> str:
+    """The user-level outcome of an executed handoff round once the aggregator decided: accepted, the target's clause
+    rejected, a conflict with the target's evidence, or the aggregate's own code."""
+    if bool(getattr(record, "accepted", False)):
+        return "HANDOFF_ACCEPTED"
+    handed = {getattr(r, "request_clause", None) for r in (getattr(round_, "executed", None) or ())}
+    reason = getattr(getattr(record, "reason", None), "value", None)
+    if reason == "VALUE_CONFLICT" and any(i in handed or j in handed for i, j, _k in (getattr(record, "conflicts", None) or ())):
+        return "HANDOFF_CONFLICT"
+    failing = next((c for c in (getattr(record, "clauses", None) or ()) if not getattr(c, "covered", False)), None)
+    if failing is not None and getattr(failing, "index", None) in handed:
+        return "HANDOFF_TARGET_REJECTED"
+    return str(reason or "HANDOFF_EXECUTED")
 
 
 def accepted_record(verification: Any) -> bool:
@@ -414,7 +454,7 @@ def adapt_finding(finding: Finding, specialist_id: SpecialistId, focus_clause: s
         "focus_clause": focus_clause,
     }
     for key in ("evidence_tier", "relation", "office_id", "office_name", "contact_values", "details_covered", "derived_from", "slice",
-                "slice_provision"):
+                "slice_provision", "projected_coverage"):
         if key in finding.metadata:
             plan_f[key] = finding.metadata[key]
     if clause_index is not None:
@@ -652,8 +692,19 @@ class PlanFRuntime:
             "confidence": decision.confidence,
             "reason": (decision.reason or "")[:120],
         })
-        problem = decision_problem(decision)
         from . import plan_f_aggregation as _aggregation          # imported here: that module builds on this one's guards
+        from . import plan_f_routing as _routing                  # phase I-6: one owner per request clause before any specialist runs
+        t = time.perf_counter()
+        decision, routing = _routing.refine(decision)
+        state.timings["routing_ms"] = (time.perf_counter() - t) * 1000.0
+        state.routing = routing
+        if routing.reason is not _routing.RoutingCode.ROUTE_UNCHANGED:
+            state.add("routing", routing.reason.value, detail=routing.to_dict())
+        if not routing.executable:
+            return state.finish(PlanFOutcome.REJECTED_BY_ROUTING, "%s: %s" % (routing.reason.value, routing.detail),
+                                specialist=",".join(routing.initial_specialists) or None)
+        md = decision.metadata or {}
+        problem = decision_problem(decision)
         clauses = _aggregation.request_clauses(decision)
         if problem is None and len(clauses) <= 1:
             return self._single_clause(state, decision, md)
@@ -702,10 +753,12 @@ class PlanFRuntime:
             "missing": len(findings.missing), "limitations": len(findings.limitations), "specialist_ms": findings.ms,
             "summary": (findings.summary or "")[:160],
         })
+        if findings.handoff_requests:                             # phase I-6: one bounded handoff round, then the aggregator decides
+            from . import plan_f_aggregation as _aggregation
+            return self._handoff_round(state, decision, md, _aggregation.request_clauses(decision), dispatched, specialist=sid.value, status=status)
         problem = result_problem(findings)
         if problem is not None:
-            decision_label = "HANDOFF_PENDING" if findings.handoff_requests else "not_eligible"
-            state.add("plan_f_gate", decision_label, detail={"reason": problem[:200]})
+            state.add("plan_f_gate", "not_eligible", detail={"reason": problem[:200]})
             return state.finish(PlanFOutcome.UNSAFE_RESULT, problem, specialist=sid.value, status=status, dispatched=dispatched)
 
         # ---- Guards, rendering, verification -----------------------------------------
@@ -848,13 +901,49 @@ class PlanFRuntime:
         state.timings["specialist_ms"] = specialist_ms
         status = "supported" if statuses and all(s == "supported" for s in statuses) else next((s for s in statuses if s != "supported"), None)
 
-        # ---- Aggregation: every request clause covered by findings verified on their own clause --------------------
+        if any(run.findings is not None and run.findings.handoff_requests for run in dispatched.runs):
+            return self._handoff_round(state, decision, md, clauses, dispatched, specialist=joined, status=status)
+        return self._finish_aggregate(state, decision, md, clauses, dispatched, specialist=joined)
+
+    # ---- the bounded handoff round (phase I-6): every valid request executed once, depth one, then the aggregator --------
+    def _handoff_round(self, state: "_Attempt", decision: CoordinatorDecision, md: Dict[str, Any], clauses: List[str],
+                       dispatched: DispatchResult, *, specialist: Optional[str], status: Optional[str]) -> AdapterResult:
+        from . import plan_f_handoff as _handoff                  # imported here: that module builds on the verifier, as the aggregator does
+        state.path = PATH_AGGREGATE
+        t = time.perf_counter()
+        round_, settled_decision, settled_dispatch = _handoff.run_handoffs(decision, dispatched, self.registry, clauses)
+        state.timings["handoff_ms"] = (time.perf_counter() - t) * 1000.0
+        state.handoff = round_
+        state.add("handoff", round_.code.value, detail=round_.to_dict())
+        target_ms = 0.0
+        for record in round_.executed:
+            target_ms += float(record.ms)
+            state.add("specialist:%s" % record.target, record.status or "error", False, {
+                "task_id": record.task_id, "handoff": True, "source": record.source, "depth": round_.depth, "request_clause": record.request_clause,
+                "findings": record.findings, "second_hop": list(record.second_hop), "specialist_ms": record.ms})
+        state.timings["handoff_specialist_ms"] = target_ms
+        if round_.code is not _handoff.HandoffCode.HANDOFF_EXECUTED or settled_decision is None or settled_dispatch is None:
+            state.handoff_outcome = round_.code.value
+            return state.finish(PlanFOutcome.REJECTED_BY_HANDOFF, "%s: %s" % (round_.code.value, round_.detail), specialist=specialist,
+                                status=status, dispatched=dispatched)
+        joined = ",".join(s.value for s in settled_decision.selected_specialists)
+        return self._finish_aggregate(state, settled_decision, md, clauses, settled_dispatch, specialist=joined)
+
+    # ---- the aggregator, the rendering and the unchanged legacy Verifier (phase I-5) -----------------------------------
+    def _finish_aggregate(self, state: "_Attempt", decision: CoordinatorDecision, md: Dict[str, Any], clauses: List[str],
+                          dispatched: DispatchResult, *, specialist: Optional[str]) -> AdapterResult:
+        from . import plan_f_aggregation as aggregation
+        joined = specialist
+        statuses = [run.findings.status.value if run.findings is not None else "pending" for run in dispatched.runs]
+        status = "supported" if statuses and all(s == "supported" for s in statuses) else next((s for s in statuses if s != "supported"), None)
         t = time.perf_counter()
         outcome = aggregation.aggregate(decision, dispatched, self.chunks, self.metadata)
         record = outcome.result
         state.timings["aggregation_ms"] = (time.perf_counter() - t) * 1000.0
         for key, value in record.timings.items():
             state.timings["aggregation_%s" % key] = float(value)
+        if state.handoff is not None and getattr(state.handoff, "attempted", False):
+            state.handoff_outcome = handoff_outcome(state.handoff, record)
         state.add("aggregator", "accepted" if outcome.accepted else "rejected", detail=record.to_dict())
         if not outcome.accepted:
             return state.finish(PlanFOutcome.REJECTED_BY_AGGREGATOR, "%s: %s" % (record.reason.value, record.detail), specialist=joined,
@@ -913,7 +1002,6 @@ class PlanFRuntime:
             return state.finish(PlanFOutcome.ERROR_REDACTED, "adapter raised: %s" % redact_error(exc), specialist=joined, status=status,
                                 dispatched=dispatched, aggregation=record)
 
-
 class _Attempt:
     """The state of one ``attempt``: the question text, the trace, the timings, the path taken and the outcome builder."""
 
@@ -923,6 +1011,9 @@ class _Attempt:
         self.timings: Dict[str, float] = {}
         self.text = (question or "").strip() if isinstance(question, str) else ""
         self.path: Optional[str] = None
+        self.routing: Any = None
+        self.handoff: Any = None
+        self.handoff_outcome: Optional[str] = None
 
     def ms(self) -> float:
         return (time.perf_counter() - self.started) * 1000.0
@@ -940,7 +1031,8 @@ class _Attempt:
             result.timings = dict(self.timings)
             result.agent_trace = list(self.trace)
         return AdapterResult(outcome=outcome, reason=reason, question=self.text, result=result, trace=self.trace, specialist_id=specialist,
-                             status=status, timings=dict(self.timings), dispatch=dispatched, verification=verification, aggregation=aggregation)
+                             status=status, timings=dict(self.timings), dispatch=dispatched, verification=verification, aggregation=aggregation,
+                             routing=self.routing, handoff=self.handoff, handoff_outcome=self.handoff_outcome)
 
 def build_runtime(kb: Any, *, builders: Optional[Mapping[SpecialistId, Callable[[Any], Specialist]]] = None
                   ) -> Tuple[Optional[PlanFRuntime], RegistryBuild]:
@@ -1057,7 +1149,7 @@ __all__ = [
     "ASK_SPECIFIC_RECOGNISED", "AdapterResult", "CacheEntry", "DEFAULT_BUILDERS", "INSTITUTIONAL_BINDINGS", "INSTITUTIONAL_TIERS",
     "PATH_AGGREGATE", "PATH_PASSTHROUGH", "PHASE", "PROMPT_VERSION", "PlanFOutcome", "PlanFRuntime", "REQUIRED_SPECIALISTS", "RELATION_STRONG",
     "RegistryBuild", "RuntimeCache", "SUBJECT_CHECK_VERSION", "accepted_pages", "accepted_record", "adapt_finding", "answer_with_fallback",
-    "build_runtime",
+    "build_runtime", "handoff_outcome",
     "build_specialist_registry", "clause_covered_by", "decision_problem", "entity_in_text", "missing_specialists",
     "named_entities", "quote_problem", "render_answer", "result_problem", "subject_binding",
 ]

@@ -243,6 +243,9 @@ def _diagnose(mode: str, served: str, attempt: Any, entry: Any, error: Optional[
         "aggregation_clauses": None, "aggregation_covered": None, "aggregation_findings_considered": None,
         "aggregation_findings_accepted": None, "aggregation_duplicates": None, "aggregation_conflict": None, "aggregation_pages": [],
         "aggregation_specialists": [], "aggregation_dispatched": None, "aggregation_ms": None,
+        "routing_refined": None, "routing_reason": None, "routing_initial": [], "routing_final": [], "routing_ms": None,
+        "handoff_attempted": False, "handoff_source": [], "handoff_target": [], "handoff_depth": 0, "handoff_visited": [],
+        "handoff_outcome": None, "handoff_ms": None, "specialist_calls": None,
         "error": error,
     }
     try:
@@ -299,6 +302,23 @@ def _diagnose(mode: str, served: str, attempt: Any, entry: Any, error: Optional[
                     classes = [getattr(getattr(r, "completeness", None), "value", None) for r in records if r is not None]
                     d["findings_completeness"] = next((c for c in classes if c not in ("complete", "elaborated")), classes[0] if classes else None)
                     d["findings_ms"] = sum(float(getattr(r, "ms", 0.0) or 0.0) for r in records if r is not None)
+            routing = getattr(attempt, "routing", None)
+            if routing is not None:                                # phase I-6: codes and specialist ids only
+                d["routing_refined"] = bool(getattr(routing, "refined", False))
+                d["routing_reason"] = getattr(getattr(routing, "reason", None), "value", None)
+                d["routing_initial"] = [str(s) for s in (getattr(routing, "initial_specialists", ()) or ())]
+                d["routing_final"] = [str(s) for s in (getattr(routing, "final_specialists", ()) or ())]
+                d["routing_ms"] = float(getattr(routing, "ms", 0.0) or 0.0)
+            handoff = getattr(attempt, "handoff", None)
+            if handoff is not None:
+                d["handoff_attempted"] = bool(getattr(handoff, "attempted", False))
+                d["handoff_source"] = [str(s) for s in (getattr(handoff, "sources", ()) or ())]
+                d["handoff_target"] = [str(s) for s in (getattr(handoff, "targets", ()) or ())]
+                d["handoff_depth"] = int(getattr(handoff, "depth", 0) or 0)
+                d["handoff_visited"] = [str(s) for s in (getattr(handoff, "visited", ()) or ())]
+                d["handoff_outcome"] = getattr(attempt, "handoff_outcome", None) or getattr(getattr(handoff, "code", None), "value", None)
+                d["handoff_ms"] = float(timings.get("handoff_ms", 0.0) or 0.0)
+            d["specialist_calls"] = int(getattr(attempt, "specialist_calls", 0) or 0)
             d["accepted"] = d["accepted"] and _verified(attempt)   # accepted means: the adapter AND the findings-aware layer accepted
             if getattr(attempt, "result", None) is not None:
                 d["plan_f_pages"] = list(attempt.result.pages)
