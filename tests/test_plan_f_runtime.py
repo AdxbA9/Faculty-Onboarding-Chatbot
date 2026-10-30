@@ -570,23 +570,26 @@ def test_secondary_findings_that_do_not_cover_the_ask_are_dropped_not_rendered(r
 
 
 # ---------------------------------------------------------------------------
-# Complex questions all fall back (section 30)
+# Complex questions all fall back (section 30; since phase I-5 a multi-clause decision is decided by the aggregator)
 # ---------------------------------------------------------------------------
-@pytest.mark.parametrize("question,outcome,reason_part", [
-    ("Who handles faculty visas and where is that office?", PF.PlanFOutcome.UNSAFE_RESULT, "multiple specialists"),
-    ("Where is the Research Institute and what research funding is available?", PF.PlanFOutcome.UNSAFE_RESULT, "synthesis required"),
-    ("Which office handles faculty housing?", PF.PlanFOutcome.UNSAFE_RESULT, "multiple specialists"),
-    ("Can I reduce my teaching load if I have a funded research project, and who approves it?", PF.PlanFOutcome.UNSAFE_RESULT, "multiple specialists"),
-    ("asdfgh qwerty zxcvb", PF.PlanFOutcome.NOT_APPLICABLE, "no specialist selected"),
-    ("Hello", PF.PlanFOutcome.NOT_APPLICABLE, "greeting"),
-    ("", PF.PlanFOutcome.NOT_APPLICABLE, "empty question"),
-    ("   ", PF.PlanFOutcome.NOT_APPLICABLE, "empty question"),
+@pytest.mark.parametrize("question,outcome,reason_part,dispatched", [
+    ("Who handles faculty visas and where is that office?", PF.PlanFOutcome.REJECTED_BY_AGGREGATOR, "CROSS_DOMAIN_UNRESOLVED", False),
+    ("Where is the Research Institute and what research funding is available?", PF.PlanFOutcome.REJECTED_BY_AGGREGATOR, "HANDOFF_REQUIRED", True),
+    ("Which office handles faculty housing?", PF.PlanFOutcome.REJECTED_BY_AGGREGATOR, "CROSS_DOMAIN_UNRESOLVED", False),
+    ("Can I reduce my teaching load if I have a funded research project, and who approves it?", PF.PlanFOutcome.REJECTED_BY_AGGREGATOR,
+     "CROSS_DOMAIN_UNRESOLVED", False),
+    ("asdfgh qwerty zxcvb", PF.PlanFOutcome.NOT_APPLICABLE, "no specialist selected", False),
+    ("Hello", PF.PlanFOutcome.NOT_APPLICABLE, "greeting", False),
+    ("", PF.PlanFOutcome.NOT_APPLICABLE, "empty question", False),
+    ("   ", PF.PlanFOutcome.NOT_APPLICABLE, "empty question", False),
 ])
-def test_complex_or_empty_questions_request_fallback(runtime, question, outcome, reason_part):
+def test_complex_or_empty_questions_request_fallback(runtime, question, outcome, reason_part, dispatched):
     attempt = runtime.attempt(question)
     assert attempt.outcome is outcome and attempt.result is None and attempt.requires_fallback
     assert reason_part in attempt.reason
-    assert "dispatcher" not in trace_agents(attempt)                      # nothing is executed for a question outside the safe case
+    # a clause shared by two specialists, a greeting or an empty question runs no specialist; a multipart clause set is
+    # dispatched exactly once and then aggregated (phase I-5), never served in part
+    assert ("dispatcher" in trace_agents(attempt)) is dispatched
 
 
 def test_decision_problem_covers_every_gate():

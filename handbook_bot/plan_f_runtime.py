@@ -9,7 +9,7 @@ DECISION OWNED
     never answers from anything but a specialist's own supported findings,
     never calls a language model and never executes a handoff.
 
-WIRING (phases I-2 and I-4)
+WIRING (phases I-2, I-4 and I-5)
     The one approved seam is ``ui/pipeline.py`` (phase I-2): it builds a
     :class:`PlanFRuntime` lazily through :class:`RuntimeCache` and calls
     ``attempt`` only in SHADOW or ACTIVE mode; both switches default to off
@@ -18,6 +18,15 @@ WIRING (phases I-2 and I-4)
     I-4 a finding passes the findings-aware verification layer
     (``plan_f_verification.verify_findings``) after the I-1 guards and
     before rendering; its rejection is ``PLAN_F_REJECTED_BY_FINDINGS_VERIFIER``.
+    Since phase I-5 a decision with several request clauses or several
+    specialists takes the aggregation path (``plan_f_aggregation.aggregate``):
+    every task of the decision is dispatched once, every request clause must
+    be covered by findings that pass the findings-aware verifier on their own
+    clause, and the verbatim quotes are rendered in request order; its
+    rejection is ``PLAN_F_REJECTED_BY_AGGREGATOR``. A single-clause decision
+    keeps the pass-through path of phases I-1 to I-4 unchanged, except that
+    the findings-aware layer may now accept the provision slice of a quote it
+    would otherwise reject as excess evidence (``verify_findings_sliced``).
 
 WHAT IT DOES
     1. ``build_specialist_registry(kb)`` builds the four specialists from a
@@ -90,7 +99,7 @@ from .agents.specialists.institutional import InstitutionalNavigationSpecialist
 from .agents.specialists.registry import SpecialistRegistry
 from .agents.specialists.research import ResearchInnovationSpecialist
 from .agents.specialists.teaching import TeachingLearningSpecialist
-from .agents.types import EvidenceResult, SynthesisResult, TraceEntry, VerifyResult
+from .agents.types import ALL_ROUTES, EvidenceResult, SubQuestion, SynthesisResult, TraceEntry, VerifyResult
 from .agents.verifier import verify
 from .config import EVIDENCE_PREVIEW_CHARS
 from .qa import QAResult, answer_question
@@ -125,6 +134,10 @@ INSTITUTIONAL_TIERS = (_nav.E1, _nav.E2, _nav.STATED_FACT)
 INSTITUTIONAL_BINDINGS = ("named subject", "list item under its lead-in")
 #: Institutional ask kind whose office is the answer rather than the asked subject.
 INSTITUTIONAL_RESPONSIBLE_OFFICE = "responsible_office"
+#: How a Plan F answer was produced (``AdapterResult.path``; phase I-5): one specialist's findings for one request
+#: clause, passed through the guards and the findings-aware verifier, or the aggregate of a multi-clause execution.
+PATH_PASSTHROUGH = "single_finding_passthrough"
+PATH_AGGREGATE = "multi_finding_aggregate"
 
 
 class PlanFOutcome(str, Enum):
@@ -137,6 +150,7 @@ class PlanFOutcome(str, Enum):
     REJECTED_BY_QUOTE_GUARD = "PLAN_F_REJECTED_BY_QUOTE_GUARD"
     REJECTED_BY_SUBJECT_GUARD = "PLAN_F_REJECTED_BY_SUBJECT_GUARD"
     REJECTED_BY_FINDINGS_VERIFIER = "PLAN_F_REJECTED_BY_FINDINGS_VERIFIER"  # phase I-4: the structured finding is not a suitable direct answer
+    REJECTED_BY_AGGREGATOR = "PLAN_F_REJECTED_BY_AGGREGATOR"          # phase I-5: the findings of a multi-clause execution do not cover the request
     REJECTED_BY_VERIFIER = "PLAN_F_REJECTED_BY_VERIFIER"
     REQUIRES_FALLBACK = "PLAN_F_REQUIRES_FALLBACK"              # Plan F ran but left the task pending or nothing renderable
     ERROR_REDACTED = "PLAN_F_ERROR_REDACTED"
@@ -214,16 +228,32 @@ class AdapterResult:
     timings: Dict[str, float] = field(default_factory=dict)
     dispatch: Optional[DispatchResult] = None
     verification: Any = None                     # plan_f_verification.FindingsVerification once the findings-aware layer ran (phase I-4)
+    aggregation: Any = None                      # plan_f_aggregation.AggregationResult once the aggregation path ran (phase I-5)
 
     @property
     def requires_fallback(self) -> bool:
         return self.outcome is not PlanFOutcome.ACCEPTED
 
     @property
+    def path(self) -> Optional[str]:
+        """How the attempt was decided: the single-finding pass-through path (phases I-1 to I-4), the multi-finding
+        aggregation path (phase I-5), or None when neither produced a record."""
+        if self.aggregation is not None:
+            return PATH_AGGREGATE
+        if self.verification is not None:
+            return PATH_PASSTHROUGH
+        return None
+
+    @property
     def verified(self) -> bool:
-        """Whether the findings-aware verification layer accepted the result for rendering (phase I-4)."""
-        v = self.verification
-        return v is not None and bool(getattr(v, "accepted", False)) and bool(getattr(v, "safe_to_render", False))
+        """Whether the findings-aware verification layer accepted the result for rendering: on the pass-through path its one
+        record (phase I-4); on the aggregation path the aggregate itself AND every clause's own record (phase I-5)."""
+        if self.aggregation is not None:
+            a = self.aggregation
+            clauses = tuple(getattr(a, "clauses", ()) or ())
+            return (bool(getattr(a, "accepted", False)) and bool(getattr(a, "safe_to_render", False)) and bool(clauses)
+                    and all(accepted_record(getattr(c, "verification", None)) for c in clauses))
+        return accepted_record(self.verification)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -237,7 +267,15 @@ class AdapterResult:
             "trace": [{"agent": e.agent, "decision": e.decision, "used_llm": e.used_llm, "ms": e.ms, "detail": e.detail} for e in self.trace],
             "result": self.result.to_dict() if self.result is not None else None,
             "verification": self.verification.to_dict() if self.verification is not None else None,
+            "aggregation": self.aggregation.to_dict() if self.aggregation is not None else None,
+            "path": self.path,
         }
+
+
+def accepted_record(verification: Any) -> bool:
+    """Whether a findings-aware verification record accepted its result for rendering."""
+    return (verification is not None and bool(getattr(verification, "accepted", False))
+            and bool(getattr(verification, "safe_to_render", False)))
 
 
 # ---------------------------------------------------------------------------
@@ -349,12 +387,14 @@ def quote_problem(finding: Any, chunks: Sequence[str], metadata: Sequence[Dict[s
 # Finding -> legacy evidence item
 # ---------------------------------------------------------------------------
 def adapt_finding(finding: Finding, specialist_id: SpecialistId, focus_clause: str, chunks: Sequence[str],
-                  metadata: Sequence[Dict[str, Any]]) -> Dict[str, Any]:
+                  metadata: Sequence[Dict[str, Any]], *, clause_index: Optional[int] = None) -> Dict[str, Any]:
     """The legacy evidence item for one finding that passed :func:`quote_problem`.
 
     ``chunk`` is the finding's own quote (the exact evidence the answer rests on), ``meta`` is a copy of the source
-    chunk's metadata with the finding's provenance under ``meta["plan_f"]``. No rerank score is invented: the
-    Verifier reads ``rerank_score`` with a default and only orders pages by it.
+    chunk's metadata with the finding's provenance under ``meta["plan_f"]``: a provision slice (phase I-5) keeps its
+    ``derived_from`` and ``slice`` offsets, and ``clause_index`` names the request clause the item answers on the
+    aggregation path. No rerank score is invented: the Verifier reads ``rerank_score`` with a default and only
+    orders pages by it.
     """
     problem = quote_problem(finding, chunks, metadata)
     if problem is not None:
@@ -373,9 +413,12 @@ def adapt_finding(finding: Finding, specialist_id: SpecialistId, focus_clause: s
         "chunk_id": cid,
         "focus_clause": focus_clause,
     }
-    for key in ("evidence_tier", "relation", "office_id", "office_name", "contact_values", "details_covered"):
+    for key in ("evidence_tier", "relation", "office_id", "office_name", "contact_values", "details_covered", "derived_from", "slice",
+                "slice_provision"):
         if key in finding.metadata:
             plan_f[key] = finding.metadata[key]
+    if clause_index is not None:
+        plan_f["clause_index"] = int(clause_index)
     meta["plan_f"] = plan_f
     return {"idx": cid, "chunk": finding.evidence_quote, "meta": meta}
 
@@ -575,46 +618,30 @@ class PlanFRuntime:
         return missing_specialists(self.registry)
 
     def attempt(self, question: str) -> AdapterResult:
-        """Try to answer ``question`` through Plan F under the I-1 safe case. Never raises."""
-        started = time.perf_counter()
-        trace: List[TraceEntry] = []
-        timings: Dict[str, float] = {}
-        text = (question or "").strip() if isinstance(question, str) else ""
-
-        def ms() -> float:
-            return (time.perf_counter() - started) * 1000.0
-
-        def finish(outcome: PlanFOutcome, reason: str, *, result: Optional[QAResult] = None, specialist: Optional[str] = None,
-                   status: Optional[str] = None, dispatched: Optional[DispatchResult] = None, verification: Any = None) -> AdapterResult:
-            trace.append(TraceEntry("plan_f_outcome", outcome.value, False, ms(),
-                                    {"reason": reason[:200], "requires_fallback": outcome is not PlanFOutcome.ACCEPTED}))
-            timings["total_ms"] = ms()
-            if result is not None:
-                result.timings = dict(timings)
-                result.agent_trace = list(trace)
-            return AdapterResult(outcome=outcome, reason=reason, question=text, result=result, trace=trace,
-                                 specialist_id=specialist, status=status, timings=dict(timings), dispatch=dispatched, verification=verification)
-
-        trace.append(TraceEntry("plan_f_adapter", "start", False, 0.0, {"phase": PHASE, "question_chars": len(text)}))
+        """Try to answer ``question`` through Plan F: the single-clause case of phases I-1 to I-4 (one specialist, one
+        request clause; the pass-through path) or, since phase I-5, the deterministic aggregation of the findings of a
+        multi-clause execution. Never raises."""
+        state = _Attempt(question)
+        state.trace.append(TraceEntry("plan_f_adapter", "start", False, 0.0, {"phase": PHASE, "question_chars": len(state.text)}))
         missing = self.missing_specialists
         if missing:
-            trace.append(TraceEntry("plan_f_registry", "incomplete", False, ms(), {"missing": missing}))
-            return finish(PlanFOutcome.REGISTRY_UNAVAILABLE, "registry lacks: %s" % ", ".join(missing))
-        trace.append(TraceEntry("plan_f_registry", "ok", False, ms(), {"specialists": [s.value for s in self.registry.ids()]}))
-        if not text:
-            trace.append(TraceEntry("coordinator", "skipped:empty", False, ms(), {}))
-            return finish(PlanFOutcome.NOT_APPLICABLE, "empty question")
+            state.add("plan_f_registry", "incomplete", detail={"missing": missing})
+            return state.finish(PlanFOutcome.REGISTRY_UNAVAILABLE, "registry lacks: %s" % ", ".join(missing))
+        state.add("plan_f_registry", "ok", detail={"specialists": [s.value for s in self.registry.ids()]})
+        if not state.text:
+            state.add("coordinator", "skipped:empty")
+            return state.finish(PlanFOutcome.NOT_APPLICABLE, "empty question")
 
         # ---- Coordinator ------------------------------------------------------
         t = time.perf_counter()
         try:
-            decision = coordinate(text)
+            decision = coordinate(state.text)
         except Exception as exc:
-            trace.append(TraceEntry("coordinator", "error", False, ms(), {"error": redact_error(exc)}))
-            return finish(PlanFOutcome.ERROR_REDACTED, "coordinator raised: %s" % redact_error(exc))
-        timings["coordinator_ms"] = (time.perf_counter() - t) * 1000.0
+            state.add("coordinator", "error", detail={"error": redact_error(exc)})
+            return state.finish(PlanFOutcome.ERROR_REDACTED, "coordinator raised: %s" % redact_error(exc))
+        state.timings["coordinator_ms"] = (time.perf_counter() - t) * 1000.0
         md = decision.metadata or {}
-        trace.append(TraceEntry("coordinator", ",".join(s.value for s in decision.selected_specialists) or "none", False, ms(), {
+        state.add("coordinator", ",".join(s.value for s in decision.selected_specialists) or "none", detail={
             "selected": [s.value for s in decision.selected_specialists],
             "complexity": md.get("complexity"),
             "requires_synthesis": decision.requires_synthesis,
@@ -624,12 +651,21 @@ class PlanFRuntime:
             "dropped_domains": list(md.get("dropped_domains") or []),
             "confidence": decision.confidence,
             "reason": (decision.reason or "")[:120],
-        }))
+        })
         problem = decision_problem(decision)
-        if problem is not None:
-            if not decision.selected_specialists or md.get("complexity") == "greeting":
-                return finish(PlanFOutcome.NOT_APPLICABLE, problem)
-            return finish(PlanFOutcome.UNSAFE_RESULT, problem)
+        from . import plan_f_aggregation as _aggregation          # imported here: that module builds on this one's guards
+        clauses = _aggregation.request_clauses(decision)
+        if problem is None and len(clauses) <= 1:
+            return self._single_clause(state, decision, md)
+        if _aggregation.applicable(decision):
+            return self._aggregate(state, decision, md, clauses, _aggregation)
+        if not decision.selected_specialists or md.get("complexity") == "greeting":
+            return state.finish(PlanFOutcome.NOT_APPLICABLE, problem)
+        return state.finish(PlanFOutcome.UNSAFE_RESULT, problem)
+
+    # ---- the pass-through path (phases I-1 to I-4): one specialist, one request clause ---------------------------
+    def _single_clause(self, state: "_Attempt", decision: CoordinatorDecision, md: Dict[str, Any]) -> AdapterResult:
+        state.path = PATH_PASSTHROUGH
         task = decision.subtasks[0]
         clause = task.context["focus_clauses"][0]
         sid = task.specialist_id
@@ -637,40 +673,40 @@ class PlanFRuntime:
         # ---- Dispatch ------------------------------------------------------------
         t = time.perf_counter()
         try:
-            dispatched = dispatch(decision, self.registry, question=text)
+            dispatched = dispatch(decision, self.registry, question=state.text)
         except Exception as exc:
-            trace.append(TraceEntry("dispatcher", "error", False, ms(), {"error": redact_error(exc)}))
-            return finish(PlanFOutcome.ERROR_REDACTED, "dispatcher raised: %s" % redact_error(exc), specialist=sid.value)
-        timings["dispatch_ms"] = (time.perf_counter() - t) * 1000.0
-        trace.append(TraceEntry("dispatcher", "executed:%d,pending:%d" % (len(dispatched.executed_specialists), len(dispatched.pending_specialists)),
-                                False, ms(), {"executed": [s.value for s in dispatched.executed_specialists],
-                                              "pending": [s.value for s in dispatched.pending_specialists],
-                                              "handoffs": len(dispatched.handoffs), "llm_calls": dispatched.llm_calls}))
+            state.add("dispatcher", "error", detail={"error": redact_error(exc)})
+            return state.finish(PlanFOutcome.ERROR_REDACTED, "dispatcher raised: %s" % redact_error(exc), specialist=sid.value)
+        state.timings["dispatch_ms"] = (time.perf_counter() - t) * 1000.0
+        state.add("dispatcher", "executed:%d,pending:%d" % (len(dispatched.executed_specialists), len(dispatched.pending_specialists)),
+                  detail={"executed": [s.value for s in dispatched.executed_specialists],
+                          "pending": [s.value for s in dispatched.pending_specialists],
+                          "handoffs": len(dispatched.handoffs), "llm_calls": dispatched.llm_calls})
         if dispatched.llm_calls != 0:
-            return finish(PlanFOutcome.UNSAFE_RESULT, "the dispatch reported %d LLM call(s)" % dispatched.llm_calls,
-                          specialist=sid.value, dispatched=dispatched)
+            return state.finish(PlanFOutcome.UNSAFE_RESULT, "the dispatch reported %d LLM call(s)" % dispatched.llm_calls,
+                                specialist=sid.value, dispatched=dispatched)
         if len(dispatched.runs) != 1:
-            return finish(PlanFOutcome.UNSAFE_RESULT, "expected one run, the dispatcher produced %d" % len(dispatched.runs),
-                          specialist=sid.value, dispatched=dispatched)
+            return state.finish(PlanFOutcome.UNSAFE_RESULT, "expected one run, the dispatcher produced %d" % len(dispatched.runs),
+                                specialist=sid.value, dispatched=dispatched)
         run = dispatched.runs[0]
         if run.state != STATE_EXECUTED or run.findings is None:
-            trace.append(TraceEntry("specialist:%s" % run.specialist_id.value, "pending", False, ms(), {"reason": run.reason[:160]}))
-            return finish(PlanFOutcome.REQUIRES_FALLBACK, "task pending: %s" % run.reason, specialist=run.specialist_id.value,
-                          dispatched=dispatched)
+            state.add("specialist:%s" % run.specialist_id.value, "pending", detail={"reason": run.reason[:160]})
+            return state.finish(PlanFOutcome.REQUIRES_FALLBACK, "task pending: %s" % run.reason, specialist=run.specialist_id.value,
+                                dispatched=dispatched)
         findings = run.findings
         sid = findings.specialist_id
         status = findings.status.value
-        timings["specialist_ms"] = float(findings.ms)
-        trace.append(TraceEntry("specialist:%s" % sid.value, status, bool(findings.llm_used), ms(), {
+        state.timings["specialist_ms"] = float(findings.ms)
+        state.add("specialist:%s" % sid.value, status, bool(findings.llm_used), {
             "findings": len(findings.findings), "handoffs": [h.requested_specialist.value for h in findings.handoff_requests],
             "missing": len(findings.missing), "limitations": len(findings.limitations), "specialist_ms": findings.ms,
             "summary": (findings.summary or "")[:160],
-        }))
+        })
         problem = result_problem(findings)
         if problem is not None:
             decision_label = "HANDOFF_PENDING" if findings.handoff_requests else "not_eligible"
-            trace.append(TraceEntry("plan_f_gate", decision_label, False, ms(), {"reason": problem[:200]}))
-            return finish(PlanFOutcome.UNSAFE_RESULT, problem, specialist=sid.value, status=status, dispatched=dispatched)
+            state.add("plan_f_gate", decision_label, detail={"reason": problem[:200]})
+            return state.finish(PlanFOutcome.UNSAFE_RESULT, problem, specialist=sid.value, status=status, dispatched=dispatched)
 
         # ---- Guards, rendering, verification -----------------------------------------
         try:
@@ -678,10 +714,10 @@ class PlanFRuntime:
             for finding in findings.findings:
                 problem = quote_problem(finding, self.chunks, self.metadata)
                 if problem is not None:
-                    trace.append(TraceEntry("quote_guard", "rejected", False, ms(), {"finding": finding.finding_id, "reason": problem}))
-                    return finish(PlanFOutcome.REJECTED_BY_QUOTE_GUARD, "%s: %s" % (finding.finding_id, problem),
-                                  specialist=sid.value, status=status, dispatched=dispatched)
-            trace.append(TraceEntry("quote_guard", "passed", False, ms(), {"findings": len(findings.findings)}))
+                    state.add("quote_guard", "rejected", detail={"finding": finding.finding_id, "reason": problem})
+                    return state.finish(PlanFOutcome.REJECTED_BY_QUOTE_GUARD, "%s: %s" % (finding.finding_id, problem),
+                                        specialist=sid.value, status=status, dispatched=dispatched)
+            state.add("quote_guard", "passed", detail={"findings": len(findings.findings)})
             report = findings.metadata["clauses"][0]
             accepted: List[Dict[str, Any]] = []
             dropped: List[Dict[str, Any]] = []
@@ -691,70 +727,220 @@ class PlanFRuntime:
                 if bound:
                     accepted.append(item)
                 elif n == 0:
-                    trace.append(TraceEntry("subject_guard", "rejected", False, ms(), {"finding": finding.finding_id, "reason": why}))
-                    return finish(PlanFOutcome.REJECTED_BY_SUBJECT_GUARD, "%s: %s" % (finding.finding_id, why),
-                                  specialist=sid.value, status=status, dispatched=dispatched)
+                    state.add("subject_guard", "rejected", detail={"finding": finding.finding_id, "reason": why})
+                    return state.finish(PlanFOutcome.REJECTED_BY_SUBJECT_GUARD, "%s: %s" % (finding.finding_id, why),
+                                        specialist=sid.value, status=status, dispatched=dispatched)
                 else:
                     dropped.append({"finding": finding.finding_id, "reason": why})
-            timings["guards_ms"] = (time.perf_counter() - t) * 1000.0
-            trace.append(TraceEntry("subject_guard", "passed", False, ms(),
-                                    {"accepted": [i["meta"]["plan_f"]["finding_id"] for i in accepted], "dropped": dropped}))
+            state.timings["guards_ms"] = (time.perf_counter() - t) * 1000.0
+            state.add("subject_guard", "passed", detail={"accepted": [i["meta"]["plan_f"]["finding_id"] for i in accepted], "dropped": dropped})
             if not accepted:
-                return finish(PlanFOutcome.REQUIRES_FALLBACK, "no finding left to render", specialist=sid.value, status=status,
-                              dispatched=dispatched)
+                return state.finish(PlanFOutcome.REQUIRES_FALLBACK, "no finding left to render", specialist=sid.value, status=status,
+                                    dispatched=dispatched)
 
             # ---- Findings-aware verification (phase I-4): the structured result must suit the exact request ----------
+            # (since phase I-5 a quote rejected as excess evidence may be replaced by its provision slice, re-verified)
             from . import plan_f_verification as _verification      # imported here: that module builds on this one's guards
             t = time.perf_counter()
-            verification = _verification.verify_findings(clause, findings, self.chunks, self.metadata)
-            timings["findings_verify_ms"] = (time.perf_counter() - t) * 1000.0
-            trace.append(TraceEntry("findings_verifier", "accepted" if verification.accepted else "rejected", False, ms(), verification.to_dict()))
+            sliced = _verification.verify_findings_sliced(clause, findings, self.chunks, self.metadata)
+            verification = sliced.verification
+            state.timings["findings_verify_ms"] = (time.perf_counter() - t) * 1000.0
+            detail = verification.to_dict()
+            if sliced.sliced:
+                detail["sliced"] = [list(s) for s in sliced.sliced]
+            state.add("findings_verifier", "accepted" if verification.accepted else "rejected", detail=detail)
             if not verification.accepted or not verification.safe_to_render:
-                return finish(PlanFOutcome.REJECTED_BY_FINDINGS_VERIFIER, "%s: %s" % (verification.reason.value, verification.detail),
-                              specialist=sid.value, status=status, dispatched=dispatched, verification=verification)
+                return state.finish(PlanFOutcome.REJECTED_BY_FINDINGS_VERIFIER, "%s: %s" % (verification.reason.value, verification.detail),
+                                    specialist=sid.value, status=status, dispatched=dispatched, verification=verification)
             keep = set(verification.accepted_finding_ids)
-            accepted = [item for item in accepted if item["meta"]["plan_f"]["finding_id"] in keep]
+            accepted = [adapt_finding(f, sid, clause, self.chunks, self.metadata) for f in sliced.findings.findings if f.finding_id in keep]
             if not accepted:
-                return finish(PlanFOutcome.REQUIRES_FALLBACK, "no verified finding left to render", specialist=sid.value, status=status,
-                              dispatched=dispatched, verification=verification)
+                return state.finish(PlanFOutcome.REQUIRES_FALLBACK, "no verified finding left to render", specialist=sid.value, status=status,
+                                    dispatched=dispatched, verification=verification)
 
             answer = render_answer(accepted)
             pages = accepted_pages(accepted)
             if not answer or not pages:
-                return finish(PlanFOutcome.REQUIRES_FALLBACK, "nothing renderable", specialist=sid.value, status=status,
-                              dispatched=dispatched)
+                return state.finish(PlanFOutcome.REQUIRES_FALLBACK, "nothing renderable", specialist=sid.value, status=status,
+                                    dispatched=dispatched)
             route = (md.get("router") or {}).get("route") or "policy"
             draft = SynthesisResult(answer=answer, claimed_pages=list(pages), prompt_version=PROMPT_VERSION)
             evidence = EvidenceResult(clause, route, list(accepted), None, True, None, False, None)
             t = time.perf_counter()
-            verdict = verify(text, draft, [evidence], [], is_retry=False)
-            timings["verify_ms"] = (time.perf_counter() - t) * 1000.0
+            verdict = verify(state.text, draft, [evidence], [], is_retry=False)
+            state.timings["verify_ms"] = (time.perf_counter() - t) * 1000.0
             if not isinstance(verdict, VerifyResult):
                 raise TypeError("verify() returned %s" % type(verdict).__name__)
             cited = [int(p) for p in verdict.pages if isinstance(p, int) and not isinstance(p, bool) and p in pages]
-            trace.append(TraceEntry("verifier", "accepted" if verdict.accepted else "rejected", False, ms(), {
-                "impl": "agents.verifier", "pages": cited, "unsupported_claims": [c[:80] for c in verdict.unsupported_claims[:3]]}))
+            state.add("verifier", "accepted" if verdict.accepted else "rejected", detail={
+                "impl": "agents.verifier", "pages": cited, "unsupported_claims": [c[:80] for c in verdict.unsupported_claims[:3]]})
             if not verdict.accepted or not cited:
-                return finish(PlanFOutcome.REJECTED_BY_VERIFIER,
-                              "verifier %s" % ("rejected the rendered answer" if not verdict.accepted else "cited no accepted page"),
-                              specialist=sid.value, status=status, dispatched=dispatched, verification=verification)
+                return state.finish(PlanFOutcome.REJECTED_BY_VERIFIER,
+                                    "verifier %s" % ("rejected the rendered answer" if not verdict.accepted else "cited no accepted page"),
+                                    specialist=sid.value, status=status, dispatched=dispatched, verification=verification)
 
             first = accepted[0]["meta"]
             best_section = first.get("section_title") or first.get("section") or "Page %d" % cited[0]
             preview = accepted[0]["chunk"]
             if len(preview) > EVIDENCE_PREVIEW_CHARS:
                 preview = preview[:EVIDENCE_PREVIEW_CHARS].rstrip() + "..."
-            timings["generation_ms"] = 0.0
+            state.timings["generation_ms"] = 0.0
             result = QAResult(answer=answer, pages=cited, best_section=str(best_section), evidence=preview, query_type=str(route),
                               items=list(accepted), used_llm=False, num_candidates=len(findings.findings), num_reranked=len(accepted),
                               llm_calls=0, retried=False, sub_questions=[])
-            return finish(PlanFOutcome.ACCEPTED, "rendered %d supported finding(s) of %s" % (len(accepted), sid.value),
-                          result=result, specialist=sid.value, status=status, dispatched=dispatched, verification=verification)
+            return state.finish(PlanFOutcome.ACCEPTED, "rendered %d supported finding(s) of %s" % (len(accepted), sid.value),
+                                result=result, specialist=sid.value, status=status, dispatched=dispatched, verification=verification)
         except Exception as exc:                                  # a defect here must never reach the user as an answer
-            trace.append(TraceEntry("plan_f_adapter", "error", False, ms(), {"error": redact_error(exc)}))
-            return finish(PlanFOutcome.ERROR_REDACTED, "adapter raised: %s" % redact_error(exc), specialist=sid.value, status=status,
-                          dispatched=dispatched)
+            state.add("plan_f_adapter", "error", detail={"error": redact_error(exc)})
+            return state.finish(PlanFOutcome.ERROR_REDACTED, "adapter raised: %s" % redact_error(exc), specialist=sid.value, status=status,
+                                dispatched=dispatched)
 
+    # ---- the aggregation path (phase I-5): several request clauses or several specialists ------------------------
+    def _aggregate(self, state: "_Attempt", decision: CoordinatorDecision, md: Dict[str, Any], clauses: List[str],
+                   aggregation: Any) -> AdapterResult:
+        state.path = PATH_AGGREGATE
+        specialists = [s.value for s in decision.selected_specialists]
+        joined = ",".join(specialists)
+        state.add("aggregator", "shape:%s" % (md.get("complexity") or "unknown"),
+                  detail={"phase": aggregation.PHASE, "clauses": len(clauses), "tasks": len(decision.subtasks), "specialists": specialists})
+        try:
+            problem = aggregation.request_problem(decision)
+            if problem is not None:                               # knowable from the decision alone: no specialist runs
+                record = aggregation.request_rejection(decision, *problem)
+                state.add("aggregator", "rejected", detail=record.to_dict())
+                return state.finish(PlanFOutcome.REJECTED_BY_AGGREGATOR, "%s: %s" % (problem[0].value, problem[1]), specialist=joined,
+                                    aggregation=record)
+        except Exception as exc:                                  # a defect in the request check is a redacted error, never a raise
+            state.add("aggregator", "error", detail={"error": redact_error(exc)})
+            return state.finish(PlanFOutcome.ERROR_REDACTED, "aggregator raised: %s" % redact_error(exc), specialist=joined)
+
+        # ---- Dispatch: every task of the decision, once; nothing re-routed, no handoff executed ------------------
+        t = time.perf_counter()
+        try:
+            dispatched = dispatch(decision, self.registry, question=state.text)
+        except Exception as exc:
+            state.add("dispatcher", "error", detail={"error": redact_error(exc)})
+            return state.finish(PlanFOutcome.ERROR_REDACTED, "dispatcher raised: %s" % redact_error(exc), specialist=joined)
+        state.timings["dispatch_ms"] = (time.perf_counter() - t) * 1000.0
+        state.add("dispatcher", "executed:%d,pending:%d" % (len(dispatched.executed_specialists), len(dispatched.pending_specialists)),
+                  detail={"executed": [s.value for s in dispatched.executed_specialists],
+                          "pending": [s.value for s in dispatched.pending_specialists],
+                          "handoffs": len(dispatched.handoffs), "llm_calls": dispatched.llm_calls})
+        if dispatched.llm_calls != 0:
+            return state.finish(PlanFOutcome.UNSAFE_RESULT, "the dispatch reported %d LLM call(s)" % dispatched.llm_calls,
+                                specialist=joined, dispatched=dispatched)
+        statuses: List[str] = []
+        specialist_ms = 0.0
+        for run in dispatched.runs:
+            if run.state != STATE_EXECUTED or run.findings is None:
+                state.add("specialist:%s" % run.specialist_id.value, "pending", detail={"reason": run.reason[:160]})
+                statuses.append("pending")
+                continue
+            findings = run.findings
+            specialist_ms += float(findings.ms)
+            statuses.append(findings.status.value)
+            state.add("specialist:%s" % findings.specialist_id.value, findings.status.value, bool(findings.llm_used), {
+                "task_id": findings.task_id, "findings": len(findings.findings),
+                "clauses": len((findings.metadata or {}).get("clauses") or []),
+                "handoffs": [h.requested_specialist.value for h in findings.handoff_requests], "missing": len(findings.missing),
+                "limitations": len(findings.limitations), "specialist_ms": findings.ms, "summary": (findings.summary or "")[:160],
+            })
+        state.timings["specialist_ms"] = specialist_ms
+        status = "supported" if statuses and all(s == "supported" for s in statuses) else next((s for s in statuses if s != "supported"), None)
+
+        # ---- Aggregation: every request clause covered by findings verified on their own clause --------------------
+        t = time.perf_counter()
+        outcome = aggregation.aggregate(decision, dispatched, self.chunks, self.metadata)
+        record = outcome.result
+        state.timings["aggregation_ms"] = (time.perf_counter() - t) * 1000.0
+        for key, value in record.timings.items():
+            state.timings["aggregation_%s" % key] = float(value)
+        state.add("aggregator", "accepted" if outcome.accepted else "rejected", detail=record.to_dict())
+        if not outcome.accepted:
+            return state.finish(PlanFOutcome.REJECTED_BY_AGGREGATOR, "%s: %s" % (record.reason.value, record.detail), specialist=joined,
+                                status=status, dispatched=dispatched, aggregation=record)
+
+        # ---- Rendering and the unchanged legacy Verifier ----------------------------------------------------------
+        try:
+            items: List[Dict[str, Any]] = []
+            for part in outcome.parts:
+                items.append(adapt_finding(part.finding, SpecialistId.parse(part.specialist_id), part.clause, self.chunks, self.metadata,
+                                           clause_index=part.clause_index))
+            answer = aggregation.render_parts(outcome.parts)
+            pages = accepted_pages(items)
+            if not answer or not pages:
+                return state.finish(PlanFOutcome.REQUIRES_FALLBACK, "nothing renderable", specialist=joined, status=status,
+                                    dispatched=dispatched, aggregation=record)
+            route = (md.get("router") or {}).get("route") or "policy"
+            draft = SynthesisResult(answer=answer, claimed_pages=list(pages), prompt_version=PROMPT_VERSION)
+            evidence = EvidenceResult(state.text, route, list(items), None, True, None, False, None)
+            t = time.perf_counter()
+            verdict = verify(state.text, draft, [evidence], [], is_retry=False)
+            state.timings["verify_ms"] = (time.perf_counter() - t) * 1000.0
+            if not isinstance(verdict, VerifyResult):
+                raise TypeError("verify() returned %s" % type(verdict).__name__)
+            cited = [int(p) for p in verdict.pages if isinstance(p, int) and not isinstance(p, bool) and p in pages]
+            state.add("verifier", "accepted" if verdict.accepted else "rejected", detail={
+                "impl": "agents.verifier", "pages": cited, "unsupported_claims": [c[:80] for c in verdict.unsupported_claims[:3]]})
+            if not verdict.accepted or not cited:
+                return state.finish(PlanFOutcome.REJECTED_BY_VERIFIER,
+                                    "verifier %s" % ("rejected the rendered answer" if not verdict.accepted else "cited no accepted page"),
+                                    specialist=joined, status=status, dispatched=dispatched, aggregation=record)
+            uncited = [p for p in pages if p not in cited]
+            if uncited:                                           # every rendered part keeps its page: no collapsed attribution
+                return state.finish(PlanFOutcome.REJECTED_BY_VERIFIER,
+                                    "verifier did not cite every evidence page (%s)" % ", ".join(str(p) for p in uncited),
+                                    specialist=joined, status=status, dispatched=dispatched, aggregation=record)
+            intents = {task.task_id: task.intent for task in decision.subtasks}
+            sub_questions: List[SubQuestion] = []
+            for cov, clause in zip(record.clauses, clauses):
+                intent = intents.get(cov.task_id)
+                sub_questions.append(SubQuestion(clause, intent if intent in ALL_ROUTES and intent != "greeting" else route))
+            first = items[0]["meta"]
+            best_section = first.get("section_title") or first.get("section") or "Page %d" % cited[0]
+            preview = items[0]["chunk"]
+            if len(preview) > EVIDENCE_PREVIEW_CHARS:
+                preview = preview[:EVIDENCE_PREVIEW_CHARS].rstrip() + "..."
+            state.timings["generation_ms"] = 0.0
+            used = "+".join(dict.fromkeys(ref.specialist_id for ref in record.evidence))
+            result = QAResult(answer=answer, pages=cited, best_section=str(best_section), evidence=preview, query_type=str(route),
+                              items=list(items), used_llm=False, num_candidates=record.findings_considered, num_reranked=len(items),
+                              llm_calls=0, retried=False, sub_questions=sub_questions)
+            return state.finish(PlanFOutcome.ACCEPTED, "aggregated %d verified finding(s) for %d clause(s) of %s" % (len(items), len(clauses), used),
+                                result=result, specialist=joined, status=status, dispatched=dispatched, aggregation=record)
+        except Exception as exc:                                  # a defect here must never reach the user as an answer
+            state.add("plan_f_adapter", "error", detail={"error": redact_error(exc)})
+            return state.finish(PlanFOutcome.ERROR_REDACTED, "adapter raised: %s" % redact_error(exc), specialist=joined, status=status,
+                                dispatched=dispatched, aggregation=record)
+
+
+class _Attempt:
+    """The state of one ``attempt``: the question text, the trace, the timings, the path taken and the outcome builder."""
+
+    def __init__(self, question: Any) -> None:
+        self.started = time.perf_counter()
+        self.trace: List[TraceEntry] = []
+        self.timings: Dict[str, float] = {}
+        self.text = (question or "").strip() if isinstance(question, str) else ""
+        self.path: Optional[str] = None
+
+    def ms(self) -> float:
+        return (time.perf_counter() - self.started) * 1000.0
+
+    def add(self, agent: str, decision: str, used_llm: bool = False, detail: Optional[Dict[str, Any]] = None) -> None:
+        self.trace.append(TraceEntry(agent, decision, used_llm, self.ms(), dict(detail or {})))
+
+    def finish(self, outcome: PlanFOutcome, reason: str, *, result: Optional[QAResult] = None, specialist: Optional[str] = None,
+               status: Optional[str] = None, dispatched: Optional[DispatchResult] = None, verification: Any = None,
+               aggregation: Any = None) -> AdapterResult:
+        self.trace.append(TraceEntry("plan_f_outcome", outcome.value, False, self.ms(),
+                                     {"reason": reason[:200], "requires_fallback": outcome is not PlanFOutcome.ACCEPTED, "path": self.path}))
+        self.timings["total_ms"] = self.ms()
+        if result is not None:
+            result.timings = dict(self.timings)
+            result.agent_trace = list(self.trace)
+        return AdapterResult(outcome=outcome, reason=reason, question=self.text, result=result, trace=self.trace, specialist_id=specialist,
+                             status=status, timings=dict(self.timings), dispatch=dispatched, verification=verification, aggregation=aggregation)
 
 def build_runtime(kb: Any, *, builders: Optional[Mapping[SpecialistId, Callable[[Any], Specialist]]] = None
                   ) -> Tuple[Optional[PlanFRuntime], RegistryBuild]:
@@ -869,8 +1055,9 @@ def answer_with_fallback(question: str, kb: Any, runtime: Optional[PlanFRuntime]
 
 __all__ = [
     "ASK_SPECIFIC_RECOGNISED", "AdapterResult", "CacheEntry", "DEFAULT_BUILDERS", "INSTITUTIONAL_BINDINGS", "INSTITUTIONAL_TIERS",
-    "PHASE", "PROMPT_VERSION", "PlanFOutcome", "PlanFRuntime", "REQUIRED_SPECIALISTS", "RELATION_STRONG", "RegistryBuild",
-    "RuntimeCache", "SUBJECT_CHECK_VERSION", "accepted_pages", "adapt_finding", "answer_with_fallback", "build_runtime",
+    "PATH_AGGREGATE", "PATH_PASSTHROUGH", "PHASE", "PROMPT_VERSION", "PlanFOutcome", "PlanFRuntime", "REQUIRED_SPECIALISTS", "RELATION_STRONG",
+    "RegistryBuild", "RuntimeCache", "SUBJECT_CHECK_VERSION", "accepted_pages", "accepted_record", "adapt_finding", "answer_with_fallback",
+    "build_runtime",
     "build_specialist_registry", "clause_covered_by", "decision_problem", "entity_in_text", "missing_specialists",
     "named_entities", "quote_problem", "render_answer", "result_problem", "subject_binding",
 ]
