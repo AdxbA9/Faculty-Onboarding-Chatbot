@@ -15,7 +15,10 @@ WHAT IT CONSUMES
     * the Coordinator's tasks and their ``focus_clauses``: a scoped task names the request clauses it owns; an
       unscoped task (one specialist given the whole question) carries the whole question as its one clause;
     * the dispatched runs: every task must have executed; each result's clause reports (``metadata["clauses"]``)
-      and each finding's ``metadata["clauses"]`` (the report indexes it answers).
+      and each finding's ``metadata["clauses"]`` (the report indexes it answers);
+    * since phase I-6, the settled execution of one bounded handoff round (``plan_f_handoff``): a source task's
+      handed-off clauses are owned by the handoff task that answered them (stamped ``handoff`` metadata, validated
+      at depth one and listed in the decision's recorded round); the aggregator itself never executes a handoff.
 
 HOW A CLAUSE IS COVERED (structured; never by word similarity)
     1. Ownership: a request clause is owned by the task whose focus names it exactly. A clause owned by two tasks
@@ -208,15 +211,28 @@ def request_clauses(decision: CoordinatorDecision) -> List[str]:
     return [c for c in clauses if isinstance(c, str) and c.strip()]
 
 
+def _issued_for(task: SpecialistTask, decision: CoordinatorDecision) -> bool:
+    """A task the Coordinator issued, or a handoff task settled into the decision by the phase I-6 handoff round."""
+    if task.requested_by == REQUESTED_BY:
+        return True
+    from . import plan_f_handoff as _handoff                       # imported here: that module builds on the verifier, as this one does
+    return _handoff.validated_handoff_task(task, decision)
+
+
+def _handoff_round_recorded(decision: CoordinatorDecision) -> bool:
+    md = decision.metadata if isinstance(getattr(decision, "metadata", None), dict) else {}
+    return isinstance(md.get("handoff_round"), dict)
+
+
 def applicable(decision: CoordinatorDecision) -> bool:
     """Whether the aggregator, not the single-finding path, owns this decision: a Coordinator-issued, non-greeting
-    decision with at least one specialist and either several request clauses or several tasks."""
+    decision with at least one specialist and either several request clauses or several tasks (or a settled handoff round)."""
     md = decision.metadata if isinstance(getattr(decision, "metadata", None), dict) else {}
     if md.get("complexity") == "greeting" or not decision.selected_specialists or not decision.subtasks:
         return False
-    if any(task.requested_by != REQUESTED_BY for task in decision.subtasks):
+    if any(not _issued_for(task, decision) for task in decision.subtasks):
         return False
-    return len(request_clauses(decision)) >= 2 or len(decision.subtasks) >= 2
+    return len(request_clauses(decision)) >= 2 or len(decision.subtasks) >= 2 or _handoff_round_recorded(decision)
 
 
 def clause_owners(decision: CoordinatorDecision) -> List[List[Tuple[SpecialistTask, int, bool]]]:
@@ -229,8 +245,10 @@ def clause_owners(decision: CoordinatorDecision) -> List[List[Tuple[SpecialistTa
     for task in decision.subtasks:
         focus = (task.context or {}).get("focus_clauses") if isinstance(task.context, dict) else None
         focus = list(focus) if isinstance(focus, (list, tuple)) else []
+        handed = (task.metadata or {}).get("handed_off_clauses") if isinstance(task.metadata, dict) else None
+        handed = set(i for i in (handed or []) if isinstance(i, int)) if isinstance(handed, (list, tuple)) else set()
         for report_index, text in enumerate(focus):
-            if not isinstance(text, str):
+            if not isinstance(text, str) or report_index in handed:     # a clause the task handed off is owned by the handoff task (phase I-6)
                 continue
             hits = [ci for ci, clause in enumerate(clauses) if clause == text]
             if hits:
@@ -254,8 +272,8 @@ def request_problem(decision: CoordinatorDecision) -> Optional[Tuple[Aggregation
     if not decision.subtasks or not decision.selected_specialists:
         return AggregationCode.MULTIPART_UNSUPPORTED, "the decision carries no specialist task"
     for task in decision.subtasks:
-        if task.requested_by != REQUESTED_BY:
-            return AggregationCode.UNSAFE_RESULT, "task %s was not issued by the Coordinator" % task.task_id
+        if not _issued_for(task, decision):
+            return AggregationCode.UNSAFE_RESULT, "task %s was not issued by the Coordinator or settled by the handoff round" % task.task_id
     md = decision.metadata if isinstance(decision.metadata, dict) else {}
     uncovered = md.get("uncovered_clauses") or []
     if uncovered:
@@ -349,7 +367,7 @@ def aggregate(decision: CoordinatorDecision, dispatched: DispatchResult, chunks:
         clauses = request_clauses(decision)
         clause_count = len(clauses)
         specialists = tuple(s.value for s in decision.selected_specialists)
-        if len(clauses) <= 1 and len(decision.subtasks) <= 1:
+        if len(clauses) <= 1 and len(decision.subtasks) <= 1 and not _handoff_round_recorded(decision):
             return reject(AggregationCode.NO_AGGREGATION_REQUIRED, "one request clause for one specialist: the single-finding path decides")
         problem = request_problem(decision)
         if problem is not None:

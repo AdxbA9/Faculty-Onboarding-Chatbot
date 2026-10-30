@@ -497,15 +497,17 @@ def _hr_phone_task_stub(kb, status, *, handoff=False, general=False, raise_error
     ("not found", dict(status=FindingStatus.NOT_FOUND), "status not_found"),
     ("out of scope", dict(status=FindingStatus.OUT_OF_SCOPE), "status out_of_scope"),
     ("error", dict(status=FindingStatus.SUPPORTED, raise_error=True), "status error"),
-    ("supported with handoff", dict(status=FindingStatus.SUPPORTED, handoff=True), "handoff pending to faculty_services"),
+    ("supported with handoff", dict(status=FindingStatus.SUPPORTED, handoff=True), "HANDOFF_TARGET_INVALID: institutional -> faculty_services"),
 ])
 def test_only_an_eligible_supported_result_progresses(kb, label, kwargs, expected_reason):
     attempt = PF.PlanFRuntime(stub_registry(institutional=_hr_phone_task_stub(kb, **kwargs)), kb.chunks, kb.metadata).attempt(HR_PHONE)
-    assert attempt.outcome is PF.PlanFOutcome.UNSAFE_RESULT and attempt.result is None, label
+    expected = PF.PlanFOutcome.REJECTED_BY_HANDOFF if label == "supported with handoff" else PF.PlanFOutcome.UNSAFE_RESULT   # phase I-6
+    assert attempt.outcome is expected and attempt.result is None, label
     assert attempt.reason.startswith(expected_reason), (label, attempt.reason)
     assert "quote_guard" not in trace_agents(attempt) and "verifier" not in trace_agents(attempt)
     if label == "supported with handoff":
-        assert [e.decision for e in attempt.trace if e.agent == "plan_f_gate"] == ["HANDOFF_PENDING"]
+        # a bare handoff request without the specialist's handoff task binds to no clause: the bounded round rejects it unexecuted
+        assert [e.decision for e in attempt.trace if e.agent == "handoff"] == ["HANDOFF_TARGET_INVALID"] and attempt.specialist_calls == 1
     if label == "error":
         text = trace_json(attempt)
         assert "gsk_ABCDEFGHIJKLMNOPQRST" not in text and "someone" not in text and "gsk_***" in text
@@ -573,11 +575,14 @@ def test_secondary_findings_that_do_not_cover_the_ask_are_dropped_not_rendered(r
 # Complex questions all fall back (section 30; since phase I-5 a multi-clause decision is decided by the aggregator)
 # ---------------------------------------------------------------------------
 @pytest.mark.parametrize("question,outcome,reason_part,dispatched", [
-    ("Who handles faculty visas and where is that office?", PF.PlanFOutcome.REJECTED_BY_AGGREGATOR, "CROSS_DOMAIN_UNRESOLVED", False),
-    ("Where is the Research Institute and what research funding is available?", PF.PlanFOutcome.REJECTED_BY_AGGREGATOR, "HANDOFF_REQUIRED", True),
-    ("Which office handles faculty housing?", PF.PlanFOutcome.REJECTED_BY_AGGREGATOR, "CROSS_DOMAIN_UNRESOLVED", False),
-    ("Can I reduce my teaching load if I have a funded research project, and who approves it?", PF.PlanFOutcome.REJECTED_BY_AGGREGATOR,
-     "CROSS_DOMAIN_UNRESOLVED", False),
+    # phase I-6: routing settles the visa clauses (HR, then Institutional) and both come back empty; the Research Institute
+    # question is clause-scoped and Research keeps a partial clause, so its handoff never runs; the office-selection and the
+    # two-subject questions stay ambiguous and run no specialist
+    ("Who handles faculty visas and where is that office?", PF.PlanFOutcome.REJECTED_BY_AGGREGATOR, "MISSING_REQUIRED_CLAUSE", True),
+    ("Where is the Research Institute and what research funding is available?", PF.PlanFOutcome.REJECTED_BY_HANDOFF, "HANDOFF_REMAINDER_UNSUPPORTED", True),
+    ("Which office handles faculty housing?", PF.PlanFOutcome.REJECTED_BY_ROUTING, "ROUTE_AMBIGUOUS", False),
+    ("Can I reduce my teaching load if I have a funded research project, and who approves it?", PF.PlanFOutcome.REJECTED_BY_ROUTING,
+     "ROUTE_AMBIGUOUS", False),
     ("asdfgh qwerty zxcvb", PF.PlanFOutcome.NOT_APPLICABLE, "no specialist selected", False),
     ("Hello", PF.PlanFOutcome.NOT_APPLICABLE, "greeting", False),
     ("", PF.PlanFOutcome.NOT_APPLICABLE, "empty question", False),
@@ -649,7 +654,9 @@ def test_handoffs_are_never_executed(kb):
         raise AssertionError("the handoff target must never run")
 
     attempt = PF.PlanFRuntime(stub_registry(institutional=institutional, faculty_services=hr), kb.chunks, kb.metadata).attempt(HR_PHONE)
-    assert attempt.outcome is PF.PlanFOutcome.UNSAFE_RESULT and calls == [("institutional", "task-1")]
+    # phase I-6: a handoff is executed once only when it carries the specialist's own task for a declined clause; this
+    # bare request binds to nothing, so the target still never runs
+    assert attempt.outcome is PF.PlanFOutcome.REJECTED_BY_HANDOFF and calls == [("institutional", "task-1")]
     assert attempt.dispatch is not None and len(attempt.dispatch.runs) == 1 and attempt.dispatch.handoffs
 
 
