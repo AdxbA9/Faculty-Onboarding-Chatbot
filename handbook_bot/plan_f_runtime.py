@@ -9,11 +9,15 @@ DECISION OWNED
     never answers from anything but a specialist's own supported findings,
     never calls a language model and never executes a handoff.
 
-NOT WIRED (phase I-1)
-    Nothing in the live application imports this module. ``ui/pipeline.ask``
-    still calls ``answer_question`` directly, ``PLAN_F_ENABLED`` is read by
-    nothing, and the orchestrator, the Router, retrieval, Synthesis and the
-    Verifier are unchanged. The flagged seam is the next phase (I-2).
+WIRING (phases I-2 and I-4)
+    The one approved seam is ``ui/pipeline.py`` (phase I-2): it builds a
+    :class:`PlanFRuntime` lazily through :class:`RuntimeCache` and calls
+    ``attempt`` only in SHADOW or ACTIVE mode; both switches default to off
+    and LEGACY mode never imports this module. The orchestrator, the Router,
+    retrieval, Synthesis and the legacy Verifier are unchanged. Since phase
+    I-4 a finding passes the findings-aware verification layer
+    (``plan_f_verification.verify_findings``) after the I-1 guards and
+    before rendering; its rejection is ``PLAN_F_REJECTED_BY_FINDINGS_VERIFIER``.
 
 WHAT IT DOES
     1. ``build_specialist_registry(kb)`` builds the four specialists from a
@@ -44,12 +48,18 @@ WHAT IT DOES
        The primary finding must pass; a secondary finding that fails the
        subject guard is dropped and traced; any finding that fails the quote
        guard rejects the whole result.
-    4. The answer is rendered extractively: the accepted quotes, verbatim, one
+    4. (Phase I-4) The findings-aware verification layer then reads the
+       structured result against the clause: request kind, requested detail
+       in the answering unit, entity and category-modifier binding, stated
+       conditions, the asked relation, provision boundaries and completeness.
+       Only a verified result is rendered; a dropped secondary finding is
+       traced, never shown.
+    5. The answer is rendered extractively: the accepted quotes, verbatim, one
        per paragraph, nothing added. Pages come only from accepted findings.
        The rendered answer is shaped as a ``SynthesisResult`` and checked by
        the unchanged legacy Verifier against the accepted evidence; a
        rejection means fallback.
-    5. On acceptance a complete, unchanged-shape ``QAResult`` is built
+    6. On acceptance a complete, unchanged-shape ``QAResult`` is built
        (``used_llm=False``, ``llm_calls=0``, ``retried=False``, trace filled).
        Every other outcome asks the caller to fall back to the legacy path.
 
@@ -126,6 +136,7 @@ class PlanFOutcome(str, Enum):
     UNSAFE_RESULT = "PLAN_F_UNSAFE_RESULT"                      # decision or specialist result outside the I-1 safe case
     REJECTED_BY_QUOTE_GUARD = "PLAN_F_REJECTED_BY_QUOTE_GUARD"
     REJECTED_BY_SUBJECT_GUARD = "PLAN_F_REJECTED_BY_SUBJECT_GUARD"
+    REJECTED_BY_FINDINGS_VERIFIER = "PLAN_F_REJECTED_BY_FINDINGS_VERIFIER"  # phase I-4: the structured finding is not a suitable direct answer
     REJECTED_BY_VERIFIER = "PLAN_F_REJECTED_BY_VERIFIER"
     REQUIRES_FALLBACK = "PLAN_F_REQUIRES_FALLBACK"              # Plan F ran but left the task pending or nothing renderable
     ERROR_REDACTED = "PLAN_F_ERROR_REDACTED"
@@ -202,10 +213,17 @@ class AdapterResult:
     status: Optional[str] = None
     timings: Dict[str, float] = field(default_factory=dict)
     dispatch: Optional[DispatchResult] = None
+    verification: Any = None                     # plan_f_verification.FindingsVerification once the findings-aware layer ran (phase I-4)
 
     @property
     def requires_fallback(self) -> bool:
         return self.outcome is not PlanFOutcome.ACCEPTED
+
+    @property
+    def verified(self) -> bool:
+        """Whether the findings-aware verification layer accepted the result for rendering (phase I-4)."""
+        v = self.verification
+        return v is not None and bool(getattr(v, "accepted", False)) and bool(getattr(v, "safe_to_render", False))
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -218,6 +236,7 @@ class AdapterResult:
             "timings": dict(self.timings),
             "trace": [{"agent": e.agent, "decision": e.decision, "used_llm": e.used_llm, "ms": e.ms, "detail": e.detail} for e in self.trace],
             "result": self.result.to_dict() if self.result is not None else None,
+            "verification": self.verification.to_dict() if self.verification is not None else None,
         }
 
 
@@ -566,7 +585,7 @@ class PlanFRuntime:
             return (time.perf_counter() - started) * 1000.0
 
         def finish(outcome: PlanFOutcome, reason: str, *, result: Optional[QAResult] = None, specialist: Optional[str] = None,
-                   status: Optional[str] = None, dispatched: Optional[DispatchResult] = None) -> AdapterResult:
+                   status: Optional[str] = None, dispatched: Optional[DispatchResult] = None, verification: Any = None) -> AdapterResult:
             trace.append(TraceEntry("plan_f_outcome", outcome.value, False, ms(),
                                     {"reason": reason[:200], "requires_fallback": outcome is not PlanFOutcome.ACCEPTED}))
             timings["total_ms"] = ms()
@@ -574,7 +593,7 @@ class PlanFRuntime:
                 result.timings = dict(timings)
                 result.agent_trace = list(trace)
             return AdapterResult(outcome=outcome, reason=reason, question=text, result=result, trace=trace,
-                                 specialist_id=specialist, status=status, timings=dict(timings), dispatch=dispatched)
+                                 specialist_id=specialist, status=status, timings=dict(timings), dispatch=dispatched, verification=verification)
 
         trace.append(TraceEntry("plan_f_adapter", "start", False, 0.0, {"phase": PHASE, "question_chars": len(text)}))
         missing = self.missing_specialists
@@ -684,6 +703,21 @@ class PlanFRuntime:
                 return finish(PlanFOutcome.REQUIRES_FALLBACK, "no finding left to render", specialist=sid.value, status=status,
                               dispatched=dispatched)
 
+            # ---- Findings-aware verification (phase I-4): the structured result must suit the exact request ----------
+            from . import plan_f_verification as _verification      # imported here: that module builds on this one's guards
+            t = time.perf_counter()
+            verification = _verification.verify_findings(clause, findings, self.chunks, self.metadata)
+            timings["findings_verify_ms"] = (time.perf_counter() - t) * 1000.0
+            trace.append(TraceEntry("findings_verifier", "accepted" if verification.accepted else "rejected", False, ms(), verification.to_dict()))
+            if not verification.accepted or not verification.safe_to_render:
+                return finish(PlanFOutcome.REJECTED_BY_FINDINGS_VERIFIER, "%s: %s" % (verification.reason.value, verification.detail),
+                              specialist=sid.value, status=status, dispatched=dispatched, verification=verification)
+            keep = set(verification.accepted_finding_ids)
+            accepted = [item for item in accepted if item["meta"]["plan_f"]["finding_id"] in keep]
+            if not accepted:
+                return finish(PlanFOutcome.REQUIRES_FALLBACK, "no verified finding left to render", specialist=sid.value, status=status,
+                              dispatched=dispatched, verification=verification)
+
             answer = render_answer(accepted)
             pages = accepted_pages(accepted)
             if not answer or not pages:
@@ -703,7 +737,7 @@ class PlanFRuntime:
             if not verdict.accepted or not cited:
                 return finish(PlanFOutcome.REJECTED_BY_VERIFIER,
                               "verifier %s" % ("rejected the rendered answer" if not verdict.accepted else "cited no accepted page"),
-                              specialist=sid.value, status=status, dispatched=dispatched)
+                              specialist=sid.value, status=status, dispatched=dispatched, verification=verification)
 
             first = accepted[0]["meta"]
             best_section = first.get("section_title") or first.get("section") or "Page %d" % cited[0]
@@ -715,7 +749,7 @@ class PlanFRuntime:
                               items=list(accepted), used_llm=False, num_candidates=len(findings.findings), num_reranked=len(accepted),
                               llm_calls=0, retried=False, sub_questions=[])
             return finish(PlanFOutcome.ACCEPTED, "rendered %d supported finding(s) of %s" % (len(accepted), sid.value),
-                          result=result, specialist=sid.value, status=status, dispatched=dispatched)
+                          result=result, specialist=sid.value, status=status, dispatched=dispatched, verification=verification)
         except Exception as exc:                                  # a defect here must never reach the user as an answer
             trace.append(TraceEntry("plan_f_adapter", "error", False, ms(), {"error": redact_error(exc)}))
             return finish(PlanFOutcome.ERROR_REDACTED, "adapter raised: %s" % redact_error(exc), specialist=sid.value, status=status,
