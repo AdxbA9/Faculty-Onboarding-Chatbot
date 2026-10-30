@@ -1,55 +1,43 @@
 """
-End-to-end question-answering pipeline.
+Question-answering public API and the Part 1 building blocks it is made of.
 
-Flow:
+Public entry point: :func:`answer_question`. Its signature and the fields of
+:class:`QAResult` are a compatibility contract with ``ui/`` and ``eval/``.
+
+Since Part 2 (Milestone 1) ``answer_question`` is a thin wrapper. The control
+flow lives in :mod:`handbook_bot.orchestrator`:
+
     question
-        -> classify_query
-        -> greeting? return canned reply
-        -> embed + FAISS + lexical -> candidates
-        -> cross-encoder rerank
-        -> low-confidence? refuse
-        -> try deterministic extractor (contact/date/count)
-        -> else prompt LLM, parse + verify answer
-        -> return structured result
+        -> Router agent            (agents/router.py)
+        -> greeting? canned reply
+        -> embed + FAISS + lexical -> rerank -> low confidence? refuse
+        -> deterministic extractor (contact/date/count), else Synthesis agent
+        -> Verifier                (agents/verifier.py; Part 1 check until it lands)
+        -> at most one retry -> structured result
 
-Public entry point: :func:`answer_question`.
-
-Light timing instrumentation is included so the UI's developer-mode
-panel can show retrieval / rerank / generation breakdowns. It adds only
-a handful of ``time.perf_counter()`` calls and does not change logic.
+What stays in this module are the pieces those agents reuse: the prompt
+builder, the Groq call, the ``Pages:`` parser and the Part 1 grounding check.
 """
 from __future__ import annotations
 
+import dataclasses
 import re
-import time
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
 
 import faiss
 import numpy as np
 
+from .agents.types import SubQuestion, TraceEntry
 from .config import (
-    EVIDENCE_PREVIEW_CHARS,
-    FINAL_K,
     GROQ_MODEL,
     LLM_MAX_TOKENS,
     LLM_TEMPERATURE,
-    MIN_RERANK_SCORE,
-)
-from .extractors import (
-    extract_contact_answer,
-    extract_count_answer,
-    extract_date_answer,
-)
-from .retrieval import (
-    classify_query,
-    deduplicate_by_text,
-    gather_candidates,
+    LLM_TRANSPORT_RETRIES,
 )
 from .text_utils import (
     EMAIL_PATTERN,
     PHONE_PATTERN,
-    normalize_text,
     tokenize,
 )
 
@@ -59,7 +47,12 @@ from .text_utils import (
 # ---------------------------------------------------------------------------
 @dataclass
 class QAResult:
-    """Structured answer returned to callers."""
+    """Structured answer returned to callers.
+
+    Every Part 1 field is unchanged in name, type and meaning. The Part 2
+    fields are appended with defaults, so existing constructors and readers
+    keep working.
+    """
     answer: str
     pages: List[int] = field(default_factory=list)
     best_section: str = ""
@@ -73,6 +66,12 @@ class QAResult:
     num_candidates: int = 0
     num_reranked: int = 0
 
+    # Part 2: what each agent decided, and what the question cost.
+    agent_trace: List[TraceEntry] = field(default_factory=list)
+    llm_calls: int = 0              # logical LLM calls issued for this question, the router's included
+    retried: bool = False           # True when the Verifier asked for, and got, a second draft
+    sub_questions: List[SubQuestion] = field(default_factory=list)   # filled by the Planner (Milestone 2)
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "answer": self.answer,
@@ -85,6 +84,10 @@ class QAResult:
             "timings": self.timings,
             "num_candidates": self.num_candidates,
             "num_reranked": self.num_reranked,
+            "agent_trace": [dataclasses.asdict(entry) for entry in self.agent_trace],
+            "llm_calls": self.llm_calls,
+            "retried": self.retried,
+            "sub_questions": [dataclasses.asdict(sq) for sq in self.sub_questions],
         }
 
 
@@ -109,9 +112,22 @@ _INTENT_GUIDANCE = {
     "list": "For list questions, enumerate only items explicitly present in the context.",
 }
 
+#: Longest reviewer feedback that is copied into a retry prompt.
+_MAX_FEEDBACK_CHARS = 400
 
-def build_prompt(question: str, items: List[Dict], query_type: str) -> str:
-    """Assemble the grounded prompt sent to the LLM."""
+
+def build_prompt(
+    question: str,
+    items: List[Dict],
+    query_type: str,
+    *,
+    feedback: Optional[str] = None,
+) -> str:
+    """Assemble the grounded prompt sent to the LLM.
+
+    ``feedback`` is only given for a Verifier-requested second draft. It says
+    what the first draft got wrong; the grounding rules still apply in full.
+    """
     context_parts = []
     for i, item in enumerate(items, 1):
         meta = item["meta"]
@@ -123,17 +139,30 @@ def build_prompt(question: str, items: List[Dict], query_type: str) -> str:
 
     extra = _INTENT_GUIDANCE.get(query_type, "")
 
+    review = ""
+    if feedback:
+        note = re.sub(r"\s+", " ", feedback).strip()[:_MAX_FEEDBACK_CHARS]
+        review = (
+            "\nA reviewer rejected your previous answer: "
+            f"{note}\n"
+            "Write a corrected answer. Every rule above still applies: use ONLY the context, "
+            "and if the context does not support an answer reply exactly: I do not have this information.\n"
+        )
+
+    # Rule 1 used to read "one or two short sentences". A three-part question
+    # cannot be answered in two sentences, so that rule produced the
+    # "incomplete multi-part answers" failure of Part 1 (report 6.7.2).
     return f"""You answer questions about the University of Sharjah Faculty Handbook.
 Use ONLY the supplied context.
 
 Rules:
-1. Give a direct, specific answer in one or two short sentences.
+1. Answer concisely, but use enough sentences to fully address every part of the question that the context supports. If the question has several parts, answer each part clearly, roughly one sentence per part. A simple question gets a short answer.
 2. If the answer is not clearly supported by the context, reply exactly: I do not have this information.
 3. Do not guess. Do not combine unrelated rows or pages.
 4. {extra}
 5. After the answer, add a new line exactly like this: Pages: page_numbers_only
 6. Only cite pages from the supplied context.
-
+{review}
 Context:
 {context}
 
@@ -146,8 +175,17 @@ Answer:""".strip()
 # LLM call + parsing
 # ---------------------------------------------------------------------------
 def ask_groq(client, prompt: str) -> str:
-    """Call the Groq chat completion endpoint and return the raw text."""
-    resp = client.chat.completions.create(
+    """Call the Groq chat completion endpoint and return the raw text.
+
+    One call here is ONE logical LLM call, which is what ``QAResult.llm_calls``
+    counts. The Groq SDK may repeat the HTTP request on 429, 5xx and timeouts,
+    with back-off; ``LLM_TRANSPORT_RETRIES`` sets how often and is applied
+    explicitly so that it is a documented setting and not a hidden SDK default.
+    """
+    caller = client
+    if hasattr(client, "with_options"):
+        caller = client.with_options(max_retries=max(0, LLM_TRANSPORT_RETRIES))
+    resp = caller.chat.completions.create(
         model=GROQ_MODEL,
         temperature=LLM_TEMPERATURE,
         max_tokens=LLM_MAX_TOKENS,
@@ -165,35 +203,103 @@ def ask_groq(client, prompt: str) -> str:
     return (resp.choices[0].message.content or "").strip()
 
 
-def parse_answer_and_pages(raw: str, items: List[Dict]) -> Tuple[str, List[int]]:
-    """Split the LLM output into (answer_body, cited_pages).
+# En and em dashes as code points, so this source file stays pure ASCII.
+_DASHES = "-" + chr(0x2013) + chr(0x2014)
+_PAGE_ITEM = r"(?:pages?\s*)?\d+"
+_PAGE_SPEC = _PAGE_ITEM + r"(?:\s*(?:,|;|&|\band\b|\bto\b|[" + _DASHES + r"])\s*" + _PAGE_ITEM + r")*"
+# A citation that ends the output: on its own line, or closing the last sentence.
+_TRAILING_PAGES = re.compile(
+    r"(?:^|[\s(\[])(?P<kw>pages?)\s*:\s*(?P<spec>" + _PAGE_SPEC + r")\s*[.)\]]*\s*$", re.I)
+# Otherwise: a line that is nothing but a citation (the last such line wins).
+_PAGES_LINE = re.compile(r"^[ \t]*pages?\s*:\s*(" + _PAGE_SPEC + r")\s*[.)\]]*[ \t]*$", re.I | re.M)
+# "Pages:" with nothing citable after it. The model writes this under a refusal;
+# it must still be stripped or the refusal sentence is no longer recognised.
+_EMPTY_PAGES_LINE = re.compile(r"\n?[ \t]*pages?\s*:\s*(?:none|n/?a|not applicable|[-,\s])*[ \t.]*$", re.I)
+_PAGE_RANGE = re.compile(r"(\d+)(?:\s*(?:\bto\b|[" + _DASHES + r"])\s*(?:pages?\s*)?(\d+))?", re.I)
+#: "Pages: 12-14" means 12, 13 and 14. A span wider than this is read as two
+#: separate numbers, so a stray "1-272" cannot cite the whole handbook.
+_MAX_RANGE_SPAN = 10
+
+
+def _pages_from_spec(spec: str, allowed: List[int]) -> List[int]:
+    pages: List[int] = []
+    for m in _PAGE_RANGE.finditer(spec):
+        first = int(m.group(1))
+        last = int(m.group(2)) if m.group(2) else first
+        span = range(first, last + 1) if 0 <= last - first <= _MAX_RANGE_SPAN else (first, last)
+        for page in span:
+            if page in allowed and page not in pages:
+                pages.append(page)
+    return pages
+
+
+def split_answer_and_claimed_pages(raw: str, items: List[Dict]) -> Tuple[str, List[int]]:
+    """Split the LLM output into (answer_body, claimed_pages).
 
     Only pages that appear in the supplied context are accepted - a cheap
-    but effective guard against hallucinated citations.
-    """
-    allowed = sorted({int(item["meta"]["page"]) for item in items})
-    pages: List[int] = []
-    m = re.search(r"Pages:\s*([0-9,\-\s]+)", raw, re.I)
-    if m:
-        for n in re.findall(r"\d+", m.group(1)):
-            val = int(n)
-            if val in allowed and val not in pages:
-                pages.append(val)
+    but effective guard against hallucinated citations. When the model wrote
+    no usable ``Pages:`` line the list is EMPTY: this function never invents a
+    citation. Deciding what to cite then is the Verifier's job.
 
-    body = re.sub(r"\n?Pages:\s*[0-9,\-\s]+\s*$", "", raw, flags=re.I).strip()
+    The citation is the LAST ``Pages:`` expression, because prompt rule 5 puts
+    it after the answer. Part 1 read the FIRST one, so an answer that merely
+    contained the words "two pages: ..." lost its real citation. Ranges
+    ("12-14"), "and", en dashes and a trailing full stop are understood.
+    Prose that mentions pages elsewhere is left in the answer untouched.
+    """
+    raw = raw or ""
+    allowed = sorted({int(item["meta"]["page"]) for item in items})
+
+    m = _TRAILING_PAGES.search(raw)
+    if m:
+        body = raw[:m.start("kw")].rstrip(" \t\r\n([").strip()
+        return body, _pages_from_spec(m.group("spec"), allowed)
+
+    lines = list(_PAGES_LINE.finditer(raw))
+    if lines:
+        last = lines[-1]
+        body = (raw[:last.start()] + raw[last.end():]).strip()
+        return body, _pages_from_spec(last.group(1), allowed)
+
+    return _EMPTY_PAGES_LINE.sub("", raw).strip(), []
+
+
+def legacy_fallback_pages(items: List[Dict]) -> List[int]:
+    """Part 1 behaviour when the model cited nothing: the first three context
+    pages, whether or not they support the answer.
+
+    Known defect (invented citations). It is kept ONLY so the Part 1 check can
+    be reproduced exactly until ``agents/verifier.py`` replaces it; the new
+    Verifier selects pages from the items that actually support the answer.
+    """
+    return sorted({int(item["meta"]["page"]) for item in items})[:3]
+
+
+def parse_answer_and_pages(raw: str, items: List[Dict]) -> Tuple[str, List[int]]:
+    """Part 1 parser, kept for compatibility: claimed pages, else the legacy
+    first-three-pages fallback. New code should use
+    :func:`split_answer_and_claimed_pages`."""
+    body, pages = split_answer_and_claimed_pages(raw, items)
     if not pages:
-        pages = allowed[:3]
+        pages = legacy_fallback_pages(items)
     return body, pages
 
 
 # ---------------------------------------------------------------------------
-# Answer verification
+# Answer verification (Part 1 check)
 # ---------------------------------------------------------------------------
 _REFUSAL = "I do not have this information."
+#: Public name for the controlled refusal sentence.
+REFUSAL = _REFUSAL
 
 
 def verify_answer(answer: str, items: List[Dict], query_type: str) -> bool:
-    """Lightweight grounding check - catches obvious hallucinations."""
+    """Lightweight grounding check - catches obvious hallucinations.
+
+    This is the Part 1 (MCBV9) check, unchanged, including its known defect:
+    generic answers are compared with the top item only. The orchestrator uses
+    it until ``agents/verifier.py`` lands; fixing the defect belongs there.
+    """
     if answer.strip() == _REFUSAL:
         return True
 
@@ -235,7 +341,7 @@ def verify_answer(answer: str, items: List[Dict], query_type: str) -> bool:
 
 
 # ---------------------------------------------------------------------------
-# Orchestrator
+# Public entry point
 # ---------------------------------------------------------------------------
 def answer_question(
     question: str,
@@ -248,136 +354,22 @@ def answer_question(
     pages: List[Dict],
     groq_client=None,
 ) -> QAResult:
-    """Run the full QA pipeline for a single question."""
-    t_total_start = time.perf_counter()
-    timings: Dict[str, float] = {}
+    """Run the full QA pipeline for a single question.
 
-    question = question.strip()
-    query_type = classify_query(question)
+    Thin compatibility wrapper: same signature and same ``QAResult`` as Part 1.
+    All control flow is in :func:`handbook_bot.orchestrator.run`. The import is
+    local because the orchestrator imports this module for ``QAResult`` and the
+    prompt helpers; importing it at module level would be circular.
+    """
+    from .orchestrator import run
 
-    if query_type == "greeting":
-        timings["total_ms"] = (time.perf_counter() - t_total_start) * 1000.0
-        return QAResult(
-            answer="Hello! Ask me a question about the University of Sharjah Faculty Handbook.",
-            query_type=query_type,
-            best_section="Greeting",
-            timings=timings,
-        )
-
-    # ---- Dense retrieval + lexical fusion ---------------------------------
-    t_retrieval_start = time.perf_counter()
-    query_embedding = embedder.encode(
-        [normalize_text(question)],
-        convert_to_numpy=True,
-        normalize_embeddings=True,
-    ).astype(np.float32)
-
-    candidates = gather_candidates(
-        question, query_type, query_embedding, index, chunks, metadata
-    )
-    timings["retrieval_ms"] = (time.perf_counter() - t_retrieval_start) * 1000.0
-
-    if not candidates:
-        timings["total_ms"] = (time.perf_counter() - t_total_start) * 1000.0
-        return QAResult(
-            answer=_REFUSAL,
-            query_type=query_type,
-            best_section="No matching evidence",
-            timings=timings,
-            num_candidates=0,
-        )
-
-    # ---- Cross-encoder rerank ---------------------------------------------
-    t_rerank_start = time.perf_counter()
-    pairs = [[question, cand["chunk"]] for cand in candidates]
-    rerank_scores = reranker.predict(pairs)
-    reranked: List[Dict] = []
-    for cand, score in zip(candidates, rerank_scores):
-        item = dict(cand)
-        item["rerank_score"] = float(score)
-        reranked.append(item)
-
-    reranked.sort(
-        key=lambda x: (
-            x["rerank_score"],
-            x.get("routing_boost", 0.0),
-            x.get("lexical_score", 0.0),
-            x.get("dense_score", 0.0),
-        ),
-        reverse=True,
-    )
-    reranked = deduplicate_by_text(reranked)
-    final_items = reranked[:FINAL_K]
-    timings["rerank_ms"] = (time.perf_counter() - t_rerank_start) * 1000.0
-
-    if not final_items or final_items[0]["rerank_score"] < MIN_RERANK_SCORE:
-        timings["total_ms"] = (time.perf_counter() - t_total_start) * 1000.0
-        return QAResult(
-            answer=_REFUSAL,
-            query_type=query_type,
-            best_section="Low confidence retrieval",
-            items=final_items,
-            timings=timings,
-            num_candidates=len(candidates),
-            num_reranked=len(final_items),
-        )
-
-    # ---- Deterministic extractor fast-path --------------------------------
-    deterministic = None
-    if query_type == "contact":
-        deterministic = extract_contact_answer(question, final_items)
-    elif query_type == "count":
-        deterministic = extract_count_answer(question, final_items, pages)
-    elif query_type == "date":
-        deterministic = extract_date_answer(question, final_items)
-
-    if deterministic:
-        answer, source_pages, evidence = deterministic
-        used_llm = False
-        timings["generation_ms"] = 0.0
-    else:
-        if groq_client is None:
-            timings["total_ms"] = (time.perf_counter() - t_total_start) * 1000.0
-            return QAResult(
-                answer="GROQ_API_KEY is not set. Please set it, then reload the app.",
-                pages=sorted({int(item["meta"]["page"]) for item in final_items[:3]}),
-                query_type=query_type,
-                items=final_items,
-                evidence=final_items[0]["chunk"],
-                timings=timings,
-                num_candidates=len(candidates),
-                num_reranked=len(final_items),
-            )
-        t_gen_start = time.perf_counter()
-        prompt = build_prompt(question, final_items, query_type)
-        raw = ask_groq(groq_client, prompt)
-        answer, source_pages = parse_answer_and_pages(raw, final_items)
-        if not answer or not verify_answer(answer, final_items, query_type):
-            answer = _REFUSAL
-        evidence = final_items[0]["chunk"]
-        used_llm = True
-        timings["generation_ms"] = (time.perf_counter() - t_gen_start) * 1000.0
-
-    # Trim evidence for display
-    if evidence and len(evidence) > EVIDENCE_PREVIEW_CHARS:
-        evidence = evidence[:EVIDENCE_PREVIEW_CHARS].rstrip() + "..."
-
-    best_section = (
-        final_items[0]["meta"].get("section")
-        or f"Page {final_items[0]['meta']['page']}"
-    )
-
-    timings["total_ms"] = (time.perf_counter() - t_total_start) * 1000.0
-
-    return QAResult(
-        answer=answer,
-        pages=source_pages,
-        best_section=best_section,
-        evidence=evidence,
-        query_type=query_type,
-        items=final_items,
-        used_llm=used_llm,
-        timings=timings,
-        num_candidates=len(candidates),
-        num_reranked=len(final_items),
+    return run(
+        question,
+        embedder=embedder,
+        reranker=reranker,
+        index=index,
+        chunks=chunks,
+        metadata=metadata,
+        pages=pages,
+        groq_client=groq_client,
     )
