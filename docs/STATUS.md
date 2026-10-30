@@ -9,6 +9,223 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-10-30 - Findings-aware Plan F verification (runtime integration, phase I-4)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/remaining-specialists` |
+| Starting commit | `1a4ed1b` |
+| Ending state | a findings-aware verification layer now sits between the I-1 guards and rendering; both Plan F switches still default to off; the four frozen specialists and the legacy core unchanged (hashes verified); Plan F is CONNECTED BEHIND FLAGS and verified, not released; local commit on top of `1a4ed1b`, pushed by the user; I-5 not started |
+
+### Completed
+
+- Objective: make the final acceptance decision aware of the STRUCTURED
+  specialist finding before it becomes a user-visible `QAResult`. A result may
+  be supported by a source and still be unsuitable as the direct answer to the
+  user's exact request; I-4 strengthens that boundary without touching the
+  frozen specialists, the Coordinator, the dispatcher or the legacy Verifier.
+  Acceptance rate was not a target.
+- Verifier: `handbook_bot/plan_f_verification.py` (new). `read_request(clause)`
+  reads the user's clause deterministically into a `RequestShape` (request
+  kind, named entities, content noun phrases with their modifiers, condition
+  phrases, the counted unit of a quantity ask, the asked action, contact
+  field, body noun, population). `verify_findings(clause, findings, chunks,
+  metadata)` returns an immutable `FindingsVerification` (accepted, reason
+  code, finding status, request kind, subject / relation / requested-detail /
+  evidence-integrity verdicts, completeness class, `safe_to_render`, the ids
+  of the findings that may be rendered, per-finding verdicts; `to_dict` is
+  JSON-serialisable, deterministic and free of question or answer text). It
+  never raises: an exception becomes `VERIFICATION_ERROR` with the exception
+  category only. Zero model calls; standard library only.
+- Reason-code model (`ReasonCode`, 19 codes): `ACCEPTED`, `UNSUPPORTED_STATUS`,
+  `PARTIAL_FINDING`, `NOT_FOUND`, `OUT_OF_SCOPE`, `HANDOFF_REQUIRED`,
+  `MULTIPART_UNSUPPORTED`, `GENERAL_ASK_MISMATCH`, `UNRECOGNISED_ASK`,
+  `SUBJECT_MISMATCH`, `RELATION_MISMATCH`, `REQUESTED_DETAIL_MISSING`,
+  `CONDITION_MISMATCH`, `MODIFIER_MISMATCH`, `ENUMERATION_INCOMPLETE`,
+  `EXCESS_EVIDENCE`, `VALUE_CONFLICT`, `INVALID_EVIDENCE_REFERENCE`,
+  `VERIFICATION_ERROR`; completeness classes `complete`, `elaborated`,
+  `specialist_contract`, `partial`, `enumeration_unproven`, `excess`,
+  `not_assessed`; 19 request kinds (contact, location, quantity, amount,
+  percentage, duration, frequency, timing, value, definition, authority,
+  responsibility, selection, eligibility, obligation, yes/no, enumeration,
+  general, unrecognised).
+- Checks, in order: status and structure (the I-1 `result_problem`
+  conditions as codes; a consistency test pins that the two never disagree);
+  per finding the I-1 quote guard (evidence integrity) and the I-1 subject
+  binding, reused, plus an independent lexicon check that an Institutional
+  finding's office is one the clause names; then on the ONE local evidence
+  unit that answers: the requested detail of the request kind (the bound
+  contact field, a location entry, a number tied to the asked unit noun, a
+  money amount, a percentage, a duration, a frequency, a timing), the
+  clause's named entities and its asked population or role, no contradicted
+  category modifier (closed contrast sets: leave types, pay status,
+  population categories, day types, hour types, examination types, visa
+  types, contact fields), every condition phrase stated (per-period wording,
+  idioms such as "at once" / "simultaneously"), the asked relation (a copular
+  definition of the asked subject; the asked action by a named party before
+  it or as its passive agent; a nominal action bound to a party; the asked
+  kind of body; a requirement for the asked actor; an eligibility statement;
+  the asked predicate with the asked polarity), and the provision boundary
+  (a sentence of another list item or numbered section before or after the
+  answering unit is `EXCESS_EVIDENCE`; same-provision sentences are
+  `elaborated`). An enumerative ask (what does X provide, what are the X,
+  what does X do, requirements) is `ENUMERATION_INCOMPLETE`: one finding
+  cannot prove the set complete (I-5). A secondary finding must pass on its
+  own and is dropped with `VALUE_CONFLICT` when it states another value for
+  the asked quantity. A request kind the verifier does not read falls back
+  to the specialist's contract plus the I-1 guards (`specialist_contract`).
+- Trimming evaluated, not performed: a quote that spans two provisions is
+  rejected, not cut to its answering unit. Cutting would be non-generative
+  and quote-guard checkable, but it would change the evidence the frozen
+  specialist selected and scored, break the provenance equality between the
+  rendered item and the finding's `evidence_quote`, and belongs with the
+  rendering decisions of I-5; rejection with fallback is the safe choice now.
+- Seam: `plan_f_runtime.PlanFRuntime.attempt` calls `verify_findings` after
+  the quote and subject guards and before rendering (lazy import; the
+  verifier builds on the adapter's guard primitives); rejection is the new
+  outcome `PLAN_F_REJECTED_BY_FINDINGS_VERIFIER`; `AdapterResult.verification`
+  and `AdapterResult.verified`; trace entry `findings_verifier` with the
+  verification record; `timings["findings_verify_ms"]`. `ui/pipeline.py`:
+  ACTIVE serves a Plan F answer only when the adapter accepted it AND
+  `attempt.verified` (an attempt without a verification record is never
+  served); diagnostics gain `findings_verified`, `findings_accepted`,
+  `findings_reason`, `findings_completeness`, `findings_request_kind`,
+  `findings_ms` (codes only). LEGACY is untouched and still never imports
+  Plan F; SHADOW still returns the legacy answer unchanged. The I-1 gates
+  stay in place (defence in depth; none removed).
+- I-3 23-case re-evaluation (real knowledge base, ACTIVE): 20 still served
+  by Plan F, 3 now fall back, and the 3 are exactly the I-3 ACCEPTABLE BUT
+  LIMITED cases: "What is the Workload Allocation Model?" ->
+  `RELATION_MISMATCH` (the quote names WLAM in its heading and then states
+  the legal basis; WLAM is not the subject of a defining statement);
+  "How many days per week can faculty spend on consultancy?" ->
+  `EXCESS_EVIDENCE` (the quote opens with the liability sentence of 16.1.6
+  before the answering 16.1.7 sentence); "What does HR provide to new
+  faculty members?" -> `ENUMERATION_INCOMPLETE` (an enumerative ask answered
+  by one bullet of a list). All 20 previously CORRECT cases remain accepted;
+  "How many office hours must faculty hold?" is narrowed to its primary
+  finding (five office hours per week; the evening-course finding states
+  another value and is dropped with `VALUE_CONFLICT`). Per-case table in
+  `qa/plan_f_i4/` (`analyze.py` on the recorded results).
+- Real-knowledge-base rerun (`qa/plan_f_i4/reverify.py`; production build
+  from the v12 cache in 22.6 s, 272 pages, 13,688 chunks; registry 666 ms on
+  its first construction in the process): the 62 I-3 questions plus 14
+  probes through the verifier directly, through the adapter, and through
+  `ui.pipeline.ask_with_diagnostics` in SHADOW and ACTIVE mode. SHADOW: 62 of
+  62 identical to the direct legacy call, Plan F 0 model calls, median wall
+  1,338 ms. ACTIVE: 20 served by Plan F (32%; I-3: 23, 37%), 42 by legacy
+  (68%); accepted wall median 627 ms (1 to 719 ms), fallback median 1,255 ms
+  (max 2,507 ms); every served answer `used_llm` False, `llm_calls` 0,
+  `findings_accepted` True. Adapter outcomes on the 62: ACCEPTED 20,
+  REJECTED_BY_FINDINGS_VERIFIER 3, REJECTED_BY_SUBJECT_GUARD 2, UNSAFE_RESULT
+  32, NOT_APPLICABLE 5; per domain Teaching 5 of 12, Research 4 of 12, HR 5
+  of 14, Institutional 6 of 14, special 0 of 10. Verifier codes on the 50
+  dispatched results: ACCEPTED 20, PARTIAL_FINDING 13, GENERAL_ASK_MISMATCH 6,
+  NOT_FOUND 6, SUBJECT_MISMATCH 2, RELATION_MISMATCH 1, EXCESS_EVIDENCE 1,
+  ENUMERATION_INCOMPLETE 1; request kinds read: quantity 7, contact 5,
+  yes/no 3, authority 2, obligation, definition, value, percentage, amount,
+  selection, enumeration and timing 1 each, unrecognised 25 (all of them
+  results the status gate had already stopped). Verification latency,
+  measured apart from retrieval and reranking: median 0.6 ms (0.3 to
+  1.2 ms) inside the adapter, 0.2 ms (0.0 to 1.5 ms) called directly,
+  against a specialist retrieval-and-rerank median of 590 ms; no measurable
+  change to the SHADOW or ACTIVE wall times. Probes: the mutated asks
+  (calendar days, part-time faculty, visiting faculty) are already `partial`
+  at the frozen specialists; the consultancy percentage ask is
+  `EXCESS_EVIDENCE` like its day-count twin; "What information does HR
+  provide to new faculty members?" (a selection ask) is served. Diagnostics
+  hygiene: 152 records, none holds the question or the answer text. Legacy
+  model path: REAL MODEL EVALUATION BLOCKED - NO AVAILABLE CONFIGURED CLIENT
+  (unchanged; I-4 does not depend on it).
+- Every answer served by Plan F in the ACTIVE run reviewed against its
+  production chunk and the printed page (`review_accepted.py`: quote present
+  in the chunk, page and source correct, subject correct, no wrong number,
+  date or contact, no cross-domain contamination, no second provision): the
+  20 I-3 questions and the 8 served probes are all CORRECT; ACCEPTABLE BUT
+  LIMITED 0; WRONG 0. The three I-3 limited answers no longer reach the user.
+- Known HR cases: "What does Human Resources do?" and "What does HR do?"
+  remain blocked by the I-1 gate (general ask) before the verifier runs;
+  called directly on the dispatched result the verifier classifies them
+  `GENERAL_ASK_MISMATCH`. "How many days of annual leave do faculty members
+  get?" remains blocked (`status partial`; verifier `PARTIAL_FINDING`); the
+  maternity sentence is additionally caught by the modifier contrast
+  (`MODIFIER_MISMATCH`) when forced through as supported. Multipart,
+  cross-domain and synthesis questions still stop at the decision gate;
+  handoff results are `HANDOFF_REQUIRED` and their handoff requests are left
+  untouched for I-6.
+- Tests: `tests/test_plan_f_verification.py` (new, 104 tests): the contract
+  (immutable, serialisable, text-free, deterministic, no model dependency),
+  request reading (33 clauses), status codes and their agreement with the
+  I-1 gate (15 shapes), evidence-integrity mutations, contact and entity
+  mutations (field, office, mislabelled report, labelled row, location asked
+  of a row, another office's row), numeric and policy mutations (leave type,
+  day type, unit noun, period condition, population, idiom), relation
+  mutations (definition, party position, passive agent, body kind, actor,
+  polarity, enumeration versus selection, general, unrecognised), provision
+  boundary, value conflict, verifier failure safety, adapter integration
+  (trace order, outcome, timings, the four I-1 examples, the known cases,
+  forced misleading shapes, rendering of verified findings only) and the
+  pipeline (SHADOW non-invasive, ACTIVE requires the verified record,
+  diagnostics codes only, LEGACY untouched). `tests/test_plan_f_runtime.py`:
+  two expectations updated (the trace now holds `findings_verifier`; office
+  hours renders the primary finding only). `tests/test_planf_imports.py`:
+  the new module in `NEW_MODULES`.
+
+### Tests performed
+
+Targeted gate (`tests/test_plan_f_verification.py`, `test_plan_f_runtime.py`,
+`test_plan_f_pipeline.py`, `test_planf_imports.py`,
+`test_four_specialist_dispatch.py`, `test_planf_coordinator.py`,
+`test_planf_contracts.py`, `test_planf_registry.py`, `test_verifier.py`,
+`test_compat.py`, `test_orchestrator.py` and the frozen specialists'
+integration, support-gate and acceptance suites; 17 files): 1,299 collected,
+1,299 passed, 0 failed, 0 skipped, 0 xfailed (69 s).
+Full suite: 6,553 collected, 6,553 passed, 0 failed, 0 skipped, 0 xfailed
+(201 s; the I-3 baseline of 6,448 plus the 104 new verification tests and
+one new import-budget case).
+`pip check`: no broken requirements. Frozen specialist hashes unchanged
+before and after (Teaching, Research, Faculty Services & HR and its claim
+model, Institutional and its cues; D-103 and D-107 values); the legacy core,
+the Coordinator, the dispatcher and the shared specialist modules unchanged.
+
+### Known issues at handoff
+
+- The verifier is conservative by design: enumerative asks never render from
+  one finding, a quote spanning two provisions is rejected rather than cut,
+  and a second finding with another value is dropped. I-5 (aggregation) owns
+  rendering several findings with explicit labels and gaps.
+- Request reading is pattern-based: a clause outside its patterns is
+  `unrecognised` and decided by the specialist's contract plus the I-1
+  guards, as before I-4.
+- The legacy model path remains REAL MODEL EVALUATION BLOCKED - NO AVAILABLE
+  CONFIGURED CLIENT (no key configured); I-4 does not depend on it.
+- UI observations from I-3 stay on the I-7 list, unchanged.
+
+### Do not redo
+
+- Do not raise acceptance by loosening the verifier or the I-1 gates; the
+  metric that matters is wrong accepted answers = 0.
+- Do not trim quotes in the adapter before the I-5 rendering decision.
+
+### Next task
+
+I-5: deterministic multi-finding aggregation (several supported findings,
+explicit labels and gaps, no composed sentences), after approval.
+
+### Files changed
+
+`handbook_bot/plan_f_verification.py` (new), `handbook_bot/plan_f_runtime.py`
+(seam, outcome, `verification` field), `ui/pipeline.py` (ACTIVE condition,
+diagnostics keys), `tests/test_plan_f_verification.py` (new),
+`tests/test_plan_f_runtime.py` (two expectations), `tests/test_planf_imports.py`
+(module list), `qa/plan_f_i4/` (new: `README.md`, `reverify.py`, `analyze.py`,
+`review_accepted.py`, `results_2026-10-30.json`), `docs/STATUS.md` (this
+entry). No frozen specialist, Coordinator, dispatcher, legacy core or shared
+specialist module changed.
+
+---
+
 ## 2026-10-30 - Plan F verified on the real knowledge base (runtime integration, phase I-3)
 
 | Field | Value |

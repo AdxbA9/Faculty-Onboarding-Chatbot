@@ -554,7 +554,7 @@ def test_each_specialist_has_a_supported_example_the_adapter_renders(kb, runtime
     for item in result.items:
         assert item["chunk"] in kb.chunks[item["idx"]] and item["meta"]["page"] in result.pages
     assert trace_agents(attempt) == ["plan_f_adapter", "plan_f_registry", "coordinator", "dispatcher", "specialist:%s" % specialist,
-                                     "quote_guard", "subject_guard", "verifier", "plan_f_outcome"]
+                                     "quote_guard", "subject_guard", "findings_verifier", "verifier", "plan_f_outcome"]   # I-4 adds findings_verifier
 
 
 def test_secondary_findings_that_do_not_cover_the_ask_are_dropped_not_rendered(runtime):
@@ -564,7 +564,9 @@ def test_secondary_findings_that_do_not_cover_the_ask_are_dropped_not_rendered(r
     guard = next(e for e in attempt.trace if e.agent == "subject_guard")
     assert guard.detail["accepted"] == ["task-1-f1"] and [d["finding"] for d in guard.detail["dropped"]] == ["task-1-f2"]
     attempt = runtime.attempt("How many office hours must faculty hold?")
-    assert attempt.outcome is PF.PlanFOutcome.ACCEPTED and attempt.result.pages == [79, 80]       # two findings, both bound
+    assert attempt.outcome is PF.PlanFOutcome.ACCEPTED and attempt.result.pages == [79]           # two findings bound (I-1); since I-4 the
+    verified = next(e for e in attempt.trace if e.agent == "findings_verifier")                   # second states another value and is dropped
+    assert verified.detail["accepted_finding_ids"] == ["task-1-f1"] and verified.detail["dropped"] == [["task-1-f2", "VALUE_CONFLICT"]]
 
 
 # ---------------------------------------------------------------------------

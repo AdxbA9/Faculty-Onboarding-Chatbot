@@ -10,7 +10,9 @@ pipeline and the Plan F runtime adapter (``handbook_bot/plan_f_runtime.py``):
     PLAN_F_SHADOW on                        SHADOW   the legacy answer is returned unchanged;
                                                      Plan F also runs, for diagnostics only
     PLAN_F_ENABLED on, PLAN_F_SHADOW off    ACTIVE   Plan F first; its answer is returned only
-                                                     when the adapter accepted it, else legacy
+                                                     when the adapter accepted it AND the
+                                                     findings-aware verification layer (phase
+                                                     I-4) accepted it, else legacy
 
 Both switches default to off (``handbook_bot.config``); SHADOW takes
 precedence when both are on. ``ask(kb, question) -> QAResult`` is unchanged
@@ -137,7 +139,7 @@ def ask_with_diagnostics(kb: KnowledgeBase, question: str) -> Tuple[QAResult, Di
         _record(diagnostics)
         return result, diagnostics
     attempt, entry, error = _attempt_plan_f(kb, question)
-    if attempt is not None and _outcome_of(attempt) == _ACCEPTED and getattr(attempt, "result", None) is not None:
+    if attempt is not None and _outcome_of(attempt) == _ACCEPTED and getattr(attempt, "result", None) is not None and _verified(attempt):
         diagnostics = _diagnose(mode, "plan_f", attempt, entry, error, legacy=None)
         _record(diagnostics)
         return attempt.result, diagnostics
@@ -205,6 +207,14 @@ def _outcome_of(attempt: Any) -> Optional[str]:
     return getattr(getattr(attempt, "outcome", None), "value", None)
 
 
+def _verified(attempt: Any) -> bool:
+    """Whether the findings-aware verification layer (phase I-4) accepted the attempt's result for rendering. ACTIVE mode
+    serves a Plan F answer only when the adapter accepted it AND this layer did: an attempt without a verification
+    record is never served."""
+    verification = getattr(attempt, "verification", None)
+    return verification is not None and bool(getattr(verification, "accepted", False)) and bool(getattr(verification, "safe_to_render", False))
+
+
 def _diagnose(mode: str, served: str, attempt: Any, entry: Any, error: Optional[str], *, legacy: Optional[QAResult]) -> Dict[str, Any]:
     """The diagnostic record of one question: outcomes, pages, timings and redacted errors only."""
     d: Dict[str, Any] = {
@@ -217,6 +227,8 @@ def _diagnose(mode: str, served: str, attempt: Any, entry: Any, error: Optional[
         "plan_f_llm_calls": 0, "plan_f_used_llm": False,
         "legacy_llm_calls": legacy.llm_calls if legacy is not None else None,
         "legacy_used_llm": legacy.used_llm if legacy is not None else None,
+        "findings_verified": False, "findings_accepted": None, "findings_reason": None, "findings_completeness": None,
+        "findings_request_kind": None, "findings_ms": None,
         "error": error,
     }
     try:
@@ -240,6 +252,15 @@ def _diagnose(mode: str, served: str, attempt: Any, entry: Any, error: Optional[
             dispatched = getattr(attempt, "dispatch", None)
             d["plan_f_llm_calls"] = int(getattr(dispatched, "llm_calls", 0) or 0)
             d["plan_f_used_llm"] = any(bool(getattr(e, "used_llm", False)) for e in getattr(attempt, "trace", []) or [])
+            verification = getattr(attempt, "verification", None)
+            if verification is not None:                           # phase I-4: codes only, never the question or the answer
+                d["findings_verified"] = True
+                d["findings_accepted"] = bool(getattr(verification, "accepted", False)) and bool(getattr(verification, "safe_to_render", False))
+                d["findings_reason"] = getattr(getattr(verification, "reason", None), "value", None)
+                d["findings_completeness"] = getattr(getattr(verification, "completeness", None), "value", None)
+                d["findings_request_kind"] = getattr(getattr(verification, "request_kind", None), "value", None)
+                d["findings_ms"] = float(getattr(verification, "ms", 0.0) or 0.0)
+            d["accepted"] = d["accepted"] and _verified(attempt)   # accepted means: the adapter AND the findings-aware layer accepted
             if getattr(attempt, "result", None) is not None:
                 d["plan_f_pages"] = list(attempt.result.pages)
                 if legacy is not None:
