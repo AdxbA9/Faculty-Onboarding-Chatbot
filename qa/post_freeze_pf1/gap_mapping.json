@@ -1,0 +1,141 @@
+{
+  "_about": "PF-1 knowledge-gap mapping against the frozen I-8 baseline (runtime-freeze-i9): what each candidate guide adds, where it may conflict with the Faculty Handbook, how it maps to the four frozen specialists, what the ingestion pipeline needs, and which recorded fallbacks the new data may or may not help. Nothing here changes the frozen metrics.",
+  "i8_baseline": {"questions": 192, "served": 55, "fallback": 137, "coverage_pct": 28.6, "correct": 55, "limited": 0, "wrong": 0, "precision_pct": 100.0, "false_acceptances": 0, "false_fallbacks": 11, "tests": 6674},
+  "i8_false_fallbacks": [
+    {"ids": ["T10", "T11", "T12"], "question": "WLAM teaching loads for Active Research, Research Intensive and Teaching Track faculty", "limitation": "verification (entity named in the preceding sentence of the bullet)", "new_data": "NEW DATA WILL NOT FIX", "relevant_documents": [], "note": "handbook-only fact; no guide covers workload profiles"},
+    {"ids": ["T14"], "question": "How many office hours per week should I keep?", "limitation": "specialist partial support on a paraphrase", "new_data": "NEW DATA WILL NOT FIX", "relevant_documents": [], "note": "handbook-only fact"},
+    {"ids": ["T19"], "question": "Within how many hours must instructors submit final examination results to the Department Chair?", "limitation": "routing ambiguity ('Department Chair' also draws Institutional Navigation)", "new_data": "NEW DATA WILL NOT FIX", "relevant_documents": [], "note": "routing, not data"},
+    {"ids": ["R35"], "question": "What is the maximum number of theses a faculty member may supervise simultaneously?", "limitation": "verification (number word 'four' not read as the asked unit)", "new_data": "NEW DATA WILL NOT FIX", "relevant_documents": [], "note": "verifier numeral reading"},
+    {"ids": ["H13"], "question": "Who approves additional maternity leave without pay?", "limitation": "specialist partial support", "new_data": "NEW DATA WILL NOT FIX", "relevant_documents": [], "note": "handbook-only fact"},
+    {"ids": ["H30"], "question": "Who arranges travel and hotel accommodation for new faculty?", "limitation": "specialist partial support on a paraphrase", "new_data": "NEW DATA WILL NOT FIX", "relevant_documents": [], "note": "handbook-only fact"},
+    {"ids": ["I45"], "question": "What is the phone number of the College of Graduate Studies and Research?", "limitation": "entity lexicon (frozen Institutional directory lexicon lacks the row)", "new_data": "NEW DATA WILL NOT FIX", "relevant_documents": [], "note": "the row is on handbook page 54; no guide carries directory rows"},
+    {"ids": ["X19", "X29"], "question": "two-clause questions with an approval clause ('Who approves conference travel ...')", "limitation": "routing (clause ambiguous inside a multi-clause question)", "new_data": "NEW DATA WILL NOT FIX", "relevant_documents": [], "note": "routing, not data"}
+  ],
+  "i8_false_fallbacks_helped_by_new_data": 0,
+  "other_recorded_fallbacks_the_new_data_addresses": [
+    {"source_corpus": "I-3 corpus, I-8 set", "question": "How are final grades entered into Blackboard? / grade flow to Banner", "i8_status": "fallback (status partial; the handbook has the page-224 policy sentence only)", "new_data": "NEW DATA MAY FIX (procedure)", "relevant_documents": ["guide_grade_transfer_dashboard", "guide_bb_gradebook", "guide_bb_grade_categories"], "limitation": "data", "caveat": "the frozen specialists retrieve only inside the handbook's source id; a scope-extension seam is needed before any new document can be served through Plan F"},
+    {"source_corpus": "I-3 corpus", "question": "Where must instructors post the syllabus? / how to upload content to Blackboard", "i8_status": "fallback (partial)", "new_data": "NEW DATA MAY FIX (procedure part)", "relevant_documents": ["guide_bb_faculty_short"], "limitation": "data"},
+    {"source_corpus": "I-6 routing set", "question": "What is the email address of the Research Funding Department? / IT help desk contact", "i8_status": "fallback (not found)", "new_data": "UNCERTAIN (the guides add the ITC service desk e-mail and extension, not the Research Funding Department's)", "relevant_documents": ["guide_myuos_announcements", "guide_ithenticate", "guide_bb_student_brief"], "limitation": "data"},
+    {"source_corpus": "I-8 set", "question": "Is attendance mandatory for students? (policy) and how do I record attendance (tool)", "i8_status": "fallback (subject guard)", "new_data": "NEW DATA MAY FIX the tool question only; the policy question stays with the handbook", "relevant_documents": ["guide_bb_attendance", "guide_bb_collaborate_instructor"], "limitation": "data"},
+    {"source_corpus": "I-8 set", "question": "performance appraisal workflow (not in the I-8 set; chapter 6 policy only in the handbook)", "i8_status": "not asked", "new_data": "NEW DATA ADDS a new procedure area", "relevant_documents": ["guide_hr_appraisal_phase2"], "limitation": "data"}
+  ],
+  "taxonomy": {
+    "Blackboard (LMS)": ["guide_bb_faculty_short", "guide_bb_gradebook", "guide_bb_assignments_tests", "guide_bb_communication", "guide_bb_collaborate_instructor", "guide_bb_attendance", "guide_bb_grade_categories", "guide_bb_student_brief", "guide_bb_collaborate_student", "guide_bb_ultra_compiled_2026"],
+    "Grade transfer (Blackboard to Banner)": ["guide_grade_transfer_dashboard"],
+    "Originality tools": ["guide_ithenticate", "guide_turnitin_instructor_ar", "guide_turnitin_students_ar"],
+    "Assessment tools": ["guide_akindi_blackboard", "vendor_connect_blackboard_sync", "vendor_connect_student_exam_support"],
+    "MyUOS portal": ["guide_myuos_announcements"],
+    "HR portal": ["guide_hr_appraisal_phase2", "guide_hr_business_mission"],
+    "Productivity and IT services": ["guide_microsoft_forms", "note_docusign_login"],
+    "Third-party learning platforms": ["vendor_coursera_admin_guide", "vendor_coursera_learner_guide"]
+  },
+  "specialist_matrix": [
+    {"doc_id": "guide_bb_faculty_short", "primary": "teaching", "secondary": ["institutional"], "topic": "Blackboard access, navigation, content", "reason": "course management is Teaching & Learning; the login path and MFA are system access (Institutional Navigation)", "routing_terms": ["Blackboard", "Ultra", "course content", "learning module", "student preview", "MyUOS login", "multi-factor"]},
+    {"doc_id": "guide_bb_gradebook", "primary": "teaching", "secondary": [], "topic": "gradebook and grading", "reason": "assessment and grading workflow", "routing_terms": ["gradebook", "post grades", "accommodations", "automatic zero", "download grades", "upload grades"]},
+    {"doc_id": "guide_bb_assignments_tests", "primary": "teaching", "secondary": [], "topic": "assignments and tests", "reason": "assessment creation and grading", "routing_terms": ["assignment", "test", "question pool", "Respondus", "Bb Annotate", "due date"]},
+    {"doc_id": "guide_bb_communication", "primary": "teaching", "secondary": [], "topic": "discussions, conversations, announcements, messages", "reason": "course communication tools", "routing_terms": ["discussion", "conversation", "course announcement", "message"]},
+    {"doc_id": "guide_bb_collaborate_instructor", "primary": "teaching", "secondary": [], "topic": "Collaborate sessions", "reason": "online class delivery", "routing_terms": ["Collaborate", "session", "recording", "breakout", "attendance report"]},
+    {"doc_id": "guide_bb_attendance", "primary": "teaching", "secondary": [], "topic": "attendance tool", "reason": "the tool records attendance for grading; the 20% policy stays in the handbook", "routing_terms": ["attendance tool", "mark attendance", "late after", "absent after"]},
+    {"doc_id": "guide_bb_grade_categories", "primary": "teaching", "secondary": [], "topic": "grade categories", "reason": "gradebook configuration before the grade transfer", "routing_terms": ["grade category", "Coursework", "Midterm", "Final", "total column"]},
+    {"doc_id": "guide_grade_transfer_dashboard", "primary": "teaching", "secondary": ["institutional"], "topic": "Blackboard to Banner grade transfer", "reason": "grading workflow owned by Teaching; the dashboard, approvals and Banner are institutional systems", "routing_terms": ["grade transfer", "Banner", "Transfer", "Chair approval", "Dean approval", "Institution Page", "op.sharjah.ac.ae"]},
+    {"doc_id": "guide_ithenticate", "primary": "research", "secondary": [], "topic": "iThenticate for researchers", "reason": "research originality checking", "routing_terms": ["iThenticate", "similarity report", "originality", "plagiarism", "upload a new revision"]},
+    {"doc_id": "guide_turnitin_instructor_ar", "primary": "teaching", "secondary": ["research"], "topic": "Turnitin via Blackboard", "reason": "course assignments (Teaching) and thesis courses (Research)", "routing_terms": ["Turnitin", "originality report", "Thesis course", "Extra course"]},
+    {"doc_id": "guide_hr_appraisal_phase2", "primary": "faculty_services", "secondary": [], "topic": "performance appraisal progress review", "reason": "HR process for employees and line managers", "routing_terms": ["performance appraisal", "progress review", "objectives", "evidence", "first line manager", "HR Portal"]},
+    {"doc_id": "guide_hr_business_mission", "primary": "faculty_services", "secondary": ["research"], "topic": "business mission requests", "reason": "HR portal request; conference missions touch the research conference policy", "routing_terms": ["business mission", "My Missions", "per diem", "learning program", "HR Portal"]},
+    {"doc_id": "guide_myuos_announcements", "primary": "institutional", "secondary": [], "topic": "MyUOS portal announcements", "reason": "university portal procedure and help-desk contact", "routing_terms": ["MyUOS", "announcement", "portal", "service desk", "IT Help Desk"]},
+    {"doc_id": "guide_microsoft_forms", "primary": "institutional", "secondary": [], "topic": "Microsoft Forms", "reason": "university IT service", "routing_terms": ["Microsoft Forms", "survey", "Microsoft 365", "IT Support"]},
+    {"doc_id": "note_docusign_login", "primary": "institutional", "secondary": [], "topic": "DocuSign login", "reason": "system access", "routing_terms": ["DocuSign", "company login"]},
+    {"doc_id": "guide_akindi_blackboard", "primary": "teaching", "secondary": [], "topic": "Akindi bubble-sheet exams", "reason": "assessment tool", "routing_terms": ["Akindi", "bubble sheet", "answer key", "Content Market"]},
+    {"doc_id": "vendor_connect_blackboard_sync", "primary": "teaching", "secondary": [], "topic": "McGraw Hill Connect pairing and grade sync", "reason": "courseware integration", "routing_terms": ["Connect", "McGraw Hill", "pair course", "grade sync"]},
+    {"doc_id": "guide_bb_ultra_compiled_2026", "primary": "teaching", "secondary": [], "topic": "Blackboard Ultra features (vendor compilation)", "reason": "same domain as the UOS guides; not authoritative for UOS", "routing_terms": ["Blackboard Ultra", "release"]},
+    {"doc_id": "vendor_coursera_learner_guide", "primary": "institutional", "secondary": [], "topic": "Coursera learner use", "reason": "university-provided platform (handbook 14.11)", "routing_terms": ["Coursera", "Coursera Academy"]}
+  ],
+  "handbook_overlap_summary": {
+    "ALREADY COVERED": [],
+    "MORE DETAILED THAN HANDBOOK": ["guide_bb_ultra_compiled_2026", "vendor_coursera_learner_guide"],
+    "NEW PROCEDURE": ["guide_myuos_announcements", "guide_bb_grade_categories", "guide_hr_business_mission"],
+    "NEW SYSTEM": ["guide_ithenticate", "guide_akindi_blackboard", "guide_microsoft_forms", "note_docusign_login", "guide_turnitin_instructor_ar", "vendor_connect_blackboard_sync"],
+    "NEW STEP-BY-STEP WORKFLOW": ["guide_bb_faculty_short", "guide_bb_gradebook", "guide_bb_assignments_tests", "guide_bb_communication", "guide_bb_collaborate_instructor", "guide_bb_attendance", "guide_grade_transfer_dashboard", "guide_hr_appraisal_phase2"],
+    "NEW CONTACT INFORMATION": ["guide_myuos_announcements (IT Help Desk e-mail, telephone and extension)", "guide_ithenticate (service desk e-mail)", "guide_bb_student_brief (e-learning URL)"],
+    "NEW SUPPORT/OFFICE INFORMATION": ["guide_myuos_announcements (Web Team approval of announcements)", "guide_microsoft_forms (IT Support)"],
+    "NEW POLICY DETAIL": ["guide_ithenticate (submission quota and file limits)", "guide_bb_grade_categories (total column rule)", "guide_hr_appraisal_phase2 (evidence and validation rules)"],
+    "POTENTIAL CONFLICT": ["guide_grade_transfer_dashboard vs handbook page 224", "guide_ithenticate English vs Arabic quota", "guide_bb_ultra_compiled_2026 vs the UOS guides on menu names", "guide_bb_student_brief vs guide_bb_faculty_short on the website menu path"],
+    "REDUNDANT": ["guide_bb_student_brief (for faculty)", "guide_bb_collaborate_student (for faculty)", "vendor_coursera_admin_guide (out of scope)"]
+  },
+  "high_value_new_knowledge": [
+    "Blackboard access with multi-factor authentication and the Ultra navigation (faculty short guide)",
+    "Blackboard to Banner grade transfer through the Grade Transfer Dashboard with Chair and Dean approval and the direct dashboard URL",
+    "Gradebook workflow: views, posting, automatic zeros, accommodations, download and upload",
+    "Grade categories Coursework, Midterm and Final and the total-column rule",
+    "Assignments and tests: question types, pools, Respondus LockDown Browser, Bb Annotate",
+    "Attendance tool thresholds and Collaborate attendance reporting",
+    "Collaborate session scheduling, recording, breakout groups",
+    "Communication tools: discussions, conversations, announcements, messages",
+    "iThenticate access, upload, similarity report, submission quota and file limits",
+    "Performance appraisal Phase 2: employee and line-manager steps, evidence rules, validation and troubleshooting",
+    "IT Help Desk contact (service desk e-mail, telephone with extension) and the e-learning URL"
+  ],
+  "conflicts": [
+    {"id": "C1", "topic": "final grade flow from Blackboard to Banner", "handbook": "page 224: faculty enter grades electronically into Blackboard, which forwards them automatically to Banner", "guide": "Grade Transfer Dashboard Guide (2024): the instructor opens the dashboard, searches the course and selects Transfer; the Chair and Dean approve before the Banner column shows the grade", "classification": "LIKELY UPDATED INFORMATION (procedural detail added; the policy statement is a summary)", "action": "precedence: handbook for the policy obligation, dashboard guide for the interface steps; do not merge the two into one sentence"},
+    {"id": "C2", "topic": "iThenticate submissions per year", "handbook": "not stated", "guide": "the English page says a maximum of 30 documents per year; the Arabic page of the same guide says 15", "classification": "UNRESOLVED CONFLICT (inside one document)", "action": "raise with ITC Academic Computing; until resolved ingest the English page only and mark the quota as disputed, or exclude the quota sentence"},
+    {"id": "C3", "topic": "IT Help Desk telephone", "handbook": "page 54: Information Technology Center +971 6 5050000", "guide": "MyUOS announcement guide: 06-5050000 (Ext. 2000)", "classification": "NO CONFLICT (same number; the extension is new)", "action": "none"},
+    {"id": "C4", "topic": "website path to MyUOS and Blackboard", "handbook": "page 183 names MyUOS and Blackboard as ITC services", "guide": "faculty short guide (2022): Quick Links > MyUOS; student brief (2024): Helpful resources > MyUOS Portal, or https://elearning.sharjah.ac.ae directly", "classification": "LIKELY UPDATED INFORMATION (the newer guide names a renamed menu)", "action": "prefer the newer path when both sources are indexed; keep the direct URL"},
+    {"id": "C5", "topic": "Blackboard Ultra menu names and layout", "handbook": "not stated", "guide": "the 2026 vendor-release-note compilation describes a new layout (full-page content, breadcrumbs, Books & Tools) that the 2022 UOS guides do not", "classification": "DIFFERENT CONTEXT (vendor release notes versus the UOS deployment of 2022)", "action": "keep the compilation on HOLD; verify the UOS deployment before any ingestion"},
+    {"id": "C6", "topic": "attendance", "handbook": "page 228: absences reaching 20% bar the final examination", "guide": "attendance tool thresholds (late after, absent after, required time)", "classification": "NO CONFLICT (policy versus tool settings)", "action": "none"},
+    {"id": "C7", "topic": "performance evaluation", "handbook": "chapter 6 evaluation policy; page 115 peer observation 'unlike ... appraisal tool'", "guide": "HR Portal Phase 2 progress-review workflow", "classification": "DIFFERENT CONTEXT (policy versus portal procedure)", "action": "none"},
+    {"id": "C8", "topic": "conference and mission travel", "handbook": "pages 117-119: VCAA approval, per diem AED 1000-1500, registration fee cap", "guide": "Business Mission guide: per diem and totals are calculated by the system from policy rules (no values stated)", "classification": "NO CONFLICT", "action": "none"}
+  ],
+  "source_precedence_proposal": {
+    "order": ["official policy or regulation (Faculty Handbook, University by-laws)", "official system manual of the issuing unit (ITC or HR guides)", "departmental procedure or note", "training slides or compilations", "FAQ or third-party vendor material"],
+    "rule": "policy facts (entitlements, limits, approvals, obligations) come from the policy source; interface steps, menu paths, URLs and system contacts come from the newest official system manual; a third-party document is never a source for a UOS policy or a UOS procedure; a conflict between two official sources is reported, never averaged",
+    "implementation_note": "no precedence rule is implemented in PF-1; the registry's authority field already exists and can carry an authority_level in PF-2"
+  },
+  "metadata_requirements": {
+    "existing_chunk_keys_kept": ["page", "section", "chunk_type", "chunk_id", "chunk_id_on_page", "text", "source_id", "source_title", "source_type", "source_version", "chapter", "chapter_title", "section_no", "section_title", "page_section_nos"],
+    "existing_registry_fields": ["source_id", "title", "relative_path", "source_type", "version", "authority", "verification_status", "section_map", "notes"],
+    "additions_for_multi_document": ["canonical_title (user-facing citation label)", "original_filename", "printed_page (when the printed number differs from the PDF page)", "subsection (when a guide has its own section map)", "system", "department (issuing unit)", "document_type (policy, system_manual, procedure, training, faq, vendor)", "document_version and publication_date (or DATE UNKNOWN)", "language (en, ar, en+ar) and page_language for bilingual pages", "authority_level (from the precedence order)", "domain hint (primary specialist) as a routing aid, not a routing decision", "content_type (narrative, procedure_step, table_row, contact, faq)", "procedure_step index and parent_section for step chunks", "source_hash (SHA-256 of the file) for content identity"],
+    "backward_compatibility": "every existing key keeps its name and meaning; the handbook's records are unchanged; new keys default to null for the handbook so the frozen specialists and the I-7 interface read the same values as today"
+  },
+  "ingestion_pipeline_readiness": {
+    "classification": "READY WITH STRUCTURAL CHANGES",
+    "supports_today": {"multiple source records in the registry": true, "unique document ids": true, "source-aware chunk metadata": true, "per-document pages": "yes for one document", "document titles": true, "mixed document types": "PDF only (PyMuPDF, pypdf fallback)", "tables": "visual rows and row windows", "procedures": "as paragraph windows and rows, no step chunk", "lists": "as rows", "cross-document retrieval": false, "source-specific citations": "source_title per chunk; the interface shows one document chip"},
+    "reasons": [
+      "pdf_loader.find_pdf_file loads the first PDF in data/ and KnowledgeBase holds one pdf_file: a second document is never loaded",
+      "retrieval._cache_paths keys the embedding cache by that one file name; a corpus of several documents needs a corpus-level cache key",
+      "the section map applies to one source (page_count check); other documents get chapter and section nulls unless each gets its own map",
+      "DOCX is not readable by the loader (4 of 25 candidates); conversion to PDF or a DOCX reader is needed",
+      "no page-language detection: bilingual guides would index garbled Arabic pages next to the English ones",
+      "the four frozen specialists compile their retrieval scope with the handbook's source id and page ranges (compile_scope in each specialist), so chunks of any other source never reach a specialist; RetrievalScope combines its constraints with AND, so a handbook-pages OR new-source scope is not expressible; serving new documents through Plan F needs either a scope-extension seam in non-frozen code (retrieval.py and plan_f_runtime.py) or a decision record reopening the specialists",
+      "ui/presentation.source_chips shows one document chip (the first item's title); several sources need one chip per source",
+      "the legacy path (orchestrator, retrieval without scope) would search every indexed chunk, so new documents reach the legacy answer immediately after ingestion; this is where the first PF-2 measurement can be made"
+    ]
+  },
+  "chunking_readiness": {
+    "current": "paragraph windows over sentence splits (PARA_CHUNK_SIZE_WORDS with overlap), one row per visual line, row windows over consecutive rows, OCR chunks when enabled",
+    "fits": ["narrative paragraphs", "table rows (appraisal tables, grade-transfer steps as rows)", "contact lines (rows with phones or e-mails)", "menu paths inside a sentence"],
+    "weak": ["numbered procedures: the sentence splitter breaks '1. Log in to Blackboard' at the step number, and a step with sub-bullets spreads over several rows", "FAQ or message/meaning/action tables: rows lose the header pairing", "bilingual pages: English and Arabic rows interleave"],
+    "smallest_safe_extension": ["procedure_step chunks: a numbered or lettered step with its continuation lines as one chunk, with step index and the heading above it as parent_section", "procedure_window chunks: three consecutive steps as one chunk, like row_window", "page_language filter before chunking: skip pages whose Arabic share exceeds a threshold, or mark them language=ar", "no FAQ-pair or navigation-path chunk type is needed for the approved set (no FAQ document; menu paths sit inside steps)"]
+  },
+  "retrieval_risks": [
+    {"term": "grade / grading", "collision": "handbook grading policy (weights, submission deadline) versus gradebook and grade-transfer procedures", "mitigation": "document_type and system metadata; policy questions keep the handbook scope"},
+    {"term": "attendance", "collision": "20% absence policy versus the attendance tool", "mitigation": "same"},
+    {"term": "announcement", "collision": "MyUOS portal announcements (Institutional) versus Blackboard course announcements (Teaching)", "mitigation": "system metadata"},
+    {"term": "approval / approve", "collision": "grade-transfer approvals (Chair, Dean) versus leave and travel approvals (handbook)", "mitigation": "the request-kind routing rule already sends authority asks to the subject specialist; keep policy approvals in the handbook scope"},
+    {"term": "login / access", "collision": "Blackboard, MyUOS, iThenticate, DocuSign, Microsoft Forms", "mitigation": "system metadata; the contact or navigation ask owned by Institutional Navigation needs a system entity"},
+    {"term": "submission", "collision": "assignment submissions (Blackboard) versus iThenticate document submissions versus exam-result submission to the Chair (handbook)", "mitigation": "system and document_type metadata"},
+    {"term": "review", "collision": "appraisal progress review (HR Portal) versus peer review or peer observation of teaching (handbook) versus research proposal review", "mitigation": "document_type and department metadata"},
+    {"term": "mission", "collision": "Business Mission request (HR Portal) versus the University's mission statement (handbook page 15)", "mitigation": "the general-ask gate already blocks mission-statement asks; keep 'business mission' as a two-word entity"},
+    {"term": "support / help desk", "collision": "ITC service desk versus McGraw Hill or Coursera support (vendor documents are held)", "mitigation": "do not ingest vendor material"},
+    {"term": "Banner", "collision": "handbook ITC description versus the grade-transfer dashboard", "mitigation": "system metadata"}
+  ],
+  "cross_document_questions": {
+    "examples": ["When must final grades be submitted and how do I transfer them to Banner? (handbook page 224 deadline plus the dashboard steps)", "What is the maximum absence percentage and how do I record attendance in Blackboard? (handbook page 228 plus the attendance tool)", "What per diem applies to a conference and how do I submit the mission request? (handbook pages 117-119 plus the Business Mission guide, if approved)", "What are the grade weights and which grade category do I set in the gradebook? (handbook page 227 plus the grade-category guide)"],
+    "aggregation_support": "the I-5 aggregator renders one clause per request clause from whichever specialist supported it; a cross-document answer is structurally possible once the specialists can retrieve the new source, with each part keeping its own source_id and page; no synthesis across documents is needed or planned"
+  },
+  "citation_design": {
+    "label": "<canonical title> · Page <n>", "examples": ["Blackboard Ultra Faculty Short Guide · Page 4", "Grade Transfer Dashboard Guide · Page 2", "UOS Faculty Handbook 2025/26 · Page 224"],
+    "rules": ["the chip shows canonical_title, never source_id", "one document chip per distinct source in the answer, in answer order, then the page chips of that source", "the Developer panel may show source_id, document_type, authority_level and language", "a bilingual guide cites the English page actually quoted"]
+  },
+  "repository_storage": {"recommendation": "MIXED APPROACH", "detail": "commit the approved official UOS guides that PF-2 ingests (small PDFs, 0.03 to 3.3 MB each, about 11 MB for the P0 and P1 set) under data/ with their registry records so the corpus is reproducible from the repository, as the handbook already is; keep vendor documents (Coursera, McGraw Hill), student guides, Arabic-only guides, unverified DOCX files and the RAR archive outside Git; never commit the archive; add a cache-size note because every ingested document adds embeddings under cache/ (ignored)"},
+  "security_privacy": {"result": "PASS", "findings": ["no credential, API key or password value in any document (login steps name the placeholder 'University password' only)", "no student record or personal staff data in the text; the appraisal guide states that its screenshots use anonymised training data; the Business Mission guide excludes personal information", "PDF and DOCX properties carry staff author names (metadata only; not ingested, not copied into these artifacts)", "the MyUOS guide lists internal e-mail distribution group names (operational, not personal)", "the Coursera guides contain vendor example e-mail addresses (fictional)", "no document is marked confidential; the appraisal guide is marked Internal Use, so confirm it may be served to faculty"]}
+}

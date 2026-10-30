@@ -9,6 +9,139 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-10-30 - Official guide inventory, knowledge-gap mapping and ingestion readiness (post-freeze phase PF-1)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/post-freeze-knowledge-expansion` (created and pushed by the developer from `main` after the I-9 merge) |
+| Starting commit | `bec494f` (Merge frozen Plan F runtime integration) |
+| Ending state | the 25 candidate guides of the Tutorials folder (21 PDF, 4 DOCX, plus a RAR container not inventoried) are inventoried, measured, classified and mapped; 12 approved official and relevant candidates (91 pages), 9 held for review, 4 rejected or duplicate; ingestion pipeline READY WITH STRUCTURAL CHANGES; PF-2 pilot of five P0 documents selected; no document ingested, no runtime code changed, the frozen baseline `runtime-freeze-i9` and its metrics unchanged; local commit on top of `bec494f`, not pushed by the developer tooling |
+| Frozen baseline (unchanged) | 192 questions; 55 served, 137 fallback, 28.6% coverage; 55 correct, 0 limited, 0 wrong, 100% precision; 0 false acceptances, 11 false fallbacks; 6,674 tests |
+| Elapsed | 0h17m49s (start 2026-10-30T12:51:58Z, end 2026-10-30T13:09:47Z) |
+
+### Completed
+
+- Purpose: the controlled preparation before any new document enters the
+  production knowledge base: what exists, how many pages, what is official
+  and relevant, duplicates and versions, extraction quality, specialist
+  ownership, pipeline support, metadata, conflicts with the Faculty
+  Handbook, priority, and the exact PF-2 plan.
+- Documents found: 25 in the `Tutorials` folder of the Senior Project
+  (milestone 4) directory (recorded by base name, no absolute path): 21
+  PDF and 4 DOCX, 225 measured PDF pages and 7 declared DOCX pages; a
+  `Tutorials.rar` sibling (26.1 MB) is a container no local tool can open
+  and was not inventoried. The Faculty Handbook stays at 272 pages
+  (verified against the production cache); the potential corpus is 363
+  pages with every approved document and 504 with every candidate.
+- Classification: APPROVED 12 (Blackboard faculty short guide, gradebook,
+  assignments and tests, communication tools, Collaborate instructor
+  guide, attendance tool, grade categories, Grade Transfer Dashboard,
+  iThenticate guidelines, Performance Appraisal Phase 2 PDF, MyUOS
+  announcement guide, Microsoft Forms guide); HOLD FOR REVIEW 9 (Akindi
+  guide, Business Mission guide and DocuSign note without an issuing unit;
+  a 2026 Blackboard compilation from vendor release notes; the McGraw Hill
+  Connect sync and Coursera learner guides as vendor material; the Arabic
+  Turnitin instructor guide; two student guides); REJECT 4 (the appraisal
+  DOCX duplicate of the PDF, the Coursera administrator guide, the Connect
+  student exam sheet, the Arabic Turnitin student guide misnamed EN). No
+  exact duplicate by hash; no version history; dates from file properties
+  or stated editions, otherwise DATE UNKNOWN.
+- Extraction (PyMuPDF for PDF as production reads it; standard-library
+  DOCX text; no OCR run): GOOD 8, GOOD WITH MINOR CLEANUP 7, NEEDS
+  STRUCTURED CLEANUP 6 (bilingual pages), OCR or alternative extraction
+  needed in part 2 (screenshot-dominated vendor guides), BLOCKED for the
+  English pipeline 2 (Arabic only). Languages: 17 English, 6 bilingual, 2
+  Arabic; Arabic text extracts reversed or with broken ligatures and the
+  embedder and reranker are English models, so Arabic pages are a
+  readiness observation only. Screenshots: the UOS guides write their
+  steps out; one Akindi step and the vendor guides depend on images.
+- Domain mapping to the four frozen specialists (no fifth): Teaching 16,
+  Institutional Navigation 5, Faculty Services & HR 3, Research 1 as
+  primary; five multi-domain documents. Taxonomy: Blackboard, grade
+  transfer, originality tools, assessment tools, MyUOS portal, HR portal,
+  productivity and IT services, third-party platforms.
+- Handbook overlap: eight new step-by-step workflows, three new
+  procedures, six new systems, new ITC service-desk contact and e-learning
+  URL; nothing already covered at procedure level. Conflicts: C1 the
+  page-224 "forwarded automatically to Banner" sentence versus the 2024
+  Grade Transfer Dashboard with Chair and Dean approval (LIKELY UPDATED,
+  serve as policy plus procedure); C2 the iThenticate quota of 30 (English
+  page) versus 15 (Arabic page) in one guide (UNRESOLVED, raise with ITC);
+  C4 the website menu path to MyUOS (LIKELY UPDATED); C5 the 2026 vendor
+  compilation's layout (DIFFERENT CONTEXT, held); C3, C6, C7, C8 none.
+  Precedence proposal: policy source for entitlements and approvals,
+  newest official system manual for interface steps and system contacts,
+  vendor material never for UOS policy or procedure, official-versus-
+  official conflicts reported not merged.
+- I-8 false-fallback mapping: 0 of the 11 are data gaps the guides fill
+  (verifier entity binding, routing, specialist partial support, numeral
+  reading, the Institutional lexicon, all on handbook content); the guides
+  address other recorded fallbacks (grade entry and transfer procedure,
+  content upload, attendance tool, service-desk contact) and add the
+  appraisal workflow. No coverage improvement is claimed.
+- Readiness: pipeline READY WITH STRUCTURAL CHANGES (first-PDF loader,
+  single-file cache key, one-source section map, no DOCX, no page-language
+  filter, one document chip, and the frozen specialists' retrieval scope
+  pinned to the handbook's source id, so new sources reach the legacy path
+  only until a scope-extension seam in non-frozen code or a decision
+  record exists). Chunking: add `procedure_step` and `procedure_window`
+  and a page-language filter; no FAQ or navigation-path type needed.
+  Metadata additions, retrieval collision risks ("grade", "attendance",
+  "announcement", "approval", "login", "submission", "review", "mission",
+  "support", "Banner"), cross-document cases for the I-5 aggregator and
+  the citation rule (`canonical title · Page n`, one chip per source) are
+  recorded in `qa/post_freeze_pf1/gap_mapping.json`.
+- Priority: P0 five (Blackboard faculty short guide, Grade Transfer
+  Dashboard, gradebook, Performance Appraisal Phase 2, iThenticate), P1
+  five, P2 two, HOLD thirteen. PF-2 pilot: the five P0 documents, 43
+  English pages, covering all four specialists; plan and required changes
+  in `qa/post_freeze_pf1/pilot_plan.md`; 34 draft PF-2 questions in
+  `pf2_question_draft.json` (not run).
+- Storage: MIXED (commit the approved official guides PF-2 ingests under
+  `data/` with registry records; keep vendor, student, Arabic-only,
+  unverified DOCX files and the archive outside Git). Security and
+  privacy: PASS (no credential, key, student record or personal staff data
+  in any text; author names in file properties only, not copied; the
+  appraisal guide is marked Internal Use, to confirm before serving).
+
+### Verification
+
+- Focused tests (no runtime code changed): `tests/test_sources.py`,
+  `tests/test_retrieval_scope.py`, `tests/test_planf_imports.py`,
+  `tests/test_compat.py`, `tests/test_clause_retrieval_intent.py`: 207
+  passed, 0 failed, 0 skipped (22 s).
+- Frozen specialists: content-identical to the freeze commit `44ada15` (git
+  blob hashes equal at the freeze commit, at HEAD and for the LF-normalised
+  working copy, 6 of 6). The checkout of this branch re-wrote
+  `navigation_cues.py` and `institutional.py` with CRLF line endings, so a
+  raw byte hash of those two files differs from the value recorded at
+  freeze time; later checks compare git blobs or LF-normalised content.
+- Artifacts are reproducible (`inventory_scan.py`, `build_inventory.py`),
+  carry no absolute path, no personal name from document metadata and no
+  secret; no document text is committed beyond short samples in the scan
+  output (not committed).
+- Elapsed phase runtime: 0h17m49s (start 2026-10-30T12:51:58Z, end 2026-10-30T13:09:47Z).
+
+### Files
+
+- `qa/post_freeze_pf1/` (new): `README.md`, `inventory_scan.py`,
+  `classification.json`, `build_inventory.py`, `document_inventory.json`,
+  `document_inventory.csv`, `gap_mapping.json`, `pf2_question_draft.json`,
+  `pilot_plan.md`.
+- `docs/STATUS.md` (this entry). No code and no source document changed.
+
+### Next
+
+- PF-2, controlled official-guide ingestion and post-ingestion evaluation:
+  decide the Internal Use question and the held documents with the owner,
+  build the smallest multi-document changes listed in the pilot plan,
+  ingest the five pilot documents, prove the 192 frozen answers unchanged
+  with `qa/plan_f_i8/compare_runs.py`, then evaluate the draft questions
+  with the I-8 review discipline. Ingestion is not complete.
+
+---
+
 ## 2026-10-30 - Plan F runtime integration freeze (runtime integration, phase I-9) - Runtime Integration I-1 through I-9 COMPLETE
 
 | Field | Value |
