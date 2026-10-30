@@ -238,6 +238,10 @@ _RESPONSIBILITY = re.compile(r"\b(?:responsible\s+for|responsibility\s+(?:for|of
                              r"deals?\s+with|takes?\s+care\s+of|entrusted\s+with|tasked\s+with|serves?\s+as)\b", re.I)
 _ELIGIBLE = re.compile(r"\b(?:eligible|entitled|qualif(?:y|ies|ied)|may\s+apply|can\s+apply|open\s+to|eligibility)\b", re.I)
 _NEGATION = frozenset({"not", "no", "never", "cannot", "neither", "nor", "n't", "without"})
+#: Phase I-8: the predicate words that let a statement answer a yes/no ask whose own action could not be read ("Is the
+#: teaching load for lecturers 12 credit hours?", "Can a faculty member be PI for two projects?"): a permission, prohibition,
+#: entitlement or requirement about the asked subject. A plain value statement never confirms or refutes such an ask.
+_YES_NO_PREDICATE = re.compile(r"\b(?:may|can|cannot|could|allowed|permitted|prohibited|forbidden|entitled|eligible|not\s+(?:allowed|permitted))\b", re.I)
 _COPULA = re.compile(r"^\s*(?:,\s*[^,]{0,80},)?\s*(?:is|are|was|were|means|refers\s+to|stands\s+for|comprises|consists\s+of|describes|denotes|"
                      r"represents|provides|aims|serves|shall\s+mean|constitutes|:)\b", re.I)
 _PAREN_ACRONYM = re.compile(r"^\s*\(\s*[A-Za-z&\.\s-]{1,12}\s*\)")
@@ -365,7 +369,8 @@ _OBLIGATION_ASK = re.compile(r"^\s*what\s+(?:must|should|shall|do(?:es)?\s+\w+\s
                              r"^\s*what\s+(?:is|are)\s+(?:my|the|a|an)?\s*(?:obligation|duty|duties|obligations)\b", re.I)
 _REQUIREMENT_ASK = re.compile(r"^\s*what\s+(?:is|are)\s+(?:the\s+)?(?:requirements?|criteria|conditions|documents|steps|procedures?|process|stages)\b|"
                               r"^\s*what\s+documents?\b|^\s*which\s+documents?\b", re.I)
-_FUNCTION_ASK = re.compile(r"^\s*what\s+(?:does|do)\s+(.+?)\s+do\s*\??$|^\s*what\s+(?:is|are)\s+(.+?)\s+responsible\s+for\s*\??$|"
+_FUNCTION_ASK = re.compile(r"^\s*what\s+(?:does|do)\s+(.+?)\s+do(?:\s+(?:for|to|with|in|on|about|regarding|during)\b.*)?\s*\??$|"
+                           r"^\s*what\s+(?:is|are)\s+(.+?)\s+responsible\s+for\s*\??$|"
                            r"^\s*what\s+(?:is|are)\s+the\s+(?:role|roles|purpose|function|functions|responsibilit(?:y|ies)|duties|services|tasks)\s+of\b", re.I)
 _OPEN_OBJECT_ASK = re.compile(r"^\s*what\s+(?:does|do|can|will|is|are)\s+(.+?)\s+(provide[sd]?|offer[sd]?|include[sd]?|cover(?:s|ed)?|handle[sd]?|"
                               r"support(?:s|ed)?|manage[sd]?|arrange[sd]?|deliver(?:s|ed)?|give[sn]?|gave|entail(?:s|ed)?|involve[sd]?|require[sd]?|provided|offered)\b", re.I)
@@ -826,6 +831,10 @@ def _relation_stated(unit: str, shape: RequestShape) -> Tuple[Optional[bool], st
     if kind is RequestKind.YES_NO or kind is RequestKind.SELECTION:
         verb = shape.verb
         if not verb:
+            if kind is RequestKind.YES_NO:                         # phase I-8: a copular or modal yes/no ask with no readable action
+                if _YES_NO_PREDICATE.search(unit) or _NORMATIVE.search(unit):
+                    return True, "a permission, prohibition, entitlement or requirement about the asked subject answers the yes/no ask"
+                return False, "no asked action read: a value statement cannot confirm or refute a yes/no ask"
             return None, "no asked action read"
         verbs = _verb_positions(unit, verb)
         if not verbs:

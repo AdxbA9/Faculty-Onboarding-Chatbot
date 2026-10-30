@@ -200,6 +200,8 @@ def test_verification_module_is_deterministic_code_with_no_model_or_network_depe
     ("Is maternity leave paid?", K.YES_NO, {"verb": "pay"}),
     (HR_PROVIDES, K.ENUMERATION, {}),
     ("What does the Technology Transfer Office do?", K.ENUMERATION, {}),
+    ("What does HR do for new faculty?", K.ENUMERATION, {"entities": ("HR",)}),       # phase I-8: a function ask with a trailing phrase
+    ("What does HR do to support visiting faculty?", K.ENUMERATION, {}),
     ("What are the research priority areas?", K.ENUMERATION, {}),
     ("What are the requirements for promotion?", K.ENUMERATION, {}),
     ("What services does the library provide?", K.ENUMERATION, {}),
@@ -655,6 +657,43 @@ def test_known_hr_cases_stay_blocked_and_the_verifier_classifies_them(kb, runtim
         assert verdict.accepted is False and verdict.reason is code, (question, verdict.reason)
         if question == ANNUAL_LEAVE:
             assert verdict.completeness is C.PARTIAL and "sixty" not in json.dumps(verdict.to_dict())
+
+
+def test_a_function_ask_with_a_trailing_phrase_is_enumerative_and_stays_unserved(kb, runtime):
+    """Phase I-8: "What does HR do for new faculty?" passed the frozen specialist as a specific ask and was read as a
+    selection ask by the verifier, so one of HR's services was served as the answer to an open "what does X do" ask.
+    A function ask keeps its kind with a trailing "for / to / with ..." phrase: one finding cannot prove it complete."""
+    question = "What does HR do for new faculty?"
+    assert V.read_request(question).kind is K.ENUMERATION
+    attempt = runtime.attempt(question)
+    assert attempt.outcome is PF.PlanFOutcome.REJECTED_BY_FINDINGS_VERIFIER and attempt.result is None
+    assert attempt.verification is not None and attempt.verification.reason is R.ENUMERATION_INCOMPLETE
+    assert attempt.verification.request_kind is K.ENUMERATION and attempt.verification.completeness is C.ENUMERATION_UNPROVEN
+    specific = runtime.attempt("What information does HR provide to new faculty members?")       # the specific ask is still served
+    assert specific.outcome is PF.PlanFOutcome.ACCEPTED and specific.verification.request_kind is K.SELECTION
+
+
+def test_a_yes_no_ask_without_a_readable_action_is_not_confirmed_by_a_value_statement(kb, runtime):
+    """Phase I-8: "Is the teaching load for lecturers 12 credit hours per semester?" (a false premise) was served with the
+    Lecturer Researcher and senior-lecturer sentences that carry the proposed value, because a yes/no ask with no readable
+    action had no relation check. A value statement cannot confirm or refute such an ask; a statement that itself grants,
+    forbids, entitles or requires still can ("may not act as principal investigators for two projects simultaneously")."""
+    question = "Is the teaching load for lecturers 12 credit hours per semester?"
+    cid = 5182
+    quote = ('o "G" Lecturer or Senior Lecturer Researcher is devoted to teaching, research, and services. '
+             "The teaching load for Lecturer Researcher is 12 credit hours per semester.")
+    assert quote in kb.chunks[cid]
+    task, findings = retrieval(kb, question, "teaching", cid, quote)
+    verdict = verify(kb, task, findings)
+    assert verdict.accepted is False and verdict.request_kind is K.YES_NO and verdict.reason is R.RELATION_MISMATCH, verdict.to_dict()
+    attempt = runtime.attempt(question)
+    assert attempt.outcome is PF.PlanFOutcome.REJECTED_BY_FINDINGS_VERIFIER and attempt.result is None
+    assert attempt.verification.request_kind is K.YES_NO and attempt.verification.reason is R.RELATION_MISMATCH
+    modal = runtime.attempt("Can a faculty member be principal investigator for two projects simultaneously?")
+    assert modal.outcome is PF.PlanFOutcome.ACCEPTED and modal.verification.request_kind is K.YES_NO
+    assert modal.verification.relation_match is True and "may not act as principal investigators" in modal.result.answer
+    predicate = runtime.attempt("Does HR arrange travel and hotel accommodations for new faculty members?")   # the verb path is unchanged
+    assert predicate.outcome is PF.PlanFOutcome.ACCEPTED and predicate.verification.request_kind is K.YES_NO
 
 
 def test_misleading_supported_shapes_through_the_adapter_are_rejected_by_the_findings_verifier(kb):

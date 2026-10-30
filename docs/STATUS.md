@@ -9,6 +9,161 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-10-30 - Full end-to-end adversarial application QA of the integrated runtime (runtime integration, phase I-8)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/remaining-specialists` |
+| Starting commit | `8d6280f` |
+| Ending state | the integrated runtime was evaluated as a product on the real knowledge base through the real seam and the real chat page: a 192-question master set (40 adversarial by category, 98 by tag, 75 regression) in ACTIVE, DIRECT and SHADOW, a determinism subset four times, a LEGACY sample in a fresh process, a 21-turn app session in ACTIVE plus SHADOW and LEGACY app checks; two defects found and fixed in the I-4 verification layer (an open "what does HR do for ..." ask served with one service; a false-premise yes/no ask served with the wrong category's value sentence); after the fixes 55 of 192 served, all 55 correct on manual evidence review, 0 false acceptances, 0 wrong supported answers, SHADOW identical to legacy 192 of 192, handoff depth 1 with no cycle, 0 Plan F model calls, the four frozen specialists unchanged (hashes verified); readiness for I-9: READY WITH MINOR KNOWN LIMITATIONS; Plan F remains CONNECTED BEHIND FLAGS; local commit on top of `8d6280f`, not pushed by the developer tooling |
+| Plan F switches | `PLAN_F_ENABLED` and `PLAN_F_SHADOW` still default to off |
+| Elapsed | 1h16m53s (start 2026-10-30T10:40:19Z, end 2026-10-30T11:57:12Z) |
+
+### Completed
+
+- Objective: decide from evidence whether the integrated runtime
+  (Coordinator, routing refinement, the four frozen specialists, retrieval,
+  reranking, guards, findings verifier, aggregator, bounded handoffs,
+  legacy Verifier, fallback, source presentation, the Developer panel, the
+  three modes, diagnostics, security, performance) is correct, safe,
+  stable and presentable enough to freeze in I-9.
+- Master evaluation set (`qa/plan_f_i8/question_set.py`): 192 unique
+  real-handbook questions, each with domain, test category, tags, the
+  behaviour a correct runtime may show (serve 58, fallback required 58,
+  either 76), the handbook fact and page, and the specialist owners a
+  correct routing may select. Teaching 33, Research 39, HR 40,
+  Institutional Navigation 40, multipart and cross-domain 30, no domain
+  10; direct, numeric, conditional, authority, contact and location,
+  enumeration, same-domain multipart, cross-domain, ambiguous, unsupported,
+  general, paraphrase (10 groups), typo and fragment (13 imperfect inputs)
+  and adversarial (subject and entity binding, numeric values, page
+  mismatch, negation, conditions, partial answers, enumeration
+  completeness, conflicting clauses, misleading evidence, routing
+  ambiguity, handoff, unsupported synthesis, general HR, cross-domain
+  confusion, duplicated facts, wrong contact, near-match terminology,
+  injection, comparison).
+- Harness (`master_eval.py`, `legacy_check.py`, `review_served.py`,
+  `analyze.py`, `compare_runs.py`): every question through
+  `ui.pipeline.ask_with_diagnostics` in ACTIVE with per-item citation
+  checks (quote in chunk, chunk page is the cited page, quote in the page
+  text), the decision, routing and adapter attempt on the same runtime,
+  every question in SHADOW compared field by field with the direct legacy
+  call, 24 questions repeated three more times, the LEGACY sample in
+  process and in a fresh process; the review sheet of every served answer
+  and the manual verdicts in `review.json`; the metrics in `metrics.json`.
+- Defects found and fixed (I-4 verification layer,
+  `handbook_bot/plan_f_verification.py`; no frozen file touched):
+  (D1, MAJOR) "What does HR do for new faculty?" was served with the one
+  Employee Handbook sentence because the function-ask pattern required the
+  clause to end right after "do"; the pattern now accepts a trailing
+  for/to/with/in/on/about/regarding/during phrase, the ask is enumerative
+  and falls back with ENUMERATION_INCOMPLETE. (D2, CRITICAL) "Is the
+  teaching load for lecturers 12 credit hours per semester?" was served
+  with the Lecturer Researcher and senior-lecturer sentences that carry
+  the proposed value, a wrong supported answer, because a yes/no ask whose
+  action cannot be read had no relation check; such an ask is now answered
+  only by a statement that itself grants, forbids, entitles or requires,
+  never by a plain value statement. Four regression tests added
+  (`tests/test_plan_f_verification.py`). The whole evaluation was rerun on
+  the fixed tree: exactly those two questions changed (both now
+  fallbacks), everything else byte-identical.
+- Open items recorded for post-I-9 (all safe fallbacks, coverage not
+  safety): three-clause aggregates whose evidence spans four pages are
+  rejected by the unchanged legacy Verifier's three-page citation cap (2
+  questions); the evidence section label is the page's dominant section
+  (page right); an approval clause settled in single-clause form stays
+  ambiguous inside a two-clause question (2); the College of Graduate
+  Studies and Research directory row is not found by Institutional
+  Navigation (frozen lexicon); WLAM profile loads for named categories
+  fail the entity check because the category is named in the preceding
+  sentence (3).
+
+### Verification
+
+- Final run (real knowledge base from the v12 cache in 22.9 s, no model
+  client, 935 s for all passes): 192 questions, Plan F served 55, fallback
+  137, coverage 28.6%; served answers reviewed one by one against the
+  handbook page: 55 CORRECT, 0 LIMITED, 0 WRONG, precision 100%; false
+  acceptances 0 (2 in the first run, both fixed); false fallbacks 11 in
+  five patterns; exceptions 0. Per group (questions / served / correct):
+  teaching 24 / 8 / 8, research 29 / 13 / 13, HR 25 / 9 / 9, institutional
+  25 / 13 / 13, cross-domain 22 / 11 / 11, adversarial and unsupported
+  67 / 1 / 1 (98 adversarially tagged questions: 9 served, all correct).
+  Citations: 67 evidence items, 0 defects, page list equals evidence pages
+  55 of 55.
+- Routing: codes unchanged 142, refined by request kind 22, clauses scoped
+  15, ambiguous 12, none 1; classification CORRECT 160, ACCEPTABLE 7,
+  AMBIGUOUS-SAFE-FALLBACK 20, WRONG 5 (all domain-cue misses that reached
+  the legacy path, none served). Aggregation: 27 attempts, 11 served (all
+  correct, parts in request order, no duplicate), rejections 9 missing
+  clause, 5 child finding rejected, 2 legacy Verifier page cap. Handoffs:
+  6 rounds attempted, 3 executed (Research to Institutional Navigation,
+  depth 1), 0 accepted, 1 blocked by the visited-target protection, no
+  second hop, no cycle.
+- Modes: SHADOW 192 of 192 visible outputs identical to the direct legacy
+  call, 0 leaks, 0 exceptions; LEGACY sample of 30 in a fresh process with
+  the minimal diagnostics record, no Plan F module imported, no runtime
+  cache, 0 exceptions. Determinism: 24 questions x 4 observations, 24
+  stable. Known cases: "What does HR do?" blocked (I-1 gate), annual leave
+  blocked (partial), WLAM relation mismatch blocked, housing ambiguous,
+  Research Institute handoff executed and fallen back, consultancy
+  provision slices and the research-grant and conference-travel authority
+  cases served and correct.
+- Performance (median / p90 / max): served single answer 660 / 744 / 852
+  ms, served aggregate 1,307 / 1,408 / 1,456 ms, routing rejection attempt
+  1 / 2 / 2 ms, Plan F attempt before a fallback 646 / 776 / 2,085 ms,
+  legacy fallback end to end 1,487 / 2,560 / 3,489 ms, all ACTIVE
+  responses 1,239 / 2,516 / 3,489 ms, direct legacy 834 / 1,860 / 2,048
+  ms; cold first ACTIVE request 1,755 ms including the 697 ms registry
+  build, registry reused on every later request; specialist calls per
+  attempt 0 for 25, 1 for 154, 2 for 12, 3 for 1; Plan F model calls 0.
+- App (built-in browser, the final tree): ACTIVE 21 sequential turns with
+  Developer mode on (greeting, single findings, routing-refined answer,
+  three-part aggregate, known HR fallback, ambiguous routing, the handoff
+  round, refusal, annual leave, two-page aggregate, typo, adversarial
+  maternity ask, the two fixed cases shown as fallbacks with their new
+  reasons): one panel per answer, every earlier panel keeping its own
+  served path and pages, no duplicate, no stale loading bubble, loading
+  text observed with role status and aria-live polite, process memory
+  1,314 MB after 17 turns and 1,327 MB after 21, 375 px without horizontal
+  overflow; SHADOW 3 questions with Developer mode off: legacy answers and
+  chips only, no Plan F text, the internal attempt visible in the panel
+  only; LEGACY 4 questions: Mode LEGACY, Served path Legacy, no Plan F,
+  routing, verification, aggregation or handoff row, no Plan F record in
+  the launcher log. Diagnostics hygiene: 486 seam records and 24 app
+  records without question or answer text.
+- Automated: targeted gate (22 files) 1,534 collected, 1,534 passed, 0
+  failed, 0 skipped, 0 xfail (85 s); full suite 6,674 passed, 0 failed, 0
+  skipped, 0 xfail (219 s; baseline 6,670 plus 4 new tests); `pip check`
+  clean. Frozen specialist hashes unchanged (6 of 6) before and after the
+  fixes. Security scan of the change set and the run logs: no key, token,
+  `.env` content, local path or traceback (the only pattern hits are the
+  pre-existing redaction fixtures of the verification tests).
+- Elapsed phase runtime: 1h16m53s (start 2026-10-30T10:40:19Z, end 2026-10-30T11:57:12Z).
+
+### Files
+
+- `handbook_bot/plan_f_verification.py` (modified): the function-ask
+  pattern accepts a trailing prepositional phrase; a yes/no ask with no
+  readable action is answered only by a permission, prohibition,
+  entitlement or requirement statement.
+- `tests/test_plan_f_verification.py` (modified): two classification rows
+  and two real-knowledge-base regression tests for the two fixes.
+- `qa/plan_f_i8/` (new): `README.md`, `question_set.py`, `master_eval.py`,
+  `legacy_check.py`, `review_served.py`, `review.json`, `analyze.py`,
+  `compare_runs.py`, `results_2026-10-30.json`, `metrics.json`.
+- `docs/STATUS.md` (this entry).
+
+### Next
+
+- I-9, final runtime freeze: decide the default mode, freeze the runtime
+  and the documentation, and record the open coverage items of this phase
+  for selective reopening afterwards. Nothing in this phase claims the
+  freeze.
+
+---
+
 ## 2026-10-30 - Interface compatibility for the Plan F runtime (runtime integration, phase I-7)
 
 | Field | Value |
