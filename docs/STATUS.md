@@ -9,6 +9,100 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-10-30 - Plan F runtime integration freeze (runtime integration, phase I-9) - Runtime Integration I-1 through I-9 COMPLETE
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/remaining-specialists` |
+| Starting commit | `eeb516f` |
+| Ending state | RUNTIME FROZEN - READY WITH MINOR KNOWN LIMITATIONS, freeze identifier `runtime-freeze-i9` (documentation and repository metadata only): the I-8 harness re-run on the frozen tree reproduced the final I-8 results (0 differences on every compared field for all 192 questions in ACTIVE and SHADOW), the three mode contracts, the routing, handoff, aggregation, verification and adapter contracts and the I-7 interface rules verified and documented in `docs/RUNTIME_FREEZE_I9.md`, a machine-readable freeze manifest in `qa/plan_f_i9/freeze_manifest.json`, the known-limitations register and the post-freeze change policy recorded (D-108 in `docs/DECISIONS.md`); no code under `handbook_bot/` or `ui/` changed in this phase; both Plan F switches still default to off; Plan F remains CONNECTED BEHIND FLAGS; local commit on top of `eeb516f`, not pushed by the developer tooling; `main` untouched |
+| Frozen metrics (I-8 final, unchanged in I-9) | 192 questions; 55 served, 137 fallback, coverage 28.6%; 55 correct, 0 limited, 0 wrong, precision 100%; 0 false acceptances, 11 false fallbacks; SHADOW mismatches 0; Plan F model calls 0 |
+| Elapsed | 0h24m41s (start 2026-10-30T12:14:45Z, end 2026-10-30T12:39:26Z) |
+
+### Completed
+
+- Objective: prove that the integrated runtime is stable, reproducible,
+  documented, safe and regression-clean, and freeze it as the Senior
+  Project runtime baseline. No new capability, no architecture change, no
+  acceptance increase, no reopened specialist.
+- Starting state recorded: HEAD `eeb516f`, clean tree, tracking ref equal
+  to HEAD (I-8 pushed by the developer), Python 3.11.9 on Windows,
+  `pip check` clean, knowledge-base cache v12 present, six frozen hashes
+  matched. Committed I-8 artifacts verified as the final post-fix state
+  (the two first-run defects recorded as fallbacks, 55 served, no secret,
+  no personal path, no raw log).
+- Freeze artifacts: `docs/RUNTIME_FREEZE_I9.md` (safety statement,
+  architecture summary with the three modes, frozen metrics, mode
+  contracts, routing, handoff, aggregation, verification and adapter
+  contracts with their complete reason-code vocabularies, interface rules,
+  the I-9 verification record, the post-I-9 change policy and the
+  known-limitations register L1 to L11 classified SAFETY / COVERAGE / UX /
+  DATA / ENVIRONMENT); `qa/plan_f_i9/make_manifest.py` and
+  `freeze_manifest.json` (SHA-256 of the integration modules, the seam and
+  interface files, the six frozen specialists and their helpers, the
+  evaluation set and QA artifacts, the v12 cache files; git HEAD; Python
+  and package versions; test counts; no absolute path);
+  `qa/plan_f_i9/concurrency_smoke.py`; D-108 in `docs/DECISIONS.md`.
+- Safety statement (verbatim in the freeze document): the system does not
+  guarantee perfect answers; Plan F achieved 100% precision on the 55
+  answers it served in the final 192-question I-8 evaluation, with 0 wrong
+  served answers; overall coverage was 28.6% and unsupported cases fell
+  back.
+
+### Verification
+
+- I-8 reproducibility: the I-8 harness re-run on the frozen tree with the cached knowledge base (935 s class run, 0 exceptions) and compared with the committed `qa/plan_f_i8/results_2026-10-30.json` by `compare_runs.py` plus a field-level check: 0 differences in 192 ACTIVE and 192 SHADOW records on served or fallback decision, outcome, answer text, cited pages, routing code and final specialists, specialist calls, handoff outcome, aggregation outcome and coverage, findings reason, the served evidence items (chunk, page, quote), the direct attempts and the LEGACY sample; SHADOW identical to the direct legacy call 192 of 192; the frozen metrics reproduced exactly (55 served, 55 correct, 0 limited, 0 wrong, 0 false acceptances, 11 false fallbacks, 0 model calls). I-8 final and I-9 freeze: unchanged.
+- Critical regression cases and determinism: all as in the final I-8 run (known HR wrong-support blocked at the I-1 gate; annual-leave partial blocked alone and in the maternity aggregate; the I-8 open-function case blocked with ENUMERATION_INCOMPLETE; the I-8 false-premise yes/no case blocked with RELATION_MISMATCH; WLAM relation mismatch blocked; consultancy provision slices, conference-travel and research-grant authority served; housing ambiguous with 0 specialist calls; the Research Institute handoff executed at depth 1 and fallen back; same-domain, cross-domain and multi-page aggregates served; the SHADOW internally accepted cases returned the legacy answer); determinism 24 questions x 4 observations, 24 stable on route, specialist count, decision, answer, pages and handoff outcome.
+- Mode contracts: LEGACY PASS (fresh-process sample of 30 with the minimal
+  record, no Plan F module imported, no runtime cache, 0 exceptions; app
+  smoke without a Plan F row); SHADOW PASS (192 of 192 visible outputs
+  identical to the direct legacy call in the rerun, 0 leaks; app smoke with
+  legacy answers and chips only and the attempt in Developer mode only);
+  ACTIVE PASS (served only adapter- and verifier-accepted results, every
+  other case a seamless legacy fallback with its reason; chips and labels
+  from the diagnostics).
+- Routing freeze PASS (`plan-f-routing-1`, no score, registration-order or
+  tie-break choice; ambiguous ownership falls back); handoff freeze PASS
+  (`MAX_DEPTH = 1`, self-loop, visited and repeated target, unknown target,
+  second hop, unresolved clause, unsupported remainder, unsafe target and
+  exception all blocked, the fixtures in `tests/test_plan_f_routing.py`
+  green, three real rounds executed at depth 1 and none accepted);
+  aggregation freeze PASS (request order, provenance, exact quotes,
+  duplicate collapse, conflict rejection, all-or-nothing completeness,
+  child verification, no generative rewrite); verification freeze PASS
+  (I-4 guarantees plus the I-8 open-function and yes/no rules); adapter
+  freeze PASS (known HR gate and annual-leave protection intact; the
+  false-premise yes/no case and the "for new faculty" case stay blocked).
+- Concurrency and cache: `qa/plan_f_i9/concurrency_smoke.py`, eight threads and sixteen calls on a fresh runtime state: the registry built exactly once (as the sequential reference), every concurrent answer equal to its sequential answer, sixteen diagnostics records with no foreign pages, 0 exceptions, 0 model calls; the existing `test_cache_is_safe_under_concurrent_first_use` and the `RuntimeCache` suite green in the gate; v12 knowledge-base cache reused at every start (23 s), registry built once per process and reused on every later request, never built in LEGACY.
+- App smoke: ACTIVE with Developer mode, twelve questions (greeting, Teaching, Research, HR and Institutional singles, a two-part multi-page aggregate, the routing-refined conference-travel answer, the known HR fallback, the annual-leave fallback, the housing ambiguity with 0 specialist calls, the Research Institute handoff at depth 1, an off-topic refusal): no crash, no stale bubble, chips and panels from the diagnostics, registry built once and reused eleven times, 0 exceptions, 12 log records without question or answer text, process memory 1,293 MB; SHADOW two questions: legacy answers and chips only, the attempt in Developer mode only; LEGACY three questions: no Plan F row, section, chip or log record. PASS.
+- Performance snapshot: median / p90 / max, I-9 rerun vs I-8 final: knowledge base 23.0 s (22.9 s); cold first ACTIVE request 2,069 ms with an 851 ms registry build (1,755 ms, 697 ms); served single 626 / 826 / 996 ms (660 / 744 / 852); served aggregate 1,179 / 1,305 / 1,326 ms (1,307 / 1,408 / 1,456); routing rejection attempt 1 / 2 / 2 ms (same); legacy fallback end to end 1,397 / 2,426 / 3,285 ms (1,487 / 2,560 / 3,489); total ACTIVE 1,151 / 2,336 / 3,285 ms (1,239 / 2,516 / 3,489); direct legacy 760 / 1,657 / 1,758 ms (834 / 1,860 / 2,048). Ordinary variance, no material regression.
+- Diagnostics hygiene: 486 seam records of the rerun and 17 app records: 0 raw questions, 0 raw answers, 0 tracebacks, 0 filesystem paths, 0 credentials.
+- Automated: targeted gate (22 files) 1,534 collected, 1,534 passed, 0 failed, 0 skipped, 0 xfail (91 s); full suite 6,674 collected, 6,674 passed, 0 failed, 0 skipped, 0 xfail (220 s; the I-8 baseline 6,674); `pip check`
+  clean. Frozen specialist hashes unchanged (6 of 6) before and after.
+  Security scan of the freeze change set and QA artifacts: no key, token,
+  password, `.env` content, personal path, model cache, embeddings, large
+  generated file, screenshot, AI attribution, co-author trailer or
+  generated-by notice.
+- Elapsed phase runtime: 0h24m41s (start 2026-10-30T12:14:45Z, end 2026-10-30T12:39:26Z).
+
+### Files
+
+- `docs/RUNTIME_FREEZE_I9.md` (new): the freeze document.
+- `docs/DECISIONS.md` (modified): D-108.
+- `qa/plan_f_i9/` (new): `make_manifest.py`, `freeze_manifest.json`,
+  `concurrency_smoke.py`, `README.md`.
+- `docs/STATUS.md` (this entry). No code changed.
+
+### Next
+
+- Post-freeze review (user-controlled): decide selective improvements
+  against the baseline, additional official-guide ingestion, final polish,
+  and the eventual merge to `main`. Frozen behaviour is not changed
+  silently; see the change policy in the freeze document.
+
+---
+
 ## 2026-10-30 - Full end-to-end adversarial application QA of the integrated runtime (runtime integration, phase I-8)
 
 | Field | Value |
