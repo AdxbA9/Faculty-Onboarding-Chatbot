@@ -41,12 +41,22 @@ RESULT
 FAILURE POLICY
     :func:`verify_findings` never raises: an unexpected exception becomes ``VERIFICATION_ERROR`` with the message
     passed through ``base.redact_error``, ``accepted`` False and ``safe_to_render`` False, so the caller falls back.
+
+PHASE I-5 (aggregation support; no verdict above changes)
+    ``status_code`` is split into :func:`run_code` (the result as a whole) and :func:`report_code` (one clause
+    report) so that the deterministic aggregator (``plan_f_aggregation``) can apply the same rules to a result that
+    holds one report per request clause. :func:`clause_view` projects such a result onto ONE of its reports and the
+    findings that answer it; the verifier then runs on the view exactly as on a single-clause result.
+    :func:`provision_slice` derives, from a quote the verifier rejected as EXCESS_EVIDENCE, the exact substring that
+    holds the answering unit's own provision (and its lead-in), with explicit provenance back to the original
+    finding; :func:`verify_findings_sliced` accepts that slice only when it passes every check on its own. Nothing
+    is reworded and no frozen specialist changes.
 """
 from __future__ import annotations
 
 import re
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from enum import Enum
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
@@ -873,9 +883,10 @@ def _detail_present(unit: str, shape: RequestShape, finding: Finding) -> Tuple[O
 # ---------------------------------------------------------------------------
 # Status and structure
 # ---------------------------------------------------------------------------
-def status_code(findings: SpecialistFindings) -> Tuple[Optional[ReasonCode], str]:
-    """Why the result's status or clause report makes it non-renderable, as a reason code, or (None, "") when it may
-    proceed to the finding-level checks. The same conditions as the I-1 ``result_problem`` gate, as codes."""
+def run_code(findings: SpecialistFindings) -> Tuple[Optional[ReasonCode], str]:
+    """Why the result AS A WHOLE is non-renderable (its status, a handoff request, a ``missing`` entry, no finding, a
+    model call, no clause report), as a reason code, or (None, "") when its clause reports may be examined. Shared
+    by :func:`status_code` (one clause) and the phase I-5 aggregator (one report per request clause)."""
     status = findings.status
     if status is FindingStatus.PARTIAL:
         return ReasonCode.PARTIAL_FINDING, "status partial"
@@ -897,12 +908,14 @@ def status_code(findings: SpecialistFindings) -> Tuple[Optional[ReasonCode], str
     clauses = md.get("clauses")
     if not isinstance(clauses, list) or not clauses or not all(isinstance(c, dict) for c in clauses):
         return ReasonCode.UNSUPPORTED_STATUS, "no clause report"
-    if len(clauses) != 1:
-        return ReasonCode.MULTIPART_UNSUPPORTED, "%d clause reports" % len(clauses)
-    if md.get("unprocessed_clauses"):
-        return ReasonCode.MULTIPART_UNSUPPORTED, "unprocessed clauses"
-    report = clauses[0]
-    if findings.specialist_id is SpecialistId.INSTITUTIONAL:
+    return None, ""
+
+
+def report_code(specialist_id: SpecialistId, report: Dict[str, Any]) -> Tuple[Optional[ReasonCode], str]:
+    """Why ONE clause report makes its clause non-renderable (the outcome, the ask shape, the requested details and
+    the relation of a retrieval specialist; the outcome and evidence tier of Institutional Navigation), as a reason
+    code, or (None, "")."""
+    if specialist_id is SpecialistId.INSTITUTIONAL:
         if report.get("outcome") != INSTITUTIONAL_OUTCOME_READ:
             return ReasonCode.UNSUPPORTED_STATUS, "institutional clause outcome %s" % report.get("outcome")
         if report.get("evidence_tier_reached") not in INSTITUTIONAL_TIERS:
@@ -922,6 +935,22 @@ def status_code(findings: SpecialistFindings) -> Tuple[Optional[ReasonCode], str
     if "relation" in report and report.get("relation") != RELATION_STRONG:
         return ReasonCode.RELATION_MISMATCH, "relation %s" % report.get("relation")
     return None, ""
+
+
+def status_code(findings: SpecialistFindings) -> Tuple[Optional[ReasonCode], str]:
+    """Why the result's status or clause report makes it non-renderable, as a reason code, or (None, "") when it may
+    proceed to the finding-level checks. The same conditions as the I-1 ``result_problem`` gate, as codes:
+    :func:`run_code`, then exactly one processed clause report, then :func:`report_code` on it."""
+    code, detail = run_code(findings)
+    if code is not None:
+        return code, detail
+    md = findings.metadata if isinstance(findings.metadata, dict) else {}
+    clauses = md["clauses"]
+    if len(clauses) != 1:
+        return ReasonCode.MULTIPART_UNSUPPORTED, "%d clause reports" % len(clauses)
+    if md.get("unprocessed_clauses"):
+        return ReasonCode.MULTIPART_UNSUPPORTED, "unprocessed clauses"
+    return report_code(findings.specialist_id, clauses[0])
 
 
 # ---------------------------------------------------------------------------
@@ -1143,7 +1172,122 @@ def verify_findings(clause: str, findings: SpecialistFindings, chunks: Sequence[
                          kind=kind, started=started)
 
 
+# ---------------------------------------------------------------------------
+# Phase I-5 helpers: one clause report of a multi-clause result, and the provision slice of an excess quote
+# ---------------------------------------------------------------------------
+#: Suffix of the id of a finding derived by :func:`provision_slice`.
+SLICE_SUFFIX = "/slice"
+
+
+def clause_view(findings: SpecialistFindings, index: int, finding_ids: Optional[Sequence[str]] = None) -> SpecialistFindings:
+    """The result restricted to ONE of its clause reports: the report at ``index`` and, by default, the findings whose
+    ``metadata["clauses"]`` name that report's index (or exactly ``finding_ids``, kept in the result's own order).
+    Status, ``missing``, handoff requests and the model flag are carried over unchanged, so :func:`verify_findings`
+    applies the same run-level rules to the view as to the result; only the single-report rule is replaced by the
+    aggregator's per-clause coverage. Raises ``ValueError`` when the report does not exist or no finding answers it."""
+    md = findings.metadata if isinstance(findings.metadata, dict) else {}
+    reports = md.get("clauses")
+    if (not isinstance(reports, list) or not isinstance(index, int) or isinstance(index, bool) or not 0 <= index < len(reports)
+            or not isinstance(reports[index], dict)):
+        raise ValueError("result %s has no clause report %r" % (findings.task_id, index))
+    report = reports[index]
+    report_index = report.get("index", index)
+    if finding_ids is None:
+        chosen = [f for f in findings.findings if report_index in (f.metadata.get("clauses") or [])]
+    else:
+        wanted = set(finding_ids)
+        chosen = [f for f in findings.findings if f.finding_id in wanted]
+    if not chosen:
+        raise ValueError("no finding of %s answers clause report %d" % (findings.task_id, index))
+    metadata = {"clauses": [report], "unprocessed_clauses": [], "view_of": findings.task_id, "view_index": index}
+    return SpecialistFindings(specialist_id=findings.specialist_id, task_id=findings.task_id, status=findings.status, findings=chosen,
+                              summary=findings.summary, missing=list(findings.missing), handoff_requests=list(findings.handoff_requests),
+                              confidence=findings.confidence, limitations=list(findings.limitations), llm_used=findings.llm_used,
+                              ms=findings.ms, metadata=metadata)
+
+
+def provision_slice(finding: Finding, unit_index: int) -> Optional[Finding]:
+    """A derived finding whose quote is the exact substring of ``finding.evidence_quote`` that holds the answering
+    unit's own provision (every sentence of that list item, numbered item or section passage that the quote
+    contains) together with the lead-in sentences immediately before it; sentences of OTHER provisions before or
+    after it are left out. Nothing is reworded: the derived finding keeps the source, page, chunk and metadata of the
+    original and records ``derived_from``, the ``slice`` offsets and the provision. None when the unit is unknown,
+    the units cannot be located in the quote or nothing would be cut."""
+    quote = finding.evidence_quote
+    units = quote_units(quote)
+    if not isinstance(unit_index, int) or isinstance(unit_index, bool) or not 0 <= unit_index < len(units):
+        return None
+    provision = units[unit_index][1]
+    spans: List[Tuple[int, int]] = []
+    position = 0
+    for text, _p in units:
+        start = quote.find(text, position)
+        if start < 0:
+            return None
+        spans.append((start, start + len(text)))
+        position = start + len(text)
+    members = [i for i, (_t, p) in enumerate(units) if p == provision]
+    first, last = members[0], members[-1]
+    while first > 0 and _is_lead_in(units[first - 1][0]):
+        first -= 1
+    start, end = spans[first][0], spans[last][1]
+    sliced = quote[start:end]
+    if not sliced.strip() or sliced.strip() == quote.strip():
+        return None
+    metadata = dict(finding.metadata)
+    metadata.update({"derived_from": finding.finding_id, "slice": [start, end], "slice_provision": provision})
+    return Finding(finding_id=finding.finding_id + SLICE_SUFFIX, claim=sliced, evidence_quote=sliced, source_id=finding.source_id,
+                   source_title=finding.source_title, page=finding.page, confidence=finding.confidence, metadata=metadata)
+
+
+@dataclass(frozen=True)
+class SlicedVerification:
+    """A verification together with the result it applies to: the original result, or a copy whose primary finding is
+    the provision slice of an excess quote. ``sliced`` lists (derived id, original id, start, end) for each slice."""
+
+    verification: FindingsVerification
+    findings: SpecialistFindings
+    sliced: Tuple[Tuple[str, str, int, int], ...] = ()
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {"verification": self.verification.to_dict(), "sliced": [list(s) for s in self.sliced]}
+
+
+def verify_findings_sliced(clause: str, findings: SpecialistFindings, chunks: Sequence[str],
+                           metadata: Sequence[Dict[str, Any]]) -> SlicedVerification:
+    """:func:`verify_findings` and, when its only objection to the primary finding is EXCESS_EVIDENCE, the same
+    verification of a copy whose primary finding is the provision slice of that quote (:func:`provision_slice`). The
+    slice is used only when it passes every check on its own, the quote guard included; otherwise the original
+    rejection stands, with the slice's own reason appended to its detail. Deterministic; never raises."""
+    first = verify_findings(clause, findings, chunks, metadata)
+    try:
+        if first.accepted or first.reason is not ReasonCode.EXCESS_EVIDENCE or not first.verdicts or not findings.findings:
+            return SlicedVerification(first, findings)
+        primary = first.verdicts[0]
+        original = findings.findings[0]
+        if primary.finding_id != original.finding_id or primary.unit_index is None:
+            return SlicedVerification(first, findings)
+        derived = provision_slice(original, primary.unit_index)
+        if derived is None:
+            return SlicedVerification(first, findings)
+        replaced = SpecialistFindings(specialist_id=findings.specialist_id, task_id=findings.task_id, status=findings.status,
+                                      findings=[derived] + list(findings.findings[1:]), summary=findings.summary,
+                                      missing=list(findings.missing), handoff_requests=list(findings.handoff_requests),
+                                      confidence=findings.confidence, limitations=list(findings.limitations), llm_used=findings.llm_used,
+                                      ms=findings.ms, metadata=dict(findings.metadata))
+        second = verify_findings(clause, replaced, chunks, metadata)
+        if second.accepted and second.safe_to_render and derived.finding_id in second.accepted_finding_ids:
+            start, end = derived.metadata["slice"]
+            return SlicedVerification(second, replaced, ((derived.finding_id, original.finding_id, int(start), int(end)),))
+        detail = ("%s; provision slice rejected: %s" % (first.detail, second.reason.value))[:200]
+        return SlicedVerification(replace(first, detail=detail), findings)
+    except Exception as exc:                                        # the slice is an extra; its failure never changes the verdict
+        category = redact_error(exc).split(":", 1)[0].strip() or type(exc).__name__
+        return SlicedVerification(replace(first, detail=("%s; provision slice raised: %s" % (first.detail, category))[:200]), findings)
+
+
 __all__ = [
     "Completeness", "ENUMERATIVE_KINDS", "FindingVerdict", "FindingsVerification", "PHASE", "ReasonCode", "RequestKind", "RequestShape",
-    "VALUE_KINDS", "VERSION", "quote_units", "read_request", "status_code", "verify_finding", "verify_findings",
+    "SLICE_SUFFIX", "SlicedVerification", "VALUE_KINDS", "VERSION", "clause_view", "provision_slice", "quote_units", "read_request",
+    "report_code", "run_code", "status_code", "verify_finding", "verify_findings", "verify_findings_sliced",
 ]

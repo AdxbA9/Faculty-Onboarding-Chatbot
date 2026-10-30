@@ -269,7 +269,7 @@ def test_ui_contract_is_unchanged():
     (HR_PHONE, "PLAN_F_ACCEPTED"),
     (HR_KNOWN_WRONG, "PLAN_F_UNSAFE_RESULT"),
     (ANNUAL_LEAVE, "PLAN_F_UNSAFE_RESULT"),
-    ("Who handles faculty visas and where is that office?", "PLAN_F_UNSAFE_RESULT"),
+    ("Who handles faculty visas and where is that office?", "PLAN_F_REJECTED_BY_AGGREGATOR"),      # phase I-5: a clause shared by two specialists
     ("asdfgh qwerty zxcvb", "PLAN_F_NOT_APPLICABLE"),
     ("Hello", "PLAN_F_NOT_APPLICABLE"),
 ])

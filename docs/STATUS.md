@@ -9,6 +9,317 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-10-30 - Deterministic Plan F aggregation (runtime integration, phase I-5)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/remaining-specialists` |
+| Starting commit | `0b179f7` |
+| Ending state | a deterministic multi-finding aggregation layer now decides every decision with several request clauses or several specialists; the single-clause pass-through path of phases I-1 to I-4 is unchanged except that a quote rejected as excess evidence may be served as its provision slice; both Plan F switches still default to off; the four frozen specialists, the Coordinator, the dispatcher and the legacy core unchanged (hashes verified); Plan F is CONNECTED BEHIND FLAGS and verified, not released; local commit on top of `0b179f7`, pushed by the user; I-6 not started |
+
+### Completed
+
+- Objective: allow Plan F to serve an answer that needs MORE THAN ONE
+  independently verified finding when the findings the current execution
+  already produced cover every clause of the request completely; never
+  free-form synthesis, never a model call, never a handoff execution, never
+  a routing change, never a partial answer served as a whole. Acceptance
+  rate was not a target.
+- Aggregator: `handbook_bot/plan_f_aggregation.py` (new).
+  `aggregate(decision, dispatched, chunks, metadata)` returns an immutable
+  `Aggregation` (an `AggregationResult` plus the ordered parts to render):
+  code, clause and coverage counts, per-clause coverage with its own
+  findings-aware verification record, ordered evidence references (finding,
+  task, specialist, source, page, chunk, the clauses it covers, the original
+  of a slice), duplicates, conflicts, specialists, pages, completeness,
+  `safe_to_render`; `to_dict` is JSON-serialisable, deterministic (no wall
+  time) and free of question and answer text. Codes (`AggregationCode`, 11):
+  `AGGREGATED_ACCEPTED`, `NO_AGGREGATION_REQUIRED`, `MULTIPART_UNSUPPORTED`,
+  `UNRESOLVED_CLAUSE`, `CROSS_DOMAIN_UNRESOLVED`, `HANDOFF_REQUIRED`,
+  `UNSAFE_RESULT`, `MISSING_REQUIRED_CLAUSE`, `CHILD_FINDING_REJECTED` (the
+  child's I-4 code in the detail), `VALUE_CONFLICT`, `AGGREGATION_ERROR`.
+  It never raises: an exception becomes `AGGREGATION_ERROR` with the
+  exception category only. Standard library only; zero model calls.
+- Clause coverage (structured, never by word similarity): the request
+  clauses are the Coordinator's own split (`metadata["analysis"]["clauses"]`,
+  in order). A clause is owned by the task whose `focus_clauses` names it
+  exactly (a cross-domain decision); a clause owned by two tasks is
+  `CROSS_DOMAIN_UNRESOLVED` and one owned by none `UNRESOLVED_CLAUSE`, both
+  knowable from the decision alone, so no specialist runs for them
+  (`request_problem`). When one specialist received the whole question as its
+  one clause (a same-domain multipart decision), its single report is shared
+  by every request clause and tried one finding at a time; the eligible
+  findings are then verified together, so the primary-first and value-conflict
+  rules of I-4 still apply. Run-level safety first, on every executed run:
+  `supported` status, no handoff, no `missing` entry, no model call, a clause
+  report list, no unprocessed clause (`plan_f_verification.run_code`). Then
+  per clause the complete I-4 verifier on the clause's own view
+  (`clause_view`: the report and the findings whose `metadata["clauses"]`
+  name it): `report_code` (outcome, ask shape, requested details, relation;
+  the Institutional outcome and tier), the quote guard, the subject binding,
+  requested detail, entities, population, modifiers, conditions, relation,
+  provision boundary. Every clause covered or no aggregate (all or nothing).
+- Conflicts and duplicates: two request clauses that read as the same ask
+  (equal `RequestShape`) answered with different values (a number, or the
+  bound contact value of a contact ask) are `VALUE_CONFLICT`; nothing is
+  chosen by score. A quote already rendered for an earlier clause (same
+  chunk, same text) is rendered once; the clause stays covered and the
+  duplicate is recorded; a duplicate never covers a clause it did not verify
+  for. Ordering: request clause order, then the specialist's finding order,
+  then first occurrence; nothing depends on set or dict iteration.
+- Rendering: the verbatim quotes of the accepted parts, one paragraph each,
+  in request order; no label, no connective sentence, no rewording (the
+  shape every Plan F answer has had since I-1). Labels made of the user's
+  clause text were evaluated and not used: the legacy Verifier treats every
+  line as a claim and a directory row does not cover a clause's words. The
+  part-to-clause mapping travels in `items[*]["meta"]["plan_f"]["clause_index"]`
+  and in `QAResult.sub_questions` (one entry per request clause with its
+  task's route). Every rendered part keeps its own page: the legacy Verifier
+  must cite every evidence page, or the attempt is `PLAN_F_REJECTED_BY_VERIFIER`.
+- Provision slice (the I-4 consultancy case, section 24 of the brief):
+  `plan_f_verification.provision_slice` derives, from a quote the verifier
+  rejected as `EXCESS_EVIDENCE`, the exact substring that holds the answering
+  unit's own provision (every sentence of that list item, numbered item or
+  section passage the quote contains) and the lead-in sentences immediately
+  before it; sentences of OTHER provisions before or after are left out.
+  The derived finding keeps source, page, chunk and metadata and records
+  `derived_from`, the `slice` offsets and the provision; its id is the
+  original id plus `/slice`. `verify_findings_sliced` serves the slice only
+  when it passes every I-4 check on its own, the quote guard included;
+  otherwise the original rejection stands. It applies on both paths. The
+  consultancy question is now served as the 16.1.7 sentence alone.
+- Seam: `plan_f_runtime.PlanFRuntime.attempt` now branches after the
+  Coordinator: one request clause and one task take the unchanged
+  pass-through path (`_single_clause`); several clauses or several
+  specialists take `_aggregate` (every task dispatched once, nothing
+  re-routed; the aggregator; adaptation of the parts; the unchanged legacy
+  Verifier; the `QAResult`). New outcome `PLAN_F_REJECTED_BY_AGGREGATOR`;
+  `AdapterResult.aggregation`, `AdapterResult.path`
+  (`single_finding_passthrough` / `multi_finding_aggregate`), `verified` now
+  requires the aggregate AND every clause's own record on the aggregation
+  path; trace entries `aggregator` (shape, then accepted or rejected with the
+  record); timings `aggregation_ms` and its parts. `ui/pipeline.py`: ACTIVE
+  serves an aggregate only when `_verified` holds for the aggregate and every
+  clause; diagnostics gain `plan_f_path` and twelve `aggregation_*` keys
+  (counts, codes, pages, specialists, timing; never text); the `findings_*`
+  keys of an aggregate summarise the clause records. LEGACY is untouched and
+  still imports nothing of Plan F; SHADOW still returns the legacy answer
+  unchanged.
+- Unsupported shapes (always fallback): a clause shared by two specialists,
+  a specialist that answers no request clause, an uncovered clause, a
+  handoff request anywhere, a partial, not found, out of scope or error run,
+  an unprocessed clause, a general or enumerative clause, a rejected child
+  finding, a value conflict, a model call, an unexecuted task. Handoff
+  requests are preserved in the dispatch result and never executed (I-6).
+- Enumeration (section 23): investigated, not enabled. The HR case "What
+  does HR provide to new faculty members?" has no bounded list in the source
+  (page 61 lists pre-joining formalities under 2.2.3.8 and visa, travel and
+  accommodation steps under 2.2.3.9; the specialist returns one bullet and a
+  recruitment bullet from page 57). The frozen specialists return findings
+  by relevance, not a list's items, and carry no list-boundary metadata, so
+  completeness cannot be proven from the findings alone; proving it from
+  chunk text the specialist did not select would break the provenance rule.
+  `ENUMERATION_INCOMPLETE` stands, inside aggregates too.
+- Real-knowledge-base run (`qa/plan_f_i5/`, 2026-10-30; v12 cache, 272 pages,
+  13,688 chunks, knowledge base in 22.2 s; 62 I-3 questions, 14 I-4 probes and
+  the 26-question aggregation set, 96 unique questions, 102 runs per mode):
+  all 28 answers the I-4 ACTIVE run served (20 corpus, 8 probes) are served
+  again with byte-identical answer text and pages, every one through the
+  single-finding pass-through path (`plan_f_path` = `single_finding_passthrough`,
+  the aggregator never consulted). The three former limited cases: WLAM still
+  `RELATION_MISMATCH`, HR provision still `ENUMERATION_INCOMPLETE`, the
+  consultancy question now served as the 16.1.7 sentence (page 260, item
+  `task-1-f1/slice` derived from `task-1-f1`, slice offsets 117 to 314 of the
+  original quote); the probe "What percentage of their time can faculty spend
+  on consultancy?" is served the same way. Known cases unchanged: "What does
+  Human Resources do?" and "What does HR do?" stop at the I-1 gate (general
+  ask), "How many days of annual leave do faculty members get?" at `status
+  partial`; the multipart visa, housing, reduced-load and Research Institute
+  questions fall back with `CROSS_DOMAIN_UNRESOLVED` (no specialist run) or
+  `HANDOFF_REQUIRED` (the handoff preserved, not executed).
+- Five real aggregates served in ACTIVE mode, each reviewed against the
+  production chunk and the printed page: "How many credit hours is a full
+  teaching load and how many days of sick leave with full pay are faculty
+  entitled to?" (Teaching + HR; pages 96, 91, 107; the two workload quotes of
+  clause 1 both state 12 credit hours per semester, the sick-leave sentence
+  answers clause 2); "How many credit hours is a full teaching load and how
+  many theses can a faculty member supervise at once?" (Teaching + Research;
+  pages 96, 91, 81); "Does HR assist new faculty members in obtaining entry
+  visas, and how many colleges does the University of Sharjah have?" (HR +
+  Institutional stated fact; pages 61, 24); "How many office hours must
+  faculty hold, and how many office hours per week must faculty hold?" and
+  "How many days of sick leave with full pay are faculty entitled to, and how
+  many days of sick leave are faculty entitled to?" (one specialist, the
+  whole question as its clause, one verified sentence covering both clauses,
+  rendered once with the duplicate recorded; pages 79 and 107). Every part is
+  a verbatim quote with its own page; `sub_questions` carries the request
+  clauses; the legacy Verifier cited every evidence page.
+- Acceptance (ACTIVE served by Plan F): I-3/I-4 corpus 20 of 62 (32%) in I-4
+  to 21 of 62 (34%), fallback 42 to 41 (the consultancy slice); I-4 probes 8
+  of 14 to 9 of 14; aggregation set 6 of 26 served (5 aggregates, 1 single
+  finding); all 96 unique questions: 35 served, 61 fallback. No acceptance
+  target was pursued.
+- Multipart classification (every question with several request clauses or
+  several specialists, 32 runs over 26 unique questions): A (findings
+  available and independently verifiable, aggregated) 5; B (a requested
+  clause not supported by the frozen specialist: the single specialist given
+  the whole question reports the combined clause `partial`, or `not_found`
+  for a contact clause naming two offices) 14; C (cross-domain, a clause
+  assigned to two specialists or a specialist that would need another: no
+  specialist run) 11; D (handoff required) 2; E (synthesis or general
+  explanation) 0; F (unsupported) 0. Only A was activated. The same-domain
+  multipart questions of the set (12) are all B except the two same-fact
+  questions above: with the Coordinator unchanged, one specialist receives
+  the whole multipart question as one clause and reports it partial.
+- Review of every answer the ACTIVE run served (`qa/plan_f_i5/review_accepted.py`:
+  the production chunk and the printed page text of every part): the 5
+  aggregates CORRECT (every request clause answered; every rendered part a
+  verbatim quote of the cited page, the quote an exact substring of its
+  chunk; subject, relation, value and condition as asked; no omitted clause;
+  no connecting text; no cross-domain contamination; every page preserved),
+  0 ACCEPTABLE BUT LIMITED, 0 WRONG. In the two teaching-load aggregates the
+  first clause renders two quotes (pages 96 and 91) that both state 12 credit
+  hours per semester for regular ranked faculty: the I-4 rule that keeps a
+  secondary finding stating the same value, applied per clause. The 2 sliced
+  answers (consultancy days per week; consultancy percentage of time) are
+  CORRECT: the served text is the complete 16.1.7 sentence and the removed
+  text is the last sentence of 16.1.6 on liability, a different numbered
+  provision. The 28 single-finding answers are byte-identical to the I-4 run
+  reviewed there.
+- Aggregation latency (adapter timings, real knowledge base): the five
+  accepted aggregates median 2.6 ms (1.5 to 5.3 ms) in total, of which clause
+  mapping 0.01 ms, per-clause verification 1.9 ms (0.9 to 4.5), conflict
+  check 0.6 ms (0.5 to 0.8), deduplication 0.01 ms; the rendering plus the
+  legacy Verifier 0.3 ms (0.1 to 0.6); the 16 dispatched rejections median
+  0.04 ms; the 11 pre-dispatch rejections 0.5 ms for the whole attempt (no
+  specialist run). Against: I-4 findings verification median 0.6 ms (0.3 to
+  1.7 ms) on the pass-through path, specialist retrieval and rerank median
+  783 ms (695 to 1,284 ms) for the aggregate attempts (two specialists run)
+  and 679 ms over all dispatched aggregation attempts. ACTIVE wall: served
+  aggregates median 760 ms (706 to 1,257 ms), all served answers 614 ms,
+  legacy fallback 1,374 ms. SHADOW: 96 of 96 unique questions identical to
+  the direct legacy call; 0 exceptions. Plan F model calls: 0 on every
+  attempt, dispatch and diagnostic record. Diagnostics hygiene: 0 of 204
+  records carry the question or the answer text.
+- Controlled application smoke test: `app.py` launched locally with the
+  switches in the process environment only (never in `.env`) and the
+  pipeline's debug diagnostics logged by the launcher (no code change),
+  driven through the browser at localhost with Developer mode on. ACTIVE:
+  "How many credit hours is a full teaching load and how many days of sick
+  leave with full pay are faculty entitled to?" rendered as three verbatim
+  paragraphs with chips Page 91, Page 96, Page 107 and the section chip
+  Workload Allocation Model (WLAM); "Does HR assist new faculty members in
+  obtaining entry visas, and how many colleges does the University of Sharjah
+  have?" as two paragraphs with chips Page 24, Page 61 and Recruitment and
+  Hiring; "How many days of sick leave with full pay are faculty entitled to,
+  and how many days of sick leave are faculty entitled to?" as one paragraph
+  with chip Page 107 and Leaves and Absences; "What does HR do?" served by
+  legacy (the configured no-key reply). The developer panel labels every
+  Plan F answer "Deterministic extractor", shows the cited pages and best
+  section and counts the considered findings and rendered parts as
+  candidates and reranked chunks; totals 1,379 ms (first question, registry
+  built in 678 ms), 830 ms and 754 ms. The logged diagnostics name the path
+  `multi_finding_aggregate`, `AGGREGATED_ACCEPTED`, 2 of 2 clauses, the pages
+  and specialists, aggregation 2.7, 1.4 and 4.6 ms, registry reused, 0 model
+  calls, no error, and hold no question or answer text. No raw exception, no
+  crash; no UI change was needed. SHADOW (a second launch): the same aggregate question showed the
+  legacy no-key reply with its own chips (Pages 94, 96, 107) while the log
+  recorded the aggregate accepted internally (`served` legacy, path
+  `multi_finding_aggregate`, pages 96, 91, 107, 2.6 ms, registry built once
+  in 670 ms); the HR telephone control question showed the legacy
+  extractor answer while Plan F accepted its single finding internally;
+  registry reused; no exception. The duplicated "Page 54" chip of that
+  legacy answer is a pre-existing legacy-path observation for the I-7 list.
+- Tests: `tests/test_plan_f_aggregation.py` (new, 50 tests): the contract
+  (codes, immutable, serialisable, text-free, deterministic, no model or
+  network import), decision reading (clauses, ownership, pre-dispatch
+  problems), two specialists covering two clauses, deterministic output
+  across runs and across direct calls, request order over task order,
+  multi-page and same-page evidence, a shared report mapped by verification,
+  one finding covering two clauses rendered once, the same quote returned
+  twice, the pass-through path untouched (the aggregator never consulted),
+  the enumerative clause inside a multipart request, the provision slice
+  (unit, served consultancy case, slice rejected on its own merits,
+  `clause_view` projection), and the negatives: missing clause, partial run,
+  contradicted modifier, wrong subject, missing condition, wrong entity and
+  wrong field of a contact clause, conflicting numeric values, conflicting
+  contact values, a duplicate that must not create completeness, a handoff
+  (target never run), a general ask, a synthesis question, wrong page, wrong
+  chunk, tampered quote, a finding without its clause index, a raising
+  aggregator (three injection points, redacted), a pending task, a reported
+  model call, a legacy Verifier that cites one page only, reordered findings;
+  pipeline SHADOW non-invasive with the aggregation diagnostics, ACTIVE
+  serving the aggregate and falling back on a rejected child, `_verified`
+  requiring every clause record, LEGACY untouched, and the real frozen
+  specialists aggregating the cross-domain question on the test corpus.
+  Updated: `tests/test_plan_f_runtime.py` (the multi-clause questions now
+  carry the aggregator's code; a shared clause runs no specialist, a
+  multipart clause set is dispatched once), `tests/test_plan_f_verification.py`
+  (the consultancy quote: still excess for the verifier, served as its slice
+  by the adapter), `tests/test_plan_f_pipeline.py` (one SHADOW outcome
+  string), `tests/test_planf_imports.py` (the new module in `NEW_MODULES`).
+
+### Tests performed
+
+Targeted gate (18 files: aggregation, verifier, adapter, pipeline, imports,
+four-specialist dispatch, Coordinator, contracts, registry, legacy Verifier,
+compatibility, orchestrator, the frozen specialists' integration, support-gate
+and acceptance suites): 1,350 collected, 1,350 passed, 0 failed, 0 skipped,
+0 xfail (96 s).
+Full suite: 6,604 collected, 6,604 passed, 0 failed, 0 skipped, 0 xfail
+(204.5 s): the I-4 baseline of 6,553 plus the 50 new aggregation tests and one
+new import-budget case.
+`pip check`: no broken requirements. Frozen specialist hashes unchanged
+before and after (Teaching, Research, Faculty Services & HR and its claim
+model, Institutional and its cues; D-103 and D-107 values); the legacy core,
+the Coordinator, the dispatcher and the shared specialist modules unchanged.
+
+### Known issues at handoff
+
+- Same-domain multipart questions remain fallback in practice: the unchanged
+  Coordinator gives a single specialist the whole question as ONE clause, and
+  the frozen specialist then reports the combined clause `partial` ("not
+  stated together in one place") or, for a contact clause naming two
+  offices, `not_found`; a partial run is never aggregated. The aggregator
+  serves such a question only when one verified sentence answers every
+  clause. Per-clause decomposition by the Coordinator is a Coordinator
+  change, outside I-5.
+- A contact clause that names Human Resources also selects the HR
+  specialist, which hands it off; the shared clause and the handoff make
+  such cross-domain questions fall back.
+- The legacy model path remains REAL MODEL EVALUATION BLOCKED - NO AVAILABLE
+  CONFIGURED CLIENT (no key configured); I-5 does not depend on it.
+- UI observations from I-3 stay on the I-7 list; no UI change was needed.
+
+### Do not redo
+
+- Do not serve a clause subset: all or nothing is the I-5 rule.
+- Do not resolve a value conflict by retrieval score, and do not execute a
+  handoff to complete an aggregate (I-6).
+- Do not label aggregate parts with generated text.
+
+### Next task
+
+I-6: handoff round and Coordinator routing integration, after approval.
+
+### Files changed
+
+`handbook_bot/plan_f_aggregation.py` (new), `handbook_bot/plan_f_verification.py`
+(`run_code` / `report_code` split, `clause_view`, `provision_slice`,
+`verify_findings_sliced`), `handbook_bot/plan_f_runtime.py` (the aggregation
+path, the slice on the pass-through path, `AdapterResult.aggregation` and
+`path`, the new outcome, `clause_index` on adapted items), `ui/pipeline.py`
+(ACTIVE condition, diagnostics keys), `tests/test_plan_f_aggregation.py`
+(new), `tests/test_plan_f_runtime.py`, `tests/test_plan_f_verification.py`,
+`tests/test_plan_f_pipeline.py`, `tests/test_planf_imports.py` (expectations),
+`qa/plan_f_i5/` (new: `README.md`, `aggregate_eval.py`, `analyze.py`,
+`review_accepted.py`, `results_2026-10-30.json`), `docs/STATUS.md` (this
+entry). No frozen specialist, Coordinator, dispatcher, legacy core or shared
+specialist module changed.
+
+---
+
 ## 2026-10-30 - Findings-aware Plan F verification (runtime integration, phase I-4)
 
 | Field | Value |

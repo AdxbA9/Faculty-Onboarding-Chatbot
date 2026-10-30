@@ -12,7 +12,9 @@ pipeline and the Plan F runtime adapter (``handbook_bot/plan_f_runtime.py``):
     PLAN_F_ENABLED on, PLAN_F_SHADOW off    ACTIVE   Plan F first; its answer is returned only
                                                      when the adapter accepted it AND the
                                                      findings-aware verification layer (phase
-                                                     I-4) accepted it, else legacy
+                                                     I-4) accepted it (on the aggregation path
+                                                     of phase I-5: the aggregate and every
+                                                     clause's own record), else legacy
 
 Both switches default to off (``handbook_bot.config``); SHADOW takes
 precedence when both are on. ``ask(kb, question) -> QAResult`` is unchanged
@@ -207,12 +209,20 @@ def _outcome_of(attempt: Any) -> Optional[str]:
     return getattr(getattr(attempt, "outcome", None), "value", None)
 
 
+def _accepted_record(record: Any) -> bool:
+    return record is not None and bool(getattr(record, "accepted", False)) and bool(getattr(record, "safe_to_render", False))
+
+
 def _verified(attempt: Any) -> bool:
     """Whether the findings-aware verification layer (phase I-4) accepted the attempt's result for rendering. ACTIVE mode
     serves a Plan F answer only when the adapter accepted it AND this layer did: an attempt without a verification
-    record is never served."""
-    verification = getattr(attempt, "verification", None)
-    return verification is not None and bool(getattr(verification, "accepted", False)) and bool(getattr(verification, "safe_to_render", False))
+    record is never served. On the aggregation path (phase I-5) the aggregate itself and EVERY clause's own
+    verification record must be accepted."""
+    aggregation = getattr(attempt, "aggregation", None)
+    if aggregation is not None:
+        clauses = list(getattr(aggregation, "clauses", ()) or ())
+        return _accepted_record(aggregation) and bool(clauses) and all(_accepted_record(getattr(c, "verification", None)) for c in clauses)
+    return _accepted_record(getattr(attempt, "verification", None))
 
 
 def _diagnose(mode: str, served: str, attempt: Any, entry: Any, error: Optional[str], *, legacy: Optional[QAResult]) -> Dict[str, Any]:
@@ -229,6 +239,10 @@ def _diagnose(mode: str, served: str, attempt: Any, entry: Any, error: Optional[
         "legacy_used_llm": legacy.used_llm if legacy is not None else None,
         "findings_verified": False, "findings_accepted": None, "findings_reason": None, "findings_completeness": None,
         "findings_request_kind": None, "findings_ms": None,
+        "plan_f_path": None, "aggregation_attempted": False, "aggregation_accepted": None, "aggregation_reason": None,
+        "aggregation_clauses": None, "aggregation_covered": None, "aggregation_findings_considered": None,
+        "aggregation_findings_accepted": None, "aggregation_duplicates": None, "aggregation_conflict": None, "aggregation_pages": [],
+        "aggregation_specialists": [], "aggregation_dispatched": None, "aggregation_ms": None,
         "error": error,
     }
     try:
@@ -252,14 +266,39 @@ def _diagnose(mode: str, served: str, attempt: Any, entry: Any, error: Optional[
             dispatched = getattr(attempt, "dispatch", None)
             d["plan_f_llm_calls"] = int(getattr(dispatched, "llm_calls", 0) or 0)
             d["plan_f_used_llm"] = any(bool(getattr(e, "used_llm", False)) for e in getattr(attempt, "trace", []) or [])
+            d["plan_f_path"] = getattr(attempt, "path", None)
             verification = getattr(attempt, "verification", None)
             if verification is not None:                           # phase I-4: codes only, never the question or the answer
                 d["findings_verified"] = True
-                d["findings_accepted"] = bool(getattr(verification, "accepted", False)) and bool(getattr(verification, "safe_to_render", False))
+                d["findings_accepted"] = _accepted_record(verification)
                 d["findings_reason"] = getattr(getattr(verification, "reason", None), "value", None)
                 d["findings_completeness"] = getattr(getattr(verification, "completeness", None), "value", None)
                 d["findings_request_kind"] = getattr(getattr(verification, "request_kind", None), "value", None)
                 d["findings_ms"] = float(getattr(verification, "ms", 0.0) or 0.0)
+            aggregation = getattr(attempt, "aggregation", None)
+            if aggregation is not None:                            # phase I-5: counts, codes and pages only
+                d["aggregation_attempted"] = True
+                d["aggregation_accepted"] = _accepted_record(aggregation)
+                d["aggregation_reason"] = getattr(getattr(aggregation, "reason", None), "value", None)
+                d["aggregation_clauses"] = int(getattr(aggregation, "clause_count", 0) or 0)
+                d["aggregation_covered"] = int(getattr(aggregation, "covered_count", 0) or 0)
+                d["aggregation_findings_considered"] = int(getattr(aggregation, "findings_considered", 0) or 0)
+                d["aggregation_findings_accepted"] = int(getattr(aggregation, "findings_accepted", 0) or 0)
+                d["aggregation_duplicates"] = len(getattr(aggregation, "duplicates", ()) or ())
+                d["aggregation_conflict"] = bool(getattr(aggregation, "conflicts", ()) or ())
+                d["aggregation_pages"] = [int(p) for p in (getattr(aggregation, "pages", ()) or ())]
+                d["aggregation_specialists"] = [str(s) for s in (getattr(aggregation, "specialists", ()) or ())]
+                d["aggregation_dispatched"] = bool(getattr(aggregation, "dispatched", False))
+                d["aggregation_ms"] = float(getattr(aggregation, "ms", 0.0) or 0.0)
+                records = [getattr(c, "verification", None) for c in (getattr(aggregation, "clauses", ()) or ())]
+                if records:                                        # the clause records stand in for the single I-4 record
+                    d["findings_verified"] = all(r is not None for r in records)
+                    d["findings_accepted"] = all(_accepted_record(r) for r in records)
+                    failing = next((r for r in records if not _accepted_record(r)), None)
+                    d["findings_reason"] = getattr(getattr(failing, "reason", None), "value", None) if failing is not None else "ACCEPTED"
+                    classes = [getattr(getattr(r, "completeness", None), "value", None) for r in records if r is not None]
+                    d["findings_completeness"] = next((c for c in classes if c not in ("complete", "elaborated")), classes[0] if classes else None)
+                    d["findings_ms"] = sum(float(getattr(r, "ms", 0.0) or 0.0) for r in records if r is not None)
             d["accepted"] = d["accepted"] and _verified(attempt)   # accepted means: the adapter AND the findings-aware layer accepted
             if getattr(attempt, "result", None) is not None:
                 d["plan_f_pages"] = list(attempt.result.pages)

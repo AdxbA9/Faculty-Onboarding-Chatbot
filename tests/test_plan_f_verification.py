@@ -662,8 +662,6 @@ def test_misleading_supported_shapes_through_the_adapter_are_rejected_by_the_fin
     cases = []
     cid, quote = located(kb, "3.11 Workload Allocation Model (WLAM) Articles 20 and 21", "teaching loads.")
     cases.append((WLAM, "teaching", cid, quote, {}, R.RELATION_MISMATCH))
-    cid, quote = located(kb, "Consultancy agreements must include a clause", "professional consultancy activities.")
-    cases.append((CONSULTANCY, "research", cid, quote, {"requested": ("number or amount",), "relation": "strong"}, R.EXCESS_EVIDENCE))
     cid, quote = located(kb, "• HR provides information to new faculty members", "settling in the UAE).")
     cases.append((HR_PROVIDES, "faculty_services", cid, quote, {}, R.ENUMERATION_INCOMPLETE))
     cid, quote = located(kb, "• Female faculty employed on a full-time basis", "Academic Affairs.")
@@ -678,6 +676,16 @@ def test_misleading_supported_shapes_through_the_adapter_are_rejected_by_the_fin
         assert attempt.outcome is PF.PlanFOutcome.REJECTED_BY_FINDINGS_VERIFIER and attempt.result is None and attempt.requires_fallback, (question, attempt.reason)
         assert attempt.verification.reason is code and attempt.reason.startswith(code.value)
         assert "verifier" not in T.trace_agents(attempt) and T.trace_agents(attempt)[-1] == "plan_f_outcome"
+    # the consultancy quote spans two provisions: the verifier still rejects it whole as excess evidence; since phase I-5 the
+    # adapter serves its provision slice instead (tests/test_plan_f_aggregation.py)
+    cid, quote = located(kb, "Consultancy agreements must include a clause", "professional consultancy activities.")
+    task, findings = retrieval(kb, CONSULTANCY, "research", cid, quote, requested=("number or amount",), relation="strong")
+    whole = verify(kb, task, findings)
+    assert whole.reason is R.EXCESS_EVIDENCE and whole.verdicts[0].unit_index == 1
+    attempt = stub_attempt(kb, "research", lambda t: T.retrieval_result(kb, t, cid, quote, requested=("number or amount",),
+                                                                        covered=("number or amount",), relation="strong"), CONSULTANCY)
+    assert attempt.outcome is PF.PlanFOutcome.ACCEPTED and attempt.result.answer.startswith("16.1.7 Time Allocation for Consultancy:")
+    assert attempt.result.items[0]["meta"]["plan_f"]["derived_from"] == "task-1-f1"
 
 
 def test_accepted_result_renders_only_the_verified_findings(kb):
