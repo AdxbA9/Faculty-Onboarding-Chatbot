@@ -303,8 +303,13 @@ class RetrievalScope:
     section_numbers: Optional[FrozenSet[str]] = None
     section_prefixes: Optional[FrozenSet[str]] = None
     page_ranges: Optional[Tuple[Tuple[int, int], ...]] = None
+    #: Post-freeze PF-2 scope extension: chunks of these sources are inside the scope regardless of the other
+    #: constraints (the handbook constraints keep applying to the handbook). Set only through
+    #: ``handbook_bot.source_scopes``; None or empty means the scope is exactly its constraints.
+    also_source_ids: Optional[FrozenSet[str]] = None
 
     def __post_init__(self) -> None:
+        object.__setattr__(self, "also_source_ids", _frozen_strings("also_source_ids", self.also_source_ids))
         object.__setattr__(self, "source_ids", _frozen_strings("source_ids", self.source_ids))
         object.__setattr__(self, "section_numbers", _frozen_strings("section_numbers", self.section_numbers, _SECTION_NO))
         object.__setattr__(self, "section_prefixes", _frozen_strings("section_prefixes", self.section_prefixes, _SECTION_NO))
@@ -332,6 +337,8 @@ class RetrievalScope:
 
     def allows(self, meta: Dict) -> bool:
         """True when the chunk described by ``meta`` is inside the scope."""
+        if self.also_source_ids and meta.get("source_id") in self.also_source_ids:
+            return True
         if self.source_ids is not None and meta.get("source_id") not in self.source_ids:
             return False
         if self.chapters is not None and meta.get("chapter") not in self.chapters:
@@ -357,13 +364,16 @@ class RetrievalScope:
         return [i for i, meta in enumerate(metadata) if self.allows(meta)]
 
     def describe(self) -> Dict:
-        return {
+        out = {
             "source_ids": sorted(self.source_ids) if self.source_ids is not None else None,
             "chapters": sorted(self.chapters) if self.chapters is not None else None,
             "section_numbers": sorted(self.section_numbers) if self.section_numbers is not None else None,
             "section_prefixes": sorted(self.section_prefixes) if self.section_prefixes is not None else None,
             "page_ranges": [list(r) for r in self.page_ranges] if self.page_ranges is not None else None,
         }
+        if self.also_source_ids:                     # present only when the scope was extended (post-freeze PF-2)
+            out["also_source_ids"] = sorted(self.also_source_ids)
+        return out
 
 
 def _search_within(index, query_embedding: np.ndarray, k: int, allowed: Sequence[int]):

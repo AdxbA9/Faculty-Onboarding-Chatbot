@@ -24,6 +24,16 @@ WHAT
     identity (``unregistered_...``) and no section data, so it can never be
     mistaken for an approved source.
 
+POST-FREEZE PF-2 (several documents)
+    A record also carries the document's language, type, authority level,
+    publication date, owning department and system, a citation label, an
+    ``enabled`` switch, the file's sha256 (version identity), a page filter
+    (``english_only``), the specialists that may retrieve from it
+    (``domains``) and any registered ``conflicts`` (statements another
+    version of the document contradicts). Every field has a default, so the
+    one-record registry of the frozen runtime loads unchanged. Disabled
+    records are listed but never loaded, and their files need not exist.
+
 PAGE CONVENTION
     Pages are physical, 1-based PDF page indexes, the same convention as
     ``meta["page"]`` produced by ``pdf_loader`` and ``chunking``.
@@ -32,6 +42,7 @@ This module imports only the standard library and ``config``.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -48,11 +59,24 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 METADATA_KEYS: Tuple[str, ...] = (
     "source_id", "source_title", "source_type", "source_version",
     "chapter", "chapter_title", "section_no", "section_title", "page_section_nos",
+    # post-freeze PF-2: identity and typing that every chunk of a multi-document corpus carries
+    "source_page", "citation_label", "document_type", "authority_level", "system", "department",
+    "language", "content_type", "source_conflict",
 )
+
+#: ``chunk_type`` -> ``content_type`` (what kind of text the chunk is, independent of the document).
+CONTENT_TYPES: Dict[str, str] = {
+    "paragraph": "prose", "row": "table_row", "row_window": "table_rows", "image_ocr": "image_text",
+    "procedure_step": "procedure_step", "procedure_window": "procedure_window",
+}
+PAGE_FILTERS = ("", "english_only")
+ACCESS_LEVELS = ("", "public", "internal_use")
 
 RECORD_KINDS = ("front_matter", "chapter", "section")
 
 _SOURCE_ID = re.compile(r"^[a-z0-9][a-z0-9_]{2,63}$")
+_SHA256 = re.compile(r"^[0-9a-f]{64}$")
+_LANGUAGE = re.compile(r"^[a-z]{2}$")
 _SECTION_NO = re.compile(r"^\d+(?:\.\d+)*$")
 _DRIVE = re.compile(r"^[A-Za-z]:")
 
@@ -97,9 +121,53 @@ def _page(name: str, value: Any, page_count: int) -> int:
     return value
 
 
+def _collapse(text: str) -> str:
+    """Lower-cased text with row separators and runs of whitespace reduced to one space, for phrase matching."""
+    return " ".join(str(text).replace(" | ", " ").lower().split())
+
+
+def file_sha256(path: str) -> str:
+    """Hex sha256 of a file's bytes (the version identity of a source)."""
+    digest = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for block in iter(lambda: fh.read(1 << 20), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
 # ---------------------------------------------------------------------------
 # Source records and registry
 # ---------------------------------------------------------------------------
+@dataclass(frozen=True)
+class SourceConflict:
+    """A statement of one source that another version or authority contradicts (post-freeze PF-2).
+
+    A chunk whose text contains any of ``phrases`` (case-insensitive, whitespace collapsed) is stamped
+    ``source_conflict = topic`` and is never served as a direct Plan F answer until ``status`` is resolved
+    and the record removed. The phrases are matched, never merged or chosen between.
+    """
+
+    topic: str
+    phrases: Tuple[str, ...]
+    status: str = "unresolved"
+    note: str = ""
+
+    def __post_init__(self) -> None:
+        _text("conflict topic", self.topic)
+        if isinstance(self.phrases, str) or not isinstance(self.phrases, (list, tuple)) or not self.phrases:
+            raise SourceRegistryError("conflict %r needs a non-empty list of phrases" % (self.topic,))
+        object.__setattr__(self, "phrases", tuple(_collapse(_text("conflict phrase", p)) for p in self.phrases))
+        _text("status", self.status, required=False)
+        _text("note", self.note, required=False)
+
+    def matches(self, text: str) -> bool:
+        folded = _collapse(text)
+        return any(p in folded for p in self.phrases)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {"topic": self.topic, "phrases": list(self.phrases), "status": self.status, "note": self.note}
+
+
 @dataclass(frozen=True)
 class SourceRecord:
     """One document the corpus may be built from. Only ``relative_path`` is a
@@ -114,6 +182,20 @@ class SourceRecord:
     verification_status: str = ""
     section_map: Optional[str] = None      # repository-relative JSON file, or None
     notes: str = ""
+    # ---- post-freeze PF-2 fields (all optional; the frozen one-record registry loads unchanged) ----
+    language: str = "en"                   # ISO 639-1 of the indexed text; only "en" is supported by the models
+    document_type: str = ""                # handbook | system_guide | guideline | ...
+    authority_level: str = ""              # university_policy | system_guide | ...
+    publication_date: str = ""             # as printed, or the file date, or ""
+    department: str = ""                   # owning unit as printed
+    system: str = ""                       # the system the document describes, if any
+    citation_label: str = ""               # what the citation chip shows; the title when empty
+    access: str = ""                       # "" | public | internal_use
+    enabled: bool = True                   # a disabled record is listed, never loaded
+    sha256: str = ""                       # version identity of the file; checked when present
+    page_filter: str = ""                  # "" | english_only (deterministic page-level language control)
+    domains: Tuple[str, ...] = ()          # specialists that may retrieve from this source (teaching, research, ...)
+    conflicts: Tuple[SourceConflict, ...] = ()
 
     def __post_init__(self) -> None:
         if not isinstance(self.source_id, str) or not _SOURCE_ID.match(self.source_id):
@@ -122,14 +204,50 @@ class SourceRecord:
         _text("title", self.title)
         _relative_path("relative_path", self.relative_path)
         _text("source_type", self.source_type)
-        for name in ("version", "authority", "verification_status", "notes"):
+        for name in ("version", "authority", "verification_status", "notes", "document_type", "authority_level",
+                     "publication_date", "department", "system", "citation_label", "access", "sha256", "page_filter"):
             _text(name, getattr(self, name), required=False)
         if self.section_map is not None:
             _relative_path("section_map", self.section_map)
+        if not isinstance(self.language, str) or not _LANGUAGE.match(self.language):
+            raise SourceRegistryError("language must be a two-letter lower-case code, got %r" % (self.language,))
+        if not isinstance(self.enabled, bool):
+            raise SourceRegistryError("enabled must be true or false, got %r" % (self.enabled,))
+        if self.sha256 and not _SHA256.match(self.sha256):
+            raise SourceRegistryError("sha256 must be 64 lower-case hex digits, got %r" % (self.sha256,))
+        if self.page_filter not in PAGE_FILTERS:
+            raise SourceRegistryError("page_filter must be one of %s, got %r" % (PAGE_FILTERS, self.page_filter))
+        if self.access not in ACCESS_LEVELS:
+            raise SourceRegistryError("access must be one of %s, got %r" % (ACCESS_LEVELS, self.access))
+        if isinstance(self.domains, str) or not isinstance(self.domains, (list, tuple)):
+            raise SourceRegistryError("domains must be a list of specialist ids, got %r" % (self.domains,))
+        object.__setattr__(self, "domains", tuple(_text("domain", d) for d in self.domains))
+        if isinstance(self.conflicts, dict) or not isinstance(self.conflicts, (list, tuple)):
+            raise SourceRegistryError("conflicts must be a list, got %r" % (self.conflicts,))
+        conflicts = []
+        for entry in self.conflicts:
+            if isinstance(entry, SourceConflict):
+                conflicts.append(entry)
+            elif isinstance(entry, dict):
+                unknown = set(entry) - set(SourceConflict.__dataclass_fields__)
+                if unknown:
+                    raise SourceRegistryError("unknown conflict field(s): %s" % ", ".join(sorted(unknown)))
+                try:
+                    conflicts.append(SourceConflict(**entry))
+                except TypeError as exc:
+                    raise SourceRegistryError("conflict entry %r: %s" % (entry.get("topic"), exc)) from None
+            else:
+                raise SourceRegistryError("every conflict must be an object, got %r" % (entry,))
+        object.__setattr__(self, "conflicts", tuple(conflicts))
 
     @property
     def registered(self) -> bool:
         return not self.source_id.startswith("unregistered_")
+
+    @property
+    def label(self) -> str:
+        """The canonical document title shown in citations."""
+        return self.citation_label or self.title
 
     def absolute_path(self) -> str:
         return os.path.normpath(os.path.join(REPO_ROOT, self.relative_path))
@@ -143,6 +261,10 @@ class SourceRecord:
             "source_type": self.source_type, "version": self.version, "authority": self.authority,
             "verification_status": self.verification_status, "section_map": self.section_map,
             "notes": self.notes,
+            "language": self.language, "document_type": self.document_type, "authority_level": self.authority_level,
+            "publication_date": self.publication_date, "department": self.department, "system": self.system,
+            "citation_label": self.citation_label, "access": self.access, "enabled": self.enabled, "sha256": self.sha256,
+            "page_filter": self.page_filter, "domains": list(self.domains), "conflicts": [c.to_dict() for c in self.conflicts],
         }
 
 
@@ -202,13 +324,25 @@ class SourceRegistry:
     def list_sources(self) -> List[SourceRecord]:
         return list(self._records)
 
+    def enabled_sources(self) -> List[SourceRecord]:
+        """The records the corpus is built from, in registry order (post-freeze PF-2)."""
+        return [r for r in self._records if r.enabled]
+
     def validate_source_registry(self) -> List[str]:
         """Problems with the registry as a list of messages; empty means valid.
-        Checks that every file exists and every section map loads."""
+        Checks that every enabled file exists, that a registered sha256 matches
+        the file, and that every section map loads. A disabled record's file
+        need not exist (it may be held outside the repository)."""
         problems: List[str] = []
         for record in self._records:
             if not record.exists():
-                problems.append("%s: file not found at %s" % (record.source_id, record.relative_path))
+                if record.enabled:
+                    problems.append("%s: file not found at %s" % (record.source_id, record.relative_path))
+            elif record.sha256:
+                actual = file_sha256(record.absolute_path())
+                if actual != record.sha256:
+                    problems.append("%s: file sha256 %s... does not match the registered %s..."
+                                    % (record.source_id, actual[:12], record.sha256[:12]))
             if record.section_map:
                 try:
                     section_map = load_section_map(os.path.join(REPO_ROOT, record.section_map))
@@ -220,7 +354,7 @@ class SourceRegistry:
         return problems
 
     def to_dict(self) -> Dict[str, Any]:
-        return {"schema_version": 1, "sources": [r.to_dict() for r in self._records]}
+        return {"schema_version": 2, "sources": [r.to_dict() for r in self._records]}
 
     def __len__(self) -> int:
         return len(self._records)
@@ -526,12 +660,38 @@ def annotate_metadata(metadata: List[Dict[str, Any]], source: SourceRecord,
         meta["section_no"] = resolved.section_no if resolved else None
         meta["section_title"] = resolved.section_title if resolved else None
         meta["page_section_nos"] = list(resolved.section_nos) if resolved else []
+        # post-freeze PF-2: document identity and content typing for a multi-document corpus. ``page`` stays the
+        # document's own physical page; ``source_page`` repeats it explicitly so no consumer has to guess.
+        meta["source_page"] = page if isinstance(page, int) and not isinstance(page, bool) else None
+        meta["citation_label"] = source.label
+        meta["document_type"] = source.document_type
+        meta["authority_level"] = source.authority_level
+        meta["system"] = source.system
+        meta["department"] = source.department
+        meta["language"] = source.language
+        meta["content_type"] = CONTENT_TYPES.get(str(meta.get("chunk_type")), "other")
+        meta.setdefault("source_conflict", None)
     return metadata
 
 
+def stamp_conflicts(chunks: Sequence[str], metadata: List[Dict[str, Any]], source: SourceRecord) -> int:
+    """Mark every chunk of ``source`` whose text carries a registered conflict phrase
+    (``meta["source_conflict"] = topic``). Returns how many chunks were marked. Nothing is merged or chosen."""
+    marked = 0
+    if not source.conflicts:
+        return 0
+    for text, meta in zip(chunks, metadata):
+        for conflict in source.conflicts:
+            if conflict.matches(text):
+                meta["source_conflict"] = conflict.topic
+                marked += 1
+                break
+    return marked
+
+
 __all__ = [
-    "METADATA_KEYS", "REPO_ROOT", "PageSections", "SectionMap", "SectionRecord", "SourceRecord",
-    "SourceRegistry", "SourceRegistryError", "UnknownSourceError", "annotate_metadata",
-    "check_section_map_pages", "default_registry_path", "load_section_map", "load_source_registry",
-    "section_map_for", "unregistered_source",
+    "ACCESS_LEVELS", "CONTENT_TYPES", "METADATA_KEYS", "PAGE_FILTERS", "REPO_ROOT", "PageSections", "SectionMap",
+    "SectionRecord", "SourceConflict", "SourceRecord", "SourceRegistry", "SourceRegistryError", "UnknownSourceError",
+    "annotate_metadata", "check_section_map_pages", "default_registry_path", "file_sha256", "load_section_map",
+    "load_source_registry", "section_map_for", "stamp_conflicts", "unregistered_source",
 ]

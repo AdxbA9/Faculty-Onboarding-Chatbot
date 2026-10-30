@@ -183,44 +183,87 @@ def ordered_pages(pages: Any) -> List[int]:
     return out
 
 
+def _title_of(meta: Mapping[str, Any]) -> str:
+    title = meta.get("source_title")
+    return title.strip() if isinstance(title, str) and title.strip() else ""
+
+
+def source_ids(result: Any) -> List[str]:
+    """Distinct source ids behind the evidence items, in citation order (Developer panel only; never a user-facing label)."""
+    out: List[str] = []
+    for item in (getattr(result, "items", None) or []):
+        meta = item.get("meta") if isinstance(item, dict) and isinstance(item.get("meta"), dict) else {}
+        sid = meta.get("source_id")
+        if isinstance(sid, str) and sid and sid not in out:
+            out.append(sid)
+    return out
+
+
 def source_chips(result: Any) -> List[Tuple[str, str]]:
     """(css class, label) chips: one chip per distinct cited page with the page's section when the evidence names one,
     the document once in front of them, an OCR marker when image text was used. Two evidence items on the same page with
     the same section give one chip; a page without a section is "Page N"; a refusal that cites no page gets no chip at
-    all, so the handbook is never shown as the source of an answer it did not give; nothing is invented."""
+    all, so the handbook is never shown as the source of an answer it did not give; nothing is invented.
+
+    Post-freeze PF-2: when the evidence comes from several documents, each document chip is followed by its own page
+    chips (canonical document title, then ``Page N``), in the order the result cites them; a one-document result is
+    rendered exactly as before. Raw source ids never appear in a chip."""
     items = [i for i in (getattr(result, "items", None) or []) if isinstance(i, dict)]
     pages = ordered_pages(getattr(result, "pages", None))
     chips: List[Tuple[str, str]] = []
     documents: List[str] = []
     sections: Dict[int, List[str]] = {}
+    cited: List[Tuple[str, int]] = []                      # (document title, page) in evidence order
+    doc_sections: Dict[Tuple[str, int], List[str]] = {}
     for item in items:
         meta = item.get("meta") if isinstance(item.get("meta"), dict) else {}
-        title = meta.get("source_title")
-        if isinstance(title, str) and title.strip() and title.strip() not in documents:
-            documents.append(title.strip())
+        title = _title_of(meta)
+        if title and title not in documents:
+            documents.append(title)
         page = meta.get("page")
         section = _section_of(meta)
-        if isinstance(page, int) and not isinstance(page, bool) and section:
-            sections.setdefault(page, [])
-            if section not in sections[page]:
-                sections[page].append(section)
-    for page in pages:
-        names = sections.get(page) or []
+        if isinstance(page, int) and not isinstance(page, bool):
+            if (title, page) not in cited:
+                cited.append((title, page))
+            if section:
+                sections.setdefault(page, [])
+                if section not in sections[page]:
+                    sections[page].append(section)
+                doc_sections.setdefault((title, page), [])
+                if section not in doc_sections[(title, page)]:
+                    doc_sections[(title, page)].append(section)
+
+    def page_chip_rows(names: List[str], page: int) -> List[Tuple[str, str]]:
         if names:
-            for name in names:
-                chips.append(("page", "Page %d · %s" % (page, _shorten(name, 44))))
-        else:
-            chips.append(("page", "Page %d" % page))
+            return [("page", "Page %d · %s" % (page, _shorten(name, 44))) for name in names]
+        return [("page", "Page %d" % page)]
+
+    if len(documents) <= 1:                                # the pre-PF-2 rendering, unchanged
+        for page in pages:
+            chips.extend(page_chip_rows(sections.get(page) or [], page))
+        if pages and documents:                           # the document only when something in it is actually cited
+            chips.insert(0, ("doc", _shorten(documents[0], 40)))
+    else:
+        page_set = set(pages)
+        shown: set = set()
+        for title in documents:
+            own = [p for p in pages if (title, p) in cited and p in page_set]
+            if not own:
+                continue
+            chips.append(("doc", _shorten(title, 40)))
+            for page in own:
+                chips.extend(page_chip_rows(doc_sections.get((title, page)) or [], page))
+                shown.add(page)
+        for page in pages:                                 # a cited page no document claims: shown without a document
+            if page not in shown:
+                chips.extend(page_chip_rows(sections.get(page) or [], page))
     if not pages:
         best = getattr(result, "best_section", None)
         if isinstance(best, str) and best.strip() and best.strip() not in _PLACEHOLDER_SECTIONS and not _PAGE_PLACEHOLDER.match(best):
             chips.append(("section", _shorten(best.strip(), 48)))
-    if chips and documents:                               # the document only when something in it is actually cited
-        chips.insert(0, ("doc", _shorten(documents[0], 40)))
     if any((i.get("meta") or {}).get("chunk_type") == "image_ocr" for i in items):
         chips.append(("ocr", "image-OCR evidence"))
     return chips
-
 
 def _shorten(text: str, limit: int) -> str:
     text = re.sub(r"\s+", " ", text).strip()
@@ -348,7 +391,8 @@ def dev_sections(result: Any, diagnostics: Optional[Mapping[str, Any]], kb_stats
     chips = source_chips(result)
     pages = ordered_pages(getattr(result, "pages", None))
     evidence = [("Pages cited", ", ".join(str(p) for p in pages) or NA),
-                ("Document", next((label for cls, label in chips if cls == "doc"), NA)),
+                ("Document", "; ".join(label for cls, label in chips if cls == "doc") or NA),
+                ("Source ids", ", ".join(source_ids(result)) or NA),
                 ("Sections", "; ".join(dict.fromkeys(label.split(" · ", 1)[1] for cls, label in chips if cls == "page" and " · " in label)) or NA),
                 ("Evidence items", str(len(getattr(result, "items", None) or []))),
                 ("Image-OCR evidence", _yes_no(any(((i.get("meta") or {}).get("chunk_type") == "image_ocr") for i in (getattr(result, "items", None) or []) if isinstance(i, dict))))]

@@ -1,0 +1,332 @@
+{
+ "phase": "PF-2",
+ "generated_from": "knowledge/sources.json and the loader (assemble_corpus)",
+ "corpus_key": "46722775e6d316bd",
+ "cache_format": "v13",
+ "total_chunks": 14549,
+ "pages_indexed_total": 298,
+ "source_folder_note": "the original files were taken from the PF-1 inventory folder outside the repository (not recorded here); the four ingested copies live under data/guides/ with stable file names",
+ "documents": [
+  {
+   "source_id": "uos_faculty_handbook_2025_26",
+   "title": "UOS Faculty Handbook 2025/26",
+   "citation_label": "UOS Faculty Handbook 2025/26",
+   "document_type": "handbook",
+   "authority_level": "university_policy",
+   "department": "University of Sharjah",
+   "system": "",
+   "publication_date": "2025",
+   "version": "2025/2026",
+   "language": "en",
+   "access": "public",
+   "enabled": true,
+   "verification_status": "verified_local_file",
+   "relative_path": "data/UOS Faculty Handbook 25-26.pdf",
+   "file_present": true,
+   "bytes": 6828353,
+   "sha256": "fc9bc650529c85363ce87b452b93e0e0bdf3caae15acf587ba232b0ca4ea7ea7",
+   "page_filter": "",
+   "domains": [
+    "teaching",
+    "research",
+    "faculty_services",
+    "institutional"
+   ],
+   "conflicts": [],
+   "decision": "PRIMARY SOURCE (unchanged): loaded first, chunked exactly as at the I-9 freeze",
+   "pf1_doc_id": null,
+   "pf1_priority": null,
+   "original_file": "UOS Faculty Handbook 25-26.pdf",
+   "indexed": {
+    "pages_loaded": 272,
+    "pages_indexed": 272,
+    "language_filter": null,
+    "procedures": false,
+    "chunks": 13688,
+    "chunk_types": {
+     "paragraph": 847,
+     "row": 8412,
+     "row_window": 4429
+    },
+    "chunk_id_range": [
+     0,
+     13687
+    ],
+    "conflict_chunks": 0,
+    "section_records": 206
+   }
+  },
+  {
+   "source_id": "uos_blackboard_faculty_short_guide",
+   "title": "Blackboard Ultra Faculty Short Guide",
+   "citation_label": "Blackboard Ultra Faculty Short Guide",
+   "document_type": "system_guide",
+   "authority_level": "system_guide",
+   "department": "ITC Academic Computing",
+   "system": "Blackboard Ultra",
+   "publication_date": "2022-08-22",
+   "version": "file dated 2022-08-22",
+   "language": "en",
+   "access": "public",
+   "enabled": true,
+   "verification_status": "pf1_approved_p0",
+   "relative_path": "data/guides/uos_blackboard_faculty_short_guide.pdf",
+   "file_present": true,
+   "bytes": 2169628,
+   "sha256": "4a9072699167a917e69b436064f4e54fce1b297587c39bce25d950bbe1a2448b",
+   "page_filter": "english_only",
+   "domains": [
+    "teaching",
+    "institutional"
+   ],
+   "conflicts": [],
+   "decision": "INGESTED: approved official ITC guide, English only",
+   "pf1_doc_id": "guide_bb_faculty_short",
+   "pf1_priority": "P0",
+   "original_file": "Blackboard_Faculty_Short_Guide_En.pdf",
+   "indexed": {
+    "pages_loaded": 11,
+    "pages_indexed": 11,
+    "language_filter": {
+     "filter": "english_only",
+     "pages_loaded": 11,
+     "pages_indexed": 11,
+     "pages_dropped": [],
+     "rows_dropped": 0,
+     "page_share_max": 0.3,
+     "row_share_max": 0.5
+    },
+    "procedures": true,
+    "chunks": 403,
+    "chunk_types": {
+     "paragraph": 22,
+     "procedure_step": 32,
+     "procedure_window": 13,
+     "row": 202,
+     "row_window": 134
+    },
+    "chunk_id_range": [
+     13688,
+     14090
+    ],
+    "conflict_chunks": 0,
+    "section_records": 0
+   }
+  },
+  {
+   "source_id": "uos_grade_transfer_dashboard_guide",
+   "title": "Grade Transfer Dashboard Guide",
+   "citation_label": "Grade Transfer Dashboard Guide",
+   "document_type": "system_guide",
+   "authority_level": "system_guide",
+   "department": "ITC Academic Computing",
+   "system": "Grade Transfer Dashboard (Blackboard to Banner)",
+   "publication_date": "2024-11-21",
+   "version": "file dated 2024-11-21",
+   "language": "en",
+   "access": "public",
+   "enabled": true,
+   "verification_status": "pf1_approved_p0",
+   "relative_path": "data/guides/uos_grade_transfer_dashboard_guide.pdf",
+   "file_present": true,
+   "bytes": 626633,
+   "sha256": "06018cb153bc833831e651461eefe298ad7e8f4cf86b57c5c0b96b8dfc733892",
+   "page_filter": "english_only",
+   "domains": [
+    "teaching",
+    "institutional"
+   ],
+   "conflicts": [],
+   "decision": "INGESTED: approved official ITC guide; Arabic pages 4-6 excluded by the english_only page filter",
+   "pf1_doc_id": "guide_grade_transfer_dashboard",
+   "pf1_priority": "P0",
+   "original_file": "Grade_Transfer_Guide.pdf",
+   "indexed": {
+    "pages_loaded": 6,
+    "pages_indexed": 3,
+    "language_filter": {
+     "filter": "english_only",
+     "pages_loaded": 6,
+     "pages_indexed": 3,
+     "pages_dropped": [
+      4,
+      5,
+      6
+     ],
+     "rows_dropped": 0,
+     "page_share_max": 0.3,
+     "row_share_max": 0.5
+    },
+    "procedures": true,
+    "chunks": 68,
+    "chunk_types": {
+     "paragraph": 3,
+     "procedure_step": 13,
+     "procedure_window": 6,
+     "row": 30,
+     "row_window": 16
+    },
+    "chunk_id_range": [
+     14091,
+     14158
+    ],
+    "conflict_chunks": 0,
+    "section_records": 0
+   }
+  },
+  {
+   "source_id": "uos_blackboard_gradebook_guide",
+   "title": "Blackboard Ultra Guide: Gradebook",
+   "citation_label": "Blackboard Ultra Guide: Gradebook",
+   "document_type": "system_guide",
+   "authority_level": "system_guide",
+   "department": "ITC Academic Computing",
+   "system": "Blackboard Ultra",
+   "publication_date": "2022-08-24",
+   "version": "file dated 2022-08-24",
+   "language": "en",
+   "access": "public",
+   "enabled": true,
+   "verification_status": "pf1_approved_p0",
+   "relative_path": "data/guides/uos_blackboard_gradebook_guide.pdf",
+   "file_present": true,
+   "bytes": 2021127,
+   "sha256": "e1171901516f58cd80af50ce442816eb919725ba30a4b13cb4155f443e87a2dc",
+   "page_filter": "english_only",
+   "domains": [
+    "teaching"
+   ],
+   "conflicts": [],
+   "decision": "INGESTED: approved official ITC guide, English only",
+   "pf1_doc_id": "guide_bb_gradebook",
+   "pf1_priority": "P0",
+   "original_file": "Bb_gradebook_En.pdf",
+   "indexed": {
+    "pages_loaded": 10,
+    "pages_indexed": 10,
+    "language_filter": {
+     "filter": "english_only",
+     "pages_loaded": 10,
+     "pages_indexed": 10,
+     "pages_dropped": [],
+     "rows_dropped": 0,
+     "page_share_max": 0.3,
+     "row_share_max": 0.5
+    },
+    "procedures": true,
+    "chunks": 308,
+    "chunk_types": {
+     "paragraph": 14,
+     "procedure_step": 48,
+     "procedure_window": 20,
+     "row": 142,
+     "row_window": 84
+    },
+    "chunk_id_range": [
+     14159,
+     14466
+    ],
+    "conflict_chunks": 0,
+    "section_records": 0
+   }
+  },
+  {
+   "source_id": "uos_ithenticate_guidelines",
+   "title": "iThenticate Guidelines",
+   "citation_label": "iThenticate Guidelines",
+   "document_type": "guideline",
+   "authority_level": "system_guide",
+   "department": "ITC Academic Computing",
+   "system": "iThenticate",
+   "publication_date": "2022-04-25",
+   "version": "file dated 2022-04-25",
+   "language": "en",
+   "access": "public",
+   "enabled": true,
+   "verification_status": "pf1_approved_p0_with_conflict",
+   "relative_path": "data/guides/uos_ithenticate_guidelines.pdf",
+   "file_present": true,
+   "bytes": 1190499,
+   "sha256": "061c30a2688a15cdae59aa5fd543538b146e6d7bf76706bd9d63c692de82371d",
+   "page_filter": "english_only",
+   "domains": [
+    "research"
+   ],
+   "conflicts": [
+    {
+     "topic": "ithenticate_yearly_submission_limit",
+     "phrases": [
+      "maximum 30",
+      "documents per year",
+      "specific amount of submission"
+     ],
+     "status": "unresolved",
+     "note": "The English page states a maximum of 30 documents per year; the Arabic page of the same file states 15. Neither value is served as a direct answer until the owning unit confirms the limit."
+    }
+   ],
+   "decision": "INGESTED WITH A REGISTERED CONFLICT: English page 1 indexed, Arabic page 2 excluded; the yearly submission limit (EN 30 / AR 15) is stamped source_conflict and blocked from direct Plan F service",
+   "pf1_doc_id": "guide_ithenticate",
+   "pf1_priority": "P0",
+   "original_file": "IThenticate_Guidelines_en_ar.pdf",
+   "indexed": {
+    "pages_loaded": 3,
+    "pages_indexed": 2,
+    "language_filter": {
+     "filter": "english_only",
+     "pages_loaded": 3,
+     "pages_indexed": 2,
+     "pages_dropped": [
+      2
+     ],
+     "rows_dropped": 0,
+     "page_share_max": 0.3,
+     "row_share_max": 0.5
+    },
+    "procedures": true,
+    "chunks": 82,
+    "chunk_types": {
+     "paragraph": 3,
+     "procedure_step": 16,
+     "procedure_window": 7,
+     "row": 35,
+     "row_window": 21
+    },
+    "chunk_id_range": [
+     14467,
+     14548
+    ],
+    "conflict_chunks": 8,
+    "section_records": 0
+   }
+  },
+  {
+   "source_id": "uos_performance_appraisal_phase2_guide",
+   "title": "Performance Appraisal Phase 2 User Guide",
+   "citation_label": "Performance Appraisal Phase 2 User Guide",
+   "document_type": "system_guide",
+   "authority_level": "system_guide",
+   "department": "Human Resources",
+   "system": "HR Portal (Performance Appraisal)",
+   "publication_date": "2026-09",
+   "version": "Edition 1, September 2026",
+   "language": "en",
+   "access": "internal_use",
+   "enabled": false,
+   "verification_status": "INGESTION HOLD - INTERNAL USE REVIEW REQUIRED",
+   "relative_path": "data/guides/uos_performance_appraisal_phase2_guide.pdf",
+   "file_present": false,
+   "bytes": null,
+   "sha256": null,
+   "page_filter": "english_only",
+   "domains": [
+    "faculty_services"
+   ],
+   "conflicts": [],
+   "decision": "INGESTION HOLD - INTERNAL USE REVIEW REQUIRED: every page carries the running header 'Internal Use'; not copied into the repository, not loaded, not served; the pilot proceeds with four documents",
+   "pf1_doc_id": "guide_hr_appraisal_phase2",
+   "pf1_priority": "P0",
+   "original_file": "Performance_Appraisal_Phase_2_User_Guide.pdf",
+   "indexed": null
+  }
+ ]
+}

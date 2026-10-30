@@ -9,6 +9,170 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-10-30 - Controlled multi-source guide ingestion and post-ingestion evaluation (post-freeze phase PF-2)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/post-freeze-knowledge-expansion` |
+| Starting commit | `5213736` (Audit official guides for knowledge expansion) |
+| Ending state | the knowledge base is registry-driven and multi-document; four approved official ITC guides are ingested beside the Faculty Handbook (298 indexed pages, 14,549 chunks, 861 from the guides); the Internal Use appraisal guide is on INGESTION HOLD; the iThenticate yearly-limit conflict is registered and blocked from Plan F; the frozen 192-question set reproduces I-9 exactly (0 changed questions); no Plan F answer rests on guide evidence because the frozen specialists' own source guard rejects non-handbook chunks (measured, recorded in D-109, the reason for the PF-3B recommendation); frozen specialists unchanged; local commit on top of `5213736`, not pushed by the developer tooling |
+| Frozen baseline (unchanged) | 192 questions; 55 served, 137 fallback, 28.6% coverage; 55 correct, 0 limited, 0 wrong, 100% precision; 0 false acceptances, 11 false fallbacks; SHADOW mismatch 0; Plan F model calls 0; 6,674 tests at the freeze |
+| Plan F switches | `PLAN_F_ENABLED`, `PLAN_F_SHADOW` and the new `PLAN_F_GUIDE_SCOPES` default to off |
+| Elapsed | 6h56m08s (start 2026-10-30T13:25:28Z, end 2026-10-30T20:21:36Z; includes long background runs) |
+
+### Completed
+
+- Objective: make the knowledge base safely multi-document, ingest the PF-1
+  P0 pilot under the provenance, language and conflict rules, and measure
+  the result against the frozen I-9 baseline without changing any frozen
+  specialist.
+- Pilot documents: Blackboard Ultra Faculty Short Guide (11 pages), Grade
+  Transfer Dashboard Guide (English pages 1-3 of 6), Blackboard Ultra Guide:
+  Gradebook (10 pages), iThenticate Guidelines (English page 1 of 3), copied
+  to `data/guides/` with stable names and registered with their sha256.
+  Performance Appraisal Phase 2 User Guide: INGESTION HOLD - INTERNAL USE
+  REVIEW REQUIRED (running header "Internal Use" on every page); registry
+  record disabled, file not committed, not loaded, not served.
+- Multi-source registry (`knowledge/sources.json` schema 2,
+  `handbook_bot/sources.py`): new optional record fields (language,
+  document type, authority level, publication date, department, system,
+  citation label, access, enabled, sha256, page filter, domains,
+  conflicts); a one-record registry of the frozen runtime still loads;
+  disabled records are listed, never loaded, and need no file; validation
+  checks every enabled file and its registered hash.
+- Loader (`handbook_bot/knowledge_base.py`): enabled records in registry
+  order, the handbook first and chunked exactly as before (13,688 chunks,
+  ids and texts identical to a one-document build); every further
+  document keeps its own page numbers, is loaded on its own with
+  source-named errors, and continues the global chunk numbering (the
+  frozen section guard requires `chunk_id == index`); `kb.pages` stays
+  the handbook's pages for the legacy extractors; `kb.sources`,
+  `kb.source_pages`, `kb.corpus_key` and per-source stats are new;
+  `build_knowledge_base(pdf_path=...)` still builds one document.
+- Cache identity: `cache/corpus_<16 hex>_v13_*`, keyed by the ordered
+  enabled sources (id, file sha256, page filter, chunking, section map
+  name) and the cache format; no path takes part. `CACHE_VERSION` v13.
+- Chunk metadata: `source_page`, `citation_label`, `document_type`,
+  `authority_level`, `system`, `department`, `language`, `content_type`,
+  `source_conflict` on every chunk; guide chunks carry no handbook section
+  (chapter and section fields null), nothing fabricated.
+- Language control: deterministic `english_only` page filter (Arabic-script
+  share of letters above 0.30 drops a page, above 0.50 drops a row);
+  grade-transfer pages 4-6 and iThenticate page 2 are not indexed; no guide
+  chunk contains Arabic script. No Arabic support was added.
+- Procedure-aware chunking (`handbook_bot/chunking.py`, system manuals
+  only): `procedure_step` (one numbered, lettered or bulleted step with its
+  continuation, prefixed by its procedure heading) and `procedure_window`
+  (three consecutive steps); 109 and 46 chunks; the paragraph, row and
+  row-window chunks are unchanged and the handbook gets none.
+- Source conflict guard: the iThenticate yearly limit (English 30, Arabic
+  15) is a registered unresolved conflict; eight chunks carry
+  `source_conflict`; the adapter rejects any finding resting on one
+  (`PLAN_F_REJECTED_BY_SOURCE_CONFLICT`, pass-through and aggregation
+  paths). Nothing is merged or chosen.
+- Source-scope seam (`handbook_bot/source_scopes.py`,
+  `RetrievalScope.also_source_ids`): the domain-to-source policy is read
+  from each record's `domains` (Teaching: handbook, short guide, gradebook,
+  grade transfer; Research: handbook, iThenticate; Faculty Services:
+  handbook while the appraisal guide is held; Institutional: handbook,
+  short guide, grade transfer) and applied in `build_specialist_registry`
+  when `PLAN_F_GUIDE_SCOPES` is on; independently of the switch the
+  registry is refused when a guide's page numbers fall inside a
+  specialist's handbook page ranges (none for the pilot).
+- Citations (`ui/presentation.py`): one document chip per cited document,
+  each followed by its own page chips; a one-document answer renders as
+  before; the Developer panel gains "Source ids"; the diagnostics gain
+  `legacy_sources` and `plan_f_sources` (ids only).
+- Legacy path: it now retrieves from the four guides as well; this is the
+  intended, documented change. No handbook-only answer of the master set
+  changed (pages, answers and outcomes identical).
+- Decision record D-109 appended to `docs/DECISIONS.md`.
+
+### Tests performed
+
+- Frozen 192-question master set rerun on the multi-source corpus and
+  compared field by field with the I-9 run (served path, outcome, routing
+  reason, handoff outcome, specialist calls, path, findings reason, answer,
+  pages): 0 changes in ACTIVE, 0 in SHADOW; SHADOW identical to the direct
+  legacy call 192 of 192; determinism stable; LEGACY fresh-process check: 30
+  minimal records, no Plan F import, no runtime cache.
+- Guide evaluation (48 labelled questions: 37 guide including 2
+  cross-document, 1 ambiguous, 4 wrong-source or held-document controls, 6
+  handbook baseline and regression) in ACTIVE, SHADOW, ACTIVE with the seam
+  on, LEGACY and two repeats: guide questions served by Plan F 0 of 37
+  (fallback 37, coverage 0%, correct 0, limited 0, wrong 0, precision not
+  applicable); the 4 served handbook questions are identical to I-9; the
+  seam changes 0 of 48 outcomes; legacy retrieval puts the expected
+  document first for 36 of 37 and the expected page in the top five for
+  36 of 37; manual review of the top-five evidence: 33 correct, 3 partial
+  (posting step, two one-sided cross-document asks), 1 miss (title length
+  limit), 1 conflict, 2 wrong-source risks (password reset, direct Banner
+  entry), 2 correct no-answer controls.
+- Wrong-source retrieval with the real models (16 questions on shared
+  terms such as approval, submission, review, attendance, support, login,
+  and system-versus-policy pairs): expected document first 16 of 16,
+  expected page in the top five 16 of 16.
+- Application smoke on the real chat page with Developer mode: ACTIVE 11
+  turns, SHADOW 4, LEGACY 3; guide answers cite "document title, Page N";
+  the held appraisal question refuses with no chip; the handbook teaching
+  load is served by Plan F in ACTIVE only; the known HR and annual-leave
+  regressions are not served.
+- Performance: cold corpus embedding 330-334 s on CPU (models 21 s,
+  assembly 1.4 s); cached start 23.2 s (15.5 s with a warm model cache)
+  against 22.9 s at I-9; embedding matrix 14,549 x 768 (44.7 MB), cache 65.4
+  MB; ACTIVE medians on the master set: served single 601 ms (I-9 660),
+  aggregate 1,186 ms (1,307), fallback 1,355 ms (1,487), direct legacy 772
+  ms (834); no material regression.
+- Targeted gate (the I-8 list plus the multi-source and retrieval-scope
+  modules): 1,641 passed. Full suite: 6,730 passed, 0 failed (6,674 at
+  the freeze plus 56 new multi-source tests). `pip check`: no broken
+  requirements. Security scan of the changed and new files: 0 problems.
+
+### Known limitations
+
+- The frozen specialists reject every non-handbook chunk in their own
+  files and the section guard has no source filter, so Plan F serves no
+  guide answer; the seam is in place but changes nothing served.
+- The legacy path can cite the conflicted iThenticate rows; with a model
+  client configured it would need the same conflict guard.
+- Five iThenticate questions reach no specialist (no Coordinator cue).
+- Cross-document legacy evidence is one-sided for the two cross-document
+  asks; the aggregator correctly refuses them in ACTIVE.
+- An approved document with 14 or more pages would disable Plan F through
+  the page-collision refusal until the section guard filters by source.
+- Guide page chips show the page's printed heading; on a guide's first
+  page it repeats the document title (cosmetic).
+
+### Next task
+
+PF-3B: a decision record to reopen the four specialists' source guard in
+favour of the registry domain policy and to give the section guard a
+source filter; add Coordinator cues for iThenticate; turn
+`PLAN_F_GUIDE_SCOPES` on, rerun `qa/post_freeze_pf2/` and the 192-question
+comparison, review every served guide answer. Only then expand to the
+remaining approved guides (PF-3A). Pending outside the code: Human
+Resources on the appraisal guide, ITC on the iThenticate limit.
+
+### Blockers
+
+None for the code. The appraisal guide and the iThenticate limit wait for
+the owning units.
+
+### Files changed
+
+`knowledge/sources.json`, `data/guides/` (four PDFs),
+`handbook_bot/sources.py`, `handbook_bot/knowledge_base.py`,
+`handbook_bot/chunking.py`, `handbook_bot/retrieval.py`,
+`handbook_bot/source_scopes.py` (new), `handbook_bot/plan_f_runtime.py`,
+`handbook_bot/config.py`, `ui/presentation.py`, `ui/pipeline.py`,
+`tests/test_multi_source.py` (new), `tests/test_sources.py`,
+`tests/test_teaching_specialist.py`, `qa/plan_f_i9/make_manifest.py`,
+`qa/post_freeze_pf2/` (new), `docs/DECISIONS.md` (D-109),
+`docs/STATUS.md`.
+
+---
+
 ## 2026-10-30 - Official guide inventory, knowledge-gap mapping and ingestion readiness (post-freeze phase PF-1)
 
 | Field | Value |

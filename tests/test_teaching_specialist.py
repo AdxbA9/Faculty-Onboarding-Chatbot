@@ -917,7 +917,7 @@ def test_teaching_answers_only_its_own_focus_of_a_cross_domain_question(speciali
 def test_production_pipeline_is_untouched():
     from handbook_bot import config
 
-    assert config.PLAN_F_ENABLED is False and config.MAX_LLM_CALLS == 2 and config.CACHE_VERSION == "v12"
+    assert config.PLAN_F_ENABLED is False and config.MAX_LLM_CALLS == 2 and config.CACHE_VERSION == "v13"
     for name in ("orchestrator.py", "qa.py", "retrieval.py"):
         text = (REPO / "handbook_bot" / name).read_text(encoding="utf-8")
         assert "specialists" not in text

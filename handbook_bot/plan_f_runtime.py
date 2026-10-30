@@ -157,6 +157,7 @@ class PlanFOutcome(str, Enum):
     UNSAFE_RESULT = "PLAN_F_UNSAFE_RESULT"                      # decision or specialist result outside the I-1 safe case
     REJECTED_BY_QUOTE_GUARD = "PLAN_F_REJECTED_BY_QUOTE_GUARD"
     REJECTED_BY_SUBJECT_GUARD = "PLAN_F_REJECTED_BY_SUBJECT_GUARD"
+    REJECTED_BY_SOURCE_CONFLICT = "PLAN_F_REJECTED_BY_SOURCE_CONFLICT"      # post-freeze PF-2: the finding rests on a registered source conflict
     REJECTED_BY_FINDINGS_VERIFIER = "PLAN_F_REJECTED_BY_FINDINGS_VERIFIER"  # phase I-4: the structured finding is not a suitable direct answer
     REJECTED_BY_AGGREGATOR = "PLAN_F_REJECTED_BY_AGGREGATOR"          # phase I-5: the findings of a multi-clause execution do not cover the request
     REJECTED_BY_ROUTING = "PLAN_F_REJECTED_BY_ROUTING"                # phase I-6: a request clause has no single owner; no specialist ran
@@ -176,6 +177,7 @@ class RegistryBuild:
     registry: Optional[SpecialistRegistry]
     errors: Dict[str, str]                       # specialist id -> redacted reason
     ms: float = 0.0
+    scope_extension: Dict[str, Any] = field(default_factory=dict)   # post-freeze PF-2: the source-scope seam's report
 
     @property
     def ok(self) -> bool:
@@ -183,16 +185,48 @@ class RegistryBuild:
 
     def to_dict(self) -> Dict[str, Any]:
         return {"ok": self.ok, "specialists": [s.value for s in self.registry.ids()] if self.registry is not None else [],
-                "errors": dict(self.errors), "ms": self.ms}
+                "errors": dict(self.errors), "ms": self.ms, "scope_extension": dict(self.scope_extension)}
 
 
-def build_specialist_registry(kb: Any, *, builders: Optional[Mapping[SpecialistId, Callable[[Any], Specialist]]] = None) -> RegistryBuild:
+def _extend_scopes(kb: Any, registry: SpecialistRegistry, errors: Dict[str, str], guide_scopes: bool) -> Dict[str, Any]:
+    """Post-freeze PF-2 seam (``handbook_bot.source_scopes``), run once the four specialists are built.
+
+    Always: refuse the registry when a non-handbook document's page numbers fall inside a specialist's handbook page
+    ranges, because the frozen section guard attributes chunks by page alone and would mix the documents. When
+    ``guide_scopes`` is on: admit each specialist's approved guides to its retrieval scope. A one-document knowledge
+    base (no ``sources``) is left exactly as it was. The report is JSON-serialisable and names no path.
+    """
+    records = list(getattr(kb, "sources", None) or ())
+    if not records:
+        return {}
+    try:
+        from .source_scopes import extend_specialist_scopes, page_collisions
+        counts = {sid: len(pages) for sid, pages in (getattr(kb, "source_pages", None) or {}).items()}
+        collisions = page_collisions(records, counts, registry)
+        if collisions:
+            errors["scope_extension"] = ("document pages overlap a specialist scope; Plan F is not built: "
+                                         + "; ".join(collisions))[:400]
+            return {"enabled": bool(guide_scopes), "applied": {}, "collisions": collisions}
+        applied = extend_specialist_scopes(registry, records) if guide_scopes else {}
+        return {"enabled": bool(guide_scopes), "applied": applied, "collisions": []}
+    except Exception as exc:                                      # the seam never raises past the registry factory
+        errors["scope_extension"] = redact_error(exc)
+        return {"enabled": bool(guide_scopes), "applied": {}, "collisions": []}
+
+
+def build_specialist_registry(kb: Any, *, builders: Optional[Mapping[SpecialistId, Callable[[Any], Specialist]]] = None,
+                              guide_scopes: Optional[bool] = None) -> RegistryBuild:
     """Build the four specialists from ``kb`` with their own ``from_knowledge_base`` builders.
 
     Either every required specialist is built and registered, or no registry is returned and ``errors`` names each
     specialist that could not be built, with its reason redacted. No model is called; nothing is cached.
+    ``guide_scopes`` (post-freeze PF-2; ``config.PLAN_F_GUIDE_SCOPES`` when None) admits each specialist's approved
+    guides to its retrieval scope through the ``source_scopes`` seam; the page-collision refusal applies either way.
     """
     table = DEFAULT_BUILDERS if builders is None else builders
+    if guide_scopes is None:
+        from . import config as _config
+        guide_scopes = bool(getattr(_config, "PLAN_F_GUIDE_SCOPES", False))
     started = time.perf_counter()
     registry = SpecialistRegistry()
     errors: Dict[str, str] = {}
@@ -208,10 +242,13 @@ def build_specialist_registry(kb: Any, *, builders: Optional[Mapping[SpecialistI
                 errors[sid.value] = "builder for %s produced the %s specialist" % (sid.value, registered.value)
         except Exception as exc:                                  # a failing builder never raises past this seam
             errors[sid.value] = redact_error(exc)
+    scope_report: Dict[str, Any] = {}
+    if not errors:
+        scope_report = _extend_scopes(kb, registry, errors, bool(guide_scopes))
     ms = (time.perf_counter() - started) * 1000.0
     if errors:
-        return RegistryBuild(None, errors, ms)
-    return RegistryBuild(registry, {}, ms)
+        return RegistryBuild(None, errors, ms, scope_report)
+    return RegistryBuild(registry, {}, ms, scope_report)
 
 
 def missing_specialists(registry: Optional[SpecialistRegistry]) -> List[str]:
@@ -420,6 +457,22 @@ def quote_problem(finding: Any, chunks: Sequence[str], metadata: Sequence[Dict[s
     source_id = cmeta.get("source_id")
     if source_id is not None and source_id != getattr(finding, "source_id", None):
         return "source mismatch: finding %r, chunk %r" % (getattr(finding, "source_id", None), source_id)
+    return None
+
+
+def source_conflict_problem(finding: Any, metadata: Sequence[Dict[str, Any]]) -> Optional[str]:
+    """Why ``finding`` must not be served because its chunk carries a registered source conflict (post-freeze PF-2),
+    or None. A conflict is a statement another version or authority of the same document contradicts; the registry
+    marks the chunks (``meta["source_conflict"]``) and this guard keeps them out of every Plan F answer. Read after
+    :func:`quote_problem` passed, so the chunk id is known to be valid; an unreadable id is simply not a conflict."""
+    meta = getattr(finding, "metadata", None)
+    cid = meta.get("chunk_id") if isinstance(meta, dict) else None
+    if isinstance(cid, bool) or not isinstance(cid, int) or not 0 <= cid < len(metadata):
+        return None
+    cmeta = metadata[cid]
+    topic = cmeta.get("source_conflict") if isinstance(cmeta, dict) else None
+    if isinstance(topic, str) and topic:
+        return "source conflict %r: the statement is contradicted by another version of its document and is not served" % topic
     return None
 
 
@@ -770,6 +823,11 @@ class PlanFRuntime:
                     state.add("quote_guard", "rejected", detail={"finding": finding.finding_id, "reason": problem})
                     return state.finish(PlanFOutcome.REJECTED_BY_QUOTE_GUARD, "%s: %s" % (finding.finding_id, problem),
                                         specialist=sid.value, status=status, dispatched=dispatched)
+                conflict = source_conflict_problem(finding, self.metadata)
+                if conflict is not None:                          # post-freeze PF-2
+                    state.add("source_conflict_guard", "rejected", detail={"finding": finding.finding_id, "reason": conflict})
+                    return state.finish(PlanFOutcome.REJECTED_BY_SOURCE_CONFLICT, "%s: %s" % (finding.finding_id, conflict),
+                                        specialist=sid.value, status=status, dispatched=dispatched)
             state.add("quote_guard", "passed", detail={"findings": len(findings.findings)})
             report = findings.metadata["clauses"][0]
             accepted: List[Dict[str, Any]] = []
@@ -951,6 +1009,12 @@ class PlanFRuntime:
 
         # ---- Rendering and the unchanged legacy Verifier ----------------------------------------------------------
         try:
+            for part in outcome.parts:                            # post-freeze PF-2: no part may rest on a source conflict
+                conflict = source_conflict_problem(part.finding, self.metadata)
+                if conflict is not None:
+                    state.add("source_conflict_guard", "rejected", detail={"finding": part.finding.finding_id, "reason": conflict})
+                    return state.finish(PlanFOutcome.REJECTED_BY_SOURCE_CONFLICT, "%s: %s" % (part.finding.finding_id, conflict),
+                                        specialist=joined, status=status, dispatched=dispatched, aggregation=record)
             items: List[Dict[str, Any]] = []
             for part in outcome.parts:
                 items.append(adapt_finding(part.finding, SpecialistId.parse(part.specialist_id), part.clause, self.chunks, self.metadata,
@@ -1151,5 +1215,5 @@ __all__ = [
     "RegistryBuild", "RuntimeCache", "SUBJECT_CHECK_VERSION", "accepted_pages", "accepted_record", "adapt_finding", "answer_with_fallback",
     "build_runtime", "handoff_outcome",
     "build_specialist_registry", "clause_covered_by", "decision_problem", "entity_in_text", "missing_specialists",
-    "named_entities", "quote_problem", "render_answer", "result_problem", "subject_binding",
+    "named_entities", "quote_problem", "render_answer", "result_problem", "source_conflict_problem", "subject_binding",
 ]

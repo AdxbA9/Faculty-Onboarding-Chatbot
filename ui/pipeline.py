@@ -225,12 +225,24 @@ def _verified(attempt: Any) -> bool:
     return _accepted_record(getattr(attempt, "verification", None))
 
 
+def _source_ids_of(result: Any) -> List[str]:
+    """Distinct source ids behind a result's evidence items, in citation order (post-freeze PF-2; ids only)."""
+    out: List[str] = []
+    for item in (getattr(result, "items", None) or []):
+        meta = item.get("meta") if isinstance(item, dict) and isinstance(item.get("meta"), dict) else {}
+        sid = meta.get("source_id")
+        if isinstance(sid, str) and sid and sid not in out:
+            out.append(sid)
+    return out
+
+
 def _diagnose(mode: str, served: str, attempt: Any, entry: Any, error: Optional[str], *, legacy: Optional[QAResult]) -> Dict[str, Any]:
     """The diagnostic record of one question: outcomes, pages, timings and redacted errors only."""
     d: Dict[str, Any] = {
         "mode": mode, "served": served, "attempted": attempt is not None, "outcome": None, "reason": "",
         "specialist_id": None, "status": None, "accepted": False, "fallback_reason": None,
         "plan_f_pages": [], "legacy_pages": list(legacy.pages) if legacy is not None else None,
+        "plan_f_sources": [], "legacy_sources": _source_ids_of(legacy) if legacy is not None else None,
         "answer_equal": None, "pages_equal": None, "page_overlap": 0,
         "plan_f_ms": None, "plan_f_timings": {},
         "registry_ok": None, "registry_reused": None, "registry_build_ms": None, "registry_errors": {},
@@ -263,6 +275,7 @@ def _diagnose(mode: str, served: str, attempt: Any, entry: Any, error: Optional[
             d["specialist_id"] = getattr(attempt, "specialist_id", None)
             d["status"] = getattr(attempt, "status", None)
             d["accepted"] = outcome == _ACCEPTED and getattr(attempt, "result", None) is not None
+            d["plan_f_sources"] = _source_ids_of(getattr(attempt, "result", None)) if d["accepted"] else []
             timings = dict(getattr(attempt, "timings", {}) or {})
             d["plan_f_ms"] = float(timings.get("total_ms", 0.0))
             d["plan_f_timings"] = {k: float(v) for k, v in timings.items()}

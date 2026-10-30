@@ -1,0 +1,188 @@
+{
+ "freeze_id": "runtime-freeze-i9",
+ "phase": "I-9",
+ "written_utc": "2026-10-30T20:21:20Z",
+ "git": {
+  "base_head_at_manifest_time": "5213736d38aa23624493e00c2f5f96e2ffec9be1",
+  "branch": "feature/post-freeze-knowledge-expansion",
+  "base_subject": "Audit official guides for knowledge expansion",
+  "freeze_commit": "the commit that adds this file (subject: Freeze Plan F runtime integration); a commit cannot record its own hash"
+ },
+ "environment": {
+  "python": "3.11.9",
+  "platform": "Windows 10",
+  "packages": {
+   "nicegui": "2.24.2",
+   "torch": "2.14.0",
+   "transformers": "5.17.0",
+   "sentence-transformers": "6.1.0",
+   "numpy": "2.4.6",
+   "pymupdf": "1.28.2",
+   "groq": "1.7.0",
+   "pytest": "9.1.1",
+   "faiss-cpu": "1.15.1"
+  }
+ },
+ "plan_f_versions": {
+  "routing": "plan-f-routing-1",
+  "handoff": "plan-f-handoff-1",
+  "aggregation": "plan-f-aggregation-1",
+  "verification_phase": "I-4 (+ I-8 rules)",
+  "handbook_bot.__version__": "1.0.0"
+ },
+ "integration_modules": {
+  "handbook_bot/plan_f_runtime.py": "f054b00df8f8dcc86443772bd99fda50e803c41f2b1b667c463c7a8f27f41d01",
+  "handbook_bot/plan_f_routing.py": "67033a3b642014825a0889407076732db154b963a7b4c05f9833add5fc4210db",
+  "handbook_bot/plan_f_handoff.py": "b91806f43d9482de40a4c65b242e2d9731d04419c21eb4257d501d54aeddd32b",
+  "handbook_bot/plan_f_aggregation.py": "862b890035b05fd20fa56820fa83cccd888274cbf1379cb6dae14e5ac49fbe7b",
+  "handbook_bot/plan_f_verification.py": "27bb4a957b62ed605d0b3bb331a0150385d6a5c53a7eb4e50b0e825bcbff0397",
+  "handbook_bot/agents/coordinator.py": "495bf5af9e5457da4a055c98494610341d8ec7350841b4bb34495310cdbde401",
+  "handbook_bot/agents/specialists/dispatch.py": "02e12a09ccd63fdd9074458fa8878638bc33d42f620a97fbe922dbfceeb4adf6",
+  "handbook_bot/agents/specialists/registry.py": "28622cf374acbb7d5054eff1ced7232cb2edcc38973f6269fc071e8d415dbd21",
+  "handbook_bot/agents/specialists/contracts.py": "22ff1130f19408870afa2ee7ace0019a804b1c7cbdc8a92951eb62ff85481a9b",
+  "handbook_bot/agents/specialists/base.py": "0b3b060bc69a8c8aad123ec4ac35a66be30935aaf97ec28d35309ecc19d0e794",
+  "handbook_bot/agents/verifier.py": "f21ca92812ae7321ef71904b265991d35a8bbda3888dc125966dd719b8c9a369",
+  "handbook_bot/agents/router.py": "f852f1b6316910d00f3ba94bbab2887227bf0aaa9467e56deecbdde6a6c5e5bc",
+  "handbook_bot/orchestrator.py": "ff72b51390bd19bf00adf0c8d687960a92c7e6cd66d7b421b9f62d4a033706fb",
+  "handbook_bot/qa.py": "0ec7acd09baf2d48e5e7acc0e3facdb13369804ec03d092a921d03cce7335a27",
+  "handbook_bot/config.py": "52fc50e926e35fb0e559da29a727c78f9843f02a69ff155c1b4c782509f02276",
+  "ui/pipeline.py": "3f86bf20b7af292a930b7673dc934dd8f8752087eeb379ed34b2d03ec93c30f3",
+  "ui/presentation.py": "5edb5c18784169bccf236c61caefe2130f56bcba47aa0189e274e4290df28559",
+  "ui/chat.py": "9efdc52707ce6d575bd193be4183fe27f48383296c513d6246806ccf6d3dc3b0",
+  "ui/styles.py": "790e41eb6968d4312d1a0a0a7dc611d19262c7da15bc5e3328919d1a00f5dda1",
+  "app.py": "e21f043835ae494e50adf6f33253fee76a000615f32cb65dbf3a6c82918fe7a3"
+ },
+ "frozen_specialists": {
+  "handbook_bot/agents/specialists/teaching.py": "0748413f316c9d0e2279efb0db4715c09d641cf98ae067730778cb8b4fd20a0e",
+  "handbook_bot/agents/specialists/research.py": "28e66c00d81c8684da61ef828dd25909a9c731f02eae5e97360d4fa5d68383b7",
+  "handbook_bot/agents/specialists/faculty_services.py": "4c158ee3a04152384d75011d61037ae25a9dacdddb803c851b1b0b290470a871",
+  "handbook_bot/agents/specialists/claim_model.py": "cb9304c90a0e265e0b58d79a9a980a5e05071971c30372c92299e815db6901ac",
+  "handbook_bot/agents/specialists/navigation_cues.py": "9ca84921595fe0c1b99d00e4c8ddc99f0c32fcd83682b2f29b99bebafb32ca0e",
+  "handbook_bot/agents/specialists/institutional.py": "17cd53c7a719d5c2ee55db3fcb13c027c42e9542002c5cc4e4ad5ff36172f98c"
+ },
+ "specialist_helpers": {
+  "handbook_bot/agents/specialists/details.py": "92ecaf2e86a449a035adb23394c04c186bb8a6699506ae7565cbcee4675f9b31",
+  "handbook_bot/agents/specialists/domain_cues.py": "ee68b1b91ce793e6a5038a4ff9ebe7e6a2643bba70c15309073cea70b74a1343",
+  "handbook_bot/agents/specialists/evidence.py": "9983a3fe427b720e4547ff1e25312e948203a789972876a5d7bab8aeb03aadbb",
+  "handbook_bot/agents/specialists/grounding.py": "5c975cbd766ce4794a1fb05728e9614d9474ab1c2bdf7555540963b9e83f9067",
+  "handbook_bot/agents/specialists/retrieval_intent.py": "6cd688f8d6b3f83d54a01afe753dbded490f93bbdc106aae58cdece829013233",
+  "handbook_bot/agents/specialists/scoping.py": "b597bd41d66be36ae7953358ae891c9034f44e5cfb17e9ce941c3dc2c82dd5d5"
+ },
+ "git_blobs": {
+  "integration_modules": {
+   "handbook_bot/plan_f_runtime.py": "56419032c74c5f45d4f0603b2d9274c3eac910dd",
+   "handbook_bot/plan_f_routing.py": "bf738550d21a7fed55e19ea497157102813d3a7e",
+   "handbook_bot/plan_f_handoff.py": "67662ad64f826089b91ef3dc32562d353fefa603",
+   "handbook_bot/plan_f_aggregation.py": "abc8c6a70f7c677d19b488f7af9538f0d2ae09d7",
+   "handbook_bot/plan_f_verification.py": "55a96ea1c51872ef7bea83cce702f2fc08f25aa2",
+   "handbook_bot/agents/coordinator.py": "e723375ffb9c6f93492c4b990f11b93960fee67c",
+   "handbook_bot/agents/specialists/dispatch.py": "2728d0a0e508c7fbf7b60fd1f71ddbb4341fba75",
+   "handbook_bot/agents/specialists/registry.py": "9f8c6aca0a31ebe8156a6c9317724fcbe516827b",
+   "handbook_bot/agents/specialists/contracts.py": "44191da3ff6945d74e3b9170075b5c88eff44080",
+   "handbook_bot/agents/specialists/base.py": "4189f611ad03c134166c5d7e9c2f84bc7e2b0b46",
+   "handbook_bot/agents/verifier.py": "bde2bb0d7592aa0d18ef5ff5ef1f1bd350223225",
+   "handbook_bot/agents/router.py": "4805d886cdb05fac3025ada25fda62877f971721",
+   "handbook_bot/orchestrator.py": "48bfaaa045c8499579d8964b0fb15448133a11c1",
+   "handbook_bot/qa.py": "de107a81821d501da4438ed6b11488430c8a2c48",
+   "handbook_bot/config.py": "caa6720006595549101dc36e19b3a1f52262800a",
+   "ui/pipeline.py": "2afdefcb27a22f0c8b3bd1fe35b99164dd2d8dd8",
+   "ui/presentation.py": "c095de1895f05b66efc795bf123d16cbcc761174",
+   "ui/chat.py": "9a19dac9be8ff6aee1642b9c174de8a50d374771",
+   "ui/styles.py": "15635093cacd962fb361c756f896cd907e57ea1a",
+   "app.py": "d28a6a2ccd101ab4dbbc911d5c6115b53ede9c03"
+  },
+  "frozen_specialists": {
+   "handbook_bot/agents/specialists/teaching.py": "28d63073438125b5837d7facb33950bcfa66c948",
+   "handbook_bot/agents/specialists/research.py": "1cb053919bf809c3948af3082a281fe805a11676",
+   "handbook_bot/agents/specialists/faculty_services.py": "d6ca51d0bbc3ec594a3cfaddd81fe2579519e881",
+   "handbook_bot/agents/specialists/claim_model.py": "a53e6c6cb99b8b15394762363c975eda5733eb39",
+   "handbook_bot/agents/specialists/navigation_cues.py": "941d64a3abe8df5451f6bb2068130d920debee0a",
+   "handbook_bot/agents/specialists/institutional.py": "baea45791e3c0fc0f23226e61ca793bd009fcd0b"
+  },
+  "specialist_helpers": {
+   "handbook_bot/agents/specialists/details.py": "1d66e8a8d5270ec2eb1ab186a12479863bde1667",
+   "handbook_bot/agents/specialists/domain_cues.py": "d9c5ce248dc3c0d60d636f24f6e5e3d952520f2f",
+   "handbook_bot/agents/specialists/evidence.py": "dad5c7bfe7a8b38f14884ac1b1c2b918a33c7cfb",
+   "handbook_bot/agents/specialists/grounding.py": "084e5788f1ee3fd625ea480b4b5f38f87cbbf80a",
+   "handbook_bot/agents/specialists/retrieval_intent.py": "5c2f72b6cef0d8243fe3ab789823a0488ccaee1c",
+   "handbook_bot/agents/specialists/scoping.py": "e9fa5a4bc9e8b7088d416ed1b8870d89611e68c6"
+  }
+ },
+ "qa_artifacts": {
+  "qa/plan_f_i8/question_set.py": "a88a6ea46736ed685ff3374144f2d315d43b4b725d4fed439d76694c3e751c04",
+  "qa/plan_f_i8/master_eval.py": "5884a0a76b5000f4e8f8c169a0f65b6604c56991e4e73233a799d89abb4acd4f",
+  "qa/plan_f_i8/analyze.py": "26d1a261226c2c2cc6dddbfe5207270ff11616b3653c1c37a142a3411417b80b",
+  "qa/plan_f_i8/review.json": "9ee9477b58a00ef8ee3cca21fc04d4ed8e00f3459d33cf9fcd56fd4e863b5a3b",
+  "qa/plan_f_i8/metrics.json": "0e822d3f9a26359deb05a1f8bee5d5568eaa615a3ecb0730ef18b8e98787fc8c",
+  "qa/plan_f_i8/results_2026-10-30.json": "77fecdb1f3e62164dd6d5523bba3ab665d8f205d6cd09b49fae987083b4dbeb2",
+  "qa/plan_f_i8/README.md": "95e7db5f97439e6da6ba52dbb77e55c64ec6b8c749f3778abf534f61581b4340",
+  "qa/plan_f_i9/concurrency_smoke.py": "821d5d9c3ef4b7a23c0dfc5efe4103d3b62fb2621b42a481e0fa7e54422295a5",
+  "qa/plan_f_i9/make_manifest.py": "e6c3af38bda0e8b4af77578e572ff0508bbf780a9c97b74586e049d638e7a1b8",
+  "docs/RUNTIME_FREEZE_I9.md": "0dc39801c6c3a31d8f54ed0bd5e5f0037281c7b1d26799f8e27289c211b7a158",
+  "docs/STATUS.md": "f3819dfe1252d02e3f57029a0ed7b73994676cc6548b38521e20101d50f97fdd",
+  "docs/DECISIONS.md": "d6c224609bb6a80f7337d4277ed1c8862bff54a6de983fa426804077a1295ec1"
+ },
+ "knowledge_base_cache_v12": {
+  "UOS Faculty Handbook 25-26_v12_chunks.json": {
+   "sha256": "8825786e4979dd2e051e63585b6d61cfc3224afa79c79938fde6ba98269525d8",
+   "bytes": 2852548
+  },
+  "UOS Faculty Handbook 25-26_v12_embeddings.npy": {
+   "sha256": "aa09de36bf600410855162d57d22c4af06e6170985ae2fce3796e83d643cbbb6",
+   "bytes": 42049664
+  },
+  "UOS Faculty Handbook 25-26_v12_meta.json": {
+   "sha256": "18ff9fd7fe7df586fce6056ad6c9d33ad7d6e1d7f27222bd379dab8963b34518",
+   "bytes": 10242396
+  },
+  "UOS Faculty Handbook 25-26_v12_pages.json": {
+   "sha256": "c4ced4ecb6ae97392ab9d02a22d794d20a2bbf55886dd834da30c8e47df96cc2",
+   "bytes": 2168071
+  }
+ },
+ "knowledge_base_cache_v13_corpus": {
+  "corpus_46722775e6d316bd_v13_chunks.json": {
+   "sha256": "258ae04f05447037718995619ac040c3b24cf53ad7d1a2097a4e4822d68ee819",
+   "bytes": 2991549
+  },
+  "corpus_46722775e6d316bd_v13_embeddings.npy": {
+   "sha256": "72f480dde6f888139ed03197251f8e0689edbc5903e98ed00dda528870a84d60",
+   "bytes": 44694656
+  },
+  "corpus_46722775e6d316bd_v13_meta.json": {
+   "sha256": "ddd12967637828db034ee55266d8de3fd12e774b9e1bf32d8c35b2561bc954bf",
+   "bytes": 15337212
+  },
+  "corpus_46722775e6d316bd_v13_pages.json": {
+   "sha256": "acfbe51b49ce8d3376859c32dd99642e46ede9d7b353d73b4da3ed9d52ca1d66",
+   "bytes": 2352901
+  }
+ },
+ "source_registry": {
+  "file": "knowledge/sources.json",
+  "sha256": "87b526a8d5b858091503e1ca469d937a5884d3e5e053dd507894b94a4480fb0a"
+ },
+ "evaluation_set": {
+  "file": "qa/plan_f_i8/question_set.py",
+  "questions": 192,
+  "sha256": "a88a6ea46736ed685ff3374144f2d315d43b4b725d4fed439d76694c3e751c04"
+ },
+ "tests": {
+  "targeted_gate": "1641",
+  "full_suite": "6730"
+ },
+ "frozen_metrics_i8_final": {
+  "questions": 192,
+  "served": 55,
+  "fallback": 137,
+  "coverage_pct": 28.6,
+  "correct": 55,
+  "limited": 0,
+  "wrong": 0,
+  "precision_pct": 100.0,
+  "false_acceptances": 0,
+  "false_fallbacks": 11,
+  "shadow_mismatches": 0,
+  "plan_f_llm_calls": 0
+ }
+}

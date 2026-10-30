@@ -1,0 +1,2077 @@
+{
+ "method": "Write ``review.json``: the manual review of every question of the PF-2 guide evaluation.\n\nFor the questions Plan F served (handbook-only controls) the verdict is CORRECT / LIMITED / WRONG on the evidence; for the\nguide questions, which the frozen specialists cannot serve, the review records that no Plan F answer was served and grades\nwhat the unscoped legacy retrieval put in its top five (the evidence a model answer would rest on): RETRIEVAL_CORRECT when the\nexpected document and page carry the asked statement, RETRIEVAL_PARTIAL when the right document is there but the statement is\ncut or a second document is missing, RETRIEVAL_MISS when the asked page is absent. The programmatic checks come from the\nresults file; the verdicts and notes were written by hand after reading the quotes.\n\n    python -X utf8 qa/post_freeze_pf2/make_review.py <results.json> <review.json>",
+ "summary": {
+  "RETRIEVAL_CORRECT": 33,
+  "RETRIEVAL_PARTIAL": 3,
+  "RETRIEVAL_MISS": 1,
+  "RETRIEVAL_CONFLICT": 1,
+  "WRONG_SOURCE_RISK": 2,
+  "RETRIEVAL_CORRECT_NO_ANSWER": 2,
+  "CORRECT": 4,
+  "CORRECT_FALLBACK": 2
+ },
+ "questions": {
+  "G01": {
+   "question": "How do I access Blackboard from outside the campus?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "procedure_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "page 1 procedure window and paragraph carry the full access procedure including the off-campus Login step"
+  },
+  "G02": {
+   "question": "How do I verify my identity when signing in to Blackboard?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "row"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "the multi-factor step (SMS or Microsoft Authenticator) is the first item"
+  },
+  "G03": {
+   "question": "How can I pin a course to the top of my course list in Blackboard Ultra?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    3
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     3,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     3,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     3,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     3,
+     "procedure_step"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "the favourite / pin sentence is the fifth item (page 3 procedure step); a gradebook page-1 paragraph intrudes at rank 2"
+  },
+  "G04": {
+   "question": "What can I manage from the Details & Actions panel of a Blackboard course?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    4
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     4,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     4,
+     "row"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     5,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     4,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "procedure_step"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "page 4 paragraph and the Details & Actions row; the list items (roster, groups, image, availability, Collaborate, attendance, announcements) are on page 4"
+  },
+  "G05": {
+   "question": "What is the minimum size of a Blackboard course banner image?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    4,
+    5
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     4,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     4,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     4,
+     "row"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     5,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     5,
+     "row_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "page 4 row states 1200 x 240; the 25 KB limit is on page 5 (page-5 paragraph is in the top five)"
+  },
+  "G06": {
+   "question": "How do I keep a Blackboard course hidden from students while I build it?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    4
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     4,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     8,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     222,
+     "row"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     4,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     226,
+     "row"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "Course Availability: Private is the first item; a handbook page-222 row about course files intrudes at rank 3"
+  },
+  "G07": {
+   "question": "Which file types can I upload to Blackboard course content?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    6
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     6,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     6,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     6,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     222,
+     "row"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     6,
+     "row_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "the Upload item with the supported file types is in the page-6 procedure window"
+  },
+  "G08": {
+   "question": "How do I move a content item with the keyboard in Blackboard Ultra?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    7
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     7,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     7,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     7,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     7,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     7,
+     "procedure_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "page 7 reorder content with the four keyboard steps (the procedure heading reads 'B. Content Visibility' because C) was parsed as a lettered step)"
+  },
+  "G09": {
+   "question": "How do I add a learning module in Blackboard Ultra?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    8
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     8,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     8,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     8,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     8,
+     "row"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     8,
+     "row_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "page 8 learning module steps"
+  },
+  "G10": {
+   "question": "How do I send an announcement to my students in Blackboard?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    9
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     9,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     9,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     9,
+     "row"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     9,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     4,
+     "row_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "page 9 announcement steps including Save then Post"
+  },
+  "G11": {
+   "question": "How do I create an assignment in Blackboard Ultra?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    10
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     10,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     10,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "procedure_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "page 10 Create an Assignment paragraph first; gradebook page-1 items intrude at ranks 2 and 3"
+  },
+  "G12": {
+   "question": "Can I add a time limit to a group assignment in Blackboard Ultra?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    11
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     11,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     11,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     11,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     11,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     11,
+     "row"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "the exact sentence 'you cannot add a time limit to group assignments' is the first item"
+  },
+  "G13": {
+   "question": "How can I review my Blackboard course from a student's perspective?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    5
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     5,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     5,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     5,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     4,
+     "paragraph"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "page 5 student preview sentence first"
+  },
+  "G14": {
+   "question": "Where do I find the course gradebook in Blackboard Ultra?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "row_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "page 1 course gradebook location (navigation bar, top right, Gradebook icon) first"
+  },
+  "G15": {
+   "question": "What are the two views of the Blackboard Ultra gradebook?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "row_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "page 1 paragraph covers the two views (list view with gradable items and students, student grid view)"
+  },
+  "G16": {
+   "question": "How do I post grades to students from the Blackboard gradebook?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    6
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     6,
+     "row_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "paragraph"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_PARTIAL",
+   "note": "page 6 is reached only at rank 4 and that row window shows steps 1-3; the 'Post option in the column header' step is not inside the top five quotes"
+  },
+  "G17": {
+   "question": "How do I make Blackboard assign zeros to missing work automatically?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    8
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_gradebook_guide",
+     8,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     8,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     7,
+     "row"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     7,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     7,
+     "row_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "page 8 automatic zeros paragraph first, page 7 settings row third"
+  },
+  "G18": {
+   "question": "How do I download the gradebook from Blackboard?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    10
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_gradebook_guide",
+     10,
+     "paragraph"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     10,
+     "procedure_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "page 10 download workflow first; grade transfer page-1 login steps intrude at ranks 2 and 3"
+  },
+  "G19": {
+   "question": "How do I set accommodations for a student in the Blackboard gradebook?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    4,
+    5
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     10,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     5,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     5,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     10,
+     "row_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": false,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "gradebook page 5 accommodations at ranks 2 and 3; the short guide's page-10 accommodations paragraph is first (also a correct document for the topic)"
+  },
+  "G20": {
+   "question": "How do I add an attendance row to the Blackboard gradebook?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    3
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_gradebook_guide",
+     3,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     3,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     3,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     3,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     9,
+     "paragraph"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "page 3 Add a row with Add Attendance"
+  },
+  "G21": {
+   "question": "How long can the title of a gradebook item be in Blackboard Ultra?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    3,
+    9
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "row_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": false,
+   "verdict": "RETRIEVAL_MISS",
+   "note": "every top-five item is a page-1 overview chunk; the 255-character limit (pages 3 and 9) is not retrieved"
+  },
+  "G22": {
+   "question": "How do I filter the Blackboard gradebook by merged child courses?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    8
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_gradebook_guide",
+     8,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     8,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     8,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     8,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     8,
+     "row"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "page 8 filter by child courses"
+  },
+  "G23": {
+   "question": "What can I change from the Gradebook Settings panel in Blackboard Ultra?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    7
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_gradebook_guide",
+     7,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     7,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     7,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     7,
+     "row"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     7,
+     "row_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "page 7 Gradebook Settings panel list"
+  },
+  "G24": {
+   "question": "How do I transfer grades from Blackboard to Banner?",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "expected_pages": [
+    2
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "row"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2,
+     "procedure_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "page 1 introduction first; the page-2 transfer steps (search by Course ID and Term, View Details, Transfer) are at ranks 4 and 5"
+  },
+  "G25": {
+   "question": "Where is the Grade Transfer Dashboard link?",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "procedure_step"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "page 1 steps including the announcement and the direct link note"
+  },
+  "G26": {
+   "question": "Who approves the grade transfer to Banner?",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "expected_pages": [
+    2,
+    3
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3,
+     "procedure_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3,
+     "paragraph"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3,
+     "row_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3,
+     "procedure_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "row_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "page 3 Chair/Dean approval procedure"
+  },
+  "G27": {
+   "question": "How can I find my course in the Grade Transfer Dashboard?",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "expected_pages": [
+    2
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2,
+     "row_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "procedure_step"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "page 2 'search by Course ID and Term' at rank 2"
+  },
+  "G28": {
+   "question": "How does a Dean approve grades in the Grade Transfer portal?",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "expected_pages": [
+    3
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3,
+     "paragraph"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3,
+     "procedure_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3,
+     "row_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3,
+     "procedure_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "page 3 Chair/Dean procedure first"
+  },
+  "G29": {
+   "question": "How do I access iThenticate?",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "page 1 access steps and the service-desk e-mail"
+  },
+  "G30": {
+   "question": "How do I upload a document to iThenticate?",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "page 1 upload steps"
+  },
+  "G31": {
+   "question": "How many documents can I submit to iThenticate per year?",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CONFLICT",
+   "note": "Plan F not served (no specialist owns the ask; the conflict guard would reject a finding on these chunks); the legacy evidence shows the English 'Maximum 30 Documents per year' rows, which carry source_conflict; the legacy path is unchanged by design and would need the same guard before a model answer is served"
+  },
+  "G32": {
+   "question": "What is the maximum file size for an iThenticate upload?",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "'Files must be less than 100MB' at rank 4 (file requirements list)"
+  },
+  "G33": {
+   "question": "Whom do I e-mail if I cannot access iThenticate?",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "the service-desk e-mail row is first"
+  },
+  "G34": {
+   "question": "How do I upload a revised version of my paper to iThenticate without it counting as a new document?",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "'Upload a New Revision ... not counted as extra doc' at ranks 2 and 3"
+  },
+  "G35": {
+   "question": "Where do I find the similarity report in iThenticate?",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "Checking Similarity Report procedure at rank 2"
+  },
+  "G36": {
+   "question": "When must final grades be submitted and how do I transfer them to Banner?",
+   "category": "cross_document",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "expected_pages": [
+    2
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2,
+     "row_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3,
+     "row_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "row"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2,
+     "row"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_PARTIAL",
+   "note": "the grade transfer steps are retrieved (pages 1-3) but the handbook page-224 submission deadline is not in the top five: a cross-document answer would be one-sided"
+  },
+  "G37": {
+   "question": "What does the handbook say about plagiarism in research, and how do I check a paper with iThenticate?",
+   "category": "cross_document",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "RETRIEVAL_PARTIAL",
+   "note": "only iThenticate page 1 is retrieved; no handbook research-integrity statement in the top five"
+  },
+  "G38": {
+   "question": "How do I submit final grades?",
+   "category": "ambiguous",
+   "expected_source": null,
+   "expected_pages": null,
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     224,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     224,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     225,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     6,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     2,
+     "paragraph"
+    ]
+   ],
+   "legacy_top1_is_expected_source": false,
+   "legacy_top5_has_expected_page": false,
+   "verdict": "RETRIEVAL_CORRECT",
+   "note": "ambiguous ask: the handbook page-224 grading policy is retrieved (the policy reading); the dashboard procedure is not in the top five"
+  },
+  "G39": {
+   "question": "How do I reset my Blackboard password?",
+   "category": "wrong_source",
+   "expected_source": null,
+   "expected_pages": null,
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "row"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "row_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": false,
+   "legacy_top5_has_expected_page": false,
+   "verdict": "WRONG_SOURCE_RISK",
+   "note": "no reset procedure exists; the top five are the Blackboard sign-in steps of the short guide, which a model answer could misread as a reset procedure; Plan F fell back (UNSAFE_RESULT)"
+  },
+  "G40": {
+   "question": "How do I enter grades in Banner Self Service directly?",
+   "category": "wrong_source",
+   "expected_source": null,
+   "expected_pages": null,
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2,
+     "procedure_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2,
+     "procedure_step"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     183,
+     "row_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": false,
+   "legacy_top5_has_expected_page": false,
+   "verdict": "WRONG_SOURCE_RISK",
+   "note": "no direct Banner entry procedure exists; the top five are the dashboard transfer steps; Plan F fell back (UNSAFE_RESULT)"
+  },
+  "G41": {
+   "question": "What is the Turnitin similarity threshold for a thesis?",
+   "category": "wrong_source",
+   "expected_source": null,
+   "expected_pages": null,
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     81,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     129,
+     "row"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     77,
+     "row"
+    ]
+   ],
+   "legacy_top1_is_expected_source": false,
+   "legacy_top5_has_expected_page": false,
+   "verdict": "RETRIEVAL_CORRECT_NO_ANSWER",
+   "note": "mixed handbook and iThenticate rows, none stating a Turnitin threshold; Plan F NOT_APPLICABLE"
+  },
+  "G42": {
+   "question": "How do I start the Phase 2 progress review in the HR Portal?",
+   "category": "wrong_source",
+   "expected_source": null,
+   "expected_pages": null,
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     20,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     61,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     60,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     60,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     6,
+     "row_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": false,
+   "legacy_top5_has_expected_page": false,
+   "verdict": "RETRIEVAL_CORRECT_NO_ANSWER",
+   "note": "no appraisal content exists in the corpus (held document): handbook HR rows only; Plan F fell back"
+  },
+  "G43": {
+   "question": "How many credit hours is a full teaching load?",
+   "category": "handbook_only",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "expected_pages": [
+    91
+   ],
+   "plan_f_served": true,
+   "plan_f_outcome": "PLAN_F_ACCEPTED",
+   "plan_f_pages": [
+    91
+   ],
+   "plan_f_answer": "o Ranked full time regular faculty, visiting faculty or senior lecturer workload equal to 12 credit hours per regular semester or 24 credit hours per academic year.",
+   "legacy_top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     96,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     108,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     96,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     65,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     96,
+     "row_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": false,
+   "verdict": "CORRECT",
+   "note": "served by Teaching, page 91, identical to the I-9 reviewed answer (T01)"
+  },
+  "G44": {
+   "question": "How many theses can a faculty member supervise at once?",
+   "category": "handbook_only",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "expected_pages": [
+    81
+   ],
+   "plan_f_served": true,
+   "plan_f_outcome": "PLAN_F_ACCEPTED",
+   "plan_f_pages": [
+    81
+   ],
+   "plan_f_answer": "• A faculty member is allowed to supervise a maximum of four theses/dissertations simultaneously, exception may be granted by the College of Graduate Studies. This limitation ensures that each student receives adequate attention and support throughout the thesis process.",
+   "legacy_top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     81,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     81,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     81,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     76,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     81,
+     "row_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "CORRECT",
+   "note": "served by Research, page 81, identical to the I-9 reviewed answer (R01)"
+  },
+  "G45": {
+   "question": "What is the phone number of the Human Resources Department?",
+   "category": "handbook_only",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "expected_pages": [
+    54
+   ],
+   "plan_f_served": true,
+   "plan_f_outcome": "PLAN_F_ACCEPTED",
+   "plan_f_pages": [
+    54
+   ],
+   "plan_f_answer": "Human Resources +971 6 5050023 +971 6 5585200",
+   "legacy_top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     54,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     54,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     55,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     53,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     74,
+     "row"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "CORRECT",
+   "note": "served by Institutional Navigation, page 54, identical to the I-9 reviewed answer (I01)"
+  },
+  "G46": {
+   "question": "What does Human Resources do?",
+   "category": "known_hr",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "expected_pages": null,
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     20,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     57,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     57,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     72,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     184,
+     "row"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": false,
+   "verdict": "CORRECT_FALLBACK",
+   "note": "the known wrong HR answer is not served (UNSAFE_RESULT), as in I-9"
+  },
+  "G47": {
+   "question": "How many days of annual leave do faculty members get?",
+   "category": "annual_leave",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "expected_pages": null,
+   "plan_f_served": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_pages": null,
+   "plan_f_answer": null,
+   "legacy_top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     107,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     107,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     107,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     107,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     107,
+     "row_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": false,
+   "verdict": "CORRECT_FALLBACK",
+   "note": "the misleading annual-leave partial is not served (UNSAFE_RESULT), as in I-9"
+  },
+  "G48": {
+   "question": "Does HR arrange travel and hotel accommodations for new faculty members?",
+   "category": "handbook_only",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "expected_pages": [
+    61
+   ],
+   "plan_f_served": true,
+   "plan_f_outcome": "PLAN_F_ACCEPTED",
+   "plan_f_pages": [
+    61
+   ],
+   "plan_f_answer": "• HR arranges travel and hotel accommodations for new faculty members.",
+   "legacy_top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     61,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     61,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     61,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     61,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     61,
+     "row_window"
+    ]
+   ],
+   "legacy_top1_is_expected_source": true,
+   "legacy_top5_has_expected_page": true,
+   "verdict": "CORRECT",
+   "note": "served by Faculty Services, page 61, identical to the I-9 reviewed answer (H01)"
+  }
+ }
+}

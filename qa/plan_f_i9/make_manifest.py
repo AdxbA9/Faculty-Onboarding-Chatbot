@@ -51,11 +51,26 @@ def hashes(paths):
     return {p: (sha(p) if os.path.exists(p) else None) for p in paths}
 
 
+def blobs(paths):
+    """Git blob ids of the working files (post-freeze PF-2): the clean filter normalises line endings, so two checkouts of
+    the same content agree even when one was written with CRLF and the other with LF, where the raw sha256 above differs."""
+    out = {}
+    for p in paths:
+        try:
+            out[p] = git("hash-object", p) if os.path.exists(p) else None
+        except Exception:
+            out[p] = None
+    return out
+
+
 cache = {}
+corpus_cache = {}                                                   # post-freeze PF-2: the multi-source corpus cache (v13)
 if os.path.isdir(CACHE_DIR):
     for name in sorted(os.listdir(CACHE_DIR)):
         if "_v12_" in name:
             cache[name] = {"sha256": sha(os.path.join(CACHE_DIR, name)), "bytes": os.path.getsize(os.path.join(CACHE_DIR, name))}
+        elif name.startswith("corpus_") and "_v13_" in name:
+            corpus_cache[name] = {"sha256": sha(os.path.join(CACHE_DIR, name)), "bytes": os.path.getsize(os.path.join(CACHE_DIR, name))}
 
 
 def version(dist):
@@ -79,8 +94,11 @@ manifest = {
     "integration_modules": hashes(INTEGRATION),
     "frozen_specialists": hashes(FROZEN),
     "specialist_helpers": hashes(SPECIALIST_HELPERS),
+    "git_blobs": {"integration_modules": blobs(INTEGRATION), "frozen_specialists": blobs(FROZEN), "specialist_helpers": blobs(SPECIALIST_HELPERS)},
     "qa_artifacts": hashes(QA),
     "knowledge_base_cache_v12": cache,
+    "knowledge_base_cache_v13_corpus": corpus_cache,
+    "source_registry": {"file": "knowledge/sources.json", "sha256": sha("knowledge/sources.json") if os.path.exists("knowledge/sources.json") else None},
     "evaluation_set": {"file": "qa/plan_f_i8/question_set.py", "questions": None, "sha256": sha("qa/plan_f_i8/question_set.py")},
     "tests": {"targeted_gate": TESTS.split(",")[0] if TESTS else None, "full_suite": TESTS.split(",")[1] if TESTS and "," in TESTS else None},
     "frozen_metrics_i8_final": {"questions": 192, "served": 55, "fallback": 137, "coverage_pct": 28.6, "correct": 55, "limited": 0, "wrong": 0,
@@ -96,5 +114,5 @@ try:
 except Exception as exc:                                           # the manifest must still be written
     manifest["note"] = "metadata import skipped: %s" % type(exc).__name__
 json.dump(manifest, open(OUT, "w", encoding="utf-8"), indent=1)
-print("manifest written:", OUT, "| head", manifest["git"]["head"][:12], "| integration files", sum(1 for v in manifest["integration_modules"].values() if v),
+print("manifest written:", OUT, "| head", manifest["git"]["base_head_at_manifest_time"][:12], "| integration files", sum(1 for v in manifest["integration_modules"].values() if v),
       "| frozen", sum(1 for v in manifest["frozen_specialists"].values() if v), "| cache files", len(cache))

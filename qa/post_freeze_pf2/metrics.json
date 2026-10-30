@@ -1,0 +1,3352 @@
+{
+ "kb": {
+  "primary_pages": 272,
+  "chunks": 14549,
+  "build_s": 22.613774700002978,
+  "corpus_key": "46722775e6d316bd",
+  "sources": [
+   {
+    "source_id": "uos_faculty_handbook_2025_26",
+    "title": "UOS Faculty Handbook 2025/26",
+    "citation_label": "UOS Faculty Handbook 2025/26",
+    "document_type": "handbook",
+    "language": "en",
+    "enabled": true,
+    "pages_loaded": 272,
+    "pages_indexed": 272,
+    "language_filter": null,
+    "procedures": false,
+    "chunks": 13688,
+    "chunk_types": {
+     "paragraph": 847,
+     "row": 8412,
+     "row_window": 4429
+    },
+    "chunk_id_range": [
+     0,
+     13687
+    ],
+    "conflict_chunks": 0,
+    "section_records": 206
+   },
+   {
+    "source_id": "uos_blackboard_faculty_short_guide",
+    "title": "Blackboard Ultra Faculty Short Guide",
+    "citation_label": "Blackboard Ultra Faculty Short Guide",
+    "document_type": "system_guide",
+    "language": "en",
+    "enabled": true,
+    "pages_loaded": 11,
+    "pages_indexed": 11,
+    "language_filter": {
+     "filter": "english_only",
+     "pages_loaded": 11,
+     "pages_indexed": 11,
+     "pages_dropped": [],
+     "rows_dropped": 0,
+     "page_share_max": 0.3,
+     "row_share_max": 0.5
+    },
+    "procedures": true,
+    "chunks": 403,
+    "chunk_types": {
+     "paragraph": 22,
+     "procedure_step": 32,
+     "procedure_window": 13,
+     "row": 202,
+     "row_window": 134
+    },
+    "chunk_id_range": [
+     13688,
+     14090
+    ],
+    "conflict_chunks": 0,
+    "section_records": 0
+   },
+   {
+    "source_id": "uos_grade_transfer_dashboard_guide",
+    "title": "Grade Transfer Dashboard Guide",
+    "citation_label": "Grade Transfer Dashboard Guide",
+    "document_type": "system_guide",
+    "language": "en",
+    "enabled": true,
+    "pages_loaded": 6,
+    "pages_indexed": 3,
+    "language_filter": {
+     "filter": "english_only",
+     "pages_loaded": 6,
+     "pages_indexed": 3,
+     "pages_dropped": [
+      4,
+      5,
+      6
+     ],
+     "rows_dropped": 0,
+     "page_share_max": 0.3,
+     "row_share_max": 0.5
+    },
+    "procedures": true,
+    "chunks": 68,
+    "chunk_types": {
+     "paragraph": 3,
+     "procedure_step": 13,
+     "procedure_window": 6,
+     "row": 30,
+     "row_window": 16
+    },
+    "chunk_id_range": [
+     14091,
+     14158
+    ],
+    "conflict_chunks": 0,
+    "section_records": 0
+   },
+   {
+    "source_id": "uos_blackboard_gradebook_guide",
+    "title": "Blackboard Ultra Guide: Gradebook",
+    "citation_label": "Blackboard Ultra Guide: Gradebook",
+    "document_type": "system_guide",
+    "language": "en",
+    "enabled": true,
+    "pages_loaded": 10,
+    "pages_indexed": 10,
+    "language_filter": {
+     "filter": "english_only",
+     "pages_loaded": 10,
+     "pages_indexed": 10,
+     "pages_dropped": [],
+     "rows_dropped": 0,
+     "page_share_max": 0.3,
+     "row_share_max": 0.5
+    },
+    "procedures": true,
+    "chunks": 308,
+    "chunk_types": {
+     "paragraph": 14,
+     "procedure_step": 48,
+     "procedure_window": 20,
+     "row": 142,
+     "row_window": 84
+    },
+    "chunk_id_range": [
+     14159,
+     14466
+    ],
+    "conflict_chunks": 0,
+    "section_records": 0
+   },
+   {
+    "source_id": "uos_ithenticate_guidelines",
+    "title": "iThenticate Guidelines",
+    "citation_label": "iThenticate Guidelines",
+    "document_type": "guideline",
+    "language": "en",
+    "enabled": true,
+    "pages_loaded": 3,
+    "pages_indexed": 2,
+    "language_filter": {
+     "filter": "english_only",
+     "pages_loaded": 3,
+     "pages_indexed": 2,
+     "pages_dropped": [
+      2
+     ],
+     "rows_dropped": 0,
+     "page_share_max": 0.3,
+     "row_share_max": 0.5
+    },
+    "procedures": true,
+    "chunks": 82,
+    "chunk_types": {
+     "paragraph": 3,
+     "procedure_step": 16,
+     "procedure_window": 7,
+     "row": 35,
+     "row_window": 21
+    },
+    "chunk_id_range": [
+     14467,
+     14548
+    ],
+    "conflict_chunks": 8,
+    "section_records": 0
+   }
+  ],
+  "chunk_types": {
+   "paragraph": 889,
+   "procedure_step": 109,
+   "procedure_window": 46,
+   "row": 8821,
+   "row_window": 4684
+  },
+  "groq_client_configured": false
+ },
+ "questions": 48,
+ "categories": {
+  "guide": 35,
+  "cross_document": 2,
+  "ambiguous": 1,
+  "wrong_source": 4,
+  "handbook_only": 4,
+  "known_hr": 1,
+  "annual_leave": 1
+ },
+ "guide": {
+  "questions": 37,
+  "plan_f_served": 0,
+  "plan_f_served_ids": [],
+  "plan_f_served_with_guide_evidence": 0,
+  "fallback": 37,
+  "exceptions": 0,
+  "outcomes": {
+   "PLAN_F_UNSAFE_RESULT": 29,
+   "PLAN_F_REJECTED_BY_ROUTING": 1,
+   "PLAN_F_NOT_APPLICABLE": 5,
+   "PLAN_F_REJECTED_BY_AGGREGATOR": 2
+  },
+  "routing_final": {
+   "teaching": 27,
+   "institutional": 3,
+   "teaching+institutional": 1,
+   "none": 5,
+   "research": 1
+  },
+  "review": {},
+  "legacy_retrieval": {
+   "top1_expected_source": 36,
+   "top1_expected_source_pct": 97.3,
+   "top5_expected_source": 37,
+   "top5_expected_source_pct": 100.0,
+   "top5_expected_page": 36,
+   "top5_expected_page_pct": 97.3,
+   "top1_handbook_instead_of_guide": 0,
+   "top1_other_guide": 1,
+   "cross_document_both_sources_in_top5": 0,
+   "cross_document_questions": 2,
+   "mean_candidate_pool_guide_share_pct": 86.3
+  },
+  "per_source": {
+   "uos_blackboard_faculty_short_guide": {
+    "questions": 13,
+    "plan_f_served": 0,
+    "legacy_top1_source": 13,
+    "legacy_top5_page": 13
+   },
+   "uos_blackboard_gradebook_guide": {
+    "questions": 10,
+    "plan_f_served": 0,
+    "legacy_top1_source": 9,
+    "legacy_top5_page": 9
+   },
+   "uos_grade_transfer_dashboard_guide": {
+    "questions": 6,
+    "plan_f_served": 0,
+    "legacy_top1_source": 6,
+    "legacy_top5_page": 6
+   },
+   "uos_ithenticate_guidelines": {
+    "questions": 8,
+    "plan_f_served": 0,
+    "legacy_top1_source": 8,
+    "legacy_top5_page": 8
+   }
+  }
+ },
+ "guide_rows": [
+  {
+   "id": "G01",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    1
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    1
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_blackboard_faculty_short_guide",
+   "legacy_top1_page": 1,
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     1
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_blackboard_faculty_short_guide": 18,
+    "uos_grade_transfer_dashboard_guide": 4,
+    "uos_faculty_handbook_2025_26": 2
+   },
+   "candidate_pool_guide_share": 91.7,
+   "review": null
+  },
+  {
+   "id": "G02",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    1
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    1
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_blackboard_faculty_short_guide",
+   "legacy_top1_page": 1,
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     1
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_grade_transfer_dashboard_guide": 4,
+    "uos_blackboard_faculty_short_guide": 15,
+    "uos_ithenticate_guidelines": 2,
+    "uos_faculty_handbook_2025_26": 3
+   },
+   "candidate_pool_guide_share": 87.5,
+   "review": null
+  },
+  {
+   "id": "G03",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    3
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    1,
+    3
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_blackboard_faculty_short_guide",
+   "legacy_top1_page": 3,
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     3
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     3
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     3
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     3
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_blackboard_faculty_short_guide": 20,
+    "uos_grade_transfer_dashboard_guide": 1,
+    "uos_blackboard_gradebook_guide": 3
+   },
+   "candidate_pool_guide_share": 100.0,
+   "review": null
+  },
+  {
+   "id": "G04",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    4
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    4,
+    5
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_blackboard_faculty_short_guide",
+   "legacy_top1_page": 4,
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     4
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     4
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     5
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     4
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_blackboard_faculty_short_guide": 15,
+    "uos_blackboard_gradebook_guide": 5,
+    "uos_faculty_handbook_2025_26": 3,
+    "uos_grade_transfer_dashboard_guide": 1
+   },
+   "candidate_pool_guide_share": 87.5,
+   "review": null
+  },
+  {
+   "id": "G05",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    4,
+    5
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    4
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_blackboard_faculty_short_guide",
+   "legacy_top1_page": 4,
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     4
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     4
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     4
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     5
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     5
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_blackboard_faculty_short_guide": 12,
+    "uos_faculty_handbook_2025_26": 12
+   },
+   "candidate_pool_guide_share": 50.0,
+   "review": null
+  },
+  {
+   "id": "G06",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    4
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    4,
+    8,
+    222
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_blackboard_faculty_short_guide",
+   "legacy_top1_page": 4,
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     4
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     8
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     222
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     4
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     226
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_blackboard_faculty_short_guide": 18,
+    "uos_faculty_handbook_2025_26": 5,
+    "uos_grade_transfer_dashboard_guide": 1
+   },
+   "candidate_pool_guide_share": 79.2,
+   "review": null
+  },
+  {
+   "id": "G07",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    6
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    6
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_blackboard_faculty_short_guide",
+   "legacy_top1_page": 6,
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     6
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     6
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     6
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     222
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     6
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_blackboard_faculty_short_guide": 12,
+    "uos_ithenticate_guidelines": 6,
+    "uos_faculty_handbook_2025_26": 5,
+    "uos_blackboard_gradebook_guide": 1
+   },
+   "candidate_pool_guide_share": 79.2,
+   "review": null
+  },
+  {
+   "id": "G08",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    7
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    7
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_blackboard_faculty_short_guide",
+   "legacy_top1_page": 7,
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     7
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     7
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     7
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     7
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     7
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_blackboard_faculty_short_guide": 23,
+    "uos_blackboard_gradebook_guide": 1
+   },
+   "candidate_pool_guide_share": 100.0,
+   "review": null
+  },
+  {
+   "id": "G09",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    8
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    8
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_blackboard_faculty_short_guide",
+   "legacy_top1_page": 8,
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     8
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     8
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     8
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     8
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     8
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_blackboard_faculty_short_guide": 19,
+    "uos_blackboard_gradebook_guide": 4,
+    "uos_faculty_handbook_2025_26": 1
+   },
+   "candidate_pool_guide_share": 95.8,
+   "review": null
+  },
+  {
+   "id": "G10",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    9
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    9
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_blackboard_faculty_short_guide",
+   "legacy_top1_page": 9,
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     9
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     9
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     9
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     9
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     4
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_blackboard_faculty_short_guide": 20,
+    "uos_faculty_handbook_2025_26": 3,
+    "uos_grade_transfer_dashboard_guide": 1
+   },
+   "candidate_pool_guide_share": 87.5,
+   "review": null
+  },
+  {
+   "id": "G11",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    10
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    1,
+    10
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_blackboard_faculty_short_guide",
+   "legacy_top1_page": 10,
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     10
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     10
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_blackboard_faculty_short_guide": 14,
+    "uos_blackboard_gradebook_guide": 10
+   },
+   "candidate_pool_guide_share": 100.0,
+   "review": null
+  },
+  {
+   "id": "G12",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    11
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    11
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_blackboard_faculty_short_guide",
+   "legacy_top1_page": 11,
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     11
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     11
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     11
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     11
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     11
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_blackboard_faculty_short_guide": 16,
+    "uos_blackboard_gradebook_guide": 6,
+    "uos_faculty_handbook_2025_26": 1,
+    "uos_ithenticate_guidelines": 1
+   },
+   "candidate_pool_guide_share": 95.8,
+   "review": null
+  },
+  {
+   "id": "G13",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    5
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    1,
+    5
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_blackboard_faculty_short_guide",
+   "legacy_top1_page": 5,
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     5
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     5
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     5
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     4
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_blackboard_faculty_short_guide": 3,
+    "uos_faculty_handbook_2025_26": 19,
+    "uos_blackboard_gradebook_guide": 2
+   },
+   "candidate_pool_guide_share": 20.8,
+   "review": null
+  },
+  {
+   "id": "G14",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    1
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    1
+   ],
+   "routing_final": [
+    "institutional"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_blackboard_gradebook_guide",
+   "legacy_top1_page": 1,
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_blackboard_gradebook_guide": 16,
+    "uos_grade_transfer_dashboard_guide": 5,
+    "uos_blackboard_faculty_short_guide": 3
+   },
+   "candidate_pool_guide_share": 100.0,
+   "review": null
+  },
+  {
+   "id": "G15",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    1
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    1
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_blackboard_gradebook_guide",
+   "legacy_top1_page": 1,
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_blackboard_gradebook_guide": 20,
+    "uos_blackboard_faculty_short_guide": 4
+   },
+   "candidate_pool_guide_share": 100.0,
+   "review": null
+  },
+  {
+   "id": "G16",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    6
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    1
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_blackboard_gradebook_guide",
+   "legacy_top1_page": 1,
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     6
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_blackboard_gradebook_guide": 19,
+    "uos_faculty_handbook_2025_26": 2,
+    "uos_grade_transfer_dashboard_guide": 2,
+    "uos_blackboard_faculty_short_guide": 1
+   },
+   "candidate_pool_guide_share": 91.7,
+   "review": null
+  },
+  {
+   "id": "G17",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    8
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    7,
+    8
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_blackboard_gradebook_guide",
+   "legacy_top1_page": 8,
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_gradebook_guide",
+     8
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     8
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     7
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     7
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     7
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_blackboard_gradebook_guide": 17,
+    "uos_blackboard_faculty_short_guide": 5,
+    "uos_faculty_handbook_2025_26": 2
+   },
+   "candidate_pool_guide_share": 91.7,
+   "review": null
+  },
+  {
+   "id": "G18",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    10
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    1,
+    10
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_blackboard_gradebook_guide",
+   "legacy_top1_page": 10,
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_gradebook_guide",
+     10
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     10
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_blackboard_gradebook_guide": 21,
+    "uos_grade_transfer_dashboard_guide": 3
+   },
+   "candidate_pool_guide_share": 100.0,
+   "review": null
+  },
+  {
+   "id": "G19",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    4,
+    5
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    5,
+    10
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_blackboard_faculty_short_guide",
+   "legacy_top1_page": 10,
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     10
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     5
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     5
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     10
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_blackboard_gradebook_guide": 18,
+    "uos_blackboard_faculty_short_guide": 6
+   },
+   "candidate_pool_guide_share": 100.0,
+   "review": null
+  },
+  {
+   "id": "G20",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    3
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    3
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_blackboard_gradebook_guide",
+   "legacy_top1_page": 3,
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_gradebook_guide",
+     3
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     3
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     3
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     3
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     9
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_blackboard_gradebook_guide": 22,
+    "uos_blackboard_faculty_short_guide": 1,
+    "uos_faculty_handbook_2025_26": 1
+   },
+   "candidate_pool_guide_share": 95.8,
+   "review": null
+  },
+  {
+   "id": "G21",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    3,
+    9
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    1
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_blackboard_gradebook_guide",
+   "legacy_top1_page": 1,
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": false,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_blackboard_gradebook_guide": 13,
+    "uos_blackboard_faculty_short_guide": 7,
+    "uos_faculty_handbook_2025_26": 4
+   },
+   "candidate_pool_guide_share": 83.3,
+   "review": null
+  },
+  {
+   "id": "G22",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    8
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    8
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_blackboard_gradebook_guide",
+   "legacy_top1_page": 8,
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_gradebook_guide",
+     8
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     8
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     8
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     8
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     8
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_blackboard_gradebook_guide": 21,
+    "uos_grade_transfer_dashboard_guide": 3
+   },
+   "candidate_pool_guide_share": 100.0,
+   "review": null
+  },
+  {
+   "id": "G23",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    7
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    7
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_blackboard_gradebook_guide",
+   "legacy_top1_page": 7,
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_gradebook_guide",
+     7
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     7
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     7
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     7
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     7
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_blackboard_gradebook_guide": 23,
+    "uos_grade_transfer_dashboard_guide": 1
+   },
+   "candidate_pool_guide_share": 100.0,
+   "review": null
+  },
+  {
+   "id": "G24",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "expected_pages": [
+    2
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    1
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_grade_transfer_dashboard_guide",
+   "legacy_top1_page": 1,
+   "legacy_top5_sources": [
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_grade_transfer_dashboard_guide": 21,
+    "uos_blackboard_gradebook_guide": 3
+   },
+   "candidate_pool_guide_share": 100.0,
+   "review": null
+  },
+  {
+   "id": "G25",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "expected_pages": [
+    1
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    1
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_grade_transfer_dashboard_guide",
+   "legacy_top1_page": 1,
+   "legacy_top5_sources": [
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_grade_transfer_dashboard_guide": 23,
+    "uos_blackboard_gradebook_guide": 1
+   },
+   "candidate_pool_guide_share": 100.0,
+   "review": null
+  },
+  {
+   "id": "G26",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "expected_pages": [
+    2,
+    3
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    3
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_grade_transfer_dashboard_guide",
+   "legacy_top1_page": 3,
+   "legacy_top5_sources": [
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_grade_transfer_dashboard_guide": 23,
+    "uos_faculty_handbook_2025_26": 1
+   },
+   "candidate_pool_guide_share": 95.8,
+   "review": null
+  },
+  {
+   "id": "G27",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "expected_pages": [
+    2
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "active_pages": [
+    1,
+    2
+   ],
+   "routing_final": [
+    "teaching",
+    "institutional"
+   ],
+   "specialist_calls": 0,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_grade_transfer_dashboard_guide",
+   "legacy_top1_page": 1,
+   "legacy_top5_sources": [
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_grade_transfer_dashboard_guide": 18,
+    "uos_blackboard_faculty_short_guide": 4,
+    "uos_blackboard_gradebook_guide": 2
+   },
+   "candidate_pool_guide_share": 100.0,
+   "review": null
+  },
+  {
+   "id": "G28",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "expected_pages": [
+    3
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    3
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_grade_transfer_dashboard_guide",
+   "legacy_top1_page": 3,
+   "legacy_top5_sources": [
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_grade_transfer_dashboard_guide": 23,
+    "uos_faculty_handbook_2025_26": 1
+   },
+   "candidate_pool_guide_share": 95.8,
+   "review": null
+  },
+  {
+   "id": "G29",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_NOT_APPLICABLE",
+   "active_pages": [
+    1
+   ],
+   "routing_final": [],
+   "specialist_calls": 0,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_ithenticate_guidelines",
+   "legacy_top1_page": 1,
+   "legacy_top5_sources": [
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 1,
+   "candidate_pool": {
+    "uos_ithenticate_guidelines": 17,
+    "uos_faculty_handbook_2025_26": 5,
+    "uos_grade_transfer_dashboard_guide": 1,
+    "uos_blackboard_faculty_short_guide": 1
+   },
+   "candidate_pool_guide_share": 79.2,
+   "review": null
+  },
+  {
+   "id": "G30",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_NOT_APPLICABLE",
+   "active_pages": [
+    1
+   ],
+   "routing_final": [],
+   "specialist_calls": 0,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_ithenticate_guidelines",
+   "legacy_top1_page": 1,
+   "legacy_top5_sources": [
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_ithenticate_guidelines": 18,
+    "uos_blackboard_faculty_short_guide": 6
+   },
+   "candidate_pool_guide_share": 100.0,
+   "review": null
+  },
+  {
+   "id": "G31",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "conflict": true,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_NOT_APPLICABLE",
+   "active_pages": [
+    1
+   ],
+   "routing_final": [],
+   "specialist_calls": 0,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_ithenticate_guidelines",
+   "legacy_top1_page": 1,
+   "legacy_top5_sources": [
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 5,
+   "candidate_pool": {
+    "uos_ithenticate_guidelines": 16,
+    "uos_faculty_handbook_2025_26": 8
+   },
+   "candidate_pool_guide_share": 66.7,
+   "review": null
+  },
+  {
+   "id": "G32",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_NOT_APPLICABLE",
+   "active_pages": [
+    1
+   ],
+   "routing_final": [],
+   "specialist_calls": 0,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_ithenticate_guidelines",
+   "legacy_top1_page": 1,
+   "legacy_top5_sources": [
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 2,
+   "candidate_pool": {
+    "uos_ithenticate_guidelines": 18,
+    "uos_faculty_handbook_2025_26": 5,
+    "uos_blackboard_faculty_short_guide": 1
+   },
+   "candidate_pool_guide_share": 79.2,
+   "review": null
+  },
+  {
+   "id": "G33",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    1
+   ],
+   "routing_final": [
+    "institutional"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_ithenticate_guidelines",
+   "legacy_top1_page": 1,
+   "legacy_top5_sources": [
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_ithenticate_guidelines": 11,
+    "uos_blackboard_faculty_short_guide": 3,
+    "uos_faculty_handbook_2025_26": 10
+   },
+   "candidate_pool_guide_share": 58.3,
+   "review": null
+  },
+  {
+   "id": "G34",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_NOT_APPLICABLE",
+   "active_pages": [
+    1
+   ],
+   "routing_final": [],
+   "specialist_calls": 0,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_ithenticate_guidelines",
+   "legacy_top1_page": 1,
+   "legacy_top5_sources": [
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 2,
+   "candidate_pool": {
+    "uos_ithenticate_guidelines": 23,
+    "uos_blackboard_faculty_short_guide": 1
+   },
+   "candidate_pool_guide_share": 100.0,
+   "review": null
+  },
+  {
+   "id": "G35",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    1
+   ],
+   "routing_final": [
+    "institutional"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_ithenticate_guidelines",
+   "legacy_top1_page": 1,
+   "legacy_top5_sources": [
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": null,
+   "legacy_conflict_items": 1,
+   "candidate_pool": {
+    "uos_ithenticate_guidelines": 21,
+    "uos_faculty_handbook_2025_26": 2,
+    "uos_grade_transfer_dashboard_guide": 1
+   },
+   "candidate_pool_guide_share": 91.7,
+   "review": null
+  },
+  {
+   "id": "G36",
+   "category": "cross_document",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "expected_pages": [
+    2
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "active_pages": [
+    1,
+    2,
+    3
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_grade_transfer_dashboard_guide",
+   "legacy_top1_page": 2,
+   "legacy_top5_sources": [
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": false,
+   "legacy_conflict_items": 0,
+   "candidate_pool": {
+    "uos_faculty_handbook_2025_26": 10,
+    "uos_grade_transfer_dashboard_guide": 6,
+    "uos_blackboard_faculty_short_guide": 3,
+    "uos_blackboard_gradebook_guide": 5
+   },
+   "candidate_pool_guide_share": 58.3,
+   "review": null
+  },
+  {
+   "id": "G37",
+   "category": "cross_document",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "conflict": false,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "active_pages": [
+    1
+   ],
+   "routing_final": [
+    "research"
+   ],
+   "specialist_calls": 1,
+   "handoff_outcome": null,
+   "plan_f_sources": [],
+   "legacy_top1_source": "uos_ithenticate_guidelines",
+   "legacy_top1_page": 1,
+   "legacy_top5_sources": [
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ]
+   ],
+   "legacy_hits_expected_source": true,
+   "legacy_hits_expected_page": true,
+   "legacy_hits_secondary_source": false,
+   "legacy_conflict_items": 1,
+   "candidate_pool": {
+    "uos_ithenticate_guidelines": 7,
+    "uos_faculty_handbook_2025_26": 17
+   },
+   "candidate_pool_guide_share": 29.2,
+   "review": null
+  }
+ ],
+ "conflict": {
+  "G31": {
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_NOT_APPLICABLE",
+   "seam_served": "legacy",
+   "seam_outcome": "PLAN_F_NOT_APPLICABLE",
+   "shadow_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_the_limit": false,
+   "legacy_items_under_conflict": 5,
+   "legacy_answer_is_model_reply": true
+  }
+ },
+ "controls": {
+  "G38": {
+   "category": "ambiguous",
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    224,
+    225
+   ],
+   "legacy_top5_sources": [
+    [
+     "uos_faculty_handbook_2025_26",
+     224
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     224
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     225
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     6
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     2
+    ]
+   ],
+   "appraisal_content_present": false
+  },
+  "G39": {
+   "category": "wrong_source",
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    1
+   ],
+   "legacy_top5_sources": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     1
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1
+    ]
+   ],
+   "appraisal_content_present": false
+  },
+  "G40": {
+   "category": "wrong_source",
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [
+    2
+   ],
+   "legacy_top5_sources": [
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     183
+    ]
+   ],
+   "appraisal_content_present": false
+  },
+  "G41": {
+   "category": "wrong_source",
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_NOT_APPLICABLE",
+   "active_pages": [],
+   "legacy_top5_sources": [
+    [
+     "uos_faculty_handbook_2025_26",
+     81
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     129
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     77
+    ]
+   ],
+   "appraisal_content_present": false
+  },
+  "G42": {
+   "category": "wrong_source",
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "active_pages": [],
+   "legacy_top5_sources": [
+    [
+     "uos_faculty_handbook_2025_26",
+     20
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     61
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     60
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     60
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     6
+    ]
+   ],
+   "appraisal_content_present": false
+  }
+ },
+ "controls_summary": {
+  "questions": 5,
+  "plan_f_served": 0,
+  "appraisal_content_present": 0
+ },
+ "baseline": {
+  "G43": {
+   "found": true,
+   "id": "T01",
+   "served": "plan_f",
+   "outcome": "PLAN_F_ACCEPTED",
+   "answer_equal": true,
+   "pages_equal": true,
+   "served_equal": true,
+   "outcome_equal": true,
+   "active_served": "plan_f",
+   "active_outcome": "PLAN_F_ACCEPTED",
+   "served_expected": true,
+   "served_as_expected": true
+  },
+  "G44": {
+   "found": true,
+   "id": "R01",
+   "served": "plan_f",
+   "outcome": "PLAN_F_ACCEPTED",
+   "answer_equal": true,
+   "pages_equal": true,
+   "served_equal": true,
+   "outcome_equal": true,
+   "active_served": "plan_f",
+   "active_outcome": "PLAN_F_ACCEPTED",
+   "served_expected": true,
+   "served_as_expected": true
+  },
+  "G45": {
+   "found": true,
+   "id": "I01",
+   "served": "plan_f",
+   "outcome": "PLAN_F_ACCEPTED",
+   "answer_equal": true,
+   "pages_equal": true,
+   "served_equal": true,
+   "outcome_equal": true,
+   "active_served": "plan_f",
+   "active_outcome": "PLAN_F_ACCEPTED",
+   "served_expected": true,
+   "served_as_expected": true
+  },
+  "G46": {
+   "found": true,
+   "id": "H09",
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "answer_equal": true,
+   "pages_equal": true,
+   "served_equal": true,
+   "outcome_equal": true,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "served_expected": false,
+   "served_as_expected": true
+  },
+  "G47": {
+   "found": true,
+   "id": "H07",
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "answer_equal": true,
+   "pages_equal": true,
+   "served_equal": true,
+   "outcome_equal": true,
+   "active_served": "legacy",
+   "active_outcome": "PLAN_F_UNSAFE_RESULT",
+   "served_expected": false,
+   "served_as_expected": true
+  },
+  "G48": {
+   "found": true,
+   "id": "H01",
+   "served": "plan_f",
+   "outcome": "PLAN_F_ACCEPTED",
+   "answer_equal": true,
+   "pages_equal": true,
+   "served_equal": true,
+   "outcome_equal": true,
+   "active_served": "plan_f",
+   "active_outcome": "PLAN_F_ACCEPTED",
+   "served_expected": true,
+   "served_as_expected": true
+  }
+ },
+ "baseline_summary": {
+  "questions": 6,
+  "found_in_i9_run": 6,
+  "unchanged": 6,
+  "served_as_expected": 6
+ },
+ "shadow": {
+  "questions": 48,
+  "identical_to_direct_legacy": 48,
+  "legacy_served": 48,
+  "same_plan_f_outcome_as_active": 48
+ },
+ "seam": {
+  "questions": 48,
+  "registry": {
+   "registry_ok": true,
+   "registry_errors": {},
+   "registry_build_ms": 92.00889999920037,
+   "scope_extension": {
+    "enabled": true,
+    "applied": {
+     "teaching": {
+      "applied": true,
+      "added": [
+       "uos_blackboard_faculty_short_guide",
+       "uos_blackboard_gradebook_guide",
+       "uos_grade_transfer_dashboard_guide"
+      ],
+      "allowed_sources": [
+       "uos_blackboard_faculty_short_guide",
+       "uos_blackboard_gradebook_guide",
+       "uos_faculty_handbook_2025_26",
+       "uos_grade_transfer_dashboard_guide"
+      ]
+     },
+     "research": {
+      "applied": true,
+      "added": [
+       "uos_ithenticate_guidelines"
+      ],
+      "allowed_sources": [
+       "uos_faculty_handbook_2025_26",
+       "uos_ithenticate_guidelines"
+      ]
+     },
+     "faculty_services": {
+      "applied": false,
+      "added": [],
+      "allowed_sources": [
+       "uos_faculty_handbook_2025_26"
+      ]
+     },
+     "institutional": {
+      "applied": true,
+      "added": [
+       "uos_blackboard_faculty_short_guide",
+       "uos_grade_transfer_dashboard_guide"
+      ],
+      "allowed_sources": [
+       "uos_blackboard_faculty_short_guide",
+       "uos_faculty_handbook_2025_26",
+       "uos_grade_transfer_dashboard_guide"
+      ]
+     }
+    },
+    "collisions": []
+   }
+  },
+  "plan_f_served": 4,
+  "questions_changed_by_the_seam": 0,
+  "changes": []
+ },
+ "determinism": {
+  "repeat_records": 82,
+  "differences": []
+ },
+ "latency": {
+  "active": {
+   "all": {
+    "n": 48,
+    "p50_ms": 1361.6,
+    "p95_ms": 2305.8,
+    "max_ms": 2503.6,
+    "mean_ms": 1318.5
+   },
+   "guide_questions": {
+    "n": 37,
+    "p50_ms": 1361.2,
+    "p95_ms": 2305.8,
+    "max_ms": 2503.6,
+    "mean_ms": 1360.4
+   },
+   "plan_f_ms": {
+    "n": 48,
+    "p50_ms": 590.9,
+    "p95_ms": 695.9,
+    "max_ms": 1116.9,
+    "mean_ms": 458.7
+   }
+  },
+  "shadow": {
+   "all": {
+    "n": 48,
+    "p50_ms": 1365.3,
+    "p95_ms": 2288.6,
+    "max_ms": 2548.5,
+    "mean_ms": 1366.2
+   },
+   "guide_questions": {
+    "n": 37,
+    "p50_ms": 1356.9,
+    "p95_ms": 2067.1,
+    "max_ms": 2288.6,
+    "mean_ms": 1327.8
+   },
+   "plan_f_ms": {
+    "n": 48,
+    "p50_ms": 586.3,
+    "p95_ms": 682.1,
+    "max_ms": 1122.1,
+    "mean_ms": 452.5
+   }
+  },
+  "active_seam": {
+   "all": {
+    "n": 48,
+    "p50_ms": 1419.6,
+    "p95_ms": 2376.7,
+    "max_ms": 2616.6,
+    "mean_ms": 1358.7
+   },
+   "guide_questions": {
+    "n": 37,
+    "p50_ms": 1421.6,
+    "p95_ms": 2376.7,
+    "max_ms": 2616.6,
+    "mean_ms": 1406.2
+   },
+   "plan_f_ms": {
+    "n": 48,
+    "p50_ms": 631.6,
+    "p95_ms": 767.7,
+    "max_ms": 1169.2,
+    "mean_ms": 511.3
+   }
+  },
+  "legacy": {
+   "all": {
+    "n": 48,
+    "p50_ms": 802.3,
+    "p95_ms": 1666.2,
+    "max_ms": 1693.0,
+    "mean_ms": 916.1
+   },
+   "guide_questions": {
+    "n": 37,
+    "p50_ms": 807.5,
+    "p95_ms": 1521.0,
+    "max_ms": 1693.0,
+    "mean_ms": 888.9
+   },
+   "plan_f_ms": null
+  },
+  "cold": {
+   "active": {
+    "first_request_wall_ms": 2503.6172999971313,
+    "registry_build_ms": 679.4899000087753,
+    "registry_reused": false,
+    "registry_ok": true,
+    "registry_errors": {}
+   },
+   "active_seam": {
+    "registry_ok": true,
+    "registry_errors": {},
+    "registry_build_ms": 92.00889999920037,
+    "scope_extension": {
+     "enabled": true,
+     "applied": {
+      "teaching": {
+       "applied": true,
+       "added": [
+        "uos_blackboard_faculty_short_guide",
+        "uos_blackboard_gradebook_guide",
+        "uos_grade_transfer_dashboard_guide"
+       ],
+       "allowed_sources": [
+        "uos_blackboard_faculty_short_guide",
+        "uos_blackboard_gradebook_guide",
+        "uos_faculty_handbook_2025_26",
+        "uos_grade_transfer_dashboard_guide"
+       ]
+      },
+      "research": {
+       "applied": true,
+       "added": [
+        "uos_ithenticate_guidelines"
+       ],
+       "allowed_sources": [
+        "uos_faculty_handbook_2025_26",
+        "uos_ithenticate_guidelines"
+       ]
+      },
+      "faculty_services": {
+       "applied": false,
+       "added": [],
+       "allowed_sources": [
+        "uos_faculty_handbook_2025_26"
+       ]
+      },
+      "institutional": {
+       "applied": true,
+       "added": [
+        "uos_blackboard_faculty_short_guide",
+        "uos_grade_transfer_dashboard_guide"
+       ],
+       "allowed_sources": [
+        "uos_blackboard_faculty_short_guide",
+        "uos_faculty_handbook_2025_26",
+        "uos_grade_transfer_dashboard_guide"
+       ]
+      }
+     },
+     "collisions": []
+    }
+   }
+  }
+ },
+ "legacy_cache_untouched": true,
+ "legacy_diagnostics_minimal": true,
+ "exceptions_total": 0,
+ "performance_inputs": {
+  "cold_build": {
+   "timings_ms": {
+    "models_ms": 21048.2,
+    "assemble_ms": 1464.8,
+    "embeddings_ms": 310371.8,
+    "total_ms": 333851.5
+   },
+   "chunks": 14549,
+   "embedding_shape": [
+    14549,
+    768
+   ],
+   "index_ntotal": 14549,
+   "corpus_key": "46722775e6d316bd",
+   "sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_blackboard_faculty_short_guide",
+    "uos_grade_transfer_dashboard_guide",
+    "uos_blackboard_gradebook_guide",
+    "uos_ithenticate_guidelines"
+   ],
+   "stats": {
+    "total_chunks": 14549,
+    "total_pages": 298,
+    "primary_pages": 272,
+    "ocr_chunks": 0,
+    "source": {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "title": "UOS Faculty Handbook 2025/26",
+     "registered": true,
+     "section_records": 206
+    },
+    "sources": [
+     {
+      "source_id": "uos_faculty_handbook_2025_26",
+      "title": "UOS Faculty Handbook 2025/26",
+      "citation_label": "UOS Faculty Handbook 2025/26",
+      "document_type": "handbook",
+      "language": "en",
+      "enabled": true,
+      "pages_loaded": 272,
+      "pages_indexed": 272,
+      "language_filter": null,
+      "procedures": false,
+      "chunks": 13688,
+      "chunk_types": {
+       "paragraph": 847,
+       "row": 8412,
+       "row_window": 4429
+      },
+      "chunk_id_range": [
+       0,
+       13687
+      ],
+      "conflict_chunks": 0,
+      "section_records": 206
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "title": "Blackboard Ultra Faculty Short Guide",
+      "citation_label": "Blackboard Ultra Faculty Short Guide",
+      "document_type": "system_guide",
+      "language": "en",
+      "enabled": true,
+      "pages_loaded": 11,
+      "pages_indexed": 11,
+      "language_filter": {
+       "filter": "english_only",
+       "pages_loaded": 11,
+       "pages_indexed": 11,
+       "pages_dropped": [],
+       "rows_dropped": 0,
+       "page_share_max": 0.3,
+       "row_share_max": 0.5
+      },
+      "procedures": true,
+      "chunks": 403,
+      "chunk_types": {
+       "paragraph": 22,
+       "procedure_step": 32,
+       "procedure_window": 13,
+       "row": 202,
+       "row_window": 134
+      },
+      "chunk_id_range": [
+       13688,
+       14090
+      ],
+      "conflict_chunks": 0,
+      "section_records": 0
+     },
+     {
+      "source_id": "uos_grade_transfer_dashboard_guide",
+      "title": "Grade Transfer Dashboard Guide",
+      "citation_label": "Grade Transfer Dashboard Guide",
+      "document_type": "system_guide",
+      "language": "en",
+      "enabled": true,
+      "pages_loaded": 6,
+      "pages_indexed": 3,
+      "language_filter": {
+       "filter": "english_only",
+       "pages_loaded": 6,
+       "pages_indexed": 3,
+       "pages_dropped": [
+        4,
+        5,
+        6
+       ],
+       "rows_dropped": 0,
+       "page_share_max": 0.3,
+       "row_share_max": 0.5
+      },
+      "procedures": true,
+      "chunks": 68,
+      "chunk_types": {
+       "paragraph": 3,
+       "procedure_step": 13,
+       "procedure_window": 6,
+       "row": 30,
+       "row_window": 16
+      },
+      "chunk_id_range": [
+       14091,
+       14158
+      ],
+      "conflict_chunks": 0,
+      "section_records": 0
+     },
+     {
+      "source_id": "uos_blackboard_gradebook_guide",
+      "title": "Blackboard Ultra Guide: Gradebook",
+      "citation_label": "Blackboard Ultra Guide: Gradebook",
+      "document_type": "system_guide",
+      "language": "en",
+      "enabled": true,
+      "pages_loaded": 10,
+      "pages_indexed": 10,
+      "language_filter": {
+       "filter": "english_only",
+       "pages_loaded": 10,
+       "pages_indexed": 10,
+       "pages_dropped": [],
+       "rows_dropped": 0,
+       "page_share_max": 0.3,
+       "row_share_max": 0.5
+      },
+      "procedures": true,
+      "chunks": 308,
+      "chunk_types": {
+       "paragraph": 14,
+       "procedure_step": 48,
+       "procedure_window": 20,
+       "row": 142,
+       "row_window": 84
+      },
+      "chunk_id_range": [
+       14159,
+       14466
+      ],
+      "conflict_chunks": 0,
+      "section_records": 0
+     },
+     {
+      "source_id": "uos_ithenticate_guidelines",
+      "title": "iThenticate Guidelines",
+      "citation_label": "iThenticate Guidelines",
+      "document_type": "guideline",
+      "language": "en",
+      "enabled": true,
+      "pages_loaded": 3,
+      "pages_indexed": 2,
+      "language_filter": {
+       "filter": "english_only",
+       "pages_loaded": 3,
+       "pages_indexed": 2,
+       "pages_dropped": [
+        2
+       ],
+       "rows_dropped": 0,
+       "page_share_max": 0.3,
+       "row_share_max": 0.5
+      },
+      "procedures": true,
+      "chunks": 82,
+      "chunk_types": {
+       "paragraph": 3,
+       "procedure_step": 16,
+       "procedure_window": 7,
+       "row": 35,
+       "row_window": 21
+      },
+      "chunk_id_range": [
+       14467,
+       14548
+      ],
+      "conflict_chunks": 8,
+      "section_records": 0
+     }
+    ],
+    "chunk_types": {
+     "paragraph": 889,
+     "procedure_step": 109,
+     "procedure_window": 46,
+     "row": 8821,
+     "row_window": 4684
+    },
+    "corpus_key": "46722775e6d316bd",
+    "corpus": [
+     {
+      "source_id": "uos_faculty_handbook_2025_26",
+      "sha256": "fc9bc650529c85363ce87b452b93e0e0bdf3caae15acf587ba232b0ca4ea7ea7",
+      "page_filter": "",
+      "procedures": false,
+      "section_map": "handbook_sections.json"
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "sha256": "4a9072699167a917e69b436064f4e54fce1b297587c39bce25d950bbe1a2448b",
+      "page_filter": "english_only",
+      "procedures": true,
+      "section_map": ""
+     },
+     {
+      "source_id": "uos_grade_transfer_dashboard_guide",
+      "sha256": "06018cb153bc833831e651461eefe298ad7e8f4cf86b57c5c0b96b8dfc733892",
+      "page_filter": "english_only",
+      "procedures": true,
+      "section_map": ""
+     },
+     {
+      "source_id": "uos_blackboard_gradebook_guide",
+      "sha256": "e1171901516f58cd80af50ce442816eb919725ba30a4b13cb4155f443e87a2dc",
+      "page_filter": "english_only",
+      "procedures": true,
+      "section_map": ""
+     },
+     {
+      "source_id": "uos_ithenticate_guidelines",
+      "sha256": "061c30a2688a15cdae59aa5fd543538b146e6d7bf76706bd9d63c692de82371d",
+      "page_filter": "english_only",
+      "procedures": true,
+      "section_map": ""
+     }
+    ]
+   },
+   "cache_files": [
+    "corpus_46722775e6d316bd_v13_chunks.json",
+    "corpus_46722775e6d316bd_v13_embeddings.npy",
+    "corpus_46722775e6d316bd_v13_meta.json",
+    "corpus_46722775e6d316bd_v13_pages.json"
+   ],
+   "cache_bytes": 65376318
+  },
+  "cache_rebuild": {
+   "timings_ms": {
+    "models_ms": 21048.2,
+    "assemble_ms": 1464.8,
+    "embeddings_ms": 310371.8,
+    "total_ms": 333851.5
+   },
+   "chunks": 14549,
+   "embedding_shape": [
+    14549,
+    768
+   ],
+   "index_ntotal": 14549,
+   "corpus_key": "46722775e6d316bd",
+   "sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_blackboard_faculty_short_guide",
+    "uos_grade_transfer_dashboard_guide",
+    "uos_blackboard_gradebook_guide",
+    "uos_ithenticate_guidelines"
+   ],
+   "stats": {
+    "total_chunks": 14549,
+    "total_pages": 298,
+    "primary_pages": 272,
+    "ocr_chunks": 0,
+    "source": {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "title": "UOS Faculty Handbook 2025/26",
+     "registered": true,
+     "section_records": 206
+    },
+    "sources": [
+     {
+      "source_id": "uos_faculty_handbook_2025_26",
+      "title": "UOS Faculty Handbook 2025/26",
+      "citation_label": "UOS Faculty Handbook 2025/26",
+      "document_type": "handbook",
+      "language": "en",
+      "enabled": true,
+      "pages_loaded": 272,
+      "pages_indexed": 272,
+      "language_filter": null,
+      "procedures": false,
+      "chunks": 13688,
+      "chunk_types": {
+       "paragraph": 847,
+       "row": 8412,
+       "row_window": 4429
+      },
+      "chunk_id_range": [
+       0,
+       13687
+      ],
+      "conflict_chunks": 0,
+      "section_records": 206
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "title": "Blackboard Ultra Faculty Short Guide",
+      "citation_label": "Blackboard Ultra Faculty Short Guide",
+      "document_type": "system_guide",
+      "language": "en",
+      "enabled": true,
+      "pages_loaded": 11,
+      "pages_indexed": 11,
+      "language_filter": {
+       "filter": "english_only",
+       "pages_loaded": 11,
+       "pages_indexed": 11,
+       "pages_dropped": [],
+       "rows_dropped": 0,
+       "page_share_max": 0.3,
+       "row_share_max": 0.5
+      },
+      "procedures": true,
+      "chunks": 403,
+      "chunk_types": {
+       "paragraph": 22,
+       "procedure_step": 32,
+       "procedure_window": 13,
+       "row": 202,
+       "row_window": 134
+      },
+      "chunk_id_range": [
+       13688,
+       14090
+      ],
+      "conflict_chunks": 0,
+      "section_records": 0
+     },
+     {
+      "source_id": "uos_grade_transfer_dashboard_guide",
+      "title": "Grade Transfer Dashboard Guide",
+      "citation_label": "Grade Transfer Dashboard Guide",
+      "document_type": "system_guide",
+      "language": "en",
+      "enabled": true,
+      "pages_loaded": 6,
+      "pages_indexed": 3,
+      "language_filter": {
+       "filter": "english_only",
+       "pages_loaded": 6,
+       "pages_indexed": 3,
+       "pages_dropped": [
+        4,
+        5,
+        6
+       ],
+       "rows_dropped": 0,
+       "page_share_max": 0.3,
+       "row_share_max": 0.5
+      },
+      "procedures": true,
+      "chunks": 68,
+      "chunk_types": {
+       "paragraph": 3,
+       "procedure_step": 13,
+       "procedure_window": 6,
+       "row": 30,
+       "row_window": 16
+      },
+      "chunk_id_range": [
+       14091,
+       14158
+      ],
+      "conflict_chunks": 0,
+      "section_records": 0
+     },
+     {
+      "source_id": "uos_blackboard_gradebook_guide",
+      "title": "Blackboard Ultra Guide: Gradebook",
+      "citation_label": "Blackboard Ultra Guide: Gradebook",
+      "document_type": "system_guide",
+      "language": "en",
+      "enabled": true,
+      "pages_loaded": 10,
+      "pages_indexed": 10,
+      "language_filter": {
+       "filter": "english_only",
+       "pages_loaded": 10,
+       "pages_indexed": 10,
+       "pages_dropped": [],
+       "rows_dropped": 0,
+       "page_share_max": 0.3,
+       "row_share_max": 0.5
+      },
+      "procedures": true,
+      "chunks": 308,
+      "chunk_types": {
+       "paragraph": 14,
+       "procedure_step": 48,
+       "procedure_window": 20,
+       "row": 142,
+       "row_window": 84
+      },
+      "chunk_id_range": [
+       14159,
+       14466
+      ],
+      "conflict_chunks": 0,
+      "section_records": 0
+     },
+     {
+      "source_id": "uos_ithenticate_guidelines",
+      "title": "iThenticate Guidelines",
+      "citation_label": "iThenticate Guidelines",
+      "document_type": "guideline",
+      "language": "en",
+      "enabled": true,
+      "pages_loaded": 3,
+      "pages_indexed": 2,
+      "language_filter": {
+       "filter": "english_only",
+       "pages_loaded": 3,
+       "pages_indexed": 2,
+       "pages_dropped": [
+        2
+       ],
+       "rows_dropped": 0,
+       "page_share_max": 0.3,
+       "row_share_max": 0.5
+      },
+      "procedures": true,
+      "chunks": 82,
+      "chunk_types": {
+       "paragraph": 3,
+       "procedure_step": 16,
+       "procedure_window": 7,
+       "row": 35,
+       "row_window": 21
+      },
+      "chunk_id_range": [
+       14467,
+       14548
+      ],
+      "conflict_chunks": 8,
+      "section_records": 0
+     }
+    ],
+    "chunk_types": {
+     "paragraph": 889,
+     "procedure_step": 109,
+     "procedure_window": 46,
+     "row": 8821,
+     "row_window": 4684
+    },
+    "corpus_key": "46722775e6d316bd",
+    "corpus": [
+     {
+      "source_id": "uos_faculty_handbook_2025_26",
+      "sha256": "fc9bc650529c85363ce87b452b93e0e0bdf3caae15acf587ba232b0ca4ea7ea7",
+      "page_filter": "",
+      "procedures": false,
+      "section_map": "handbook_sections.json"
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "sha256": "4a9072699167a917e69b436064f4e54fce1b297587c39bce25d950bbe1a2448b",
+      "page_filter": "english_only",
+      "procedures": true,
+      "section_map": ""
+     },
+     {
+      "source_id": "uos_grade_transfer_dashboard_guide",
+      "sha256": "06018cb153bc833831e651461eefe298ad7e8f4cf86b57c5c0b96b8dfc733892",
+      "page_filter": "english_only",
+      "procedures": true,
+      "section_map": ""
+     },
+     {
+      "source_id": "uos_blackboard_gradebook_guide",
+      "sha256": "e1171901516f58cd80af50ce442816eb919725ba30a4b13cb4155f443e87a2dc",
+      "page_filter": "english_only",
+      "procedures": true,
+      "section_map": ""
+     },
+     {
+      "source_id": "uos_ithenticate_guidelines",
+      "sha256": "061c30a2688a15cdae59aa5fd543538b146e6d7bf76706bd9d63c692de82371d",
+      "page_filter": "english_only",
+      "procedures": true,
+      "section_map": ""
+     }
+    ]
+   },
+   "cache_files": [
+    "corpus_46722775e6d316bd_v13_chunks.json",
+    "corpus_46722775e6d316bd_v13_embeddings.npy",
+    "corpus_46722775e6d316bd_v13_meta.json",
+    "corpus_46722775e6d316bd_v13_pages.json"
+   ],
+   "cache_bytes": 65376318
+  },
+  "cached_startup": {
+   "runs": [
+    {
+     "models_ms": 21559.5,
+     "assemble_ms": 1429.5,
+     "embeddings_cache_ms": 181.5,
+     "total_ms": 23180.4
+    },
+    {
+     "models_ms": 13737.6,
+     "assemble_ms": 1427.5,
+     "embeddings_cache_ms": 308.4,
+     "total_ms": 15489.0
+    }
+   ],
+   "chunks": 14549,
+   "embedding_shape": [
+    14549,
+    768
+   ],
+   "embedding_bytes": 44694528,
+   "index_ntotal": 14549,
+   "corpus_key": "46722775e6d316bd",
+   "cache_files": [
+    "corpus_46722775e6d316bd_v13_chunks.json",
+    "corpus_46722775e6d316bd_v13_embeddings.npy",
+    "corpus_46722775e6d316bd_v13_meta.json",
+    "corpus_46722775e6d316bd_v13_pages.json"
+   ],
+   "cache_bytes": {
+    "corpus_46722775e6d316bd_v13_chunks.json": 2991549,
+    "corpus_46722775e6d316bd_v13_embeddings.npy": 44694656,
+    "corpus_46722775e6d316bd_v13_meta.json": 15337212,
+    "corpus_46722775e6d316bd_v13_pages.json": 2352901
+   },
+   "cache_bytes_total": 65376318,
+   "sources": [
+    [
+     "uos_faculty_handbook_2025_26",
+     272,
+     13688
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     11,
+     403
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3,
+     68
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     10,
+     308
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     2,
+     82
+    ]
+   ]
+  }
+ },
+ "total_script_s": 427.8357038999966
+}

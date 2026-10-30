@@ -133,6 +133,12 @@ PLAN_F_MAX_RETRY: int = _env_int("PLAN_F_MAX_RETRY", 1)
 PLAN_F_MAX_LLM_CALLS: int = _env_int("PLAN_F_MAX_LLM_CALLS", 5)
 # Specialist executions per question, handoffs included.
 PLAN_F_MAX_AGENT_CALLS: int = _env_int("PLAN_F_MAX_AGENT_CALLS", 4)
+# Post-freeze PF-2 scope-extension seam (handbook_bot.source_scopes): when on,
+# each frozen specialist's retrieval scope also admits the approved guides of
+# its own domain. Off by default, so the frozen specialists retrieve exactly as
+# at the I-9 freeze; the frozen specialists' own source guard still rejects
+# non-handbook evidence, so turning this on alone serves no guide answer.
+PLAN_F_GUIDE_SCOPES: bool = _env_bool("PLAN_F_GUIDE_SCOPES", False)
 
 # ---------------------------------------------------------------------------
 # OCR / image extraction
@@ -171,7 +177,21 @@ SOURCES_FILE: str = "sources.json"
 # v12: chunk metadata gained source and section keys (source_id, chapter,
 # section_no, ...). Chunk text, embeddings model and ranking are unchanged,
 # but the cache compares metadata, so every machine rebuilds its cache once.
-CACHE_VERSION: str = "v12"
+# v13 (post-freeze PF-2): the corpus may hold several registered sources; the
+# cache is keyed by the enabled source set and file hashes, every chunk
+# carries source_page, citation_label, document_type, authority_level,
+# system, language, content_type and source_conflict, and system manuals
+# gain procedure_step / procedure_window chunks. Handbook chunk texts and
+# ids are unchanged.
+CACHE_VERSION: str = "v13"
+
+# Page-level language control for sources whose page_filter is
+# "english_only": a page whose Arabic-script share of letters exceeds
+# PAGE_ARABIC_SHARE_MAX is not indexed, and a row whose share exceeds
+# ROW_ARABIC_SHARE_MAX is dropped from a kept page. Deterministic; no
+# Arabic support is implemented.
+PAGE_ARABIC_SHARE_MAX: float = 0.30
+ROW_ARABIC_SHARE_MAX: float = 0.50
 
 # ---------------------------------------------------------------------------
 # Prompting
