@@ -9,6 +9,120 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-10-30 - Interface compatibility for the Plan F runtime (runtime integration, phase I-7)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/remaining-specialists` |
+| Starting commit | `8331475` |
+| Ending state | the chat page presents every answer kind the pipeline returns (legacy extractor, legacy model path, refusal, verified single finding, verified aggregate, routing-refined answer, handoff round, legacy fallback after a Plan F attempt, shadow run) from the per-turn diagnostics of `ui.pipeline.ask_with_diagnostics`, through a pure helper module; users see the answer, the handbook and page-with-section chips and a domain chip only for a verified specialist answer; Developer mode shows Runtime, Routing, Verification, Aggregation, Handoff, Evidence, Performance, LLM and Knowledge-base sections with N/A for anything unrecorded; no exception text reaches the page; both Plan F switches still default to off; nothing under `handbook_bot/` changed (frozen hashes verified); Plan F remains CONNECTED BEHIND FLAGS; local commit on top of `8331475`, to be pushed by the user; I-8 not started |
+
+### Completed
+
+- Objective: make the existing NiceGUI interface state accurately what
+  produced each answer and what it cost, without the interface deciding
+  anything itself. The pipeline's diagnostics record is the only source of
+  truth; the interface adds no architecture logic and imports no Plan F
+  module (`ui/chat.py` still contains none of the runtime module names,
+  the Coordinator's name or the switch names).
+- Presentation helpers: `ui/presentation.py` (new, pure functions, no
+  NiceGUI import). `answer_kind`, `served_label`, `path_label` and
+  `domain_labels` read the served path, the Plan F path, the routing and
+  handoff outcome and the legacy result's own route; `source_chips` builds
+  one chip per distinct cited page with that page's section from the
+  evidence ("Page 54 · Contact Information"), the handbook title once in
+  front, an OCR marker, nothing for a refusal that cites nothing, and never
+  a placeholder section; `performance_rows` prints recorded timings only
+  (a Plan F answer: specialist execution, routing refinement, findings
+  verification, aggregation, handoff round, legacy Verifier, Plan F total,
+  with retrieval and rerank N/A because the specialists do not time them
+  separately; a fallback: the Plan F attempt apart from the legacy stages;
+  every turn: the end-to-end wall time measured around the whole call and
+  the registry build or reuse); `dev_sections` assembles the Developer
+  panel and leaves out sections that do not apply; `escape_identifiers`
+  keeps underscores inside identifiers out of Markdown emphasis;
+  `assistant_message` gives each turn its own copy of its diagnostics;
+  `error_diagnostics` keeps the exception class only.
+- Chat page: `_call_pipeline` calls `ask_with_diagnostics` and measures the
+  wall time; each assistant message stores its result, diagnostics and wall
+  time; the Developer panel renders the sections of that message; the
+  loading bubble reads "Searching official university sources…" (`role`
+  status, `aria-live` polite); a pipeline exception yields a fixed safe
+  reply and a knowledge-base load failure a message with the exception
+  class only (the traceback goes to the server log); the message box, the
+  send button, the theme button and the Developer switch carry `aria-label`s.
+  LEGACY mode renders exactly the legacy result (no Plan F row, chip or
+  import at work); SHADOW renders the legacy answer and chips with the
+  shadow attempt visible in Developer mode only.
+- Styles: chip variants for the handbook and the verified domain, the
+  loading text, and narrow-screen rules (540 px and below: stacked Developer
+  rows, full-width chips, the user-bubble width cap moved from the
+  inline-block bubble to its flex wrapper, which fixed short messages
+  wrapping mid-word at 820 px and below).
+- Defects closed (log with before, fix and verification in
+  `qa/plan_f_i7/README.md`): Plan F answers labelled "Deterministic
+  extractor" (MAJOR); invented "0.0 ms" retrieval and rerank and
+  evidence-count "candidates" for Plan F answers (MAJOR); fallback timing
+  without the Plan F attempt or the wall time (MAJOR); exception text in the
+  user's reply and the status banner (MAJOR); duplicate-looking page chips
+  (MINOR); Markdown eating the underscores of `GROQ_API_KEY` (MINOR);
+  dots-only loading state (MINOR); unlabelled controls (MINOR); mid-word
+  wrapping of short user messages on narrow screens (MINOR); a handbook chip
+  on a refusal (MINOR); clipped Developer values on narrow screens
+  (COSMETIC); repeated section names in the Evidence row (COSMETIC). Left as
+  is and recorded: the handbook's own list glyphs inside verbatim aggregate
+  parts (the interface does not alter answer text).
+
+### Verification
+
+- Browser matrix (`app.py` launched locally with the switch in the process
+  environment only, no model key, the real cached knowledge base, Developer
+  mode on): LEGACY greeting, HR telephone (extractor), annual leave (no-key
+  reply with intact underscores), off-topic refusal; SHADOW HR telephone
+  (accepted internally, legacy answer shown), teaching load plus sick leave
+  (aggregate accepted internally), "What does HR do?" (rejected
+  internally); ACTIVE HR telephone (single finding, "Verified · Institutional
+  Navigation"), teaching load plus sick leave (aggregate, three parts, three
+  page chips), "Who approves conference travel?" (routing refined), "What
+  does HR do?" and annual leave (legacy fallback with the Plan F attempt
+  time shown apart), faculty housing (ambiguous routing, 0 specialist
+  calls), HR telephone plus Passport Unit fax (multi-page aggregate), "Where
+  is the Research Institute?" (a real executed handoff Research to
+  Institutional Navigation at depth 1, rendered in the Handoff section,
+  served by legacy fallback), off-topic refusal without chips. No exception,
+  no developer vocabulary outside the panel, each panel bound to its own
+  turn after later fallbacks, the loading text observed in the DOM, the
+  launcher's logs free of question and answer text. Responsive review at the
+  desktop width in both themes and at 375 x 812 px. Plan F model calls in
+  every run: 0. Visible answers in SHADOW identical to LEGACY for the shared
+  question (HR telephone) and in every case the legacy result's own text and
+  pages.
+- Backend regression: the I-6 real-knowledge-base evaluation (126 questions in SHADOW and 126 in ACTIVE) re-run on this code and compared record by record with `qa/plan_f_i6/results_2026-10-30.json`: 252 of 252 records equal in served path, outcome, answer text, pages, routing reason, handoff outcome and specialist calls; 56 ACTIVE records (55 unique questions) served by Plan F, every answer byte-identical to I-6; SHADOW 126 of 126 identical to the direct legacy call; the known HR wrong-support case still `PLAN_F_UNSAFE_RESULT`, the ambiguous housing question still `PLAN_F_REJECTED_BY_ROUTING` with 0 calls; model calls 0, exceptions 0 (output kept outside the repository).
+- Automated: `tests/test_ui_presentation.py` (25 tests, labels,
+  chips, escaping, N/A timing rules, Developer sections for every served
+  path, per-turn isolation, source constraints). Targeted gate (the I-6 gate
+  plus the new file, 20 files): 1,416 collected, 1,416 passed, 0 failed, 0 skipped, 0 xfail (82 s). Full suite: 6,670 collected, 6,670 passed, 0 failed, 0 skipped, 0 xfail (221 s)
+  (baseline 6,645 before this phase). `pip check`: no broken requirements. Frozen
+  specialist hashes unchanged (6 of 6); no file under `handbook_bot/`
+  changed. Security scan of the change set: no key, token, `.env` content or
+  local path.
+- Elapsed phase runtime: 0h41m19s (start 2026-10-30T08:12:01Z, end 2026-10-30T08:53:20Z).
+
+### Files
+
+New: `ui/presentation.py`, `tests/test_ui_presentation.py`,
+`qa/plan_f_i7/README.md`. Changed: `ui/chat.py`, `ui/styles.py`,
+`docs/STATUS.md` (this entry). No frozen file changed; nothing under
+`handbook_bot/` changed.
+
+### Next
+
+I-8: full end-to-end adversarial application QA on the integrated system
+(both switches still default to off; Plan F stays behind flags).
+
+---
+
 ## 2026-10-30 - Bounded Plan F handoffs and routing refinement (runtime integration, phase I-6)
 
 | Field | Value |

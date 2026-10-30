@@ -761,6 +761,28 @@ header.q-header, footer.q-footer { display: none !important; }
     color: var(--text-1);
     font-size: 10.5px;
 }
+/* One chip per cited page; the page's section rides along ("Page 54 · Contact Information"). */
+.chip.page {
+    max-width: 420px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/* The handbook itself, once per answer. */
+.chip.doc {
+    background: var(--bg-1);
+    color: var(--text-2);
+    border-color: var(--border);
+    max-width: 320px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/* Shown only when the verified specialist path produced the answer: the handbook domain it came from. */
+.chip.verified {
+    background: var(--uos);
+    color: #ffffff;
+    border-color: var(--uos);
+    font-weight: 600;
+}
 
 .msg-toolbar {
     display: flex;
@@ -883,6 +905,12 @@ header.q-header, footer.q-footer { display: none !important; }
 }
 .typing span:nth-child(2) { animation-delay: 0.15s; }
 .typing span:nth-child(3) { animation-delay: 0.30s; }
+.typing .typing-text {
+    margin-left: 6px;
+    font-style: normal;
+    font-size: 13px;
+    color: var(--text-2);
+}
 @keyframes typingPulse {
     0%, 80%, 100% { opacity: 0.25; transform: scale(0.75); }
     40% { opacity: 1; transform: scale(1); }
@@ -1117,7 +1145,7 @@ header.q-header, footer.q-footer { display: none !important; }
     .landing-title { font-size: 24px; }
     .example-grid { grid-template-columns: 1fr; }
     .bubble { font-size: 14px; }
-    .bubble.user { max-width: 86%; }
+    .msg-row.user > *:first-child { max-width: 86%; }
     .composer-wrap { padding: 12px 14px 18px 14px; }
     .topbar { padding: 0 14px; height: 52px; }
     .topbar-title { font-size: 13px; }
@@ -1129,6 +1157,14 @@ header.q-header, footer.q-footer { display: none !important; }
 
 @media (max-width: 540px) {
     .sidebar { display: none; }
+    .chat-inner { padding: 16px 12px 170px 12px; }
+    .msg-row { gap: 8px; }
+    .msg-row.user > *:first-child { max-width: 92%; }
+    .chip.page, .chip.section, .chip.doc { max-width: 100%; }
+    /* Developer rows stack so long values stay readable instead of being clipped. */
+    .dev-row { flex-direction: column; gap: 0; padding: 4px 0; }
+    .dev-row .v { text-align: left; white-space: normal; word-break: break-word; }
+    .composer-hint { display: none; }
 }
 </style>
 """

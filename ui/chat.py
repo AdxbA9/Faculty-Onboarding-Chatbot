@@ -27,6 +27,7 @@ from __future__ import annotations
 import asyncio
 import html
 import json
+import logging
 import secrets
 import time
 import uuid
@@ -38,8 +39,11 @@ from nicegui import app, run, ui
 from handbook_bot import QAResult
 from handbook_bot.config import ENABLE_OCR, GROQ_MODEL
 
+from . import presentation
 from .pipeline import groq_is_configured, load_knowledge_base, preflight
 from .styles import GLOBAL_CSS, ICONS
+
+_log = logging.getLogger(__name__)
 
 
 APP_TITLE = "UOS Faculty Onboarding Chatbot"
@@ -84,7 +88,12 @@ def _ensure_kb_loaded() -> None:
         _KB_STATE["pdf_name"] = Path(kb.pdf_file).name
         _KB_STATE["stats"] = kb.stats or {}
     except Exception as exc:  # pragma: no cover
-        _KB_STATE["error"] = f"Could not load the handbook: {exc}"
+        # The full traceback goes to the server log; the page shows only the failure category.
+        _log.exception("knowledge base failed to load")
+        _KB_STATE["error"] = (
+            "Could not load the handbook (%s). Check the server log, then reload the app."
+            % type(exc).__name__
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -121,20 +130,6 @@ def _active_session(state: Dict[str, Any]) -> Dict[str, Any]:
     state["sessions"].insert(0, s)
     state["active_id"] = s["id"]
     return s
-
-
-def _dedupe_pages(pages) -> List[int]:
-    seen: set = set()
-    out: List[int] = []
-    for p in pages or []:
-        try:
-            n = int(p)
-        except (TypeError, ValueError):
-            continue
-        if n not in seen:
-            seen.add(n)
-            out.append(n)
-    return sorted(out)
 
 
 def _safe(callable_, *args, **kwargs) -> None:
@@ -301,29 +296,16 @@ def _build_page() -> None:
                             f'</div>'
                         ).classes("example-card").on("click", _make_click(p))
 
-    def _render_sources(result: QAResult) -> None:
-        unique_pages = _dedupe_pages(result.pages)
+    def _render_sources(result: QAResult, diagnostics: Optional[Dict[str, Any]] = None) -> None:
         chips_html: List[str] = []
-
-        for p in unique_pages:
-            chips_html.append(f'<span class="chip page">Page&nbsp;{p}</span>')
-
-        if result.best_section and result.best_section not in {
-            "Greeting", "Low confidence retrieval", "No matching evidence"
-        }:
-            section_label = result.best_section
-            if len(section_label) > 48:
-                section_label = section_label[:45] + "..."
+        domains = presentation.domain_labels(diagnostics)
+        if domains:                                       # the verified specialist path served this answer
             chips_html.append(
-                f'<span class="chip section">{html.escape(section_label)}</span>'
+                '<span class="chip verified" title="Verified from the handbook by the specialist path">'
+                + html.escape("Verified \u00b7 " + ", ".join(domains)) + '</span>'
             )
-
-        if any(
-            item.get("meta", {}).get("chunk_type") == "image_ocr"
-            for item in (result.items or [])
-        ):
-            chips_html.append('<span class="chip ocr">image-OCR evidence</span>')
-
+        for css, label in presentation.source_chips(result):
+            chips_html.append(f'<span class="chip {css}">{html.escape(label)}</span>')
         if not chips_html:
             return
         ui.html('<div class="source-row">' + "".join(chips_html) + '</div>')
@@ -349,58 +331,21 @@ def _build_page() -> None:
             f'</div>'
         )
 
-    def _render_debug(result: QAResult) -> None:
-        t = result.timings or {}
-        answered_by = (
-            "Deterministic extractor"
-            if not result.used_llm
-            else f"Groq . {GROQ_MODEL}"
-        )
-
-        uses_ocr = any(
-            item.get("meta", {}).get("chunk_type") == "image_ocr"
-            for item in (result.items or [])
-        )
-
-        rows_pipeline = [
-            ("Query type", (result.query_type or "-").replace("_", " ")),
-            ("Answered by", answered_by),
-            ("Image-OCR evidence", "yes" if uses_ocr else "no"),
-        ]
-        rows_retrieval = [
-            ("Candidates retrieved", str(result.num_candidates)),
-            ("Chunks reranked", str(result.num_reranked)),
-            ("Pages cited", ", ".join(str(p) for p in _dedupe_pages(result.pages)) or "-"),
-            ("Best section", (result.best_section or "-")[:48]),
-        ]
-        rows_timing = [
-            ("Retrieval", f"{t.get('retrieval_ms', 0):.1f} ms"),
-            ("Rerank",    f"{t.get('rerank_ms', 0):.1f} ms"),
-            ("Generation", f"{t.get('generation_ms', 0):.1f} ms"),
-            ("Total",     f"{t.get('total_ms', 0):.1f} ms"),
-        ]
-
-        kb_stats = _KB_STATE.get("stats") or {}
-        rows_kb = [
-            ("Total chunks", str(kb_stats.get("total_chunks", "-"))),
-            ("Total pages",  str(kb_stats.get("total_pages", "-"))),
-            ("OCR chunks",   str(kb_stats.get("ocr_chunks", "-"))),
-        ]
+    def _render_debug(msg: Dict[str, Any]) -> None:
+        result: QAResult = msg["result"]
+        sections = presentation.dev_sections(result, msg.get("diagnostics"), _KB_STATE.get("stats") or {}, msg.get("wall_ms"))
 
         def _rows(rs) -> str:
             return "".join(
                 f'<div class="dev-row"><span class="k">{html.escape(k)}</span>'
-                f'<span class="v">{html.escape(v)}</span></div>'
+                f'<span class="v" title="{html.escape(v)}">{html.escape(v)}</span></div>'
                 for k, v in rs
             )
 
-        body = (
-            '<div class="dev-section">Pipeline</div>' + _rows(rows_pipeline) +
-            '<div class="dev-section">Retrieval</div>' + _rows(rows_retrieval) +
-            '<div class="dev-section">Timing</div>' + _rows(rows_timing) +
-            '<div class="dev-section">Knowledge base</div>' + _rows(rows_kb)
+        body = "".join(
+            f'<div class="dev-section">{html.escape(title)}</div>' + _rows(rows)
+            for title, rows in sections if rows
         )
-
         ui.html(
             '<div class="dev-panel">'
             '  <details open>'
@@ -429,18 +374,19 @@ def _build_page() -> None:
                 with ui.element("div").classes("bubble assistant"):
                     if content == "__typing__":
                         ui.html(
-                            '<div class="typing">'
+                            '<div class="typing" role="status" aria-live="polite">'
                             '<span></span><span></span><span></span>'
+                            f'<em class="typing-text">{html.escape(presentation.SEARCHING_TEXT)}</em>'
                             '</div>'
                         )
                     else:
-                        ui.markdown(content)
+                        ui.markdown(presentation.escape_identifiers(content))
 
                 if result is not None and content != "__typing__":
-                    _render_sources(result)
+                    _render_sources(result, msg.get("diagnostics"))
                     _render_toolbar(content)
                     if state["debug"]:
-                        _render_debug(result)
+                        _render_debug(msg)
 
     def _render_chat() -> None:
         container = chat_container.get("el")
@@ -521,17 +467,14 @@ def _build_page() -> None:
         _render_chat()
 
         try:
-            result: QAResult = await run.io_bound(
+            result, diagnostics, wall_ms = await run.io_bound(
                 _call_pipeline, _KB_STATE["kb"], question
             )
         except Exception as exc:  # pragma: no cover
-            result = QAResult(answer=f"Sorry, I ran into an error: {exc}")
+            result = QAResult(answer=presentation.ERROR_TEXT)
+            diagnostics, wall_ms = presentation.error_diagnostics(exc), None
 
-        sess["messages"][-1] = {
-            "role": "assistant",
-            "content": result.answer,
-            "result": result,
-        }
+        sess["messages"][-1] = presentation.assistant_message(result, diagnostics, wall_ms)
         is_busy["v"] = False
         if "el" in send_button_ref:
             _safe(send_button_ref["el"].props, remove="disable")
@@ -612,11 +555,11 @@ def _build_page() -> None:
                     ui.switch(
                         value=state["debug"],
                         on_change=_dev_changed,
-                    ).props("dense")
+                    ).props('dense aria-label="Developer mode"')
 
                 # Theme toggle button (sun/moon icon)
                 theme_btn = ui.button(on_click=_on_theme_toggle) \
-                    .props("flat dense") \
+                    .props('flat dense aria-label="Toggle light or dark mode"') \
                     .classes("topbar-btn")
                 theme_btn.tooltip("Toggle light / dark mode")
                 with theme_btn:
@@ -639,12 +582,12 @@ def _build_page() -> None:
         with ui.element("div").classes("composer-wrap"):
             with ui.element("div").classes("composer"):
                 txt = ui.textarea(placeholder="Message the Onboarding Chatbot...") \
-                    .props('autogrow outlined=false borderless dense rounded') \
+                    .props('autogrow outlined=false borderless dense rounded aria-label="Message the Onboarding Chatbot"') \
                     .classes("flex-1")
                 composer_input["el"] = txt
 
                 send_btn = ui.button(on_click=_on_send_click) \
-                    .props("flat dense no-caps") \
+                    .props('flat dense no-caps aria-label="Send message"') \
                     .classes("send-btn")
                 with send_btn:
                     ui.html(ICONS["send"])
@@ -668,9 +611,12 @@ def _build_page() -> None:
     _render_chat()
 
 
-def _call_pipeline(kb, question: str) -> QAResult:
-    from .pipeline import ask
-    return ask(kb, question)
+def _call_pipeline(kb, question: str):
+    """One turn: the answer, the diagnostics the seam recorded for it and the end-to-end wall time of the call."""
+    from .pipeline import ask_with_diagnostics
+    started = time.perf_counter()
+    result, diagnostics = ask_with_diagnostics(kb, question)
+    return result, diagnostics, (time.perf_counter() - started) * 1000.0
 
 
 # ---------------------------------------------------------------------------
