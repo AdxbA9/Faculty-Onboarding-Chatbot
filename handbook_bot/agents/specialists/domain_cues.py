@@ -54,6 +54,10 @@ def research_view(text: str) -> str:
 #: Research ownership patterns (strong cues). The Coordinator scores each once per question on the research view.
 RESEARCH_OWNERSHIP_PATTERNS: Tuple[str, ...] = (
     r"\bresearch(?:er|ers)?\b",
+    # post-freeze PF-3B (D-110): iThenticate is the university's originality checker for researchers' manuscripts (the
+    # official ITC guideline says it "is used for university researchers"); course-assignment checkers (SafeAssign,
+    # Turnitin) stay Teaching cues
+    r"\bi\s?thenticate\b",
     # "grant" as a verb ("who grants tenure", "grant a student an extension") and a grant of leave are not research grants
     r"(?<!who )(?<!to )(?<!\bi )(?<!we )\bgrants?\b(?!\s+(?:tenure|leave|access|permission|approval|exemptions?|exceptions?|extensions?|"
         r"an?\s|me\b|him\b|her\b|them\b|students?\b|of\s+(?:leave|absence|tenure)))|\b(?:fund(?:ed|ing)|seed fund|principal investigator|pi)\b",

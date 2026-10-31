@@ -71,6 +71,9 @@ CONTENT_TYPES: Dict[str, str] = {
 }
 PAGE_FILTERS = ("", "english_only")
 ACCESS_LEVELS = ("", "public", "internal_use")
+#: Post-freeze PF-3C (D-111): who a document is written for. Only a faculty or instructor document may let its second-person
+#: procedural text ("click ...", "you can ...") stand for the faculty member asking; an empty audience is unknown.
+AUDIENCES = ("faculty", "instructor", "researcher", "staff", "student", "administrator")
 
 RECORD_KINDS = ("front_matter", "chapter", "section")
 
@@ -196,6 +199,7 @@ class SourceRecord:
     page_filter: str = ""                  # "" | english_only (deterministic page-level language control)
     domains: Tuple[str, ...] = ()          # specialists that may retrieve from this source (teaching, research, ...)
     conflicts: Tuple[SourceConflict, ...] = ()
+    audience: Tuple[str, ...] = ()         # post-freeze PF-3C (D-111): who the document is written for (AUDIENCES); () = unknown
 
     def __post_init__(self) -> None:
         if not isinstance(self.source_id, str) or not _SOURCE_ID.match(self.source_id):
@@ -222,6 +226,12 @@ class SourceRecord:
         if isinstance(self.domains, str) or not isinstance(self.domains, (list, tuple)):
             raise SourceRegistryError("domains must be a list of specialist ids, got %r" % (self.domains,))
         object.__setattr__(self, "domains", tuple(_text("domain", d) for d in self.domains))
+        if isinstance(self.audience, str) or not isinstance(self.audience, (list, tuple)):
+            raise SourceRegistryError("audience must be a list of %s, got %r" % (", ".join(AUDIENCES), self.audience))
+        unknown_audience = [a for a in self.audience if a not in AUDIENCES]
+        if unknown_audience:
+            raise SourceRegistryError("audience must be a list of %s, got %r" % (", ".join(AUDIENCES), unknown_audience))
+        object.__setattr__(self, "audience", tuple(self.audience))
         if isinstance(self.conflicts, dict) or not isinstance(self.conflicts, (list, tuple)):
             raise SourceRegistryError("conflicts must be a list, got %r" % (self.conflicts,))
         conflicts = []
@@ -265,6 +275,7 @@ class SourceRecord:
             "publication_date": self.publication_date, "department": self.department, "system": self.system,
             "citation_label": self.citation_label, "access": self.access, "enabled": self.enabled, "sha256": self.sha256,
             "page_filter": self.page_filter, "domains": list(self.domains), "conflicts": [c.to_dict() for c in self.conflicts],
+            "audience": list(self.audience),
         }
 
 

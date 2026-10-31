@@ -923,7 +923,11 @@ def run_code(findings: SpecialistFindings) -> Tuple[Optional[ReasonCode], str]:
 def report_code(specialist_id: SpecialistId, report: Dict[str, Any]) -> Tuple[Optional[ReasonCode], str]:
     """Why ONE clause report makes its clause non-renderable (the outcome, the ask shape, the requested details and
     the relation of a retrieval specialist; the outcome and evidence tier of Institutional Navigation), as a reason
-    code, or (None, "")."""
+    code, or (None, ""). A clause report of the D-111 guide path (post-freeze PF-3C) is read by its own rule."""
+    from . import guide_grounding as _guides
+    if _guides.has_guide_record(report):
+        problem = _guides.guide_report_problem(report)
+        return (None, "") if problem is None else (ReasonCode.UNSUPPORTED_STATUS, "D-111: %s" % problem)
     if specialist_id is SpecialistId.INSTITUTIONAL:
         if report.get("outcome") != INSTITUTIONAL_OUTCOME_READ:
             return ReasonCode.UNSUPPORTED_STATUS, "institutional clause outcome %s" % report.get("outcome")
@@ -1128,8 +1132,41 @@ def verify_finding(clause: str, shape: RequestShape, findings: SpecialistFinding
 # ---------------------------------------------------------------------------
 # The result
 # ---------------------------------------------------------------------------
-def verify_findings(clause: str, findings: SpecialistFindings, chunks: Sequence[str], metadata: Sequence[Dict[str, Any]]) -> FindingsVerification:
-    """Verify one specialist result against the clause it answers. Deterministic; no model; never raises."""
+def _verify_guide(clause: str, findings: SpecialistFindings, chunks: Sequence[str], metadata: Sequence[Dict[str, Any]], guide_index: Any,
+                  status: Optional[str], specialist: Optional[str], started: float) -> FindingsVerification:
+    """Post-freeze PF-3C (D-111): the findings of a guide clause are verified as ONE answer (a complete procedure, one item
+    of an unordered list, or one statement) by ``guide_grounding.verify_guide_findings``; the quote guard still applies to
+    every finding. A unit-by-unit handbook check would refuse every step of a procedure on its own."""
+    from . import guide_grounding as _guides
+    kind = read_request(clause).kind
+    report = findings.metadata["clauses"][0]
+    if not _guides.has_guide_record(report) or not all(_guides.has_guide_record(f) for f in findings.findings):
+        return _rejected(ReasonCode.UNSUPPORTED_STATUS, "D-111: guide and non-guide evidence mixed in one clause", status=status,
+                         specialist=specialist, kind=kind, started=started)
+    for finding in findings.findings:
+        problem = quote_problem(finding, chunks, metadata)
+        if problem is not None:
+            return _rejected(ReasonCode.INVALID_EVIDENCE_REFERENCE, problem, status=status, specialist=specialist, kind=kind, started=started,
+                             integrity=False)
+    problem = _guides.verify_guide_findings(clause, findings.findings, findings.specialist_id.value, guide_index)
+    if problem is not None:
+        code = ReasonCode.REQUESTED_DETAIL_MISSING if "term" in problem else ReasonCode.SUBJECT_MISMATCH
+        return _rejected(code, "D-111: %s" % problem, status=status, specialist=specialist, kind=kind, started=started, integrity=True,
+                         subject=False)
+    form = report[_guides.GUIDE_KEY].get("form")
+    verdicts = tuple(FindingVerdict(f.finding_id, True, ReasonCode.ACCEPTED, "D-111 %s verified as one answer" % form, Completeness.COMPLETE)
+                     for f in findings.findings)
+    return FindingsVerification(
+        accepted=True, reason=ReasonCode.ACCEPTED, detail="D-111: %s of %d part(s) verified" % (form, len(verdicts)), status=status,
+        specialist_id=specialist, request_kind=kind, subject_match=True, relation_match=True, detail_coverage=True, evidence_integrity=True,
+        completeness=Completeness.COMPLETE, safe_to_render=True, accepted_finding_ids=tuple(v.finding_id for v in verdicts), verdicts=verdicts,
+        ms=(time.perf_counter() - started) * 1000.0)
+
+
+def verify_findings(clause: str, findings: SpecialistFindings, chunks: Sequence[str], metadata: Sequence[Dict[str, Any]],
+                    guide_index: Any = None) -> FindingsVerification:
+    """Verify one specialist result against the clause it answers. Deterministic; no model; never raises. ``guide_index``
+    (post-freeze PF-3C) lets a D-111 guide clause be verified; without it such a clause is refused."""
     started = time.perf_counter()
     kind = RequestKind.UNRECOGNISED
     status: Optional[str] = None
@@ -1145,6 +1182,9 @@ def verify_findings(clause: str, findings: SpecialistFindings, chunks: Sequence[
         text = (clause or "").strip()
         if not text:
             return _rejected(ReasonCode.UNSUPPORTED_STATUS, "empty clause", status=status, specialist=specialist, kind=kind, started=started)
+        from . import guide_grounding as _guides
+        if _guides.has_guide_record(findings.metadata["clauses"][0]) or any(_guides.has_guide_record(f) for f in findings.findings):
+            return _verify_guide(text, findings, chunks, metadata, guide_index, status, specialist, started)
         shape = read_request(text)
         kind = shape.kind
         verdicts: List[FindingVerdict] = []
@@ -1286,12 +1326,12 @@ class SlicedVerification:
 
 
 def verify_findings_sliced(clause: str, findings: SpecialistFindings, chunks: Sequence[str],
-                           metadata: Sequence[Dict[str, Any]]) -> SlicedVerification:
+                           metadata: Sequence[Dict[str, Any]], guide_index: Any = None) -> SlicedVerification:
     """:func:`verify_findings` and, when its only objection to the primary finding is EXCESS_EVIDENCE, the same
     verification of a copy whose primary finding is the provision slice of that quote (:func:`provision_slice`). The
     slice is used only when it passes every check on its own, the quote guard included; otherwise the original
     rejection stands, with the slice's own reason appended to its detail. Deterministic; never raises."""
-    first = verify_findings(clause, findings, chunks, metadata)
+    first = verify_findings(clause, findings, chunks, metadata, guide_index)
     try:
         if first.accepted or first.reason is not ReasonCode.EXCESS_EVIDENCE or not first.verdicts or not findings.findings:
             return SlicedVerification(first, findings)
@@ -1307,7 +1347,7 @@ def verify_findings_sliced(clause: str, findings: SpecialistFindings, chunks: Se
                                       missing=list(findings.missing), handoff_requests=list(findings.handoff_requests),
                                       confidence=findings.confidence, limitations=list(findings.limitations), llm_used=findings.llm_used,
                                       ms=findings.ms, metadata=dict(findings.metadata))
-        second = verify_findings(clause, replaced, chunks, metadata)
+        second = verify_findings(clause, replaced, chunks, metadata, guide_index)
         if second.accepted and second.safe_to_render and derived.finding_id in second.accepted_finding_ids:
             start, end = derived.metadata["slice"]
             return SlicedVerification(second, replaced, ((derived.finding_id, original.finding_id, int(start), int(end)),))

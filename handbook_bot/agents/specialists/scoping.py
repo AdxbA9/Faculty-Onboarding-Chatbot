@@ -17,6 +17,12 @@ WHAT IS HERE
     * ``heading_marker``: the regex for a section's printed heading.
     * ``SectionGuard``: chunk-level section eligibility on pages that carry a
       non-owned section (see the class docstring).
+    * ``approved_source_set`` / ``approve_sources`` (post-freeze PF-3B,
+      D-110): the source-acceptance boundary of a specialist. The section-
+      mapped primary source (the handbook) is always approved; further
+      sources are approved only when the runtime's source policy names them
+      explicitly. ``approve_sources`` adds them to the scope as
+      ``also_source_ids``: the handbook constraints stay exactly as compiled.
 
 The code was extracted unchanged from the Teaching & Learning Specialist
 (Milestone 3) so that the remaining specialists share one implementation.
@@ -25,8 +31,8 @@ No specialist imports another specialist; each imports this module.
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Sequence, Tuple
+from dataclasses import dataclass, replace
+from typing import Any, Dict, FrozenSet, Iterable, List, Optional, Sequence, Tuple
 
 from ...retrieval import RetrievalScope
 from ...sources import SectionMap, SectionRecord
@@ -84,6 +90,34 @@ def compile_scope(section_map: SectionMap, source_id: str, owned: Sequence[Secti
     return RetrievalScope(source_ids=[source_id], page_ranges=_merge_ranges(ranges))
 
 
+def approved_source_set(approved: Optional[Iterable[str]], primary_source_id: str) -> FrozenSet[str]:
+    """The source ids a specialist accepts evidence from (post-freeze PF-3B, D-110). ``None`` means the primary
+    (section-mapped) source only, exactly as at the I-9 freeze. Any other value must be a collection of non-empty
+    source ids that includes the primary source; nothing is ever implied beyond the ids given (no wildcard)."""
+    if approved is None:
+        return frozenset({primary_source_id})
+    if isinstance(approved, str):
+        raise ValueError("approved_sources must be a collection of source ids, not a single string")
+    ids = set()
+    for source_id in approved:
+        if not isinstance(source_id, str) or not source_id.strip() or source_id.strip() != source_id or "*" in source_id:
+            raise ValueError("approved_sources must contain plain source ids, got %r" % (source_id,))
+        ids.add(source_id)
+    if primary_source_id not in ids:
+        raise ValueError("approved_sources must include the primary source %r" % primary_source_id)
+    return frozenset(ids)
+
+
+def approve_sources(scope: RetrievalScope, approved: FrozenSet[str], primary_source_id: str) -> RetrievalScope:
+    """``scope`` with every approved source other than the primary one admitted as ``also_source_ids`` (their chunks
+    are not subject to the primary source's page ranges). The scope is returned unchanged when nothing beyond the
+    primary source is approved, so the I-9 scope object is reproduced exactly."""
+    extra = frozenset(approved) - {primary_source_id}
+    if not extra:
+        return scope
+    return replace(scope, also_source_ids=frozenset(set(scope.also_source_ids or ()) | extra))
+
+
 def heading_marker(record: SectionRecord) -> "re.Pattern[str]":
     """Regex for the printed heading of a section: its number followed by the
     first two title words, e.g. "3.5 Responsibility to"."""
@@ -129,6 +163,13 @@ class SectionGuard:
     preferred to a supported claim from an excluded section. A page that no
     section record covers (a chapter preamble admitted as an extra page) is
     never shared and is admitted whole.
+
+    Source-aware since post-freeze PF-3B (D-110): page and section
+    attribution applies to the section map's own source only. A chunk of
+    another approved source (a system guide, which has no section map) is
+    never counted on a handbook page and is never shared: its page numbers
+    are its own document's, so handbook page ranges and headings say nothing
+    about it. For the handbook every result is exactly as before.
     """
 
     def __init__(self, chunks: Sequence[str], metadata: Sequence[Dict[str, Any]], section_map: SectionMap,
@@ -140,6 +181,7 @@ class SectionGuard:
             if cid is not None and cid != i:
                 raise ValueError("chunk metadata is out of order: metadata[%d]['chunk_id'] == %r" % (i, cid))
         self.owned = {(c, n) for c, n, _ in owned}
+        self.source_id = section_map.source_id
         self.shared_pages: Dict[int, _PageSegments] = {}
         self.unresolved_pages: List[int] = []
         pages = sorted({p for first, last in (scope.page_ranges or ()) for p in range(first, last + 1)})
@@ -147,7 +189,7 @@ class SectionGuard:
         by_page: Dict[int, List[int]] = {}
         for i, meta in enumerate(metadata):
             page = meta.get("page")
-            if isinstance(page, int) and page in pages:
+            if isinstance(page, int) and page in pages and self._mapped(meta):
                 by_page.setdefault(page, []).append(i)
         for page in pages:
             on_page = [r for r in sections if r.start_page <= page <= r.end_page]
@@ -209,13 +251,24 @@ class SectionGuard:
             para_spans[i] = spans
         return _PageSegments(page=page, segments=segments, markers=markers, para_spans=para_spans)
 
+    def _mapped(self, meta: Dict[str, Any]) -> bool:
+        """True when ``meta`` belongs to the section map's source (metadata without a source id, as in fixtures built
+        before source annotation, is read as the mapped source, the I-9 behaviour)."""
+        source_id = meta.get("source_id")
+        return source_id is None or source_id == self.source_id
+
     def is_shared(self, meta: Dict[str, Any]) -> bool:
+        if not self._mapped(meta):
+            return False
         return meta.get("page") in self.shared_pages or meta.get("page") in self.unresolved_pages
 
     def owned_spans(self, chunk_id: Any, chunk: str, meta: Dict[str, Any]) -> Optional[List[Tuple[int, int]]]:
         """Character spans of ``chunk`` that are the specialist's, or None
-        when the whole chunk is (page without a non-owned section). An empty
-        list means nothing in the chunk may be quoted."""
+        when the whole chunk is (page without a non-owned section, or a chunk
+        of another approved source, which has no sections). An empty list
+        means nothing in the chunk may be quoted."""
+        if not self._mapped(meta):
+            return None
         page = meta.get("page")
         if page in self.unresolved_pages:
             return []
@@ -240,4 +293,4 @@ class SectionGuard:
         return []
 
 
-__all__ = ["SectionGuard", "SectionIdentity", "compile_scope", "heading_marker"]
+__all__ = ["SectionGuard", "SectionIdentity", "approve_sources", "approved_source_set", "compile_scope", "heading_marker"]

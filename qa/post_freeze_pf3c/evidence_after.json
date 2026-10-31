@@ -1,0 +1,5848 @@
+{
+ "method": "PF-3C evidence-selection measurement on the REAL knowledge base (no model call besides the local embedder and reranker).\n\n    python -X utf8 qa/post_freeze_pf3c/evidence_selection.py <repo> <out.json> [--pf3c]\n\nFor each of the 37 guide questions (``qa/post_freeze_pf2/guide_questions.jsonl`` G01-G37) and its hand-labelled target\npassage (``guide_targets.json``) it records:\n  * UNSCOPED: the whole-corpus hybrid retrieval plus cross-encoder order (what the legacy path sees): expected source\n    top-1 and top-5.\n  * GUIDE-SCOPED (B0): the same retrieval restricted to the guide sources the question names (the PF-3B candidate pool\n    for guide evidence): top-1 category (ON_TARGET / PARTIAL / OFF_TARGET), rank of the first on-target chunk, whether\n    the top hit is a generic guide introduction, whether a procedure chunk is in the top five.\n  * PF-3C (with ``--pf3c``): the evidence the D-111 guide path selects for the question (whether or not it is served),\n    with the same categories.\nA generic introduction is a chunk on a guide's first page carrying the guide's opening description (listed below).",
+ "summary": {
+  "questions": 37,
+  "kb_load_s": 24.2,
+  "unscoped_expected_top1": 36,
+  "unscoped_expected_top5": 37,
+  "b0": {
+   "on_target_top1": 30,
+   "partial_top1": 2,
+   "off_target_top1": 5,
+   "intro_top1": 11,
+   "procedure_in_top5": 29,
+   "expected_source_top1": 36,
+   "expected_source_top5": 37,
+   "on_target_in_top5": 35,
+   "median_ms": 1360.1
+  },
+  "pf3c": {
+   "with_evidence": 12,
+   "on_target_top1": 12,
+   "partial_top1": 0,
+   "off_target_top1": 0,
+   "intro_top1": 0,
+   "median_ms": 555.9
+  }
+ },
+ "rows": [
+  {
+   "id": "G01",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1348.3,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "procedure_window",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 897.7,
+   "pf3c": {
+    "form": "procedure",
+    "intent": "procedure",
+    "evidence": [
+     {
+      "chunk_id": 13711,
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 1,
+      "text": "How to access Blackboard: - Open the University website http://www.sharjah.ac.ae",
+      "kind": "procedure"
+     },
+     {
+      "chunk_id": 13712,
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 1,
+      "text": "- Click Quick Links “MyUOS” , If you are connected to the University Network Domain, you will be directly logged in automatically.",
+      "kind": "procedure"
+     },
+     {
+      "chunk_id": 13713,
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 1,
+      "text": "- If you are singing from outside university campus, click on Login from the main page.",
+      "kind": "procedure"
+     },
+     {
+      "chunk_id": 13714,
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 1,
+      "text": "- Click on Login.",
+      "kind": "procedure"
+     },
+     {
+      "chunk_id": 13715,
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 1,
+      "text": "- Then sign in using your University of Sharjah email address and password.",
+      "kind": "procedure"
+     },
+     {
+      "chunk_id": 13716,
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 1,
+      "text": "- You must verify your identity using the multifactor factor authentication service by receiving an SMS on the registered phone number or using Microsoft authenticator application.",
+      "kind": "procedure"
+     },
+     {
+      "chunk_id": 13717,
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 1,
+      "text": "- Then you will be redirected to the main page of the blackboard.",
+      "kind": "procedure"
+     }
+    ],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": true,
+       "terms": 3,
+       "core": 1,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": true,
+       "terms": 3,
+       "core": 1,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 529.5199000102002,
+     "retrieved": [
+      {
+       "chunk_id": 13718,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 13688,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 13719,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 13713,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 13720,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 13712,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 13704,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 13745,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 2,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 13715,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 13716,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "tried": [
+        {
+         "procedure": "uos_blackboard_faculty_short_guide:1:0",
+         "form": "procedure",
+         "accepted": true,
+         "reason": null
+        }
+       ]
+      }
+     ],
+     "form": "procedure",
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "procedure_key": "uos_blackboard_faculty_short_guide:1:0",
+     "chunk_ids": [
+      13711,
+      13712,
+      13713,
+      13714,
+      13715,
+      13716,
+      13717
+     ],
+     "selection_ms": 1.0578999936114997,
+     "ms": 897.7095000154804
+    }
+   },
+   "pf3c_top1": "ON_TARGET",
+   "pf3c_top1_intro": false,
+   "pf3c_top1_kind": "procedure"
+  },
+  {
+   "id": "G02",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1310.5,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "procedure_step",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 419.2,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": true,
+       "terms": 3,
+       "core": 2,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": true,
+       "terms": 3,
+       "core": 2,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 417.48519998509437,
+     "retrieved": [
+      {
+       "chunk_id": 13716,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 13720,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 13709,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 13688,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 13737,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 2,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 13715,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 13719,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 13710,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 1,
+       "chunk_type": "row_window"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "tried": [
+        {
+         "procedure": "uos_blackboard_faculty_short_guide:1:0",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the procedure heading names another action than the one asked"
+        }
+       ]
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "tried": []
+      }
+     ],
+     "selection_ms": 0.49539998872205615,
+     "ms": 419.14479999104515
+    }
+   }
+  },
+  {
+   "id": "G03",
+   "route": "list",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1390.8,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 3,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 555.9,
+   "pf3c": {
+    "form": "list_item",
+    "intent": "procedure",
+    "evidence": [
+     {
+      "chunk_id": 13765,
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 3,
+      "text": "- You can mark one of your courses as a favorite, this will allow you to pin this course on the top of the courses list.",
+      "kind": "list_item"
+     }
+    ],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard Ultra"
+       ],
+       "actor_bound": true,
+       "terms": 4,
+       "core": 2,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard Ultra"
+       ],
+       "actor_bound": true,
+       "terms": 4,
+       "core": 2,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 554.015800007619,
+     "retrieved": [
+      {
+       "chunk_id": 13747,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 3,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14197,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14159,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 13767,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 3,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 13758,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 3,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 13765,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 3,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14198,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 13754,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 3,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 13759,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 3,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14196,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "tried": [
+        {
+         "procedure": "uos_blackboard_faculty_short_guide:3:0",
+         "form": "list_item",
+         "chunk_id": 13765,
+         "accepted": true
+        }
+       ]
+      }
+     ],
+     "form": "list_item",
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "procedure_key": "uos_blackboard_faculty_short_guide:3:0",
+     "chunk_ids": [
+      13765
+     ],
+     "selection_ms": 0.54519998957403,
+     "ms": 555.9082000108901
+    }
+   },
+   "pf3c_top1": "ON_TARGET",
+   "pf3c_top1_intro": false,
+   "pf3c_top1_kind": "list_item"
+  },
+  {
+   "id": "G04",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1542.7,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 4,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 620.0,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "enumeration",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": true,
+       "terms": 5,
+       "core": 0,
+       "entities": 1,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "enumeration",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": true,
+       "terms": 5,
+       "core": 0,
+       "entities": 1,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 616.6128999902867,
+     "retrieved": [
+      {
+       "chunk_id": 13768,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 4,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 13777,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 4,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 13831,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 5,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 13825,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 4,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14197,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 13806,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 4,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 13826,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 4,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 13807,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 4,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14159,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14198,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "enumeration",
+       "tried": [
+        {
+         "procedure": "uos_blackboard_faculty_short_guide:4:0",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the last step continues on a row read as a heading and no indexed text holds the whole step"
+        },
+        {
+         "chunk_id": 13768,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 4 asked term(s)"
+        },
+        {
+         "chunk_id": 13768,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 5 asked term(s)"
+        },
+        {
+         "chunk_id": 13768,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 4 asked term(s)"
+        },
+        {
+         "chunk_id": 13768,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 5 asked term(s)"
+        },
+        {
+         "chunk_id": 13768,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 1 asked term(s)"
+        },
+        {
+         "chunk_id": 13768,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 5 asked term(s)"
+        },
+        {
+         "chunk_id": 13768,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 5 asked term(s)"
+        },
+        {
+         "chunk_id": 13768,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 4 asked term(s)"
+        },
+        {
+         "chunk_id": 13768,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 4 asked term(s)"
+        },
+        {
+         "chunk_id": 13768,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 5 asked term(s)"
+        },
+        {
+         "chunk_id": 13768,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 4 asked term(s)"
+        }
+       ]
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "enumeration",
+       "tried": [
+        {
+         "procedure": "uos_blackboard_gradebook_guide:1:0",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the last step continues on a row read as a heading and no indexed text holds the whole step"
+        },
+        {
+         "chunk_id": 14197,
+         "kind": "step",
+         "accepted": false,
+         "reason": "the evidence does not state 3 asked term(s)"
+        },
+        {
+         "chunk_id": 14197,
+         "kind": "step",
+         "accepted": false,
+         "reason": "the evidence does not state 3 asked term(s)"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 4 asked term(s)"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 5 asked term(s)"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 5 asked term(s)"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 4 asked term(s)"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 4 asked term(s)"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 4 asked term(s)"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 4 asked term(s)"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 4 asked term(s)"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 4 asked term(s)"
+        }
+       ]
+      }
+     ],
+     "selection_ms": 2.2468999959528446,
+     "ms": 620.0069999904372
+    }
+   }
+  },
+  {
+   "id": "G05",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 2317.8,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "row_window",
+   "b0_top1_page": 4,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": false,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 553.9,
+   "pf3c": {
+    "form": "statement",
+    "intent": "value",
+    "evidence": [
+     {
+      "chunk_id": 13769,
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 4,
+      "text": "Course Image: You will be able to upload a course banner image, the image always displays as the course card thumbnail on the Courses page. In Ultra Course View courses, you can toggle the Course Image to display the image within your course as well, Image must be at least 1200 x 240 pixels.",
+      "kind": "statement"
+     }
+    ],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "value",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": false,
+       "terms": 3,
+       "core": 0,
+       "entities": 0,
+       "minimum": true,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "value",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": false,
+       "terms": 3,
+       "core": 0,
+       "entities": 0,
+       "minimum": true,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 552.0228999957908,
+     "retrieved": [
+      {
+       "chunk_id": 13812,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 4,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 13813,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 4,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 13850,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 5,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 13769,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 4,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 13786,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 4,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 13830,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 5,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 13851,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 5,
+       "chunk_type": "row_window"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "value",
+       "tried": [
+        {
+         "chunk_id": 13769,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 3 asked term(s)"
+        },
+        {
+         "chunk_id": 13769,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 3 asked term(s)"
+        },
+        {
+         "chunk_id": 13769,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "a value ask needs a stated number with its unit"
+        },
+        {
+         "chunk_id": 13769,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 1 asked term(s)"
+        },
+        {
+         "chunk_id": 13769,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 1 asked term(s)"
+        },
+        {
+         "chunk_id": 13769,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 2 asked term(s)"
+        },
+        {
+         "chunk_id": 13769,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 2 asked term(s)"
+        },
+        {
+         "chunk_id": 13769,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 2 asked term(s)"
+        },
+        {
+         "chunk_id": 13769,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 2 asked term(s)"
+        },
+        {
+         "chunk_id": 13769,
+         "kind": "sentences",
+         "accepted": false,
+         "reason": "the evidence does not state 3 asked term(s)"
+        },
+        {
+         "chunk_id": 13769,
+         "kind": "sentences",
+         "accepted": true,
+         "reason": null
+        }
+       ]
+      }
+     ],
+     "form": "statement",
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "procedure_key": null,
+     "chunk_ids": [
+      13769
+     ],
+     "selection_ms": 0.8132000220939517,
+     "ms": 553.8943000137806
+    }
+   },
+   "pf3c_top1": "ON_TARGET",
+   "pf3c_top1_intro": false,
+   "pf3c_top1_kind": "statement"
+  },
+  {
+   "id": "G06",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1399.3,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 4,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": false,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 579.7,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": true,
+       "terms": 5,
+       "core": 3,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": true,
+       "terms": 5,
+       "core": 3,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 577.8613000002224,
+     "retrieved": [
+      {
+       "chunk_id": 13770,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 4,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 13934,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 8,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 13974,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 8,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 13817,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 4,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 13953,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 8,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 13688,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "tried": []
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "tried": []
+      }
+     ],
+     "selection_ms": 0.7361999887507409,
+     "ms": 579.6379999956116
+    }
+   }
+  },
+  {
+   "id": "G07",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1391.5,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "procedure_window",
+   "b0_top1_page": 6,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 547.0,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "enumeration",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": true,
+       "terms": 4,
+       "core": 0,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "enumeration",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": true,
+       "terms": 4,
+       "core": 0,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 543.1055999943055,
+     "retrieved": [
+      {
+       "chunk_id": 13892,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 6,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 13857,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 6,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 13878,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 6,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 13879,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 6,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 13887,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 6,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 13858,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 6,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 13889,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 6,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 13770,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 4,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 13934,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 8,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 13893,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 6,
+       "chunk_type": "procedure_window"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "enumeration",
+       "tried": [
+        {
+         "procedure": "uos_blackboard_faculty_short_guide:6:0",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the list may continue on page 7 (steps open that page under no heading)"
+        },
+        {
+         "chunk_id": 13857,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 3 asked term(s)"
+        },
+        {
+         "chunk_id": 13857,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 3 asked term(s)"
+        },
+        {
+         "chunk_id": 13857,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 3 asked term(s)"
+        },
+        {
+         "chunk_id": 13857,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 3 asked term(s)"
+        },
+        {
+         "chunk_id": 13857,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 1 asked term(s)"
+        },
+        {
+         "chunk_id": 13857,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 2 asked term(s)"
+        },
+        {
+         "chunk_id": 13857,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 2 asked term(s)"
+        },
+        {
+         "chunk_id": 13857,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 3 asked term(s)"
+        },
+        {
+         "chunk_id": 13857,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 3 asked term(s)"
+        },
+        {
+         "chunk_id": 13857,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 3 asked term(s)"
+        },
+        {
+         "chunk_id": 13857,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 3 asked term(s)"
+        }
+       ]
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "enumeration",
+       "tried": []
+      }
+     ],
+     "selection_ms": 2.6495000056456774,
+     "ms": 546.9588999985717
+    }
+   }
+  },
+  {
+   "id": "G08",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1353.4,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "PARTIAL",
+   "b0_top1_chunk_type": "procedure_step",
+   "b0_top1_page": 7,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 3,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 572.1,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard Ultra"
+       ],
+       "actor_bound": true,
+       "terms": 4,
+       "core": 3,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard Ultra"
+       ],
+       "actor_bound": true,
+       "terms": 4,
+       "core": 3,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 570.4880999983288,
+     "retrieved": [
+      {
+       "chunk_id": 13923,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 7,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 13915,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 7,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 13894,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 7,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 13918,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 7,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 13930,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 7,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 13895,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 7,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 13924,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 7,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 13903,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 7,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 13916,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 7,
+       "chunk_type": "row_window"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "tried": [
+        {
+         "procedure": "uos_blackboard_faculty_short_guide:7:0",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the list opens the page under no heading and may continue a list of page 6"
+        },
+        {
+         "procedure": "uos_blackboard_faculty_short_guide:7:1",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the list mixes bullets, letters and numbers"
+        }
+       ]
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "tried": []
+      }
+     ],
+     "selection_ms": 0.4102000093553215,
+     "ms": 572.0368000038434
+    }
+   }
+  },
+  {
+   "id": "G09",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1223.1,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 8,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": false,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 534.6,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard Ultra"
+       ],
+       "actor_bound": true,
+       "terms": 3,
+       "core": 3,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard Ultra"
+       ],
+       "actor_bound": true,
+       "terms": 3,
+       "core": 3,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 532.2074000141583,
+     "retrieved": [
+      {
+       "chunk_id": 13932,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 8,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 13933,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 8,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 13963,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 8,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 13942,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 8,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 13964,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 8,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 13965,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 8,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14197,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14159,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 13944,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 8,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 13936,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 8,
+       "chunk_type": "row"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "tried": [
+        {
+         "procedure": "uos_blackboard_faculty_short_guide:6:0",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the list may continue on page 7 (steps open that page under no heading)"
+        }
+       ]
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "tried": [
+        {
+         "procedure": "uos_blackboard_gradebook_guide:1:0",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the last step continues on a row read as a heading and no indexed text holds the whole step"
+        }
+       ]
+      }
+     ],
+     "selection_ms": 1.3799000007566065,
+     "ms": 534.5737999887206
+    }
+   }
+  },
+  {
+   "id": "G10",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1183.2,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 9,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": false,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 549.4,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": true,
+       "terms": 3,
+       "core": 2,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": true,
+       "terms": 3,
+       "core": 2,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 547.5558000034653,
+     "retrieved": [
+      {
+       "chunk_id": 13978,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 9,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 13770,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 4,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14002,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 9,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 13989,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 9,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 14001,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 9,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 13821,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 4,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 13688,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 13997,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 9,
+       "chunk_type": "row_window"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "tried": []
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "tried": []
+      }
+     ],
+     "selection_ms": 0.746000005165115,
+     "ms": 549.3459999852348
+    }
+   }
+  },
+  {
+   "id": "G11",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1238.0,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 10,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 511.9,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard Ultra"
+       ],
+       "actor_bound": true,
+       "terms": 2,
+       "core": 2,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard Ultra"
+       ],
+       "actor_bound": true,
+       "terms": 2,
+       "core": 2,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 509.9079000065103,
+     "retrieved": [
+      {
+       "chunk_id": 14005,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 10,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14196,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14159,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14054,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 10,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14198,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14006,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 10,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14055,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 10,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14051,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 10,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 13688,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14197,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "tried": []
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "tried": [
+        {
+         "procedure": "uos_blackboard_gradebook_guide:1:0",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the last step continues on a row read as a heading and no indexed text holds the whole step"
+        }
+       ]
+      }
+     ],
+     "selection_ms": 1.1677999864332378,
+     "ms": 511.8803000077605
+    }
+   }
+  },
+  {
+   "id": "G12",
+   "route": "policy_yesno",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1278.5,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "row_window",
+   "b0_top1_page": 11,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": false,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 22,
+   "pf3c_ms": 537.5,
+   "pf3c": {
+    "form": "statement",
+    "intent": "yes_no",
+    "evidence": [
+     {
+      "chunk_id": 14078,
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 11,
+      "text": "At this time, you cannot add a time limit to group assignments.",
+      "kind": "statement"
+     }
+    ],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "yes_no",
+       "names_bound": [
+        "Blackboard Ultra"
+       ],
+       "actor_bound": true,
+       "terms": 5,
+       "core": 0,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "yes_no",
+       "names_bound": [
+        "Blackboard Ultra"
+       ],
+       "actor_bound": true,
+       "terms": 5,
+       "core": 0,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 535.5222999933176,
+     "retrieved": [
+      {
+       "chunk_id": 14090,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 11,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14089,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 11,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14078,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 11,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14088,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 11,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14082,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 11,
+       "chunk_type": "row"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "yes_no",
+       "tried": [
+        {
+         "chunk_id": 14078,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 5 asked term(s)"
+        },
+        {
+         "chunk_id": 14078,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 5 asked term(s)"
+        },
+        {
+         "chunk_id": 14078,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 4 asked term(s)"
+        },
+        {
+         "chunk_id": 14078,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 2 asked term(s)"
+        },
+        {
+         "chunk_id": 14078,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 2 asked term(s)"
+        },
+        {
+         "chunk_id": 14078,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 3 asked term(s)"
+        },
+        {
+         "chunk_id": 14078,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 3 asked term(s)"
+        },
+        {
+         "chunk_id": 14078,
+         "kind": "sentence",
+         "accepted": true,
+         "reason": null
+        }
+       ]
+      }
+     ],
+     "form": "statement",
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "procedure_key": null,
+     "chunk_ids": [
+      14078
+     ],
+     "selection_ms": 0.3887999919243157,
+     "ms": 537.5160000112373
+    }
+   },
+   "pf3c_top1": "ON_TARGET",
+   "pf3c_top1_intro": false,
+   "pf3c_top1_kind": "statement"
+  },
+  {
+   "id": "G13",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1292.1,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 5,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 534.4,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": true,
+       "terms": 4,
+       "core": 2,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": true,
+       "terms": 4,
+       "core": 2,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 532.252500008326,
+     "retrieved": [
+      {
+       "chunk_id": 13830,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 5,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 13847,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 5,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 13855,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 5,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 13833,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 5,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 14159,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14197,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 13848,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 5,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 13834,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 5,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 13817,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 4,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14198,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "tried": [
+        {
+         "procedure": "uos_blackboard_faculty_short_guide:5:0",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the list opens the page under no heading and may continue a list of page 4"
+        }
+       ]
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "tried": [
+        {
+         "procedure": "uos_blackboard_gradebook_guide:1:0",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the last step continues on a row read as a heading and no indexed text holds the whole step"
+        }
+       ]
+      }
+     ],
+     "selection_ms": 0.8580999856349081,
+     "ms": 534.3282999820076
+    }
+   }
+  },
+  {
+   "id": "G14",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1375.4,
+   "unscoped_top1_source": "uos_blackboard_gradebook_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "procedure_step",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_blackboard_gradebook_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 527.5,
+   "pf3c": {
+    "form": "statement",
+    "intent": "location",
+    "evidence": [
+     {
+      "chunk_id": 14197,
+      "source_id": "uos_blackboard_gradebook_guide",
+      "page": 1,
+      "text": "2. Course gradebook Inside your course, you can access the course gradebook on the navigation bar on the top right corner. Select the Gradebook icon to access all the coursework that specific to the course you are in. The gradebook is populated with students when they are enrolled in your course. You can grade coursework, manage",
+      "kind": "statement"
+     }
+    ],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "location",
+       "names_bound": [
+        "Blackboard Ultra"
+       ],
+       "actor_bound": true,
+       "terms": 2,
+       "core": 0,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "location",
+       "names_bound": [
+        "Blackboard Ultra",
+        "Gradebook"
+       ],
+       "actor_bound": true,
+       "terms": 1,
+       "core": 0,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 525.6057000078727,
+     "retrieved": [
+      {
+       "chunk_id": 14197,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14159,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14198,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14196,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14183,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14190,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14189,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14162,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 14161,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 13721,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 2,
+       "chunk_type": "paragraph"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "location",
+       "tried": [
+        {
+         "chunk_id": 14197,
+         "kind": "step",
+         "accepted": true,
+         "reason": null
+        }
+       ]
+      }
+     ],
+     "form": "statement",
+     "source_id": "uos_blackboard_gradebook_guide",
+     "procedure_key": null,
+     "chunk_ids": [
+      14197
+     ],
+     "selection_ms": 1.0774999973364174,
+     "ms": 527.4489000148606
+    }
+   },
+   "pf3c_top1": "ON_TARGET",
+   "pf3c_top1_intro": false,
+   "pf3c_top1_kind": "statement"
+  },
+  {
+   "id": "G15",
+   "route": "list",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1304.5,
+   "unscoped_top1_source": "uos_blackboard_gradebook_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_blackboard_gradebook_guide",
+   "b0_top1_intro": true,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 556.8,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "enumeration",
+       "names_bound": [
+        "Blackboard Ultra"
+       ],
+       "actor_bound": false,
+       "terms": 3,
+       "core": 0,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "enumeration",
+       "names_bound": [
+        "Blackboard Ultra Gradebook"
+       ],
+       "actor_bound": false,
+       "terms": 2,
+       "core": 0,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 554.5906000188552,
+     "retrieved": [
+      {
+       "chunk_id": 14159,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14197,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14198,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14196,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14183,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14161,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 14202,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14162,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 14160,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14192,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "row_window"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "enumeration",
+       "tried": [
+        {
+         "procedure": "uos_blackboard_gradebook_guide:1:1",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the procedure heading is only carried from the page or an earlier list, so the procedure is not identified"
+        },
+        {
+         "procedure": "uos_blackboard_gradebook_guide:1:0",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the last step continues on a row read as a heading and no indexed text holds the whole step"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "generic introduction"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 2 asked term(s)"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 2 asked term(s)"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 2 asked term(s)"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 2 asked term(s)"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "generic introduction"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "generic introduction"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 2 asked term(s)"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "generic introduction"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "an enumeration ask is answered by a complete list; one statement must itself list the set"
+        }
+       ]
+      },
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "enumeration",
+       "tried": []
+      }
+     ],
+     "selection_ms": 1.2654000020120293,
+     "ms": 556.7350999917835
+    }
+   }
+  },
+  {
+   "id": "G16",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1378.1,
+   "unscoped_top1_source": "uos_blackboard_gradebook_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "OFF_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_blackboard_gradebook_guide",
+   "b0_top1_intro": true,
+   "b0_first_on_target_rank": 6,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 538.8,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": true,
+       "terms": 4,
+       "core": 2,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard Gradebook"
+       ],
+       "actor_bound": true,
+       "terms": 3,
+       "core": 2,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 535.4062000114936,
+     "retrieved": [
+      {
+       "chunk_id": 14159,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14198,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14196,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14338,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 6,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14160,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14328,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 6,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14277,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 4,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14339,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 6,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14315,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 4,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14350,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 6,
+       "chunk_type": "procedure_window"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "tried": [
+        {
+         "procedure": "uos_blackboard_gradebook_guide:1:1",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the procedure heading is only carried from the page or an earlier list, so the procedure is not identified"
+        },
+        {
+         "procedure": "uos_blackboard_gradebook_guide:1:0",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the last step continues on a row read as a heading and no indexed text holds the whole step"
+        },
+        {
+         "procedure": "uos_blackboard_gradebook_guide:4:0",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the list opens the page under no heading and may continue a list of page 3"
+        },
+        {
+         "procedure": "uos_blackboard_gradebook_guide:6:1",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the procedure heading is only carried from the page or an earlier list, so the procedure is not identified"
+        }
+       ]
+      },
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "tried": []
+      }
+     ],
+     "selection_ms": 1.8564999918453395,
+     "ms": 538.7314000108745
+    }
+   }
+  },
+  {
+   "id": "G17",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1317.6,
+   "unscoped_top1_source": "uos_blackboard_gradebook_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 8,
+   "b0_top1_source": "uos_blackboard_gradebook_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 518.0,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": true,
+       "terms": 5,
+       "core": 2,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": true,
+       "terms": 5,
+       "core": 2,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 516.2850000197068,
+     "retrieved": [
+      {
+       "chunk_id": 14378,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 8,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14399,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 8,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14360,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 7,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 14373,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 7,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14368,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 7,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14376,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 7,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14381,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 8,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 14369,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 7,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14352,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 7,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14387,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 8,
+       "chunk_type": "row"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "tried": [
+        {
+         "procedure": "uos_blackboard_gradebook_guide:7:0",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "a list of what can be done is not a procedure"
+        }
+       ]
+      },
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "tried": []
+      }
+     ],
+     "selection_ms": 0.7903000223450363,
+     "ms": 517.9288000217639
+    }
+   }
+  },
+  {
+   "id": "G18",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1353.1,
+   "unscoped_top1_source": "uos_blackboard_gradebook_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 10,
+   "b0_top1_source": "uos_blackboard_gradebook_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 521.4,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": true,
+       "terms": 2,
+       "core": 2,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard",
+        "Gradebook"
+       ],
+       "actor_bound": true,
+       "terms": 1,
+       "core": 1,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 519.775299995672,
+     "retrieved": [
+      {
+       "chunk_id": 14434,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 10,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14466,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 10,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14197,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14465,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 10,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14460,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 10,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14159,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14198,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14457,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 10,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14196,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14450,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 10,
+       "chunk_type": "row"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "tried": [
+        {
+         "procedure": "uos_blackboard_gradebook_guide:10:0",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "a numbered list with one step is a list cut after its first item"
+        },
+        {
+         "procedure": "uos_blackboard_gradebook_guide:10:1",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the list mixes bullets, letters and numbers"
+        },
+        {
+         "procedure": "uos_blackboard_gradebook_guide:1:0",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the last step continues on a row read as a heading and no indexed text holds the whole step"
+        },
+        {
+         "procedure": "uos_blackboard_gradebook_guide:2:1+3:0",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "a list of what can be done is not a procedure"
+        }
+       ]
+      },
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "tried": []
+      }
+     ],
+     "selection_ms": 0.8099999977275729,
+     "ms": 521.396399999503
+    }
+   }
+  },
+  {
+   "id": "G19",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1300.7,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "OFF_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 10,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 2,
+   "b0_procedure_in_top5": false,
+   "b0_expected_top1": false,
+   "b0_expected_top5": true,
+   "b0_pool": 23,
+   "pf3c_ms": 523.5,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": true,
+       "terms": 4,
+       "core": 2,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard Gradebook"
+       ],
+       "actor_bound": true,
+       "terms": 3,
+       "core": 2,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 520.0495999888517,
+     "retrieved": [
+      {
+       "chunk_id": 14007,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 10,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14318,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 5,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14327,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 5,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14159,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14069,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 10,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14008,
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "page": 10,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14326,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 5,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14198,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14325,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 5,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14278,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 4,
+       "chunk_type": "paragraph"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "tried": []
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "tried": [
+        {
+         "procedure": "uos_blackboard_gradebook_guide:1:0",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the last step continues on a row read as a heading and no indexed text holds the whole step"
+        }
+       ]
+      }
+     ],
+     "selection_ms": 1.9154000037815422,
+     "ms": 523.430000001099
+    }
+   }
+  },
+  {
+   "id": "G20",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1270.2,
+   "unscoped_top1_source": "uos_blackboard_gradebook_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 3,
+   "b0_top1_source": "uos_blackboard_gradebook_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 542.8,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": true,
+       "terms": 4,
+       "core": 3,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard Gradebook"
+       ],
+       "actor_bound": true,
+       "terms": 3,
+       "core": 3,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 540.5505000089761,
+     "retrieved": [
+      {
+       "chunk_id": 14241,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 3,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14257,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 3,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14269,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 3,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14258,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 3,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14411,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 9,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14246,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 3,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 14256,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 3,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14268,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 3,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14267,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 3,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14433,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 9,
+       "chunk_type": "procedure_window"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "tried": [
+        {
+         "procedure": "uos_blackboard_gradebook_guide:9:1",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the list mixes bullets, letters and numbers"
+        },
+        {
+         "procedure": "uos_blackboard_gradebook_guide:2:1+3:0",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "a list of what can be done is not a procedure"
+        }
+       ]
+      },
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "tried": []
+      }
+     ],
+     "selection_ms": 1.0393000266049057,
+     "ms": 542.7950999874156
+    }
+   }
+  },
+  {
+   "id": "G21",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1358.2,
+   "unscoped_top1_source": "uos_blackboard_gradebook_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "OFF_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_blackboard_gradebook_guide",
+   "b0_top1_intro": true,
+   "b0_first_on_target_rank": 10,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 583.1,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "value",
+       "names_bound": [
+        "Blackboard Ultra"
+       ],
+       "actor_bound": false,
+       "terms": 3,
+       "core": 0,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "value",
+       "names_bound": [
+        "Blackboard Ultra",
+        "Gradebook"
+       ],
+       "actor_bound": false,
+       "terms": 2,
+       "core": 0,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 580.8573999966029,
+     "retrieved": [
+      {
+       "chunk_id": 14159,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14196,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14198,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14197,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14183,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14161,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "row"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "value",
+       "tried": [
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "generic introduction"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 2 asked term(s)"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "a value ask needs a stated number with its unit"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 2 asked term(s)"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 2 asked term(s)"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "generic introduction"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "generic introduction"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 2 asked term(s)"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "generic introduction"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 1 asked term(s)"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentences",
+         "accepted": false,
+         "reason": "the evidence does not state 2 asked term(s)"
+        },
+        {
+         "chunk_id": 14159,
+         "kind": "sentences",
+         "accepted": false,
+         "reason": "the evidence does not state 2 asked term(s)"
+        }
+       ]
+      },
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "value",
+       "tried": []
+      }
+     ],
+     "selection_ms": 1.1414999898988754,
+     "ms": 583.0552999977954
+    }
+   }
+  },
+  {
+   "id": "G22",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1358.8,
+   "unscoped_top1_source": "uos_blackboard_gradebook_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 8,
+   "b0_top1_source": "uos_blackboard_gradebook_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": false,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 544.9,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": true,
+       "terms": 5,
+       "core": 2,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard Gradebook"
+       ],
+       "actor_bound": true,
+       "terms": 4,
+       "core": 1,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 542.8899999824353,
+     "retrieved": [
+      {
+       "chunk_id": 14379,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 8,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14378,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 8,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14405,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 8,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14404,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 8,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14393,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 8,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 14408,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 8,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14197,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14159,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14407,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 8,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14392,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 8,
+       "chunk_type": "row"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "tried": [
+        {
+         "procedure": "uos_blackboard_gradebook_guide:1:0",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the last step continues on a row read as a heading and no indexed text holds the whole step"
+        }
+       ]
+      },
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "tried": []
+      }
+     ],
+     "selection_ms": 1.1900000099558383,
+     "ms": 544.916100014234
+    }
+   }
+  },
+  {
+   "id": "G23",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1334.7,
+   "unscoped_top1_source": "uos_blackboard_gradebook_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "procedure_step",
+   "b0_top1_page": 7,
+   "b0_top1_source": "uos_blackboard_gradebook_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 535.8,
+   "pf3c": {
+    "form": "procedure",
+    "intent": "enumeration",
+    "evidence": [
+     {
+      "chunk_id": 14372,
+      "source_id": "uos_blackboard_gradebook_guide",
+      "page": 7,
+      "text": "From the Gradebook Settings panel, you can: 1. You can make changes to the default grading schema.",
+      "kind": "procedure"
+     },
+     {
+      "chunk_id": 14373,
+      "source_id": "uos_blackboard_gradebook_guide",
+      "page": 7,
+      "text": "2. Automatically assign zeros to missing work past the due date",
+      "kind": "procedure"
+     },
+     {
+      "chunk_id": 14374,
+      "source_id": "uos_blackboard_gradebook_guide",
+      "page": 7,
+      "text": "3. view the gradebook categories & add new categories",
+      "kind": "procedure"
+     },
+     {
+      "chunk_id": 14375,
+      "source_id": "uos_blackboard_gradebook_guide",
+      "page": 7,
+      "text": "4. Create & edit Rubrics for more information or rubrics click here.",
+      "kind": "procedure"
+     }
+    ],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "enumeration",
+       "names_bound": [
+        "Blackboard Ultra"
+       ],
+       "actor_bound": true,
+       "terms": 4,
+       "core": 0,
+       "entities": 1,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "enumeration",
+       "names_bound": [
+        "Blackboard Ultra",
+        "Gradebook"
+       ],
+       "actor_bound": true,
+       "terms": 3,
+       "core": 0,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 533.1520999898203,
+     "retrieved": [
+      {
+       "chunk_id": 14372,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 7,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14367,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 7,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14352,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 7,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14358,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 7,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 14365,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 7,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14197,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14159,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14374,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 7,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14375,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 7,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14377,
+       "source_id": "uos_blackboard_gradebook_guide",
+       "page": 7,
+       "chunk_type": "procedure_window"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "enumeration",
+       "tried": [
+        {
+         "procedure": "uos_blackboard_gradebook_guide:7:0",
+         "form": "procedure",
+         "accepted": true,
+         "reason": null
+        }
+       ]
+      }
+     ],
+     "form": "procedure",
+     "source_id": "uos_blackboard_gradebook_guide",
+     "procedure_key": "uos_blackboard_gradebook_guide:7:0",
+     "chunk_ids": [
+      14372,
+      14373,
+      14374,
+      14375
+     ],
+     "selection_ms": 1.4309000107459724,
+     "ms": 535.7859000214376
+    }
+   },
+   "pf3c_top1": "ON_TARGET",
+   "pf3c_top1_intro": false,
+   "pf3c_top1_kind": "procedure"
+  },
+  {
+   "id": "G24",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_grade_transfer_dashboard_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1396.0,
+   "unscoped_top1_source": "uos_grade_transfer_dashboard_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "OFF_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_grade_transfer_dashboard_guide",
+   "b0_top1_intro": true,
+   "b0_first_on_target_rank": 4,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 587.0,
+   "pf3c": {
+    "form": "procedure",
+    "intent": "procedure",
+    "evidence": [
+     {
+      "chunk_id": 14135,
+      "source_id": "uos_grade_transfer_dashboard_guide",
+      "page": 2,
+      "text": "How to Send Grades to Banner as instructor?: 1. Search for the course by using the search bar at the top of the dashboard to locate the specific course you wish to transfer. You can search by Course ID and Term.",
+      "kind": "procedure"
+     },
+     {
+      "chunk_id": 14136,
+      "source_id": "uos_grade_transfer_dashboard_guide",
+      "page": 2,
+      "text": "2. Click on View Details on the dashboard",
+      "kind": "procedure"
+     },
+     {
+      "chunk_id": 14137,
+      "source_id": "uos_grade_transfer_dashboard_guide",
+      "page": 2,
+      "text": "3. Click on Transfer:",
+      "kind": "procedure"
+     },
+     {
+      "chunk_id": 14123,
+      "source_id": "uos_grade_transfer_dashboard_guide",
+      "page": 2,
+      "text": "4. You can click again in View Detail to see the grade under the Banner Column after the approval from Chair and Dean as below:",
+      "kind": "procedure"
+     }
+    ],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_blackboard_faculty_short_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": true,
+       "terms": 3,
+       "core": 2,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard",
+        "Banner"
+       ],
+       "actor_bound": true,
+       "terms": 2,
+       "core": 2,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      },
+      {
+       "source_id": "uos_blackboard_gradebook_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Blackboard"
+       ],
+       "actor_bound": true,
+       "terms": 3,
+       "core": 2,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 584.1430999862496,
+     "retrieved": [
+      {
+       "chunk_id": 14091,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14108,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14093,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 14123,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 2,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14139,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 2,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14121,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14135,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 2,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14131,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 2,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14111,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14116,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "intent": "procedure",
+       "tried": [
+        {
+         "procedure": "uos_grade_transfer_dashboard_guide:1:0",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the procedure heading names another action than the one asked"
+        },
+        {
+         "procedure": "uos_grade_transfer_dashboard_guide:2:0",
+         "form": "procedure",
+         "accepted": true,
+         "reason": null
+        }
+       ]
+      }
+     ],
+     "form": "procedure",
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "procedure_key": "uos_grade_transfer_dashboard_guide:2:0",
+     "chunk_ids": [
+      14135,
+      14136,
+      14137,
+      14123
+     ],
+     "selection_ms": 0.5744000081904233,
+     "ms": 586.9275000004563
+    }
+   },
+   "pf3c_top1": "ON_TARGET",
+   "pf3c_top1_intro": false,
+   "pf3c_top1_kind": "procedure"
+  },
+  {
+   "id": "G25",
+   "route": "policy",
+   "named": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "ms": 1360.1,
+   "unscoped_top1_source": "uos_grade_transfer_dashboard_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "PARTIAL",
+   "b0_top1_chunk_type": "procedure_step",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_grade_transfer_dashboard_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 2,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 559.7,
+   "pf3c": {
+    "form": "statement",
+    "intent": "location",
+    "evidence": [
+     {
+      "chunk_id": 14091,
+      "source_id": "uos_grade_transfer_dashboard_guide",
+      "page": 1,
+      "text": "NOTE: You can access directly by clicking on below link https://op.sharjah.ac.ae/GradeTransfer",
+      "kind": "statement"
+     }
+    ],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "intent": "location",
+       "names_bound": [
+        "Grade Transfer Dashboard"
+       ],
+       "actor_bound": false,
+       "terms": 1,
+       "core": 0,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 558.5536000144202,
+     "retrieved": [
+      {
+       "chunk_id": 14120,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14122,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14091,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14112,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14119,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14110,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14121,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14118,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14117,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14113,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "row_window"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "intent": "location",
+       "tried": [
+        {
+         "chunk_id": 14120,
+         "kind": "step",
+         "accepted": false,
+         "reason": "the evidence does not state 1 asked term(s)"
+        },
+        {
+         "chunk_id": 14120,
+         "kind": "step",
+         "accepted": false,
+         "reason": "a location ask needs a stated place in the interface or an address"
+        },
+        {
+         "chunk_id": 14091,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 1 asked term(s)"
+        },
+        {
+         "chunk_id": 14091,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 1 asked term(s)"
+        },
+        {
+         "chunk_id": 14091,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 1 asked term(s)"
+        },
+        {
+         "chunk_id": 14091,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "a location ask needs a stated place in the interface or an address"
+        },
+        {
+         "chunk_id": 14091,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 1 asked term(s)"
+        },
+        {
+         "chunk_id": 14091,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "the evidence does not state 1 asked term(s)"
+        },
+        {
+         "chunk_id": 14091,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "a location ask needs a stated place in the interface or an address"
+        },
+        {
+         "chunk_id": 14091,
+         "kind": "sentence",
+         "accepted": true,
+         "reason": null
+        }
+       ]
+      }
+     ],
+     "form": "statement",
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "procedure_key": null,
+     "chunk_ids": [
+      14091
+     ],
+     "selection_ms": 0.6745000137016177,
+     "ms": 559.6240000159014
+    }
+   },
+   "pf3c_top1": "ON_TARGET",
+   "pf3c_top1_intro": false,
+   "pf3c_top1_kind": "statement"
+  },
+  {
+   "id": "G26",
+   "route": "policy",
+   "named": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "ms": 1383.6,
+   "unscoped_top1_source": "uos_grade_transfer_dashboard_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "procedure_window",
+   "b0_top1_page": 3,
+   "b0_top1_source": "uos_grade_transfer_dashboard_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 0.4,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": false,
+     "refused": [
+      {
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "reason": "a authority ask is not answered from a system guide"
+      }
+     ],
+     "bindings": [],
+     "ms": 0.3768000169657171
+    }
+   }
+  },
+  {
+   "id": "G27",
+   "route": "policy",
+   "named": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "ms": 1383.6,
+   "unscoped_top1_source": "uos_grade_transfer_dashboard_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "OFF_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_grade_transfer_dashboard_guide",
+   "b0_top1_intro": true,
+   "b0_first_on_target_rank": 3,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 592.7,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Grade Transfer Dashboard"
+       ],
+       "actor_bound": true,
+       "terms": 1,
+       "core": 1,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 591.0885000193957,
+     "retrieved": [
+      {
+       "chunk_id": 14091,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14132,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 2,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14123,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 2,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14122,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14135,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 2,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14110,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14120,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14119,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14113,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14109,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "row_window"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "intent": "procedure",
+       "tried": [
+        {
+         "procedure": "uos_grade_transfer_dashboard_guide:2:0",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the procedure heading names neither the asked action nor its object"
+        },
+        {
+         "procedure": "uos_grade_transfer_dashboard_guide:1:0",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the procedure does not state 1 asked term(s)"
+        }
+       ]
+      }
+     ],
+     "selection_ms": 0.8953000069595873,
+     "ms": 592.6822999899741
+    }
+   }
+  },
+  {
+   "id": "G28",
+   "route": "policy",
+   "named": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "ms": 1425.9,
+   "unscoped_top1_source": "uos_grade_transfer_dashboard_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 3,
+   "b0_top1_source": "uos_grade_transfer_dashboard_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 599.3,
+   "pf3c": {
+    "form": "procedure",
+    "intent": "procedure",
+    "evidence": [
+     {
+      "chunk_id": 14153,
+      "source_id": "uos_grade_transfer_dashboard_guide",
+      "page": 3,
+      "text": "How to approve Grades to Banner as Chair/Dean?: 1. Click on below link to access Grade transfer Portal https://op.sharjah.ac.ae/GradeTransfer",
+      "kind": "procedure"
+     },
+     {
+      "chunk_id": 14154,
+      "source_id": "uos_grade_transfer_dashboard_guide",
+      "page": 3,
+      "text": "2. Use your credentials to log in",
+      "kind": "procedure"
+     },
+     {
+      "chunk_id": 14155,
+      "source_id": "uos_grade_transfer_dashboard_guide",
+      "page": 3,
+      "text": "3. Select the option corresponding to your role and follow the on-screen instructions to complete the process.",
+      "kind": "procedure"
+     },
+     {
+      "chunk_id": 14156,
+      "source_id": "uos_grade_transfer_dashboard_guide",
+      "page": 3,
+      "text": "4. Navigate to the course search and select the course, revise grades, and approve by selecting Transfer option",
+      "kind": "procedure"
+     }
+    ],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "intent": "procedure",
+       "names_bound": [
+        "Grade Transfer Portal"
+       ],
+       "actor_bound": false,
+       "terms": 3,
+       "core": 3,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 598.2553999929223,
+     "retrieved": [
+      {
+       "chunk_id": 14141,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 3,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14157,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 3,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14149,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 3,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14091,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14158,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 3,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14109,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14153,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 3,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14156,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 3,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14108,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14123,
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "page": 2,
+       "chunk_type": "paragraph"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "intent": "procedure",
+       "tried": [
+        {
+         "procedure": "uos_grade_transfer_dashboard_guide:3:0",
+         "form": "procedure",
+         "accepted": true,
+         "reason": null
+        }
+       ]
+      }
+     ],
+     "form": "procedure",
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "procedure_key": "uos_grade_transfer_dashboard_guide:3:0",
+     "chunk_ids": [
+      14153,
+      14154,
+      14155,
+      14156
+     ],
+     "selection_ms": 0.5499999970197678,
+     "ms": 599.2894999799319
+    }
+   },
+   "pf3c_top1": "ON_TARGET",
+   "pf3c_top1_intro": false,
+   "pf3c_top1_kind": "procedure"
+  },
+  {
+   "id": "G29",
+   "route": "policy",
+   "named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "ms": 2292.5,
+   "unscoped_top1_source": "uos_ithenticate_guidelines",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "procedure_window",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_ithenticate_guidelines",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 1049.3,
+   "pf3c": {
+    "form": "procedure",
+    "intent": "procedure",
+    "evidence": [
+     {
+      "chunk_id": 14526,
+      "source_id": "uos_ithenticate_guidelines",
+      "page": 1,
+      "text": "How to access IThenticate: 1. Open www.ithenticate.com",
+      "kind": "procedure"
+     },
+     {
+      "chunk_id": 14527,
+      "source_id": "uos_ithenticate_guidelines",
+      "page": 1,
+      "text": "2. Click on login",
+      "kind": "procedure"
+     },
+     {
+      "chunk_id": 14528,
+      "source_id": "uos_ithenticate_guidelines",
+      "page": 1,
+      "text": "3. Type your university email and your password (activation password is sent to you through ithenticate.com ) If you are unable to access iThenticate software email: servicedesk@sharjah.ac.ae",
+      "kind": "procedure"
+     }
+    ],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_ithenticate_guidelines",
+       "intent": "procedure",
+       "names_bound": [
+        "iThenticate"
+       ],
+       "actor_bound": true,
+       "terms": 1,
+       "core": 1,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 1047.9624000145122,
+     "retrieved": [
+      {
+       "chunk_id": 14529,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14507,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14528,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14468,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14527,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14526,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14508,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14509,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14506,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14473,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_ithenticate_guidelines",
+       "intent": "procedure",
+       "tried": [
+        {
+         "procedure": "uos_ithenticate_guidelines:1:0",
+         "form": "procedure",
+         "accepted": true,
+         "reason": null
+        }
+       ]
+      }
+     ],
+     "form": "procedure",
+     "source_id": "uos_ithenticate_guidelines",
+     "procedure_key": "uos_ithenticate_guidelines:1:0",
+     "chunk_ids": [
+      14526,
+      14527,
+      14528
+     ],
+     "selection_ms": 0.7135999912861735,
+     "ms": 1049.228599993512
+    }
+   },
+   "pf3c_top1": "ON_TARGET",
+   "pf3c_top1_intro": false,
+   "pf3c_top1_kind": "procedure"
+  },
+  {
+   "id": "G30",
+   "route": "policy",
+   "named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "ms": 1823.3,
+   "unscoped_top1_source": "uos_ithenticate_guidelines",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_ithenticate_guidelines",
+   "b0_top1_intro": true,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 1044.1,
+   "pf3c": {
+    "form": "procedure",
+    "intent": "procedure",
+    "evidence": [
+     {
+      "chunk_id": 14530,
+      "source_id": "uos_ithenticate_guidelines",
+      "page": 1,
+      "text": "How to upload a document: 1. Select the “Upload a File” link under the “Submit a Document” section on the home screen",
+      "kind": "procedure"
+     },
+     {
+      "chunk_id": 14531,
+      "source_id": "uos_ithenticate_guidelines",
+      "page": 1,
+      "text": "2. Enter in the author’s name and the document title, then click the “Choose a File” button in order to open your file",
+      "kind": "procedure"
+     },
+     {
+      "chunk_id": 14532,
+      "source_id": "uos_ithenticate_guidelines",
+      "page": 1,
+      "text": "3. Once you have opened your file, click “Upload” to upload your file",
+      "kind": "procedure"
+     },
+     {
+      "chunk_id": 14533,
+      "source_id": "uos_ithenticate_guidelines",
+      "page": 1,
+      "text": "4. If you will upload the same document but with an updated version use the following button and upload the updated document Note: The analysis may take a few hours",
+      "kind": "procedure"
+     }
+    ],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_ithenticate_guidelines",
+       "intent": "procedure",
+       "names_bound": [
+        "iThenticate"
+       ],
+       "actor_bound": true,
+       "terms": 2,
+       "core": 2,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 1042.773599998327,
+     "retrieved": [
+      {
+       "chunk_id": 14468,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14509,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14529,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14534,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14528,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14510,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14531,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14530,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14535,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14526,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_ithenticate_guidelines",
+       "intent": "procedure",
+       "tried": [
+        {
+         "procedure": "uos_ithenticate_guidelines:1:1",
+         "form": "procedure",
+         "accepted": true,
+         "reason": null
+        }
+       ]
+      }
+     ],
+     "form": "procedure",
+     "source_id": "uos_ithenticate_guidelines",
+     "procedure_key": "uos_ithenticate_guidelines:1:1",
+     "chunk_ids": [
+      14530,
+      14531,
+      14532,
+      14533
+     ],
+     "selection_ms": 0.8573000086471438,
+     "ms": 1044.0764999948442
+    }
+   },
+   "pf3c_top1": "ON_TARGET",
+   "pf3c_top1_intro": false,
+   "pf3c_top1_kind": "procedure"
+  },
+  {
+   "id": "G31",
+   "route": "count",
+   "named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "ms": 2347.0,
+   "unscoped_top1_source": "uos_ithenticate_guidelines",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_ithenticate_guidelines",
+   "b0_top1_intro": true,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 1069.7,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_ithenticate_guidelines",
+       "intent": "value",
+       "names_bound": [
+        "iThenticate"
+       ],
+       "actor_bound": true,
+       "terms": 3,
+       "core": 0,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 1068.2678000011947,
+     "retrieved": [
+      {
+       "chunk_id": 14468,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14520,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14519,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14537,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14545,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14469,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "paragraph"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_ithenticate_guidelines",
+       "intent": "value",
+       "tried": [
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "generic introduction"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "generic introduction"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "generic introduction"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        }
+       ]
+      }
+     ],
+     "selection_ms": 0.6969000096432865,
+     "ms": 1069.6379999862984
+    }
+   }
+  },
+  {
+   "id": "G32",
+   "route": "policy",
+   "named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "ms": 2377.6,
+   "unscoped_top1_source": "uos_ithenticate_guidelines",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_ithenticate_guidelines",
+   "b0_top1_intro": true,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 1027.6,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_ithenticate_guidelines",
+       "intent": "value",
+       "names_bound": [
+        "iThenticate"
+       ],
+       "actor_bound": false,
+       "terms": 2,
+       "core": 0,
+       "entities": 0,
+       "minimum": false,
+       "maximum": true
+      }
+     ],
+     "retrieval_ms": 1026.5067999716848,
+     "retrieved": [
+      {
+       "chunk_id": 14468,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14521,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14469,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14540,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14522,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14546,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_ithenticate_guidelines",
+       "intent": "value",
+       "tried": [
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "generic introduction"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "generic introduction"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "generic introduction"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        }
+       ]
+      }
+     ],
+     "selection_ms": 0.6455999973695725,
+     "ms": 1027.6233999757096
+    }
+   }
+  },
+  {
+   "id": "G33",
+   "route": "contact",
+   "named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "ms": 705.5,
+   "unscoped_top1_source": "uos_ithenticate_guidelines",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "row",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_ithenticate_guidelines",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 1069.9,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_ithenticate_guidelines",
+       "intent": "contact",
+       "names_bound": [
+        "iThenticate"
+       ],
+       "actor_bound": true,
+       "terms": 2,
+       "core": 0,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 1068.7786000198685,
+     "retrieved": [
+      {
+       "chunk_id": 14478,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 14529,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14509,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14528,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14508,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14468,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14507,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14526,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14473,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 14527,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_ithenticate_guidelines",
+       "intent": "contact",
+       "tried": [
+        {
+         "chunk_id": 14528,
+         "kind": "step",
+         "accepted": false,
+         "reason": "the evidence does not state 1 asked term(s)"
+        },
+        {
+         "chunk_id": 14528,
+         "kind": "step",
+         "accepted": false,
+         "reason": "the evidence does not state 1 asked term(s)"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "generic introduction"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "generic introduction"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        }
+       ]
+      }
+     ],
+     "selection_ms": 0.6254999898374081,
+     "ms": 1069.8293000168633
+    }
+   }
+  },
+  {
+   "id": "G34",
+   "route": "policy",
+   "named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "ms": 2553.9,
+   "unscoped_top1_source": "uos_ithenticate_guidelines",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_ithenticate_guidelines",
+   "b0_top1_intro": true,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 1160.1,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_ithenticate_guidelines",
+       "intent": "procedure",
+       "names_bound": [
+        "iThenticate"
+       ],
+       "actor_bound": true,
+       "terms": 7,
+       "core": 3,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 1158.0976999830455,
+     "retrieved": [
+      {
+       "chunk_id": 14468,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14521,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14538,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14509,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14520,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14545,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      },
+      {
+       "chunk_id": 14469,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14535,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "procedure_window"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_ithenticate_guidelines",
+       "intent": "procedure",
+       "tried": [
+        {
+         "procedure": "uos_ithenticate_guidelines:1:1",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "the procedure does not state 4 asked term(s)"
+        },
+        {
+         "procedure": "uos_ithenticate_guidelines:1:3",
+         "form": "procedure",
+         "accepted": false,
+         "reason": "source conflict 'ithenticate_yearly_submission_limit' on the evidence chunk"
+        }
+       ]
+      }
+     ],
+     "selection_ms": 1.1647999926935881,
+     "ms": 1160.1163999876007
+    }
+   }
+  },
+  {
+   "id": "G35",
+   "route": "policy",
+   "named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "ms": 2353.8,
+   "unscoped_top1_source": "uos_ithenticate_guidelines",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_ithenticate_guidelines",
+   "b0_top1_intro": true,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 1080.5,
+   "pf3c": {
+    "form": "statement",
+    "intent": "location",
+    "evidence": [
+     {
+      "chunk_id": 14536,
+      "source_id": "uos_ithenticate_guidelines",
+      "page": 1,
+      "text": "- The similarity index and originality report can be found under the “Documents” You need to click on report percentage shown to be able to view the similarity report You will be able to view the resources as shown below You can discard some resources by clicking on “Exclude resource” The user has a multiple settings and filtering options to deal with documents",
+      "kind": "statement"
+     }
+    ],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_ithenticate_guidelines",
+       "intent": "location",
+       "names_bound": [
+        "iThenticate"
+       ],
+       "actor_bound": true,
+       "terms": 2,
+       "core": 0,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 1079.2259000008926,
+     "retrieved": [
+      {
+       "chunk_id": 14468,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14536,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "procedure_step"
+      },
+      {
+       "chunk_id": 14514,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14488,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 14513,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14489,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row"
+      },
+      {
+       "chunk_id": 14506,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14515,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14505,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14467,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "paragraph"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_ithenticate_guidelines",
+       "intent": "location",
+       "tried": [
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "generic introduction"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "generic introduction"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "generic introduction"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        },
+        {
+         "chunk_id": 14468,
+         "kind": "sentence",
+         "accepted": false,
+         "reason": "source conflict"
+        }
+       ]
+      }
+     ],
+     "form": "statement",
+     "source_id": "uos_ithenticate_guidelines",
+     "procedure_key": null,
+     "chunk_ids": [
+      14536
+     ],
+     "selection_ms": 0.7804999768268317,
+     "ms": 1080.4826999956276
+    }
+   },
+   "pf3c_top1": "ON_TARGET",
+   "pf3c_top1_intro": false,
+   "pf3c_top1_kind": "statement"
+  },
+  {
+   "id": "G36",
+   "route": "date",
+   "named": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "ms": 813.5,
+   "unscoped_top1_source": "uos_grade_transfer_dashboard_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 2,
+   "b0_top1_source": "uos_grade_transfer_dashboard_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 0.6,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": false,
+     "refused": [
+      {
+       "source_id": "uos_grade_transfer_dashboard_guide",
+       "reason": "a policy ask is not answered from a system guide"
+      }
+     ],
+     "bindings": [],
+     "ms": 0.6157000025268644
+    }
+   }
+  },
+  {
+   "id": "G37",
+   "route": "policy",
+   "named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "ms": 2556.2,
+   "unscoped_top1_source": "uos_ithenticate_guidelines",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_ithenticate_guidelines",
+   "b0_top1_intro": true,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": false,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24,
+   "pf3c_ms": 1124.1,
+   "pf3c": {
+    "form": null,
+    "intent": null,
+    "evidence": [],
+    "diagnostics": {
+     "applies": true,
+     "refused": [],
+     "bindings": [
+      {
+       "source_id": "uos_ithenticate_guidelines",
+       "intent": "procedure",
+       "names_bound": [
+        "iThenticate"
+       ],
+       "actor_bound": true,
+       "terms": 6,
+       "core": 3,
+       "entities": 0,
+       "minimum": false,
+       "maximum": false
+      }
+     ],
+     "retrieval_ms": 1121.3791000191122,
+     "retrieved": [
+      {
+       "chunk_id": 14468,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14505,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14506,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row_window"
+      },
+      {
+       "chunk_id": 14467,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "paragraph"
+      },
+      {
+       "chunk_id": 14472,
+       "source_id": "uos_ithenticate_guidelines",
+       "page": 1,
+       "chunk_type": "row"
+      }
+     ],
+     "considered": [
+      {
+       "source_id": "uos_ithenticate_guidelines",
+       "intent": "procedure",
+       "tried": []
+      }
+     ],
+     "selection_ms": 1.3725000026170164,
+     "ms": 1124.0781999949832
+    }
+   }
+  }
+ ]
+}

@@ -930,12 +930,17 @@ class TeachingLearningSpecialist(Specialist):
     specialist_id = SpecialistId.TEACHING
 
     def __init__(self, resources: TeachingResources, *,
-                 owned_sections: Sequence[Tuple[int, str, str]] = OWNED_SECTIONS) -> None:
+                 owned_sections: Sequence[Tuple[int, str, str]] = OWNED_SECTIONS,
+                 approved_sources: Optional[Sequence[str]] = None) -> None:
         if resources.source.source_id != APPROVED_SOURCE_ID or not resources.source.registered:
             raise ValueError("the Teaching specialist may only use the registered handbook %r" % APPROVED_SOURCE_ID)
         self.resources = resources
         self.owned_sections = tuple(owned_sections)
-        self.scope = compile_scope(resources.section_map, APPROVED_SOURCE_ID, self.owned_sections)
+        # post-freeze PF-3B (D-110): the source-acceptance boundary. None keeps the I-9 handbook-only boundary; the runtime's
+        # source policy may approve named official guides, admitted beside the unchanged handbook scope
+        self.approved_sources = _scoping.approved_source_set(approved_sources, APPROVED_SOURCE_ID)
+        self.scope = _scoping.approve_sources(compile_scope(resources.section_map, APPROVED_SOURCE_ID, self.owned_sections),
+                                              self.approved_sources, APPROVED_SOURCE_ID)
         self.guard = SectionGuard(resources.chunks, resources.metadata, resources.section_map, self.owned_sections, self.scope)
         calendar = [r for r in resources.section_map.sections() if (r.chapter, r.section_no) == (1, "1.14")]
         self.calendar_pages = {p for r in calendar for p in range(r.start_page, r.end_page + 1)}
@@ -953,8 +958,8 @@ class TeachingLearningSpecialist(Specialist):
         return "%s/%s" % (m.group(1), m.group(1)[:2] + m.group(2)) if m else None
 
     @classmethod
-    def from_knowledge_base(cls, kb) -> "TeachingLearningSpecialist":
-        return cls(TeachingResources.from_knowledge_base(kb))
+    def from_knowledge_base(cls, kb, *, approved_sources: Optional[Sequence[str]] = None) -> "TeachingLearningSpecialist":
+        return cls(TeachingResources.from_knowledge_base(kb), approved_sources=approved_sources)
 
     # ---- input checks -------------------------------------------------------
     def _check_task(self, task: SpecialistTask) -> None:
@@ -1067,7 +1072,7 @@ class TeachingLearningSpecialist(Specialist):
         chunk = item["chunk"]
         if quote not in chunk:                                   # cannot happen by construction; kept as a guard
             raise ValueError("quote is not a substring of the retrieved chunk")
-        if meta.get("source_id") != APPROVED_SOURCE_ID or not self.scope.allows(meta):
+        if meta.get("source_id") not in self.approved_sources or not self.scope.allows(meta):   # D-110: approved-source check
             raise ValueError("retrieved chunk %r is outside the approved scope" % meta.get("chunk_id"))
         page = meta.get("page")
         shared = self.guard.is_shared(meta)

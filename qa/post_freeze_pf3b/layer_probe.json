@@ -1,0 +1,256 @@
+[
+ {
+  "question": "What is the minimum size of a Blackboard course banner image?",
+  "source": "uos_blackboard_faculty_short_guide",
+  "quote": "Your image must be at least 1200 x 240 pixels and it can't be larger than 25 KB.",
+  "outcome": "PLAN_F_REJECTED_BY_SUBJECT_GUARD",
+  "reason": "task-1-f1: the quote does not cover the clause's content words",
+  "answer": null,
+  "trace": [
+   [
+    "source_scope",
+    "guides"
+   ],
+   [
+    "coordinator",
+    "teaching"
+   ],
+   [
+    "dispatcher",
+    "executed:1,pending:0"
+   ],
+   [
+    "specialist:teaching",
+    "supported"
+   ],
+   [
+    "quote_guard",
+    "passed"
+   ],
+   [
+    "subject_guard",
+    "rejected"
+   ],
+   [
+    "plan_f_outcome",
+    "PLAN_F_REJECTED_BY_SUBJECT_GUARD"
+   ]
+  ]
+ },
+ {
+  "question": "Can I add a time limit to a group assignment in Blackboard Ultra?",
+  "source": "uos_blackboard_faculty_short_guide",
+  "quote": "At this time, you cannot add a time limit to group assignments.",
+  "outcome": "PLAN_F_REJECTED_BY_SUBJECT_GUARD",
+  "reason": "task-1-f1: entity 'Blackboard Ultra' is not in the quote",
+  "answer": null,
+  "trace": [
+   [
+    "source_scope",
+    "guides"
+   ],
+   [
+    "coordinator",
+    "teaching"
+   ],
+   [
+    "dispatcher",
+    "executed:1,pending:0"
+   ],
+   [
+    "specialist:teaching",
+    "supported"
+   ],
+   [
+    "quote_guard",
+    "passed"
+   ],
+   [
+    "subject_guard",
+    "rejected"
+   ],
+   [
+    "plan_f_outcome",
+    "PLAN_F_REJECTED_BY_SUBJECT_GUARD"
+   ]
+  ]
+ },
+ {
+  "question": "How long can the title of a gradebook item be in Blackboard Ultra?",
+  "source": "uos_blackboard_gradebook_guide",
+  "quote": "Your title is limited to 255 characters.",
+  "outcome": "PLAN_F_REJECTED_BY_SUBJECT_GUARD",
+  "reason": "task-1-f1: entity 'Blackboard Ultra' is not in the quote",
+  "answer": null,
+  "trace": [
+   [
+    "source_scope",
+    "guides"
+   ],
+   [
+    "coordinator",
+    "teaching"
+   ],
+   [
+    "dispatcher",
+    "executed:1,pending:0"
+   ],
+   [
+    "specialist:teaching",
+    "supported"
+   ],
+   [
+    "quote_guard",
+    "passed"
+   ],
+   [
+    "subject_guard",
+    "rejected"
+   ],
+   [
+    "plan_f_outcome",
+    "PLAN_F_REJECTED_BY_SUBJECT_GUARD"
+   ]
+  ]
+ },
+ {
+  "question": "What is the maximum file size for an iThenticate upload?",
+  "source": "uos_ithenticate_guidelines",
+  "quote": "Files must be less than 100MB.",
+  "outcome": "PLAN_F_REJECTED_BY_SOURCE_CONFLICT",
+  "reason": "task-1-f1: source conflict 'ithenticate_yearly_submission_limit': the statement is contradicted by another version of its document and is not served",
+  "answer": null,
+  "trace": [
+   [
+    "source_scope",
+    "guides"
+   ],
+   [
+    "coordinator",
+    "research"
+   ],
+   [
+    "dispatcher",
+    "executed:1,pending:0"
+   ],
+   [
+    "specialist:research",
+    "supported"
+   ],
+   [
+    "source_conflict_guard",
+    "rejected"
+   ],
+   [
+    "plan_f_outcome",
+    "PLAN_F_REJECTED_BY_SOURCE_CONFLICT"
+   ]
+  ]
+ },
+ {
+  "question": "How many documents can I submit to iThenticate per year?",
+  "source": "uos_ithenticate_guidelines",
+  "quote": "Each instructor is limited to a specific amount of submission (Maximum 30 Documents per year)",
+  "outcome": "PLAN_F_REJECTED_BY_SOURCE_CONFLICT",
+  "reason": "task-1-f1: source conflict 'ithenticate_yearly_submission_limit': the statement is contradicted by another version of its document and is not served",
+  "answer": null,
+  "trace": [
+   [
+    "source_scope",
+    "guides"
+   ],
+   [
+    "coordinator",
+    "research"
+   ],
+   [
+    "dispatcher",
+    "executed:1,pending:0"
+   ],
+   [
+    "specialist:research",
+    "supported"
+   ],
+   [
+    "source_conflict_guard",
+    "rejected"
+   ],
+   [
+    "plan_f_outcome",
+    "PLAN_F_REJECTED_BY_SOURCE_CONFLICT"
+   ]
+  ]
+ },
+ {
+  "question": "What is the required teaching load for faculty in Blackboard?",
+  "source": "uos_blackboard_faculty_short_guide",
+  "quote": "Your image must be at least 1200 x 240 pixels and it can't be larger than 25 KB.",
+  "outcome": "PLAN_F_REJECTED_BY_SUBJECT_GUARD",
+  "reason": "task-1-f1: the quote does not cover the clause's content words",
+  "answer": null,
+  "trace": [
+   [
+    "source_scope",
+    "guides"
+   ],
+   [
+    "coordinator",
+    "teaching"
+   ],
+   [
+    "dispatcher",
+    "executed:1,pending:0"
+   ],
+   [
+    "specialist:teaching",
+    "supported"
+   ],
+   [
+    "quote_guard",
+    "passed"
+   ],
+   [
+    "subject_guard",
+    "rejected"
+   ],
+   [
+    "plan_f_outcome",
+    "PLAN_F_REJECTED_BY_SUBJECT_GUARD"
+   ]
+  ]
+ },
+ {
+  "question": "How do I add a learning module in Blackboard Ultra?",
+  "source": "uos_blackboard_faculty_short_guide",
+  "quote": "Click on Learning Module or Folder.",
+  "outcome": "PLAN_F_REJECTED_BY_SOURCE_AUTHORITY",
+  "reason": "task-1-f1: a procedure ask answered from a paragraph chunk: the complete procedure is not established",
+  "answer": null,
+  "trace": [
+   [
+    "source_scope",
+    "guides"
+   ],
+   [
+    "coordinator",
+    "teaching"
+   ],
+   [
+    "dispatcher",
+    "executed:1,pending:0"
+   ],
+   [
+    "specialist:teaching",
+    "supported"
+   ],
+   [
+    "source_authority_guard",
+    "rejected"
+   ],
+   [
+    "plan_f_outcome",
+    "PLAN_F_REJECTED_BY_SOURCE_AUTHORITY"
+   ]
+  ]
+ }
+]

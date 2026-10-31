@@ -4108,18 +4108,23 @@ class ResearchInnovationSpecialist(Specialist):
 
     def __init__(self, resources: ResearchResources, *,
                  owned_sections: Sequence[Tuple[int, str, str]] = SCOPE_SECTIONS,
-                 extra_pages: Sequence[Tuple[int, int]] = EXTRA_PAGES) -> None:
+                 extra_pages: Sequence[Tuple[int, int]] = EXTRA_PAGES,
+                 approved_sources: Optional[Sequence[str]] = None) -> None:
         if resources.source.source_id != APPROVED_SOURCE_ID or not resources.source.registered:
             raise ValueError("the Research specialist may only use the registered handbook %r" % APPROVED_SOURCE_ID)
         self.resources = resources
         self.owned_sections = tuple(owned_sections)
         self.extra_pages = tuple(extra_pages)
-        self.scope = compile_scope(resources.section_map, APPROVED_SOURCE_ID, self.owned_sections, self.extra_pages)
+        # post-freeze PF-3B (D-110): the source-acceptance boundary. None keeps the I-9 handbook-only boundary; the runtime's
+        # source policy may approve named official guides, admitted beside the unchanged handbook scope
+        self.approved_sources = _scoping.approved_source_set(approved_sources, APPROVED_SOURCE_ID)
+        self.scope = _scoping.approve_sources(compile_scope(resources.section_map, APPROVED_SOURCE_ID, self.owned_sections, self.extra_pages),
+                                              self.approved_sources, APPROVED_SOURCE_ID)
         self.guard = _scoping.SectionGuard(resources.chunks, resources.metadata, resources.section_map, self.owned_sections, self.scope)
 
     @classmethod
-    def from_knowledge_base(cls, kb) -> "ResearchInnovationSpecialist":
-        return cls(ResearchResources.from_knowledge_base(kb))
+    def from_knowledge_base(cls, kb, *, approved_sources: Optional[Sequence[str]] = None) -> "ResearchInnovationSpecialist":
+        return cls(ResearchResources.from_knowledge_base(kb), approved_sources=approved_sources)
 
     # ---- input checks -------------------------------------------------------
     def _check_task(self, task: SpecialistTask) -> None:
@@ -4204,7 +4209,7 @@ class ResearchInnovationSpecialist(Specialist):
         chunk = item["chunk"]
         if quote not in chunk:                                   # cannot happen by construction; kept as a guard
             raise ValueError("quote is not a substring of the retrieved chunk")
-        if meta.get("source_id") != APPROVED_SOURCE_ID or not self.scope.allows(meta):
+        if meta.get("source_id") not in self.approved_sources or not self.scope.allows(meta):   # D-110: approved-source check
             raise ValueError("retrieved chunk %r is outside the approved scope" % meta.get("chunk_id"))
         page = meta.get("page")
         shared = self.guard.is_shared(meta)

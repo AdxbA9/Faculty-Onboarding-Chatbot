@@ -111,6 +111,8 @@ from .agents.types import ALL_ROUTES, EvidenceResult, SubQuestion, SynthesisResu
 from .agents.verifier import verify
 from .config import EVIDENCE_PREVIEW_CHARS
 from .qa import QAResult, answer_question
+from . import guide_grounding as _guides                         # post-freeze PF-3C (D-111): the one guide evidence path
+from .agents.specialists.guide_evidence import GuideCapableSpecialist, GuideEvidence
 
 #: Integration phase this module implements.
 PHASE = "I-1"
@@ -158,6 +160,7 @@ class PlanFOutcome(str, Enum):
     REJECTED_BY_QUOTE_GUARD = "PLAN_F_REJECTED_BY_QUOTE_GUARD"
     REJECTED_BY_SUBJECT_GUARD = "PLAN_F_REJECTED_BY_SUBJECT_GUARD"
     REJECTED_BY_SOURCE_CONFLICT = "PLAN_F_REJECTED_BY_SOURCE_CONFLICT"      # post-freeze PF-2: the finding rests on a registered source conflict
+    REJECTED_BY_SOURCE_AUTHORITY = "PLAN_F_REJECTED_BY_SOURCE_AUTHORITY"    # post-freeze PF-3B: a guide outside its system, a policy ask, or a partial procedure
     REJECTED_BY_FINDINGS_VERIFIER = "PLAN_F_REJECTED_BY_FINDINGS_VERIFIER"  # phase I-4: the structured finding is not a suitable direct answer
     REJECTED_BY_AGGREGATOR = "PLAN_F_REJECTED_BY_AGGREGATOR"          # phase I-5: the findings of a multi-clause execution do not cover the request
     REJECTED_BY_ROUTING = "PLAN_F_REJECTED_BY_ROUTING"                # phase I-6: a request clause has no single owner; no specialist ran
@@ -188,45 +191,35 @@ class RegistryBuild:
                 "errors": dict(self.errors), "ms": self.ms, "scope_extension": dict(self.scope_extension)}
 
 
-def _extend_scopes(kb: Any, registry: SpecialistRegistry, errors: Dict[str, str], guide_scopes: bool) -> Dict[str, Any]:
-    """Post-freeze PF-2 seam (``handbook_bot.source_scopes``), run once the four specialists are built.
-
-    Always: refuse the registry when a non-handbook document's page numbers fall inside a specialist's handbook page
-    ranges, because the frozen section guard attributes chunks by page alone and would mix the documents. When
-    ``guide_scopes`` is on: admit each specialist's approved guides to its retrieval scope. A one-document knowledge
-    base (no ``sources``) is left exactly as it was. The report is JSON-serialisable and names no path.
-    """
+def _collision_report(kb: Any, registry: SpecialistRegistry, errors: Dict[str, str]) -> Dict[str, Any]:
+    """Post-freeze PF-2/PF-3B check, run once the four specialists are built: refuse the registry when a non-handbook
+    document's page numbers fall inside a specialist's handbook page ranges (frozen indexes such as the Teaching
+    calendar rows and the Institutional directory are keyed by handbook page number). A one-document knowledge base
+    (no ``sources``) is left exactly as it was. The report is JSON-serialisable and names no path."""
     records = list(getattr(kb, "sources", None) or ())
     if not records:
         return {}
     try:
-        from .source_scopes import extend_specialist_scopes, page_collisions
+        from .source_scopes import page_collisions
         counts = {sid: len(pages) for sid, pages in (getattr(kb, "source_pages", None) or {}).items()}
         collisions = page_collisions(records, counts, registry)
         if collisions:
             errors["scope_extension"] = ("document pages overlap a specialist scope; Plan F is not built: "
                                          + "; ".join(collisions))[:400]
-            return {"enabled": bool(guide_scopes), "applied": {}, "collisions": collisions}
-        applied = extend_specialist_scopes(registry, records) if guide_scopes else {}
-        return {"enabled": bool(guide_scopes), "applied": applied, "collisions": []}
-    except Exception as exc:                                      # the seam never raises past the registry factory
+        return {"collisions": collisions}
+    except Exception as exc:                                      # the check never raises past the registry factory
         errors["scope_extension"] = redact_error(exc)
-        return {"enabled": bool(guide_scopes), "applied": {}, "collisions": []}
+        return {"collisions": []}
 
 
-def build_specialist_registry(kb: Any, *, builders: Optional[Mapping[SpecialistId, Callable[[Any], Specialist]]] = None,
-                              guide_scopes: Optional[bool] = None) -> RegistryBuild:
+def build_specialist_registry(kb: Any, *, builders: Optional[Mapping[SpecialistId, Callable[[Any], Specialist]]] = None) -> RegistryBuild:
     """Build the four specialists from ``kb`` with their own ``from_knowledge_base`` builders.
 
     Either every required specialist is built and registered, or no registry is returned and ``errors`` names each
-    specialist that could not be built, with its reason redacted. No model is called; nothing is cached.
-    ``guide_scopes`` (post-freeze PF-2; ``config.PLAN_F_GUIDE_SCOPES`` when None) admits each specialist's approved
-    guides to its retrieval scope through the ``source_scopes`` seam; the page-collision refusal applies either way.
+    specialist that could not be built, with its reason redacted. No model is called; nothing is cached. The default
+    builders give every specialist the I-9 handbook-only source boundary; ``guide_builders`` gives the PF-3B one.
     """
     table = DEFAULT_BUILDERS if builders is None else builders
-    if guide_scopes is None:
-        from . import config as _config
-        guide_scopes = bool(getattr(_config, "PLAN_F_GUIDE_SCOPES", False))
     started = time.perf_counter()
     registry = SpecialistRegistry()
     errors: Dict[str, str] = {}
@@ -244,11 +237,39 @@ def build_specialist_registry(kb: Any, *, builders: Optional[Mapping[SpecialistI
             errors[sid.value] = redact_error(exc)
     scope_report: Dict[str, Any] = {}
     if not errors:
-        scope_report = _extend_scopes(kb, registry, errors, bool(guide_scopes))
+        scope_report = _collision_report(kb, registry, errors)
     ms = (time.perf_counter() - started) * 1000.0
     if errors:
         return RegistryBuild(None, errors, ms, scope_report)
     return RegistryBuild(registry, {}, ms, scope_report)
+
+
+def guide_builders(policy: Mapping[str, Any], evidence: Optional[GuideEvidence] = None,
+                   base_registry: Optional[SpecialistRegistry] = None) -> Dict[SpecialistId, Callable[[Any], Specialist]]:
+    """Builders of the guide-enabled registry. Post-freeze PF-3C (D-111): a specialist whose D-110 approved set holds a
+    guide (``source_scopes.source_policy``) is the frozen I-9 specialist, with its handbook-only extraction untouched,
+    behind the D-111 guide path (``GuideCapableSpecialist``) for exactly its approved guides. Guide evidence reaches Plan F
+    through that path only. A specialist approved for the handbook only (Faculty Services & HR) is the I-9 specialist.
+    ``base_registry`` lends its already built I-9 specialists (nothing is mutated); ``evidence`` is shared by all."""
+    table: Dict[SpecialistId, Callable[[Any], Specialist]] = dict(DEFAULT_BUILDERS)
+    if base_registry is not None:
+        for sid in REQUIRED_SPECIALISTS:
+            table[sid] = (lambda kb, sid=sid: base_registry.resolve(sid))
+    frozen = dict(table)
+    shared: Dict[str, GuideEvidence] = {}
+
+    def evidence_for(kb: Any) -> GuideEvidence:
+        if evidence is not None:
+            return evidence
+        if "evidence" not in shared:
+            shared["evidence"] = GuideEvidence.from_knowledge_base(kb)
+        return shared["evidence"]
+
+    for sid in (SpecialistId.TEACHING, SpecialistId.RESEARCH, SpecialistId.INSTITUTIONAL):
+        approved = frozenset(policy.get(sid.value) or ())
+        if len(approved) > 1:
+            table[sid] = (lambda kb, sid=sid, approved=approved: GuideCapableSpecialist.wrap(frozen[sid](kb), evidence_for(kb), approved))
+    return table
 
 
 def missing_specialists(registry: Optional[SpecialistRegistry]) -> List[str]:
@@ -279,6 +300,7 @@ class AdapterResult:
     routing: Any = None                          # plan_f_routing.RoutingResult of the decision (phase I-6)
     handoff: Any = None                          # plan_f_handoff.HandoffRound once a specialist asked for a handoff (phase I-6)
     handoff_outcome: Optional[str] = None        # the round's code, or HANDOFF_ACCEPTED / HANDOFF_TARGET_REJECTED / HANDOFF_CONFLICT after aggregation
+    guide_scope: Optional[Dict[str, Any]] = None  # post-freeze PF-3B: {"enabled", "selected", "named"} (source ids only)
 
     @property
     def requires_fallback(self) -> bool:
@@ -331,6 +353,7 @@ class AdapterResult:
             "handoff": self.handoff.to_dict() if self.handoff is not None else None,
             "handoff_outcome": self.handoff_outcome,
             "specialist_calls": self.specialist_calls,
+            "guide_scope": dict(self.guide_scope) if self.guide_scope is not None else None,
         }
 
 
@@ -406,6 +429,8 @@ def result_problem(findings: SpecialistFindings) -> Optional[str]:
     if (findings.metadata or {}).get("unprocessed_clauses"):
         return "unprocessed clauses"
     report = clauses[0]
+    if _guides.has_guide_record(report):                          # post-freeze PF-3C (D-111): a guide clause report
+        return _guides.guide_report_problem(report)
     if findings.specialist_id is SpecialistId.INSTITUTIONAL:
         if report.get("outcome") != INSTITUTIONAL_OUTCOME_READ:
             return "institutional clause outcome %s" % report.get("outcome")
@@ -476,6 +501,30 @@ def source_conflict_problem(finding: Any, metadata: Sequence[Dict[str, Any]]) ->
     return None
 
 
+def guide_evidence_problem(clause: str, quote: str, finding: Any, chunks: Sequence[str],
+                           metadata: Sequence[Dict[str, Any]]) -> Optional[str]:
+    """Why a finding resting on an official guide must not answer ``clause`` (post-freeze PF-3B, D-110; PF-3C, D-111), or
+    None. Read after :func:`quote_problem` passed. Handbook evidence is never refused here: a guide answers only for the
+    system it documents and never a policy, entitlement or obligation ask. Since PF-3C guide evidence reaches Plan F only
+    through the D-111 guide path: a finding that carries its D-111 record is verified as a set by
+    ``guide_grounding.verify_guide_findings``; any other guide finding keeps the PF-3B single-quote procedure rule and is
+    then refused."""
+    meta = getattr(finding, "metadata", None)
+    cid = meta.get("chunk_id") if isinstance(meta, dict) else None
+    if isinstance(cid, bool) or not isinstance(cid, int) or not 0 <= cid < len(metadata):
+        return None
+    cmeta = metadata[cid]
+    from .source_scopes import is_guide_meta, procedure_problem, source_authority_problem
+    if not is_guide_meta(cmeta):
+        return None
+    problem = source_authority_problem(clause, cmeta)
+    if problem is None and not _guides.has_guide_record(finding):
+        problem = procedure_problem(clause, quote or "", chunks[cid] if cid < len(chunks) else "", cmeta)
+        if problem is None:
+            problem = "guide evidence outside the D-111 guide path is not served"
+    return problem
+
+
 # ---------------------------------------------------------------------------
 # Finding -> legacy evidence item
 # ---------------------------------------------------------------------------
@@ -507,7 +556,7 @@ def adapt_finding(finding: Finding, specialist_id: SpecialistId, focus_clause: s
         "focus_clause": focus_clause,
     }
     for key in ("evidence_tier", "relation", "office_id", "office_name", "contact_values", "details_covered", "derived_from", "slice",
-                "slice_provision", "projected_coverage"):
+                "slice_provision", "projected_coverage", _guides.GUIDE_KEY):
         if key in finding.metadata:
             plan_f[key] = finding.metadata[key]
     if clause_index is not None:
@@ -656,6 +705,8 @@ def _institutional_binding(clause: str, report: Dict[str, Any], finding: Finding
 def subject_binding(clause: str, report: Dict[str, Any], finding: Finding, item: Dict[str, Any],
                     specialist_id: SpecialistId) -> Tuple[bool, str]:
     """Whether the asked subject is bound to ``finding``. Deterministic; no model; uncertain means unbound."""
+    if _guides.has_guide_record(finding):                        # post-freeze PF-3C: guide findings are bound as a set only
+        return False, "a guide finding is bound only by the D-111 set check (guide_grounding.verify_guide_findings)"
     if specialist_id is SpecialistId.INSTITUTIONAL:
         return _institutional_binding(clause, report, finding)
     for entity in named_entities(clause):
@@ -677,8 +728,15 @@ def subject_binding(clause: str, report: Dict[str, Any], finding: Finding, item:
 # Rendering
 # ---------------------------------------------------------------------------
 def render_answer(items: Sequence[Dict[str, Any]]) -> str:
-    """The accepted quotes, verbatim, one per paragraph. Nothing is added or reworded."""
-    return "\n\n".join(str(item["chunk"]).strip() for item in items if str(item.get("chunk") or "").strip())
+    """The accepted quotes, verbatim, one per paragraph. Nothing is added or reworded; the first step of a D-111 guide
+    procedure puts its printed heading on its own line (post-freeze PF-3C, ``guide_grounding.render_part``)."""
+    parts = []
+    for item in items:
+        text = str(item.get("chunk") or "").strip()
+        if text:
+            record = ((item.get("meta") or {}).get("plan_f") or {}).get(_guides.GUIDE_KEY)
+            parts.append(_guides.render_part(text, record))
+    return "\n\n".join(parts)
 
 
 def accepted_pages(items: Sequence[Dict[str, Any]]) -> List[int]:
@@ -697,14 +755,33 @@ class PlanFRuntime:
     """A complete specialist registry together with the corpus it was built on. Created explicitly by the caller
     (``build_runtime``); there is no module-level instance."""
 
-    def __init__(self, registry: SpecialistRegistry, chunks: Sequence[str], metadata: Sequence[Dict[str, Any]]) -> None:
+    def __init__(self, registry: SpecialistRegistry, chunks: Sequence[str], metadata: Sequence[Dict[str, Any]], *,
+                 guide_registry: Optional[SpecialistRegistry] = None, guide_records: Sequence[Any] = (),
+                 guide_index: Optional[_guides.GuideIndex] = None) -> None:
         if not isinstance(registry, SpecialistRegistry):
             raise TypeError("PlanFRuntime expects a SpecialistRegistry, got %s" % type(registry).__name__)
+        if guide_registry is not None and not isinstance(guide_registry, SpecialistRegistry):
+            raise TypeError("PlanFRuntime expects a SpecialistRegistry for guides, got %s" % type(guide_registry).__name__)
         if len(chunks) != len(metadata):
             raise ValueError("chunks and metadata differ in length (%d vs %d)" % (len(chunks), len(metadata)))
-        self.registry = registry
+        self.registry = registry                              # the I-9 specialists: handbook-only source boundary
+        self.guide_registry = guide_registry                  # post-freeze PF-3B (D-110): specialists with approved guides
+        self.guide_records = tuple(guide_records or ())
+        self.guide_index = guide_index                        # post-freeze PF-3C (D-111): procedures, registry and approved sets
         self.chunks = chunks
         self.metadata = metadata
+
+    def select_registry(self, text: str) -> Tuple[SpecialistRegistry, Dict[str, Any]]:
+        """The registry a question runs on (post-freeze PF-3B): the guide-enabled one only when the question names the
+        system an approved guide documents; every other question runs on the I-9 specialists, so no guide chunk can
+        reach a handbook-only question. Deterministic; the record holds source ids only."""
+        if self.guide_registry is None:
+            return self.registry, {"enabled": False, "selected": False, "named": []}
+        from .source_scopes import guide_sources_named
+        named = guide_sources_named(text, self.guide_records)
+        if not named:
+            return self.registry, {"enabled": True, "selected": False, "named": []}
+        return self.guide_registry, {"enabled": True, "selected": True, "named": named}
 
     @property
     def missing_specialists(self) -> List[str]:
@@ -721,6 +798,9 @@ class PlanFRuntime:
             state.add("plan_f_registry", "incomplete", detail={"missing": missing})
             return state.finish(PlanFOutcome.REGISTRY_UNAVAILABLE, "registry lacks: %s" % ", ".join(missing))
         state.add("plan_f_registry", "ok", detail={"specialists": [s.value for s in self.registry.ids()]})
+        state.registry, state.guide = self.select_registry(state.text)
+        if state.guide.get("enabled"):
+            state.add("source_scope", "guides" if state.guide["selected"] else "handbook", detail=dict(state.guide))
         if not state.text:
             state.add("coordinator", "skipped:empty")
             return state.finish(PlanFOutcome.NOT_APPLICABLE, "empty question")
@@ -777,7 +857,7 @@ class PlanFRuntime:
         # ---- Dispatch ------------------------------------------------------------
         t = time.perf_counter()
         try:
-            dispatched = dispatch(decision, self.registry, question=state.text)
+            dispatched = dispatch(decision, state.registry, question=state.text)
         except Exception as exc:
             state.add("dispatcher", "error", detail={"error": redact_error(exc)})
             return state.finish(PlanFOutcome.ERROR_REDACTED, "dispatcher raised: %s" % redact_error(exc), specialist=sid.value)
@@ -828,11 +908,29 @@ class PlanFRuntime:
                     state.add("source_conflict_guard", "rejected", detail={"finding": finding.finding_id, "reason": conflict})
                     return state.finish(PlanFOutcome.REJECTED_BY_SOURCE_CONFLICT, "%s: %s" % (finding.finding_id, conflict),
                                         specialist=sid.value, status=status, dispatched=dispatched)
+                authority = guide_evidence_problem(clause, finding.evidence_quote, finding, self.chunks, self.metadata)
+                if authority is not None:                         # post-freeze PF-3B (D-110)
+                    state.add("source_authority_guard", "rejected", detail={"finding": finding.finding_id, "reason": authority})
+                    return state.finish(PlanFOutcome.REJECTED_BY_SOURCE_AUTHORITY, "%s: %s" % (finding.finding_id, authority),
+                                        specialist=sid.value, status=status, dispatched=dispatched)
             state.add("quote_guard", "passed", detail={"findings": len(findings.findings)})
             report = findings.metadata["clauses"][0]
             accepted: List[Dict[str, Any]] = []
             dropped: List[Dict[str, Any]] = []
-            for n, finding in enumerate(findings.findings):
+            guided = _guides.has_guide_record(report) or any(_guides.has_guide_record(f) for f in findings.findings)
+            if guided:
+                # post-freeze PF-3C (D-111): guide evidence is bound and checked for completeness as ONE answer
+                problem = _guides.verify_guide_findings(clause, findings.findings, sid.value, self.guide_index)
+                if problem is None and not _guides.has_guide_record(report):
+                    problem = "guide findings under a clause report without its D-111 record"
+                if problem is not None:
+                    authority = _guides.is_authority_problem(problem)
+                    state.add("guide_guard", "rejected", detail={"reason": problem[:200]})
+                    return state.finish(PlanFOutcome.REJECTED_BY_SOURCE_AUTHORITY if authority else PlanFOutcome.REJECTED_BY_SUBJECT_GUARD,
+                                        "D-111: %s" % problem, specialist=sid.value, status=status, dispatched=dispatched)
+                accepted = [adapt_finding(f, sid, clause, self.chunks, self.metadata) for f in findings.findings]
+                state.add("guide_guard", "passed", detail={"form": report[_guides.GUIDE_KEY].get("form"), "findings": len(accepted)})
+            for n, finding in enumerate(() if guided else findings.findings):
                 item = adapt_finding(finding, sid, clause, self.chunks, self.metadata)
                 bound, why = subject_binding(clause, report, finding, item, sid)
                 if bound:
@@ -853,7 +951,7 @@ class PlanFRuntime:
             # (since phase I-5 a quote rejected as excess evidence may be replaced by its provision slice, re-verified)
             from . import plan_f_verification as _verification      # imported here: that module builds on this one's guards
             t = time.perf_counter()
-            sliced = _verification.verify_findings_sliced(clause, findings, self.chunks, self.metadata)
+            sliced = _verification.verify_findings_sliced(clause, findings, self.chunks, self.metadata, guide_index=self.guide_index)
             verification = sliced.verification
             state.timings["findings_verify_ms"] = (time.perf_counter() - t) * 1000.0
             detail = verification.to_dict()
@@ -864,7 +962,14 @@ class PlanFRuntime:
                 return state.finish(PlanFOutcome.REJECTED_BY_FINDINGS_VERIFIER, "%s: %s" % (verification.reason.value, verification.detail),
                                     specialist=sid.value, status=status, dispatched=dispatched, verification=verification)
             keep = set(verification.accepted_finding_ids)
-            accepted = [adapt_finding(f, sid, clause, self.chunks, self.metadata) for f in sliced.findings.findings if f.finding_id in keep]
+            kept = [f for f in sliced.findings.findings if f.finding_id in keep]
+            for finding in kept:                                  # post-freeze PF-3B: a provision slice is checked again
+                authority = guide_evidence_problem(clause, finding.evidence_quote, finding, self.chunks, self.metadata)
+                if authority is not None:
+                    state.add("source_authority_guard", "rejected", detail={"finding": finding.finding_id, "reason": authority})
+                    return state.finish(PlanFOutcome.REJECTED_BY_SOURCE_AUTHORITY, "%s: %s" % (finding.finding_id, authority),
+                                        specialist=sid.value, status=status, dispatched=dispatched, verification=verification)
+            accepted = [adapt_finding(f, sid, clause, self.chunks, self.metadata) for f in kept]
             if not accepted:
                 return state.finish(PlanFOutcome.REQUIRES_FALLBACK, "no verified finding left to render", specialist=sid.value, status=status,
                                     dispatched=dispatched, verification=verification)
@@ -928,7 +1033,7 @@ class PlanFRuntime:
         # ---- Dispatch: every task of the decision, once; nothing re-routed, no handoff executed ------------------
         t = time.perf_counter()
         try:
-            dispatched = dispatch(decision, self.registry, question=state.text)
+            dispatched = dispatch(decision, state.registry, question=state.text)
         except Exception as exc:
             state.add("dispatcher", "error", detail={"error": redact_error(exc)})
             return state.finish(PlanFOutcome.ERROR_REDACTED, "dispatcher raised: %s" % redact_error(exc), specialist=joined)
@@ -969,7 +1074,7 @@ class PlanFRuntime:
         from . import plan_f_handoff as _handoff                  # imported here: that module builds on the verifier, as the aggregator does
         state.path = PATH_AGGREGATE
         t = time.perf_counter()
-        round_, settled_decision, settled_dispatch = _handoff.run_handoffs(decision, dispatched, self.registry, clauses)
+        round_, settled_decision, settled_dispatch = _handoff.run_handoffs(decision, dispatched, state.registry, clauses)
         state.timings["handoff_ms"] = (time.perf_counter() - t) * 1000.0
         state.handoff = round_
         state.add("handoff", round_.code.value, detail=round_.to_dict())
@@ -995,7 +1100,7 @@ class PlanFRuntime:
         statuses = [run.findings.status.value if run.findings is not None else "pending" for run in dispatched.runs]
         status = "supported" if statuses and all(s == "supported" for s in statuses) else next((s for s in statuses if s != "supported"), None)
         t = time.perf_counter()
-        outcome = aggregation.aggregate(decision, dispatched, self.chunks, self.metadata)
+        outcome = aggregation.aggregate(decision, dispatched, self.chunks, self.metadata, guide_index=self.guide_index)
         record = outcome.result
         state.timings["aggregation_ms"] = (time.perf_counter() - t) * 1000.0
         for key, value in record.timings.items():
@@ -1014,6 +1119,11 @@ class PlanFRuntime:
                 if conflict is not None:
                     state.add("source_conflict_guard", "rejected", detail={"finding": part.finding.finding_id, "reason": conflict})
                     return state.finish(PlanFOutcome.REJECTED_BY_SOURCE_CONFLICT, "%s: %s" % (part.finding.finding_id, conflict),
+                                        specialist=joined, status=status, dispatched=dispatched, aggregation=record)
+                authority = guide_evidence_problem(part.clause, part.finding.evidence_quote, part.finding, self.chunks, self.metadata)
+                if authority is not None:                         # post-freeze PF-3B (D-110): each clause answered within its source's authority
+                    state.add("source_authority_guard", "rejected", detail={"finding": part.finding.finding_id, "reason": authority})
+                    return state.finish(PlanFOutcome.REJECTED_BY_SOURCE_AUTHORITY, "%s: %s" % (part.finding.finding_id, authority),
                                         specialist=joined, status=status, dispatched=dispatched, aggregation=record)
             items: List[Dict[str, Any]] = []
             for part in outcome.parts:
@@ -1078,6 +1188,8 @@ class _Attempt:
         self.routing: Any = None
         self.handoff: Any = None
         self.handoff_outcome: Optional[str] = None
+        self.registry: Any = None                                 # post-freeze PF-3B: the registry this question runs on
+        self.guide: Optional[Dict[str, Any]] = None              # post-freeze PF-3B: the source selection record
 
     def ms(self) -> float:
         return (time.perf_counter() - self.started) * 1000.0
@@ -1096,17 +1208,52 @@ class _Attempt:
             result.agent_trace = list(self.trace)
         return AdapterResult(outcome=outcome, reason=reason, question=self.text, result=result, trace=self.trace, specialist_id=specialist,
                              status=status, timings=dict(self.timings), dispatch=dispatched, verification=verification, aggregation=aggregation,
-                             routing=self.routing, handoff=self.handoff, handoff_outcome=self.handoff_outcome)
+                             routing=self.routing, handoff=self.handoff, handoff_outcome=self.handoff_outcome,
+                             guide_scope=dict(self.guide) if self.guide is not None else None)
 
-def build_runtime(kb: Any, *, builders: Optional[Mapping[SpecialistId, Callable[[Any], Specialist]]] = None
-                  ) -> Tuple[Optional[PlanFRuntime], RegistryBuild]:
-    """A :class:`PlanFRuntime` on ``kb``, or None with the registry failures. Builds nothing but the four specialists."""
+def build_runtime(kb: Any, *, builders: Optional[Mapping[SpecialistId, Callable[[Any], Specialist]]] = None,
+                  guide_scopes: Optional[bool] = None) -> Tuple[Optional[PlanFRuntime], RegistryBuild]:
+    """A :class:`PlanFRuntime` on ``kb``, or None with the registry failures. Builds nothing but the specialists.
+
+    Post-freeze PF-3B (D-110): when ``guide_scopes`` is on (``config.PLAN_F_GUIDE_SCOPES`` when None), the default
+    builders are used and ``kb`` holds approved guides, a second, guide-enabled registry is built beside the I-9 one
+    (``guide_builders``); a question runs on it only when it names a guide's system. A failed guide build leaves the
+    runtime on the I-9 registry alone and is reported in ``scope_extension``. Post-freeze PF-3C (D-111): the guide
+    registry wraps the SAME I-9 specialist objects behind the D-111 guide path, and the runtime keeps the guide index
+    (procedures, registry, approved sets) that the adapter's independent guide check reads."""
     build = build_specialist_registry(kb, builders=builders)
     if not build.ok:
         return None, build
+    if guide_scopes is None:
+        from . import config as _config
+        guide_scopes = bool(getattr(_config, "PLAN_F_GUIDE_SCOPES", False))
+    guide_registry: Optional[SpecialistRegistry] = None
+    guide_index: Optional[_guides.GuideIndex] = None
+    records = tuple(getattr(kb, "sources", None) or ())
+    report: Dict[str, Any] = dict(build.scope_extension)
+    report["enabled"] = bool(guide_scopes and builders is None and records)
+    if report["enabled"]:
+        from .source_scopes import source_policy
+        try:
+            policy = source_policy(records)
+            report["policy"] = {sid: sorted(ids) for sid, ids in policy.items()}
+            if any(len(ids) > 1 for ids in policy.values()):
+                t = time.perf_counter()
+                index = _guides.GuideIndex(kb.chunks, kb.metadata, getattr(kb, "source_pages", None) or {}, records, policy)
+                evidence = GuideEvidence.from_knowledge_base(kb, index)
+                report["guide_index"] = {"procedures": sum(len(p) for p in index.procedures.values()), "skipped_pages": len(index.skipped_pages),
+                                         "ms": (time.perf_counter() - t) * 1000.0}
+                guide_build = build_specialist_registry(kb, builders=guide_builders(policy, evidence, build.registry))
+                report["guide_registry"] = {"ok": guide_build.ok, "errors": dict(guide_build.errors), "ms": guide_build.ms}
+                guide_registry = guide_build.registry if guide_build.ok else None
+                guide_index = index if guide_registry is not None else None
+        except Exception as exc:                                  # a failed guide build never takes the I-9 registry down
+            report["guide_registry"] = {"ok": False, "errors": {"guide_registry": redact_error(exc)}, "ms": 0.0}
+            guide_registry, guide_index = None, None
+    build = RegistryBuild(build.registry, dict(build.errors), build.ms, report)
     try:
         chunks, metadata = kb.chunks, kb.metadata
-        runtime = PlanFRuntime(build.registry, chunks, metadata)
+        runtime = PlanFRuntime(build.registry, chunks, metadata, guide_registry=guide_registry, guide_records=records, guide_index=guide_index)
     except Exception as exc:
         return None, RegistryBuild(None, {"runtime": redact_error(exc)}, build.ms)
     return runtime, build
@@ -1215,5 +1362,5 @@ __all__ = [
     "RegistryBuild", "RuntimeCache", "SUBJECT_CHECK_VERSION", "accepted_pages", "accepted_record", "adapt_finding", "answer_with_fallback",
     "build_runtime", "handoff_outcome",
     "build_specialist_registry", "clause_covered_by", "decision_problem", "entity_in_text", "missing_specialists",
-    "named_entities", "quote_problem", "render_answer", "result_problem", "source_conflict_problem", "subject_binding",
+    "named_entities", "quote_problem", "render_answer", "result_problem", "source_conflict_problem", "guide_evidence_problem", "guide_builders", "subject_binding",
 ]

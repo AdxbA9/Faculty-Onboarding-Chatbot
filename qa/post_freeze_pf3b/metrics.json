@@ -1,0 +1,2355 @@
+{
+ "kb": {
+  "primary_pages": 272,
+  "chunks": 14549,
+  "build_s": 23.12322859998676,
+  "corpus_key": "46722775e6d316bd",
+  "groq_client_configured": false
+ },
+ "registry_report": {
+  "collisions": [],
+  "enabled": true,
+  "policy": {
+   "teaching": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide",
+    "uos_faculty_handbook_2025_26",
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "research": [
+    "uos_faculty_handbook_2025_26",
+    "uos_ithenticate_guidelines"
+   ],
+   "faculty_services": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "institutional": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_faculty_handbook_2025_26",
+    "uos_grade_transfer_dashboard_guide"
+   ]
+  },
+  "guide_registry": {
+   "ok": true,
+   "errors": {},
+   "ms": 97.84989999025129
+  }
+ },
+ "cold": {
+  "first_request_wall_ms": 2755.1108000043314,
+  "registry_build_ms": 735.9777999809012,
+  "registry_ok": true,
+  "registry_errors": {}
+ },
+ "questions": 70,
+ "categories": {
+  "guide": 35,
+  "cross_document": 5,
+  "ambiguous": 1,
+  "wrong_source": 10,
+  "handbook_only": 4,
+  "known_hr": 1,
+  "annual_leave": 1,
+  "conflict": 5,
+  "handbook_contamination": 5,
+  "guide_contamination": 3
+ },
+ "guide": {
+  "questions": 37,
+  "plan_f_served": 0,
+  "fallback": 37,
+  "coverage_pct": 0.0,
+  "correct": 0,
+  "limited": 0,
+  "wrong": 0,
+  "precision_pct": null,
+  "pf2_coverage_pct": 0.0,
+  "scope_selected": 37,
+  "guide_findings_returned": 24,
+  "stop_layers": {
+   "specialist procedure rule (a procedure request is never supported)": 6,
+   "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)": 20,
+   "other (PLAN_F_UNSAFE_RESULT)": 3,
+   "routing ambiguity": 1,
+   "specialist ask gate (unrecognised ask)": 3,
+   "specialist completeness (a requested detail not stated)": 1,
+   "specialist found no quotable guide evidence": 1,
+   "aggregator (a clause unsupported)": 2
+  }
+ },
+ "per_source": {
+  "uos_blackboard_faculty_short_guide": {
+   "questions": 13,
+   "served": 0,
+   "fallback": 13,
+   "correct": 0,
+   "limited": 0,
+   "wrong": 0,
+   "guide_findings_returned": 11,
+   "stop_layers": {
+    "specialist procedure rule (a procedure request is never supported)": 3,
+    "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)": 10
+   }
+  },
+  "uos_blackboard_gradebook_guide": {
+   "questions": 10,
+   "served": 0,
+   "fallback": 10,
+   "correct": 0,
+   "limited": 0,
+   "wrong": 0,
+   "guide_findings_returned": 8,
+   "stop_layers": {
+    "other (PLAN_F_UNSAFE_RESULT)": 1,
+    "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)": 6,
+    "specialist procedure rule (a procedure request is never supported)": 3
+   }
+  },
+  "uos_grade_transfer_dashboard_guide": {
+   "questions": 6,
+   "served": 0,
+   "fallback": 6,
+   "correct": 0,
+   "limited": 0,
+   "wrong": 0,
+   "guide_findings_returned": 4,
+   "stop_layers": {
+    "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)": 4,
+    "routing ambiguity": 1,
+    "aggregator (a clause unsupported)": 1
+   }
+  },
+  "uos_ithenticate_guidelines": {
+   "questions": 8,
+   "served": 0,
+   "fallback": 8,
+   "correct": 0,
+   "limited": 0,
+   "wrong": 0,
+   "guide_findings_returned": 1,
+   "stop_layers": {
+    "specialist ask gate (unrecognised ask)": 3,
+    "specialist completeness (a requested detail not stated)": 1,
+    "specialist found no quotable guide evidence": 1,
+    "other (PLAN_F_UNSAFE_RESULT)": 2,
+    "aggregator (a clause unsupported)": 1
+   }
+  }
+ },
+ "per_specialist": {
+  "teaching": {
+   "routed": 28,
+   "served": 0,
+   "fallback": 28,
+   "correct": 0,
+   "wrong": 0,
+   "guide_findings_returned": 23
+  },
+  "institutional": {
+   "routed": 4,
+   "served": 0,
+   "fallback": 4,
+   "correct": 0,
+   "wrong": 0,
+   "guide_findings_returned": 0
+  },
+  "research": {
+   "routed": 6,
+   "served": 0,
+   "fallback": 6,
+   "correct": 0,
+   "wrong": 0,
+   "guide_findings_returned": 1
+  }
+ },
+ "groups": {
+  "conflict": {
+   "questions": 5,
+   "served": 0,
+   "guide_served": 0,
+   "outcomes": {
+    "PLAN_F_UNSAFE_RESULT": 3,
+    "PLAN_F_REJECTED_BY_ROUTING": 1,
+    "PLAN_F_REJECTED_BY_AGGREGATOR": 1
+   },
+   "stop_layers": {
+    "specialist completeness (a requested detail not stated)": 2,
+    "routing ambiguity": 1,
+    "other (PLAN_F_UNSAFE_RESULT)": 1,
+    "aggregator (a clause unsupported)": 1
+   },
+   "ids_served": []
+  },
+  "handbook_contamination": {
+   "questions": 5,
+   "served": 0,
+   "guide_served": 0,
+   "outcomes": {
+    "PLAN_F_UNSAFE_RESULT": 3,
+    "PLAN_F_REJECTED_BY_AGGREGATOR": 2
+   },
+   "stop_layers": {
+    "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)": 3,
+    "aggregator (a clause unsupported)": 2
+   },
+   "ids_served": []
+  },
+  "guide_contamination": {
+   "questions": 3,
+   "served": 0,
+   "guide_served": 0,
+   "outcomes": {
+    "PLAN_F_UNSAFE_RESULT": 3
+   },
+   "stop_layers": {
+    "specialist procedure rule (a procedure request is never supported)": 3
+   },
+   "ids_served": []
+  },
+  "cross_document": {
+   "questions": 5,
+   "served": 0,
+   "guide_served": 0,
+   "outcomes": {
+    "PLAN_F_REJECTED_BY_AGGREGATOR": 5
+   },
+   "stop_layers": {
+    "aggregator (a clause unsupported)": 5
+   },
+   "ids_served": []
+  },
+  "wrong_source": {
+   "questions": 10,
+   "served": 0,
+   "guide_served": 0,
+   "outcomes": {
+    "PLAN_F_UNSAFE_RESULT": 8,
+    "PLAN_F_NOT_APPLICABLE": 1,
+    "PLAN_F_REJECTED_BY_HANDOFF": 1
+   },
+   "stop_layers": {
+    "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)": 6,
+    "specialist procedure rule (a procedure request is never supported)": 3,
+    "no specialist selected (routing)": 1
+   },
+   "ids_served": []
+  },
+  "ambiguous": {
+   "questions": 1,
+   "served": 0,
+   "guide_served": 0,
+   "outcomes": {
+    "PLAN_F_UNSAFE_RESULT": 1
+   },
+   "stop_layers": {
+    "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)": 1
+   },
+   "ids_served": []
+  },
+  "handbook_only": {
+   "questions": 4,
+   "served": 4,
+   "guide_served": 0,
+   "outcomes": {
+    "PLAN_F_ACCEPTED": 4
+   },
+   "stop_layers": {
+    "served": 4
+   },
+   "ids_served": [
+    "G43",
+    "G44",
+    "G45",
+    "G48"
+   ]
+  },
+  "known_hr": {
+   "questions": 1,
+   "served": 0,
+   "guide_served": 0,
+   "outcomes": {
+    "PLAN_F_UNSAFE_RESULT": 1
+   },
+   "stop_layers": {
+    "other (PLAN_F_UNSAFE_RESULT)": 1
+   },
+   "ids_served": []
+  },
+  "annual_leave": {
+   "questions": 1,
+   "served": 0,
+   "guide_served": 0,
+   "outcomes": {
+    "PLAN_F_UNSAFE_RESULT": 1
+   },
+   "stop_layers": {
+    "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)": 1
+   },
+   "ids_served": []
+  }
+ },
+ "shadow": {
+  "questions": 70,
+  "identical_to_direct_legacy": 70,
+  "visible_mismatches": 0,
+  "legacy_served": 70
+ },
+ "control_scopes_off_vs_on": {
+  "changed": 0,
+  "changes": []
+ },
+ "determinism": {
+  "repeat_records": 128,
+  "differences": []
+ },
+ "latency": {
+  "active": {
+   "all": {
+    "n": 70,
+    "p50_ms": 1500.5,
+    "p95_ms": 2850.2,
+    "max_ms": 3802.6
+   },
+   "plan_f_ms": {
+    "n": 70,
+    "p50_ms": 671.3,
+    "p95_ms": 1439.3,
+    "max_ms": 2357.0
+   },
+   "guide_scope_selected": {
+    "n": 60,
+    "p50_ms": 1505.3,
+    "p95_ms": 3428.3,
+    "max_ms": 3802.6
+   }
+  },
+  "shadow": {
+   "all": {
+    "n": 70,
+    "p50_ms": 1521.4,
+    "p95_ms": 2890.5,
+    "max_ms": 3701.9
+   },
+   "plan_f_ms": {
+    "n": 70,
+    "p50_ms": 665.2,
+    "p95_ms": 1401.6,
+    "max_ms": 2289.3
+   },
+   "guide_scope_selected": {
+    "n": 60,
+    "p50_ms": 1528.6,
+    "p95_ms": 3467.4,
+    "max_ms": 3701.9
+   }
+  },
+  "active_off": {
+   "all": {
+    "n": 70,
+    "p50_ms": 1477.9,
+    "p95_ms": 2412.3,
+    "max_ms": 2993.3
+   },
+   "plan_f_ms": {
+    "n": 70,
+    "p50_ms": 611.0,
+    "p95_ms": 1161.5,
+    "max_ms": 1347.7
+   },
+   "guide_scope_selected": null
+  },
+  "legacy": {
+   "all": {
+    "n": 70,
+    "p50_ms": 832.6,
+    "p95_ms": 1701.4,
+    "max_ms": 1741.7
+   },
+   "plan_f_ms": null,
+   "guide_scope_selected": null
+  }
+ },
+ "llm": {
+  "plan_f_llm_calls_max": 0,
+  "direct_llm_calls_max": 0,
+  "direct_used_llm": 0
+ },
+ "exceptions": 0,
+ "legacy_minimal": true,
+ "legacy_cache_untouched": true,
+ "rows": [
+  {
+   "id": "G01",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist procedure rule (a procedure request is never supported)",
+   "guide_findings_from": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G02",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G03",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G04",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G05",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G06",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G07",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G08",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G09",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist procedure rule (a procedure request is never supported)",
+   "guide_findings_from": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G10",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G11",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist procedure rule (a procedure request is never supported)",
+   "guide_findings_from": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G12",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G13",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G14",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "institutional"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "other (PLAN_F_UNSAFE_RESULT)",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G15",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G16",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist procedure rule (a procedure request is never supported)",
+   "guide_findings_from": [
+    "uos_blackboard_gradebook_guide",
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G17",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G18",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist procedure rule (a procedure request is never supported)",
+   "guide_findings_from": [
+    "uos_blackboard_gradebook_guide",
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G19",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G20",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist procedure rule (a procedure request is never supported)",
+   "guide_findings_from": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G21",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G22",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G23",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G24",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_grade_transfer_dashboard_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G25",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G26",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G27",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "routing_final": [
+    "teaching",
+    "institutional"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "routing ambiguity",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G28",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G29",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (unrecognised ask)",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G30",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (unrecognised ask)",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G31",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "conflict": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist completeness (a requested detail not stated)",
+   "guide_findings_from": [
+    "uos_ithenticate_guidelines"
+   ],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G32",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist found no quotable guide evidence",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G33",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "routing_final": [
+    "institutional"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "other (PLAN_F_UNSAFE_RESULT)",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G34",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (unrecognised ask)",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G35",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "routing_final": [
+    "institutional"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "other (PLAN_F_UNSAFE_RESULT)",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G36",
+   "category": "cross_document",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "aggregator (a clause unsupported)",
+   "guide_findings_from": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "guards": [
+    [
+     "aggregator",
+     "shape:multipart"
+    ],
+    [
+     "aggregator",
+     "rejected"
+    ]
+   ],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G37",
+   "category": "cross_document",
+   "expected_source": "uos_ithenticate_guidelines",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "aggregator (a clause unsupported)",
+   "guide_findings_from": [],
+   "guards": [
+    [
+     "aggregator",
+     "shape:multipart"
+    ],
+    [
+     "aggregator",
+     "rejected"
+    ]
+   ],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "G38",
+   "category": "ambiguous",
+   "expected_source": null,
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": false,
+   "sources_named": [],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "G39",
+   "category": "wrong_source",
+   "expected_source": null,
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "guards": [],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "G40",
+   "category": "wrong_source",
+   "expected_source": null,
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist procedure rule (a procedure request is never supported)",
+   "guide_findings_from": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "guards": [],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "G41",
+   "category": "wrong_source",
+   "expected_source": null,
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "scope_selected": false,
+   "sources_named": [],
+   "routing_final": [],
+   "plan_f_sources": [],
+   "stop_layer": "no specialist selected (routing)",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "G42",
+   "category": "wrong_source",
+   "expected_source": null,
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": false,
+   "sources_named": [],
+   "routing_final": [
+    "faculty_services"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "G43",
+   "category": "handbook_only",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "conflict": false,
+   "served": true,
+   "guide_served": false,
+   "outcome": "PLAN_F_ACCEPTED",
+   "scope_selected": false,
+   "sources_named": [],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "stop_layer": "served",
+   "guide_findings_from": [],
+   "guards": [
+    [
+     "quote_guard",
+     "passed"
+    ],
+    [
+     "subject_guard",
+     "passed"
+    ],
+    [
+     "findings_verifier",
+     "accepted"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ],
+   "review": "CORRECT"
+  },
+  {
+   "id": "G44",
+   "category": "handbook_only",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "conflict": false,
+   "served": true,
+   "guide_served": false,
+   "outcome": "PLAN_F_ACCEPTED",
+   "scope_selected": false,
+   "sources_named": [],
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "stop_layer": "served",
+   "guide_findings_from": [],
+   "guards": [
+    [
+     "quote_guard",
+     "passed"
+    ],
+    [
+     "subject_guard",
+     "passed"
+    ],
+    [
+     "findings_verifier",
+     "accepted"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ],
+   "review": "CORRECT"
+  },
+  {
+   "id": "G45",
+   "category": "handbook_only",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "conflict": false,
+   "served": true,
+   "guide_served": false,
+   "outcome": "PLAN_F_ACCEPTED",
+   "scope_selected": false,
+   "sources_named": [],
+   "routing_final": [
+    "institutional"
+   ],
+   "plan_f_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "stop_layer": "served",
+   "guide_findings_from": [],
+   "guards": [
+    [
+     "quote_guard",
+     "passed"
+    ],
+    [
+     "subject_guard",
+     "passed"
+    ],
+    [
+     "findings_verifier",
+     "accepted"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ],
+   "review": "CORRECT"
+  },
+  {
+   "id": "G46",
+   "category": "known_hr",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": false,
+   "sources_named": [],
+   "routing_final": [
+    "faculty_services"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "other (PLAN_F_UNSAFE_RESULT)",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "G47",
+   "category": "annual_leave",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": false,
+   "sources_named": [],
+   "routing_final": [
+    "faculty_services"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "G48",
+   "category": "handbook_only",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "conflict": false,
+   "served": true,
+   "guide_served": false,
+   "outcome": "PLAN_F_ACCEPTED",
+   "scope_selected": false,
+   "sources_named": [],
+   "routing_final": [
+    "faculty_services"
+   ],
+   "plan_f_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "stop_layer": "served",
+   "guide_findings_from": [],
+   "guards": [
+    [
+     "quote_guard",
+     "passed"
+    ],
+    [
+     "subject_guard",
+     "passed"
+    ],
+    [
+     "findings_verifier",
+     "accepted"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ],
+   "review": "CORRECT"
+  },
+  {
+   "id": "P01",
+   "category": "conflict",
+   "expected_source": "uos_ithenticate_guidelines",
+   "conflict": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist completeness (a requested detail not stated)",
+   "guide_findings_from": [
+    "uos_ithenticate_guidelines"
+   ],
+   "guards": [],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "P02",
+   "category": "conflict",
+   "expected_source": "uos_ithenticate_guidelines",
+   "conflict": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "routing_final": [
+    "research",
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "routing ambiguity",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "P03",
+   "category": "conflict",
+   "expected_source": "uos_ithenticate_guidelines",
+   "conflict": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "other (PLAN_F_UNSAFE_RESULT)",
+   "guide_findings_from": [
+    "uos_ithenticate_guidelines"
+   ],
+   "guards": [],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "P04",
+   "category": "conflict",
+   "expected_source": "uos_ithenticate_guidelines",
+   "conflict": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist completeness (a requested detail not stated)",
+   "guide_findings_from": [
+    "uos_ithenticate_guidelines"
+   ],
+   "guards": [],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "P05",
+   "category": "conflict",
+   "expected_source": "uos_ithenticate_guidelines",
+   "conflict": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "aggregator (a clause unsupported)",
+   "guide_findings_from": [],
+   "guards": [
+    [
+     "aggregator",
+     "shape:multipart"
+    ],
+    [
+     "aggregator",
+     "rejected"
+    ]
+   ],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "P06",
+   "category": "handbook_contamination",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "P07",
+   "category": "handbook_contamination",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "aggregator (a clause unsupported)",
+   "guide_findings_from": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "guards": [
+    [
+     "aggregator",
+     "shape:simple"
+    ],
+    [
+     "aggregator",
+     "rejected"
+    ]
+   ],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "P08",
+   "category": "handbook_contamination",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "aggregator (a clause unsupported)",
+   "guide_findings_from": [],
+   "guards": [
+    [
+     "aggregator",
+     "shape:simple"
+    ],
+    [
+     "aggregator",
+     "rejected"
+    ]
+   ],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "P09",
+   "category": "handbook_contamination",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "guards": [],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "P10",
+   "category": "handbook_contamination",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "P11",
+   "category": "guide_contamination",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist procedure rule (a procedure request is never supported)",
+   "guide_findings_from": [
+    "uos_blackboard_gradebook_guide",
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "guards": [],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "P12",
+   "category": "guide_contamination",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist procedure rule (a procedure request is never supported)",
+   "guide_findings_from": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "guards": [],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "P13",
+   "category": "guide_contamination",
+   "expected_source": "uos_ithenticate_guidelines",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist procedure rule (a procedure request is never supported)",
+   "guide_findings_from": [
+    "uos_ithenticate_guidelines"
+   ],
+   "guards": [],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "P14",
+   "category": "cross_document",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "aggregator (a clause unsupported)",
+   "guide_findings_from": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "guards": [
+    [
+     "aggregator",
+     "shape:multipart"
+    ],
+    [
+     "aggregator",
+     "rejected"
+    ]
+   ],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "P15",
+   "category": "cross_document",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "aggregator (a clause unsupported)",
+   "guide_findings_from": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "guards": [
+    [
+     "aggregator",
+     "shape:simple"
+    ],
+    [
+     "aggregator",
+     "rejected"
+    ]
+   ],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "P16",
+   "category": "cross_document",
+   "expected_source": "uos_ithenticate_guidelines",
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "aggregator (a clause unsupported)",
+   "guide_findings_from": [],
+   "guards": [
+    [
+     "aggregator",
+     "shape:multipart"
+    ],
+    [
+     "aggregator",
+     "rejected"
+    ]
+   ],
+   "review": "NOT SERVED"
+  },
+  {
+   "id": "P17",
+   "category": "wrong_source",
+   "expected_source": null,
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "guards": [],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "P18",
+   "category": "wrong_source",
+   "expected_source": null,
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist procedure rule (a procedure request is never supported)",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "P19",
+   "category": "wrong_source",
+   "expected_source": null,
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": false,
+   "sources_named": [],
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist procedure rule (a procedure request is never supported)",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "P20",
+   "category": "wrong_source",
+   "expected_source": null,
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "guards": [],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "P21",
+   "category": "wrong_source",
+   "expected_source": null,
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "SAFE FALLBACK"
+  },
+  {
+   "id": "P22",
+   "category": "wrong_source",
+   "expected_source": null,
+   "conflict": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_HANDOFF",
+   "scope_selected": true,
+   "sources_named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "stop_layer": "specialist ask gate (asked specifics, such as the system name or actor, not stated in the answering sentence)",
+   "guide_findings_from": [],
+   "guards": [],
+   "review": "SAFE FALLBACK"
+  }
+ ],
+ "performance": [
+  [
+   {
+    "question": "What is the minimum size of a Blackboard course banner image?",
+    "source": "uos_blackboard_faculty_short_guide",
+    "quote": "Your image must be at least 1200 x 240 pixels and it can't be larger than 25 KB.",
+    "outcome": "PLAN_F_REJECTED_BY_SUBJECT_GUARD",
+    "reason": "task-1-f1: the quote does not cover the clause's content words",
+    "answer": null,
+    "trace": [
+     [
+      "source_scope",
+      "guides"
+     ],
+     [
+      "coordinator",
+      "teaching"
+     ],
+     [
+      "dispatcher",
+      "executed:1,pending:0"
+     ],
+     [
+      "specialist:teaching",
+      "supported"
+     ],
+     [
+      "quote_guard",
+      "passed"
+     ],
+     [
+      "subject_guard",
+      "rejected"
+     ],
+     [
+      "plan_f_outcome",
+      "PLAN_F_REJECTED_BY_SUBJECT_GUARD"
+     ]
+    ]
+   },
+   {
+    "question": "Can I add a time limit to a group assignment in Blackboard Ultra?",
+    "source": "uos_blackboard_faculty_short_guide",
+    "quote": "At this time, you cannot add a time limit to group assignments.",
+    "outcome": "PLAN_F_REJECTED_BY_SUBJECT_GUARD",
+    "reason": "task-1-f1: entity 'Blackboard Ultra' is not in the quote",
+    "answer": null,
+    "trace": [
+     [
+      "source_scope",
+      "guides"
+     ],
+     [
+      "coordinator",
+      "teaching"
+     ],
+     [
+      "dispatcher",
+      "executed:1,pending:0"
+     ],
+     [
+      "specialist:teaching",
+      "supported"
+     ],
+     [
+      "quote_guard",
+      "passed"
+     ],
+     [
+      "subject_guard",
+      "rejected"
+     ],
+     [
+      "plan_f_outcome",
+      "PLAN_F_REJECTED_BY_SUBJECT_GUARD"
+     ]
+    ]
+   },
+   {
+    "question": "How long can the title of a gradebook item be in Blackboard Ultra?",
+    "source": "uos_blackboard_gradebook_guide",
+    "quote": "Your title is limited to 255 characters.",
+    "outcome": "PLAN_F_REJECTED_BY_SUBJECT_GUARD",
+    "reason": "task-1-f1: entity 'Blackboard Ultra' is not in the quote",
+    "answer": null,
+    "trace": [
+     [
+      "source_scope",
+      "guides"
+     ],
+     [
+      "coordinator",
+      "teaching"
+     ],
+     [
+      "dispatcher",
+      "executed:1,pending:0"
+     ],
+     [
+      "specialist:teaching",
+      "supported"
+     ],
+     [
+      "quote_guard",
+      "passed"
+     ],
+     [
+      "subject_guard",
+      "rejected"
+     ],
+     [
+      "plan_f_outcome",
+      "PLAN_F_REJECTED_BY_SUBJECT_GUARD"
+     ]
+    ]
+   },
+   {
+    "question": "What is the maximum file size for an iThenticate upload?",
+    "source": "uos_ithenticate_guidelines",
+    "quote": "Files must be less than 100MB.",
+    "outcome": "PLAN_F_REJECTED_BY_SOURCE_CONFLICT",
+    "reason": "task-1-f1: source conflict 'ithenticate_yearly_submission_limit': the statement is contradicted by another version of its document and is not served",
+    "answer": null,
+    "trace": [
+     [
+      "source_scope",
+      "guides"
+     ],
+     [
+      "coordinator",
+      "research"
+     ],
+     [
+      "dispatcher",
+      "executed:1,pending:0"
+     ],
+     [
+      "specialist:research",
+      "supported"
+     ],
+     [
+      "source_conflict_guard",
+      "rejected"
+     ],
+     [
+      "plan_f_outcome",
+      "PLAN_F_REJECTED_BY_SOURCE_CONFLICT"
+     ]
+    ]
+   },
+   {
+    "question": "How many documents can I submit to iThenticate per year?",
+    "source": "uos_ithenticate_guidelines",
+    "quote": "Each instructor is limited to a specific amount of submission (Maximum 30 Documents per year)",
+    "outcome": "PLAN_F_REJECTED_BY_SOURCE_CONFLICT",
+    "reason": "task-1-f1: source conflict 'ithenticate_yearly_submission_limit': the statement is contradicted by another version of its document and is not served",
+    "answer": null,
+    "trace": [
+     [
+      "source_scope",
+      "guides"
+     ],
+     [
+      "coordinator",
+      "research"
+     ],
+     [
+      "dispatcher",
+      "executed:1,pending:0"
+     ],
+     [
+      "specialist:research",
+      "supported"
+     ],
+     [
+      "source_conflict_guard",
+      "rejected"
+     ],
+     [
+      "plan_f_outcome",
+      "PLAN_F_REJECTED_BY_SOURCE_CONFLICT"
+     ]
+    ]
+   },
+   {
+    "question": "What is the required teaching load for faculty in Blackboard?",
+    "source": "uos_blackboard_faculty_short_guide",
+    "quote": "Your image must be at least 1200 x 240 pixels and it can't be larger than 25 KB.",
+    "outcome": "PLAN_F_REJECTED_BY_SUBJECT_GUARD",
+    "reason": "task-1-f1: the quote does not cover the clause's content words",
+    "answer": null,
+    "trace": [
+     [
+      "source_scope",
+      "guides"
+     ],
+     [
+      "coordinator",
+      "teaching"
+     ],
+     [
+      "dispatcher",
+      "executed:1,pending:0"
+     ],
+     [
+      "specialist:teaching",
+      "supported"
+     ],
+     [
+      "quote_guard",
+      "passed"
+     ],
+     [
+      "subject_guard",
+      "rejected"
+     ],
+     [
+      "plan_f_outcome",
+      "PLAN_F_REJECTED_BY_SUBJECT_GUARD"
+     ]
+    ]
+   },
+   {
+    "question": "How do I add a learning module in Blackboard Ultra?",
+    "source": "uos_blackboard_faculty_short_guide",
+    "quote": "Click on Learning Module or Folder.",
+    "outcome": "PLAN_F_REJECTED_BY_SOURCE_AUTHORITY",
+    "reason": "task-1-f1: a procedure ask answered from a paragraph chunk: the complete procedure is not established",
+    "answer": null,
+    "trace": [
+     [
+      "source_scope",
+      "guides"
+     ],
+     [
+      "coordinator",
+      "teaching"
+     ],
+     [
+      "dispatcher",
+      "executed:1,pending:0"
+     ],
+     [
+      "specialist:teaching",
+      "supported"
+     ],
+     [
+      "source_authority_guard",
+      "rejected"
+     ],
+     [
+      "plan_f_outcome",
+      "PLAN_F_REJECTED_BY_SOURCE_AUTHORITY"
+     ]
+    ]
+   }
+  ]
+ ],
+ "total_script_s": 775.5274788000097
+}

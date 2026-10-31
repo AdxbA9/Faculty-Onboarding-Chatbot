@@ -1,0 +1,787 @@
+{
+ "method": "PF-3C evidence-selection measurement on the REAL knowledge base (no model call besides the local embedder and reranker).\n\n    python -X utf8 qa/post_freeze_pf3c/evidence_selection.py <repo> <out.json> [--pf3c]\n\nFor each of the 37 guide questions (``qa/post_freeze_pf2/guide_questions.jsonl`` G01-G37) and its hand-labelled target\npassage (``guide_targets.json``) it records:\n  * UNSCOPED: the whole-corpus hybrid retrieval plus cross-encoder order (what the legacy path sees): expected source\n    top-1 and top-5.\n  * GUIDE-SCOPED (B0): the same retrieval restricted to the guide sources the question names (the PF-3B candidate pool\n    for guide evidence): top-1 category (ON_TARGET / PARTIAL / OFF_TARGET), rank of the first on-target chunk, whether\n    the top hit is a generic guide introduction, whether a procedure chunk is in the top five.\n  * PF-3C (with ``--pf3c``): the evidence the D-111 guide path selects for the question (whether or not it is served),\n    with the same categories.\nA generic introduction is a chunk on a guide's first page carrying the guide's opening description (listed below).",
+ "summary": {
+  "questions": 37,
+  "kb_load_s": 23.9,
+  "unscoped_expected_top1": 36,
+  "unscoped_expected_top5": 37,
+  "b0": {
+   "on_target_top1": 30,
+   "partial_top1": 2,
+   "off_target_top1": 5,
+   "intro_top1": 11,
+   "procedure_in_top5": 29,
+   "expected_source_top1": 36,
+   "expected_source_top5": 37,
+   "on_target_in_top5": 35,
+   "median_ms": 1360.7
+  }
+ },
+ "rows": [
+  {
+   "id": "G01",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1389.0,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "procedure_window",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G02",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1291.6,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "procedure_step",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G03",
+   "route": "list",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1346.8,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 3,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G04",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1464.2,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 4,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G05",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 2375.8,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "row_window",
+   "b0_top1_page": 4,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": false,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G06",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1364.4,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 4,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": false,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G07",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1348.3,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "procedure_window",
+   "b0_top1_page": 6,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G08",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1341.7,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "PARTIAL",
+   "b0_top1_chunk_type": "procedure_step",
+   "b0_top1_page": 7,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 3,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G09",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1274.8,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 8,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": false,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G10",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1149.8,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 9,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": false,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G11",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1307.7,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 10,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G12",
+   "route": "policy_yesno",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1288.8,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "row_window",
+   "b0_top1_page": 11,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": false,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 22
+  },
+  {
+   "id": "G13",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1327.4,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 5,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G14",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1383.0,
+   "unscoped_top1_source": "uos_blackboard_gradebook_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "procedure_step",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_blackboard_gradebook_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G15",
+   "route": "list",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1312.7,
+   "unscoped_top1_source": "uos_blackboard_gradebook_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_blackboard_gradebook_guide",
+   "b0_top1_intro": true,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G16",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1372.0,
+   "unscoped_top1_source": "uos_blackboard_gradebook_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "OFF_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_blackboard_gradebook_guide",
+   "b0_top1_intro": true,
+   "b0_first_on_target_rank": 6,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G17",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1360.7,
+   "unscoped_top1_source": "uos_blackboard_gradebook_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 8,
+   "b0_top1_source": "uos_blackboard_gradebook_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G18",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1312.1,
+   "unscoped_top1_source": "uos_blackboard_gradebook_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 10,
+   "b0_top1_source": "uos_blackboard_gradebook_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G19",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1243.4,
+   "unscoped_top1_source": "uos_blackboard_faculty_short_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "OFF_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 10,
+   "b0_top1_source": "uos_blackboard_faculty_short_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 2,
+   "b0_procedure_in_top5": false,
+   "b0_expected_top1": false,
+   "b0_expected_top5": true,
+   "b0_pool": 23
+  },
+  {
+   "id": "G20",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1268.7,
+   "unscoped_top1_source": "uos_blackboard_gradebook_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 3,
+   "b0_top1_source": "uos_blackboard_gradebook_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G21",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1362.8,
+   "unscoped_top1_source": "uos_blackboard_gradebook_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "OFF_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_blackboard_gradebook_guide",
+   "b0_top1_intro": true,
+   "b0_first_on_target_rank": 10,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G22",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1336.4,
+   "unscoped_top1_source": "uos_blackboard_gradebook_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 8,
+   "b0_top1_source": "uos_blackboard_gradebook_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": false,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G23",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1350.3,
+   "unscoped_top1_source": "uos_blackboard_gradebook_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "procedure_step",
+   "b0_top1_page": 7,
+   "b0_top1_source": "uos_blackboard_gradebook_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G24",
+   "route": "policy",
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_grade_transfer_dashboard_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "ms": 1413.1,
+   "unscoped_top1_source": "uos_grade_transfer_dashboard_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "OFF_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_grade_transfer_dashboard_guide",
+   "b0_top1_intro": true,
+   "b0_first_on_target_rank": 4,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G25",
+   "route": "policy",
+   "named": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "ms": 1358.0,
+   "unscoped_top1_source": "uos_grade_transfer_dashboard_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "PARTIAL",
+   "b0_top1_chunk_type": "procedure_step",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_grade_transfer_dashboard_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 2,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G26",
+   "route": "policy",
+   "named": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "ms": 1405.8,
+   "unscoped_top1_source": "uos_grade_transfer_dashboard_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "procedure_window",
+   "b0_top1_page": 3,
+   "b0_top1_source": "uos_grade_transfer_dashboard_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G27",
+   "route": "policy",
+   "named": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "ms": 1451.8,
+   "unscoped_top1_source": "uos_grade_transfer_dashboard_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "OFF_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_grade_transfer_dashboard_guide",
+   "b0_top1_intro": true,
+   "b0_first_on_target_rank": 3,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G28",
+   "route": "policy",
+   "named": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "ms": 1428.9,
+   "unscoped_top1_source": "uos_grade_transfer_dashboard_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 3,
+   "b0_top1_source": "uos_grade_transfer_dashboard_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G29",
+   "route": "policy",
+   "named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "ms": 2280.7,
+   "unscoped_top1_source": "uos_ithenticate_guidelines",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "procedure_window",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_ithenticate_guidelines",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G30",
+   "route": "policy",
+   "named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "ms": 1829.3,
+   "unscoped_top1_source": "uos_ithenticate_guidelines",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_ithenticate_guidelines",
+   "b0_top1_intro": true,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G31",
+   "route": "count",
+   "named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "ms": 2414.3,
+   "unscoped_top1_source": "uos_ithenticate_guidelines",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_ithenticate_guidelines",
+   "b0_top1_intro": true,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G32",
+   "route": "policy",
+   "named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "ms": 2429.2,
+   "unscoped_top1_source": "uos_ithenticate_guidelines",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_ithenticate_guidelines",
+   "b0_top1_intro": true,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G33",
+   "route": "contact",
+   "named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "ms": 686.9,
+   "unscoped_top1_source": "uos_ithenticate_guidelines",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "row",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_ithenticate_guidelines",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G34",
+   "route": "policy",
+   "named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "ms": 2586.7,
+   "unscoped_top1_source": "uos_ithenticate_guidelines",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_ithenticate_guidelines",
+   "b0_top1_intro": true,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G35",
+   "route": "policy",
+   "named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "ms": 2382.7,
+   "unscoped_top1_source": "uos_ithenticate_guidelines",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_ithenticate_guidelines",
+   "b0_top1_intro": true,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G36",
+   "route": "date",
+   "named": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "ms": 803.2,
+   "unscoped_top1_source": "uos_grade_transfer_dashboard_guide",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 2,
+   "b0_top1_source": "uos_grade_transfer_dashboard_guide",
+   "b0_top1_intro": false,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": true,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  },
+  {
+   "id": "G37",
+   "route": "policy",
+   "named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "ms": 2531.9,
+   "unscoped_top1_source": "uos_ithenticate_guidelines",
+   "unscoped_expected_top5": true,
+   "b0_top1": "ON_TARGET",
+   "b0_top1_chunk_type": "paragraph",
+   "b0_top1_page": 1,
+   "b0_top1_source": "uos_ithenticate_guidelines",
+   "b0_top1_intro": true,
+   "b0_first_on_target_rank": 1,
+   "b0_procedure_in_top5": false,
+   "b0_expected_top1": true,
+   "b0_expected_top5": true,
+   "b0_pool": 24
+  }
+ ]
+}

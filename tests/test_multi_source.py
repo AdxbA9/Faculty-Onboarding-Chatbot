@@ -377,15 +377,33 @@ def test_assemble_corpus_refuses_an_empty_record_list():
 # ---------------------------------------------------------------------------
 # The scope-extension seam
 # ---------------------------------------------------------------------------
-def test_extended_scope_admits_the_extra_source_and_keeps_the_handbook_constraints():
+def test_approve_sources_admits_only_the_named_extra_sources_and_keeps_the_handbook_constraints():
+    from handbook_bot.agents.specialists.scoping import approve_sources, approved_source_set
+
     scope = RetrievalScope(source_ids=[HANDBOOK], page_ranges=[(56, 74)])
-    extended = SS.extended_scope(scope, [GRADEBOOK, HANDBOOK])
+    approved = approved_source_set([HANDBOOK, GRADEBOOK], HANDBOOK)
+    extended = approve_sources(scope, approved, HANDBOOK)
     assert extended.also_source_ids == frozenset({GRADEBOOK})
     assert extended.allows({"source_id": GRADEBOOK, "page": 6}) and not scope.allows({"source_id": GRADEBOOK, "page": 6})
     assert extended.allows({"source_id": HANDBOOK, "page": 60}) and not extended.allows({"source_id": HANDBOOK, "page": 10})
     assert not extended.allows({"source_id": SHORT_GUIDE, "page": 6})
     assert "also_source_ids" not in scope.describe() and extended.describe()["also_source_ids"] == [GRADEBOOK]
-    assert SS.extended_scope(scope, [HANDBOOK]) is scope and SS.extended_scope(extended, [GRADEBOOK]) is extended
+    assert approve_sources(scope, approved_source_set(None, HANDBOOK), HANDBOOK) is scope      # I-9 scope object reproduced
+
+
+@pytest.mark.parametrize("bad, message", [
+    ("uos_blackboard_gradebook_guide", "not a single string"),
+    ([HANDBOOK, "*"], "plain source ids"),
+    ([HANDBOOK, ""], "plain source ids"),
+    ([HANDBOOK, " " + GRADEBOOK], "plain source ids"),
+    ([GRADEBOOK], "must include the primary source"),
+])
+def test_approved_source_set_has_no_wildcard_and_always_keeps_the_handbook(bad, message):
+    from handbook_bot.agents.specialists.scoping import approved_source_set
+
+    with pytest.raises(ValueError, match=message):
+        approved_source_set(bad, HANDBOOK)
+    assert approved_source_set(None, HANDBOOK) == frozenset({HANDBOOK})
 
 
 def test_domain_policy_is_read_from_the_records_and_ignores_disabled_ones(registry):
@@ -396,15 +414,35 @@ def test_domain_policy_is_read_from_the_records_and_ignores_disabled_ones(regist
     assert policy["institutional"] == frozenset({HANDBOOK, SHORT_GUIDE, GRADE_TRANSFER})
 
 
-def test_extend_specialist_scopes_applies_the_policy_per_specialist(registry):
-    scope = RetrievalScope(source_ids=[HANDBOOK], page_ranges=[(14, 60)])
-    fake = {sid: SimpleNamespace(scope=scope) for sid in SS.SPECIALIST_IDS}
-    report = SS.extend_specialist_scopes(fake, registry.list_sources())
-    assert report["teaching"]["added"] == sorted([SHORT_GUIDE, GRADE_TRANSFER, GRADEBOOK]) and report["teaching"]["applied"]
-    assert report["research"]["added"] == [ITHENTICATE] and report["institutional"]["added"] == sorted([SHORT_GUIDE, GRADE_TRANSFER])
-    assert report["faculty_services"] == {"applied": False, "added": [], "allowed_sources": [HANDBOOK]}
-    assert fake["faculty_services"].scope is scope and fake["research"].scope.also_source_ids == frozenset({ITHENTICATE})
-    assert SS.extend_specialist_scopes({}, registry.list_sources())["teaching"] == {"applied": False, "reason": "not registered"}
+def test_source_policy_is_the_d110_map_and_needs_both_the_allowlist_and_the_registry(registry):
+    policy = SS.source_policy(registry.list_sources())
+    assert policy == {"teaching": frozenset({HANDBOOK, SHORT_GUIDE, GRADEBOOK, GRADE_TRANSFER}),
+                      "research": frozenset({HANDBOOK, ITHENTICATE}),
+                      "faculty_services": frozenset({HANDBOOK}),
+                      "institutional": frozenset({HANDBOOK, SHORT_GUIDE, GRADE_TRANSFER})}
+    assert all(not ids & {APPRAISAL} for ids in policy.values())                  # the held document is never approved
+    with pytest.raises(ValueError, match="unknown specialist"):
+        SS.approved_sources_for(registry.list_sources(), "everyone")
+
+
+def _record(source_id, **kw):
+    base = dict(source_id=source_id, title="T", relative_path="data/guides/x.pdf", source_type="pdf", document_type="system_guide",
+                domains=("teaching",))
+    base.update(kw)
+    return SourceRecord(**base)
+
+
+@pytest.mark.parametrize("record, why", [
+    (_record("uos_unlisted_vendor_guide"), "not in the code allow-list"),
+    (_record(GRADEBOOK, enabled=False), "disabled"),
+    (_record(GRADEBOOK, access="internal_use"), "internal use"),
+    (_record(GRADEBOOK, verification_status="INGESTION HOLD - REVIEW"), "on hold"),
+    (_record(GRADEBOOK, domains=("research",)), "registry does not list the specialist"),
+])
+def test_unknown_disabled_held_or_unlisted_sources_are_never_approved(record, why):
+    assert SS.approved_sources_for([record], "teaching") == frozenset({HANDBOOK}), why
+    assert SS.approved_sources_for([_record(GRADEBOOK)], "teaching") == frozenset({HANDBOOK, GRADEBOOK})
+    assert SS.approved_sources_for([_record(GRADEBOOK)], "research") == frozenset({HANDBOOK})      # allow-list narrows
 
 
 def test_page_collisions_flag_a_guide_whose_pages_reach_into_a_specialist_scope(registry):
@@ -416,21 +454,137 @@ def test_page_collisions_flag_a_guide_whose_pages_reach_into_a_specialist_scope(
     assert len(hits) == 4 and all("pages 14-20 of %s" % GRADEBOOK in h for h in hits)
 
 
-def test_specialists_build_from_the_corpus_with_the_seam_off_by_default_and_on_when_asked(kb):
-    off = PF.build_specialist_registry(kb)
-    assert off.ok, off.errors
-    assert off.scope_extension == {"enabled": False, "applied": {}, "collisions": []}
-    assert "scope_extension" in off.to_dict() and json.dumps(off.to_dict())
-    teaching = off.registry.resolve("teaching")
-    assert not teaching.scope.allows({"source_id": GRADEBOOK, "page": 6})
-    on = PF.build_specialist_registry(kb, guide_scopes=True)
-    assert on.ok and on.scope_extension["enabled"] and on.scope_extension["collisions"] == []
-    assert on.scope_extension["applied"]["teaching"]["added"] == sorted([SHORT_GUIDE, GRADE_TRANSFER, GRADEBOOK])
-    assert on.registry.resolve("teaching").scope.allows({"source_id": GRADEBOOK, "page": 6})
-    assert on.registry.resolve("research").scope.allows({"source_id": ITHENTICATE, "page": 1})
-    assert not on.registry.resolve("research").scope.allows({"source_id": GRADEBOOK, "page": 1})
-    assert not on.registry.resolve("faculty_services").scope.also_source_ids
-    assert PF.build_specialist_registry(kb).scope_extension["enabled"] is False     # each build reads the switch afresh
+def test_the_i9_registry_stays_handbook_only_and_the_guide_registry_is_built_beside_it(kb):
+    base = PF.build_specialist_registry(kb)
+    assert base.ok, base.errors
+    assert base.scope_extension == {"collisions": []} and json.dumps(base.to_dict())
+    for sid in SS.SPECIALIST_IDS:
+        specialist = base.registry.resolve(sid)
+        assert not specialist.scope.also_source_ids
+        assert getattr(specialist, "approved_sources", frozenset({HANDBOOK})) == frozenset({HANDBOOK})
+    off, off_build = PF.build_runtime(kb, guide_scopes=False)
+    assert off.guide_registry is None and off_build.scope_extension["enabled"] is False
+    on, on_build = PF.build_runtime(kb, guide_scopes=True)
+    assert on_build.ok and on.guide_registry is not None and on.registry is not on.guide_registry
+    report = on_build.scope_extension
+    assert report["enabled"] and report["collisions"] == [] and report["guide_registry"]["ok"]
+    assert report["policy"]["research"] == sorted([HANDBOOK, ITHENTICATE]) and report["policy"]["faculty_services"] == [HANDBOOK]
+    guides = on.guide_registry
+    assert guides.resolve("teaching").approved_sources == frozenset({HANDBOOK, SHORT_GUIDE, GRADEBOOK, GRADE_TRANSFER})
+    assert guides.resolve("research").approved_sources == frozenset({HANDBOOK, ITHENTICATE})
+    assert guides.resolve("institutional").approved_sources == frozenset({HANDBOOK, SHORT_GUIDE, GRADE_TRANSFER})
+    assert not hasattr(guides.resolve("faculty_services"), "approved_sources")                  # Faculty Services & HR untouched
+    # PF-3C (D-111): the guide registry wraps the SAME I-9 specialist objects; their extraction stays handbook-only and guide
+    # evidence enters only through the D-111 guide path, for exactly the D-110 approved guides
+    from handbook_bot.agents.specialists.guide_evidence import GuideCapableSpecialist
+    assert guides.resolve("teaching").approved_guides == frozenset({SHORT_GUIDE, GRADEBOOK, GRADE_TRANSFER})
+    assert guides.resolve("research").approved_guides == frozenset({ITHENTICATE})
+    assert guides.resolve("faculty_services") is on.registry.resolve("faculty_services")
+    for sid in ("teaching", "research", "institutional"):
+        wrapper = guides.resolve(sid)
+        assert isinstance(wrapper, GuideCapableSpecialist) and wrapper.base is on.registry.resolve(sid), sid
+        assert not wrapper.scope.allows({"source_id": GRADEBOOK, "page": 6}) and not wrapper.scope.also_source_ids, sid
+        assert wrapper.scope.page_ranges == base.registry.resolve(sid).scope.page_ranges, sid      # handbook constraints unchanged
+        assert getattr(wrapper.base, "approved_sources", frozenset({HANDBOOK})) == frozenset({HANDBOOK}), sid
+    assert on.guide_index is not None and on.guide_index.policy["research"] == frozenset({HANDBOOK, ITHENTICATE})
+    assert off.guide_index is None
+
+
+def test_the_guide_registry_is_used_only_for_a_question_that_names_a_guide_system(kb):
+    runtime, _ = PF.build_runtime(kb, guide_scopes=True)
+    for question, named in [
+        ("How do I post grades in the Blackboard gradebook?", [SHORT_GUIDE, GRADEBOOK]),
+        ("How do I transfer grades to Banner?", [GRADE_TRANSFER]),
+        ("How do I access iThenticate?", [ITHENTICATE]),
+        ("What is the minimum size of a Blackboard course banner image?", [SHORT_GUIDE, GRADEBOOK]),   # a banner image is not Banner
+        ("Can I upload a banner image for my course?", []),
+        ("How many credit hours is a full teaching load?", []),
+        ("How do I start the Phase 2 progress review in the HR Portal?", []),          # the held appraisal guide has no scope
+        ("What is the grading policy for final examinations?", []),
+    ]:
+        registry, record = runtime.select_registry(question)
+        assert record == {"enabled": True, "selected": bool(named), "named": named}, question
+        assert registry is (runtime.guide_registry if named else runtime.registry), question
+    plain, _ = PF.build_runtime(kb, guide_scopes=False)
+    assert plain.select_registry("How do I access iThenticate?") == (plain.registry, {"enabled": False, "selected": False, "named": []})
+
+
+def test_the_section_guard_is_unchanged_for_the_handbook_and_never_attributes_a_guide_chunk(kb):
+    base = PF.build_specialist_registry(kb).registry
+    _, built = PF.build_runtime(kb, guide_scopes=True)
+    guides, _ = PF.build_runtime(kb, guide_scopes=True)
+    for sid in ("teaching", "research", "institutional"):
+        old, new = base.resolve(sid).guard, guides.guide_registry.resolve(sid).guard
+        assert sorted(old.shared_pages) == sorted(new.shared_pages) and old.unresolved_pages == new.unresolved_pages, sid
+        if new.shared_pages:
+            page = sorted(new.shared_pages)[0]
+            fake_guide = {"source_id": GRADEBOOK, "page": page, "chunk_type": "row", "row_id": 0}
+            assert new.is_shared(fake_guide) is False and new.owned_spans(0, "text", fake_guide) is None
+            handbook_meta = {"source_id": HANDBOOK, "page": page}
+            assert new.is_shared(handbook_meta) is True
+
+
+def _cand(module, kb, index, quote=None):
+    meta = kb.metadata[index]
+    item = {"meta": meta, "chunk": kb.chunks[index], "rerank_score": 1.0, "idx": index}
+    quote = quote or kb.chunks[index][:60]
+    if module == "teaching":
+        from handbook_bot.agents.specialists.teaching import _Candidate
+        return _Candidate(0, item, quote, 1, 1, None, frozenset())
+    from handbook_bot.agents.specialists.research import _Candidate
+    return _Candidate(0, item, quote, 1, 1, frozenset())
+
+
+def _first(kb, source_id, chunk_type="paragraph"):
+    return next(i for i, m in enumerate(kb.metadata) if m["source_id"] == source_id and m["chunk_type"] == chunk_type)
+
+
+def _reopened(kb, sid):
+    """A specialist built with its D-110 approved source set through the constructor option PF-3B added. Since PF-3C (D-111)
+    the runtime no longer builds specialists this way (the guide registry puts the I-9 specialists behind the D-111 guide
+    path); the option and its source check stay in the specialists and are tested here as the D-110 boundary itself."""
+    from handbook_bot.agents.specialists.institutional import InstitutionalNavigationSpecialist
+    from handbook_bot.agents.specialists.research import ResearchInnovationSpecialist
+    from handbook_bot.agents.specialists.teaching import TeachingLearningSpecialist
+
+    cls = {"teaching": TeachingLearningSpecialist, "research": ResearchInnovationSpecialist, "institutional": InstitutionalNavigationSpecialist}[sid]
+    return cls.from_knowledge_base(kb, approved_sources=SS.source_policy(kb.sources)[sid])
+
+
+@pytest.mark.parametrize("sid, accepted, refused", [
+    ("teaching", [SHORT_GUIDE, GRADEBOOK, GRADE_TRANSFER], [ITHENTICATE]),
+    ("research", [ITHENTICATE], [SHORT_GUIDE, GRADEBOOK, GRADE_TRANSFER]),
+])
+def test_the_specialist_guard_accepts_exactly_its_approved_sources(kb, sid, accepted, refused):
+    from handbook_bot.agents.specialists.contracts import SpecialistTask
+
+    base = PF.build_specialist_registry(kb).registry.resolve(sid)
+    reopened = _reopened(kb, sid)
+    task = SpecialistTask(task_id="t-1", question="q", specialist_id=base.specialist_id, domain=sid, context={"focus_clauses": ["q"]})
+    for source_id in accepted:
+        cand = _cand(sid, kb, _first(kb, source_id))
+        finding = reopened._finding(task, 1, cand, 0, "policy", [])
+        assert finding.source_id == source_id and finding.source_title == kb.metadata[_first(kb, source_id)]["source_title"]
+        assert finding.metadata["shared_page"] is False                         # no handbook section attribution
+        with pytest.raises(ValueError, match="outside the approved scope"):
+            base._finding(task, 1, cand, 0, "policy", [])                      # the I-9 boundary is untouched
+    for source_id in refused + ["uos_unregistered_source"]:
+        cand = _cand(sid, kb, _first(kb, source_id) if source_id != "uos_unregistered_source" else 0)
+        if source_id == "uos_unregistered_source":
+            cand.item["meta"] = dict(cand.item["meta"], source_id=source_id)
+        with pytest.raises(ValueError, match="outside the approved scope"):
+            reopened._finding(task, 1, cand, 0, "policy", [])
+
+
+def test_institutional_statements_come_only_from_its_approved_sources(kb):
+    base = PF.build_specialist_registry(kb).registry.resolve("institutional")
+    reopened = _reopened(kb, "institutional")
+    old = {(s.index, s.quote_start) for s in base.statements}
+    new = {(s.index, s.quote_start) for s in reopened.statements}
+    assert old <= new
+    sources = {kb.metadata[i]["source_id"] for i, _ in new - old}
+    assert sources <= {SHORT_GUIDE, GRADE_TRANSFER}
+    assert {kb.metadata[r.index]["source_id"] for rows in reopened.directory.values() for r in rows} == {HANDBOOK}   # directory: handbook only
 
 
 def test_a_guide_whose_pages_overlap_a_specialist_scope_refuses_the_whole_registry(kb):
@@ -444,8 +598,141 @@ def test_a_guide_whose_pages_overlap_a_specialist_scope_refuses_the_whole_regist
 
 def test_a_one_document_knowledge_base_is_left_alone_by_the_seam(kb):
     single = SimpleNamespace(**{**kb.__dict__, "sources": [], "source_pages": {}})
-    build = PF.build_specialist_registry(single, guide_scopes=True)
-    assert build.ok and build.scope_extension == {}
+    runtime, build = PF.build_runtime(single, guide_scopes=True)
+    assert build.ok and runtime.guide_registry is None and build.scope_extension == {"enabled": False}
+
+
+# ---------------------------------------------------------------------------
+# Source authority, the policy/system boundary and procedure completeness (PF-3B, D-110)
+# ---------------------------------------------------------------------------
+def _meta(source_id, **kw):
+    doc = "handbook" if source_id == HANDBOOK else ("guideline" if source_id == ITHENTICATE else "system_guide")
+    base = {"source_id": source_id, "document_type": doc, "authority_level": "university_policy" if source_id == HANDBOOK else "system_guide",
+            "chunk_type": "paragraph"}
+    base.update(kw)
+    return base
+
+
+@pytest.mark.parametrize("clause, meta, expected", [
+    ("What is the minimum size of a Blackboard course banner image?", _meta(SHORT_GUIDE), None),
+    ("What is the maximum file size for an iThenticate upload?", _meta(ITHENTICATE), None),
+    ("Who approves the grade transfer to Banner?", _meta(GRADE_TRANSFER), None),
+    ("What is the minimum size of a course banner image?", _meta(SHORT_GUIDE), "does not name the system"),
+    ("What is the minimum size of a Blackboard course banner image?", _meta(GRADE_TRANSFER), "does not name the system"),
+    ("What is the minimum size of a Blackboard course banner image?", _meta(ITHENTICATE), "does not name the system"),
+    ("What grading policy applies to final examinations in Blackboard?", _meta(GRADEBOOK), "policy, entitlement or obligation"),
+    ("Must instructors post grades in Blackboard within 48 hours?", _meta(GRADEBOOK), "policy, entitlement or obligation"),
+    ("Am I required to use iThenticate for my thesis?", _meta(ITHENTICATE), "policy, entitlement or obligation"),
+    ("What is the grading policy?", _meta(HANDBOOK), None),                              # handbook evidence is never refused here
+])
+def test_a_guide_answers_only_within_its_own_system_and_never_a_policy_ask(clause, meta, expected):
+    problem = SS.source_authority_problem(clause, meta)
+    assert (problem is None) if expected is None else (expected in problem), (clause, problem)
+
+
+def test_a_procedure_ask_is_answered_by_the_whole_procedure_or_not_at_all(parts):
+    windows = [(c, m) for c, m in zip(parts.chunks, parts.metadata) if m["chunk_type"] == "procedure_window"]
+    full = next((c, m) for c, m in windows if m["step_start"] == 0 and m["step_end"] == m["step_count"] - 1)
+    partial = next((c, m) for c, m in windows if m["step_end"] < m["step_count"] - 1)
+    step = next((c, m) for c, m in zip(parts.chunks, parts.metadata) if m["chunk_type"] == "procedure_step" and m["step_count"] > 1)
+    para = next((c, m) for c, m in zip(parts.chunks, parts.metadata) if m["chunk_type"] == "paragraph" and m["source_id"] == SHORT_GUIDE)
+    ask = "How do I access iThenticate?"
+    assert SS.procedure_problem(ask, full[0], full[0], full[1]) is None
+    assert "leaves out" in SS.procedure_problem(ask, full[0].split(" | ")[0], full[0], full[1])
+    assert "not the whole procedure" in SS.procedure_problem(ask, partial[0], partial[0], partial[1])
+    assert "one step of a" in SS.procedure_problem(ask, step[0], step[0], step[1])
+    assert "complete procedure is not established" in SS.procedure_problem(ask, para[0], para[0], para[1])
+    assert SS.procedure_problem("What is the minimum size of a Blackboard image?", para[0], para[0], para[1]) is None   # not a procedure ask
+    assert SS.procedure_problem(ask, "x", "x", _meta(HANDBOOK)) is None                                               # handbook untouched
+
+
+def _stub_runtime(kb, sid, cid, quote):
+    """The guide-enabled runtime with ``sid`` replaced by a stub that returns one supported finding on chunk ``cid``."""
+    from handbook_bot.agents.specialists.contracts import Finding, FindingStatus, SpecialistFindings, SpecialistId
+
+    runtime, build = PF.build_runtime(kb, guide_scopes=True)
+    meta = kb.metadata[cid]
+
+    def run(task):
+        finding = Finding(finding_id="%s-f1" % task.task_id, claim=quote, evidence_quote=quote, source_id=meta["source_id"],
+                          source_title=meta["source_title"], page=meta["page"], confidence=0.9,
+                          metadata={"chunk_id": cid, "clauses": [0], "details_covered": ["number or amount"]})
+        clause = task.context["focus_clauses"][0]
+        return SpecialistFindings(specialist_id=SpecialistId.parse(sid), task_id=task.task_id, status=FindingStatus.SUPPORTED,
+                                  findings=[finding], summary="stub", metadata={"clauses": [{"index": 0, "clause": clause, "outcome": "supported",
+                                                                                          "ask_shape": "specific_recognised",
+                                                                                          "requested_details": ["number or amount"],
+                                                                                          "uncovered_details": [], "route": "policy"}]})
+
+    runtime.guide_registry.resolve(sid).run = run
+    return runtime
+
+
+def test_the_adapter_refuses_a_guide_finding_outside_its_system_or_on_a_policy_ask(kb):
+    cid = _first(kb, GRADE_TRANSFER)
+    quote = kb.chunks[cid][:80]
+    runtime = _stub_runtime(kb, "teaching", cid, quote)
+    attempt = runtime.attempt("What is the minimum size of a Blackboard course banner image?")
+    assert attempt.outcome is PF.PlanFOutcome.REJECTED_BY_SOURCE_AUTHORITY and "does not name the system" in attempt.reason
+    assert attempt.guide_scope == {"enabled": True, "selected": True, "named": [SHORT_GUIDE, GRADEBOOK]}
+    cid = _first(kb, GRADEBOOK)
+    runtime = _stub_runtime(kb, "teaching", cid, kb.chunks[cid][:80])
+    attempt = runtime.attempt("What grading policy applies to the Blackboard gradebook?")
+    assert attempt.outcome is PF.PlanFOutcome.REJECTED_BY_SOURCE_AUTHORITY and "policy" in attempt.reason
+    assert attempt.result is None and any(e.agent == "source_authority_guard" for e in attempt.trace)
+
+
+def test_the_adapter_refuses_one_step_as_a_procedure(kb):
+    cid = next(i for i, m in enumerate(kb.metadata) if m["source_id"] == SHORT_GUIDE and m["chunk_type"] == "procedure_step" and m["step_count"] > 2)
+    runtime = _stub_runtime(kb, "teaching", cid, kb.chunks[cid])
+    attempt = runtime.attempt("How do I access Blackboard from outside the campus?")
+    assert attempt.outcome is PF.PlanFOutcome.REJECTED_BY_SOURCE_AUTHORITY and "one step of a" in attempt.reason
+
+
+@pytest.mark.parametrize("question", [
+    "How many documents can I submit to iThenticate per year?",
+    "What is the yearly iThenticate submission quota?",
+    "Is the iThenticate limit 30 documents per year?",
+    "Is the iThenticate limit 15 documents per year?",
+    "How do I upload a document to iThenticate and how many documents can I submit per year?",
+])
+def test_the_disputed_ithenticate_quota_is_never_served_through_the_guide_registry(kb, question):
+    cid = next(i for i, m in enumerate(kb.metadata) if m.get("source_conflict") and m["chunk_type"] == "row")
+    runtime = _stub_runtime(kb, "research", cid, kb.chunks[cid])
+    attempt = runtime.attempt(question)
+    assert attempt.outcome is not PF.PlanFOutcome.ACCEPTED and attempt.result is None, question
+    if attempt.dispatch is not None and any(r.findings is not None and r.findings.findings for r in attempt.dispatch.runs):
+        assert attempt.outcome in (PF.PlanFOutcome.REJECTED_BY_SOURCE_CONFLICT, PF.PlanFOutcome.REJECTED_BY_AGGREGATOR), (question, attempt.outcome)
+
+
+@pytest.mark.parametrize("question, owner", [
+    ("How do I access iThenticate?", "research"),
+    ("How do I upload a document to iThenticate?", "research"),
+    ("What is the maximum file size for an iThenticate upload?", "research"),
+    ("How do I check my research manuscript for plagiarism?", "research"),
+    ("How do I check a student's assignment for plagiarism with SafeAssign in Blackboard?", "teaching"),
+    ("Can students check their course assignments with Turnitin?", "teaching"),
+])
+def test_ithenticate_routes_to_research_and_course_originality_stays_with_teaching(question, owner):
+    from handbook_bot import plan_f_routing as RT
+    from handbook_bot.agents.coordinator import coordinate
+
+    refined, _ = RT.refine(coordinate(question))
+    assert [s.value for s in refined.selected_specialists] == [owner], question
+
+
+def test_source_scope_diagnostics_carry_ids_and_flags_only():
+    attempt = SimpleNamespace(outcome=SimpleNamespace(value="PLAN_F_UNSAFE_RESULT"), reason="r", specialist_id="teaching", status="partial",
+                              result=None, timings={}, dispatch=None, trace=[], path=None, verification=None, aggregation=None,
+                              routing=None, handoff=None, handoff_outcome=None, specialist_calls=1,
+                              guide_scope={"enabled": True, "selected": True, "named": [GRADEBOOK]})
+    d = UP._diagnose("active", "legacy", attempt, None, None, legacy=None)
+    assert d["guide_scope_enabled"] is True and d["guide_scope_selected"] is True and d["guide_sources_named"] == [GRADEBOOK]
+    assert d["plan_f_guide_served"] is False and json.dumps(d)
+    rows = dict(next(rows for title, rows in P.dev_sections(_result([], []), d) if title == "Routing"))
+    assert rows["Source scope"] == "handbook + guides: %s" % GRADEBOOK
+    d.update(guide_scope_selected=False, guide_sources_named=[])
+    assert dict(next(r for t, r in P.dev_sections(_result([], []), d) if t == "Routing"))["Source scope"] == "handbook only (no guide system named)"
 
 
 # ---------------------------------------------------------------------------

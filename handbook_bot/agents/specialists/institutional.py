@@ -136,7 +136,7 @@ from . import domain_cues as _domain
 from . import navigation_cues as _cues
 from .base import Specialist
 from .contracts import Finding, FindingStatus, HandoffRequest, SpecialistFindings, SpecialistId, SpecialistTask
-from .scoping import SectionGuard, compile_scope
+from .scoping import SectionGuard, approve_sources, approved_source_set, compile_scope
 
 APPROVED_SOURCE_ID = "uos_faculty_handbook_2025_26"
 #: The last development phase this version implements (Step 4.16-C1, natural phrasing); frozen for Milestone 4 (D-107).
@@ -469,12 +469,16 @@ class InstitutionalNavigationSpecialist(Specialist):
     specialist_id = SpecialistId.INSTITUTIONAL
 
     def __init__(self, resources: InstitutionalResources, *, owned_sections: Sequence[Tuple[int, str, str]] = SCOPE_SECTIONS,
-                 extra_pages: Sequence[Tuple[int, int]] = EXTRA_PAGES) -> None:
+                 extra_pages: Sequence[Tuple[int, int]] = EXTRA_PAGES, approved_sources: Optional[Sequence[str]] = None) -> None:
         if resources.source.source_id != APPROVED_SOURCE_ID or not resources.source.registered:
             raise ValueError("the Institutional Navigation specialist may only use the registered handbook %r" % APPROVED_SOURCE_ID)
         self.resources = resources
         self.owned_sections = tuple(owned_sections)
-        self.scope = compile_scope(resources.section_map, APPROVED_SOURCE_ID, self.owned_sections, extra_pages)
+        # post-freeze PF-3B (D-110): the source-acceptance boundary. None keeps the I-9 handbook-only boundary; the runtime's
+        # source policy may approve named official guides for statements. The contact directory stays handbook-only.
+        self.approved_sources = approved_source_set(approved_sources, APPROVED_SOURCE_ID)
+        self.scope = approve_sources(compile_scope(resources.section_map, APPROVED_SOURCE_ID, self.owned_sections, extra_pages),
+                                     self.approved_sources, APPROVED_SOURCE_ID)
         self.guard = SectionGuard(resources.chunks, resources.metadata, resources.section_map, self.owned_sections, self.scope)
         self.directory_pages = self._directory_pages()
         self.directory = self._read_directory()
@@ -483,8 +487,8 @@ class InstitutionalNavigationSpecialist(Specialist):
         self.outside_statements = self._read_outside_statements()
 
     @classmethod
-    def from_knowledge_base(cls, kb) -> "InstitutionalNavigationSpecialist":
-        return cls(InstitutionalResources.from_knowledge_base(kb))
+    def from_knowledge_base(cls, kb, *, approved_sources: Optional[Sequence[str]] = None) -> "InstitutionalNavigationSpecialist":
+        return cls(InstitutionalResources.from_knowledge_base(kb), approved_sources=approved_sources)
 
     # ---- the contact directory ----------------------------------------------
     def _directory_pages(self) -> FrozenSet[int]:
@@ -819,7 +823,7 @@ class InstitutionalNavigationSpecialist(Specialist):
         clean = self._page_starts_clean()
         for i, meta in enumerate(metas):
             page = meta.get("page")
-            if meta.get("chunk_type") != "paragraph" or meta.get("source_id") != APPROVED_SOURCE_ID or not self.scope.allows(meta):
+            if meta.get("chunk_type") != "paragraph" or meta.get("source_id") not in self.approved_sources or not self.scope.allows(meta):   # D-110
                 continue
             if page in self.directory_pages or not isinstance(page, int):
                 continue                      # the contact directory is never responsibility evidence

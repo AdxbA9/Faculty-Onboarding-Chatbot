@@ -9,6 +9,171 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-10-31 - Guide grounding, evidence selection and verified procedure assembly (post-freeze phase PF-3C)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/post-freeze-knowledge-expansion` |
+| Starting commit | `fd14af8` (Add controlled multi-source guide ingestion), with the uncommitted PF-3B working tree on top (preserved; backed up before any change) |
+| Ending state | COMPLETE. Plan F serves verified guide answers under D-111 (10 of 37 core guide questions, all correct; 22 guide answers over the 100-question evaluation, 21 correct, 1 limited, 0 wrong); the frozen 192-question set is identical to I-9; PF-3B and PF-3C committed together as one local commit for the project owner to push; `PLAN_F_GUIDE_SCOPES` stays off by default |
+| Freeze status | I-9 (`runtime-freeze-i9`, D-108) remains the frozen baseline and comparison control. PF-3B (D-110) reopened source acceptance; PF-3C (D-111) adds one deterministic guide evidence path in front of the unchanged I-9 specialists, used only with `PLAN_F_GUIDE_SCOPES` on |
+| Elapsed | 1h39m26s (start 2026-10-31T01:45:07Z, end 2026-10-31T03:24:33Z; includes the background evaluation runs) |
+
+### Before and after
+
+| | PF-3B | PF-3C |
+|---|---|---|
+| core guide questions served by Plan F | 0 of 37 | 10 of 37 (27.0%) |
+| served guide answers correct / limited / wrong | - | 10 / 0 / 0 |
+| guide evidence reviewed by hand: on target / partial / off target | 5 / 5 / 14 (of 24 returned) | 12 / 0 / 0 (of 12 selected; nothing selected for the rest) |
+| frozen 192-question set | 55 served, 0 wrong, 0 changed | 55 served, 0 wrong, 0 changed |
+
+### Completed
+
+- Measured before changing: guide-scoped retrieval already ranks an on-target chunk first for 30 of 37 guide questions
+  (35 in the top five); the off-target PF-3B quotes came from unit selection inside page-wide windows (the sentence naming
+  the system, usually the introduction), not from ranking.
+- D-110 finalised (superseded in part) and D-111 recorded: one guide evidence path; declared system names and the faculty
+  actor bound by the registry (new `audience` field); every other content word stated by the evidence; complete
+  procedures only (ordered labels, real heading, no page continuation left open, cut steps completed only from the page's
+  own prose); policy, authority, timing and handbook-subject asks never answered from a guide; independent set-level
+  verification in the adapter.
+- New modules `handbook_bot/guide_grounding.py` and `handbook_bot/agents/specialists/guide_evidence.py`; adapter,
+  findings verifier and aggregator guide branches; diagnostics `guide_answer_forms`, `guide_answer_parts`; Developer row
+  "Guide answer". The frozen specialists are not changed by PF-3C.
+
+### Tests performed
+
+- Frozen 192-question set with guide scopes on: identical to I-9 (0 changed questions in ACTIVE and SHADOW; 55 served,
+  0 wrong, 0 false acceptances, 11 false fallbacks, SHADOW 192 of 192, 0 model calls; no master question selects the
+  guide registry).
+- Guide evaluation (48 PF-2 + 22 PF-3B + 30 PF-3C questions; ACTIVE, SHADOW, DIRECT, scopes off, LEGACY, two repeats):
+  core guide questions 10 of 37 served (27.0%), 10 correct, 0 limited, 0 wrong (precision 100%); all served guide answers 22 (21 correct, 1 limited, 0 wrong), including a numbered gradebook list continued across two pages and four cross-document answers; conflict, contamination, approval, wrong-source, appraisal and incomplete-procedure cases all fall back; SHADOW 100 of 100 identical; scopes off versus on: 22 differences, all reviewed guide answers; determinism 0 differences; 0 exceptions; 0 model calls.
+- Evidence selection before and after (`evidence_selection.py`): guide-scoped retrieval unchanged (on-target chunk first 30 of 37, top five 35); the evidence selected by the D-111 path is on target for 12 of 12 questions (PF-3B frozen extraction: 5 on target, 5 partial, 14 off target of 24); nothing is selected for the other 25.
+- Application smoke with guide scopes on: ACTIVE 12 turns (Blackboard procedure, multi-page gradebook list, grade transfer
+  procedure, grade transfer authority fallback, iThenticate procedure, quota fallback, handbook teaching load, known HR,
+  annual leave, Banner Self Service collision, cross-document aggregate, held appraisal); SHADOW 3; LEGACY fresh-process
+  checks (I-8: 30 of 30 minimal; PF-3C: 8 of 8 minimal, no Plan F or D-111 module imported).
+- Real-model wrong-source retrieval rerun: 16 of 16 unchanged.
+- Targeted gate: 2,252 passed. Full suite: 6,858 passed, 0 failed, 0 skipped (6,770 at the start). `pip check`: no
+  broken requirements. Security scan of the changed and new files: 0 problems (49 files).
+
+### Known limitations
+
+- 27 of 37 core guide questions still fall back: guide steps printed without list markers (the short guide's
+  learning-module, announcement and assignment pages), lists cut or mixed by the PDF reading, headings carried from the
+  page, asks whose words the guide does not print ("upload" for a file size, "cannot" versus "unable"), approval asks, and
+  routing to Institutional Navigation for guides it is not approved for.
+- Evidence below the production reranker gate is not considered (G21's 255-character limit).
+- `PLAN_F_GUIDE_SCOPES` stays off by default.
+
+### Next task
+
+Evidence-driven expansion of the remaining approved guides, or targeted refinement of the guide reading (unmarked steps,
+mixed lists) under its own decision record, each with the D-111 evaluation and a hand review of every served answer.
+Enabling `PLAN_F_GUIDE_SCOPES` by default is the project owner's decision.
+
+### Blockers
+
+None.
+
+### Files changed
+
+`handbook_bot/guide_grounding.py` (new), `handbook_bot/agents/specialists/guide_evidence.py` (new),
+`handbook_bot/plan_f_runtime.py`, `plan_f_verification.py`, `plan_f_aggregation.py`, `source_scopes.py`, `sources.py`,
+`knowledge/sources.json`, `ui/pipeline.py`, `ui/presentation.py`, `tests/test_guide_grounding.py` (new),
+`tests/test_multi_source.py`, `qa/post_freeze_pf3c/` (new), `docs/DECISIONS.md` (D-110 finalised, D-111),
+`docs/STATUS.md`; with the PF-3B files carried in the same commit.
+
+---
+
+## 2026-10-31 - Controlled specialist source reopening and guide activation (post-freeze phase PF-3B)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/post-freeze-knowledge-expansion` |
+| Starting commit | `fd14af8` (Add controlled multi-source guide ingestion) |
+| Ending state | INCOMPLETE on the coverage criterion, changes left UNCOMMITTED in the working tree; carried into PF-3C, which builds on them and commits PF-3B and PF-3C together if PF-3C passes. The specialist source-acceptance boundary is reopened under control (D-110) and is safe; the frozen 192-question set is unchanged with guide scopes on; Plan F serves 0 of 37 guide questions because the frozen ask gate and procedure rule of the specialists (and the I-1 subject guard) refuse second-person system-manual evidence, rules this phase was not allowed to redesign; `PLAN_F_GUIDE_SCOPES` stays off by default |
+| Freeze status | I-9 (`runtime-freeze-i9`, D-108) remains the frozen baseline and the comparison control. PF-3B is a controlled post-freeze reopening of ONE contract boundary (source acceptance); claim interpretation, grounding, the ask gate, completeness, binding and safety gates stay frozen |
+| Elapsed | 0h57m40s (start 2026-10-30T20:34:27Z, end 2026-10-30T21:32:07Z; includes long background evaluation runs) |
+
+### Before and after
+
+| | before (I-9 / PF-2) | after (PF-3B) |
+|---|---|---|
+| sources a specialist accepts | handbook only, hard-coded | handbook plus the D-110 approved guides when `PLAN_F_GUIDE_SCOPES` is on; handbook only otherwise |
+| guide evidence reaching the specialists | none | 24 of 37 guide questions |
+| guide answers served by Plan F | 0 of 37 | 0 of 37 |
+| frozen 192-question set | 55 served, 0 wrong | 55 served, 0 wrong, 0 changed questions |
+
+### Completed
+
+- D-110 recorded: why the source guard is reopened, exactly what may change, what stays frozen, the approved source
+  sets, the same verification standard plus three source rules, fallback for anything unsafe, the iThenticate routing
+  decision, the conflict behaviour, the rollback condition and the baseline comparison requirement.
+- Specialist files changed (source boundary only): `teaching.py`, `research.py`, `institutional.py` (constructor and
+  `from_knowledge_base` take `approved_sources`; one source check each, Institutional statements only), `scoping.py`
+  (approved source set, guide sources beside the unchanged handbook scope, source-aware section guard),
+  `domain_cues.py` (iThenticate cue). Faculty Services & HR, claim model and navigation cues unchanged.
+- Source policy (`handbook_bot/source_scopes.py`): code allow-list intersected with the registry (enabled, not internal
+  use, not held, specialist listed in `domains`); system vocabulary per guide ("course banner image" is not Banner);
+  source-authority, policy-boundary and procedure-completeness checks.
+- Runtime (`handbook_bot/plan_f_runtime.py`): a guide-enabled registry beside the I-9 one; a question uses it only when it
+  names a guide's system; `PLAN_F_REJECTED_BY_SOURCE_AUTHORITY`; guards on pass-through findings, provision slices and
+  aggregation parts. Diagnostics and Developer panel: source scope, named guide sources, guide-served flag (ids only).
+- iThenticate questions route to Research; SafeAssign and Turnitin course questions stay with Teaching.
+
+### Tests performed
+
+- Frozen 192-question set with guide scopes on: identical to I-9 and PF-2 (0 changed questions in ACTIVE and SHADOW; 55
+  served, 55 correct, 0 wrong, 0 false acceptances, 11 false fallbacks, SHADOW 192 of 192, 0 model calls).
+- Guide evaluation (48 PF-2 + 22 new PF-3B questions) in ACTIVE and SHADOW with scopes on, a DIRECT pass, ACTIVE with scopes
+  off and LEGACY, plus two repeats: guide served 0 of 37; stop layers: ask gate 20, procedure rule 6, unrecognised ask 3,
+  Institutional without an approved statement 3, aggregator 2, other 3; conflict variants, contamination both ways,
+  cross-document and wrong-source cases all fall back; SHADOW 70 of 70 identical; scopes off versus on 0 differences;
+  determinism 0 differences; 0 exceptions; 0 model calls. Manual review of the 24 returned guide quotes: 5 on target, 5
+  partial, 14 off target.
+- Layer probe: a stubbed supported guide finding is refused by the I-1 subject guard; the quota by the conflict guard; a
+  single step by the procedure guard.
+- Application smoke with guide scopes on: ACTIVE 12 turns, SHADOW 3, LEGACY fresh-process check (30 minimal records, no
+  Plan F import); behaviour as expected, correct chips and Developer rows.
+- Real-model wrong-source retrieval rerun: 16 of 16 unchanged.
+- Targeted gate: 2,164 passed. Full suite: 6,770 passed, 0 failed (6,730 at the start). `pip check`: no broken
+  requirements. Security scan of the changed and new files: 0 problems. Frozen-file blob check: six specialist files
+  compared with `44ada15`; only the three listed above changed.
+
+### Known limitations
+
+- No guide answer is served (the coverage criterion of PF-3B is not met).
+- The specialists' guide evidence selection prefers generic introductions that name the system (14 of 24 top quotes off
+  target): relaxing the grounding rules alone would serve wrong answers.
+- Five iThenticate questions are owned by Research but read as unrecognised "how" asks; "where do I find ..." questions
+  are refined to Institutional Navigation, which is not approved for iThenticate.
+- The Teaching and Research limitation text still says no procedural guide is indexed (diagnostics only).
+- Guide-scoped questions add about 60 ms at the median and 280 ms at p95 to the Plan F attempt.
+
+### Next task
+
+PF-3C: a decision record (proposed D-111) on source-context binding (a guide's declared system binds the system named in
+the question, "you" binds the faculty actor) in the specialists' ask gate and the I-1 subject guard, together with
+procedure-aware guide evidence selection and complete-procedure answers, each with its own evaluation and a hand review of
+every served answer. The project owner decides whether the PF-3B working tree is committed as a checkpoint.
+
+### Blockers
+
+The coverage criterion needs changes to frozen grounding and completeness rules, which the PF-3B brief does not
+authorise.
+
+### Files changed
+
+`handbook_bot/agents/specialists/teaching.py`, `research.py`, `institutional.py`, `scoping.py`, `domain_cues.py`,
+`handbook_bot/source_scopes.py`, `handbook_bot/plan_f_runtime.py`, `ui/pipeline.py`, `ui/presentation.py`,
+`tests/test_multi_source.py`, `qa/post_freeze_pf3b/` (new), `docs/DECISIONS.md` (D-110), `docs/STATUS.md`.
+
+---
+
 ## 2026-10-30 - Controlled multi-source guide ingestion and post-ingestion evaluation (post-freeze phase PF-2)
 
 | Field | Value |

@@ -346,9 +346,10 @@ def _clause_value(coverage: ClauseCoverage, shape: RequestShape, findings_by_id:
 # The aggregator
 # ---------------------------------------------------------------------------
 def aggregate(decision: CoordinatorDecision, dispatched: DispatchResult, chunks: Sequence[str],
-              metadata: Sequence[Dict[str, Any]]) -> Aggregation:
+              metadata: Sequence[Dict[str, Any]], guide_index: Any = None) -> Aggregation:
     """Combine the findings of one execution into one complete answer, or say exactly why not. Deterministic; no
-    model; no specialist call; never raises."""
+    model; no specialist call; never raises. ``guide_index`` (post-freeze PF-3C, D-111) lets the findings-aware verifier
+    check a guide clause as one answer; without it a guide clause is refused."""
     started = time.perf_counter()
     timings: Dict[str, float] = {}
     clause_count = 0
@@ -433,7 +434,7 @@ def aggregate(decision: CoordinatorDecision, dispatched: DispatchResult, chunks:
                 first_failure: Optional[FindingsVerification] = None
                 for finding in findings.findings:
                     trial = _verification.verify_findings(clause, _verification.clause_view(findings, report_index, [finding.finding_id]),
-                                                          chunks, metadata)
+                                                          chunks, metadata, guide_index)
                     if trial.accepted and trial.safe_to_render:
                         eligible.append(finding.finding_id)
                     elif first_failure is None:
@@ -447,7 +448,7 @@ def aggregate(decision: CoordinatorDecision, dispatched: DispatchResult, chunks:
                     view = _verification.clause_view(findings, report_index)
                 except ValueError:
                     return fail(AggregationCode.MISSING_REQUIRED_CLAUSE, "no finding of task %s answers its clause report" % task.task_id)
-            sliced = _verification.verify_findings_sliced(clause, view, chunks, metadata)
+            sliced = _verification.verify_findings_sliced(clause, view, chunks, metadata, guide_index)
             verification = sliced.verification
             if not verification.accepted or not verification.safe_to_render:
                 return fail(AggregationCode.CHILD_FINDING_REJECTED, "%s: %s" % (verification.reason.value, verification.detail), verification)
@@ -518,8 +519,11 @@ def aggregate(decision: CoordinatorDecision, dispatched: DispatchResult, chunks:
 # Rendering
 # ---------------------------------------------------------------------------
 def render_parts(parts: Sequence[AggregatePart]) -> str:
-    """The verbatim quotes of the parts, in their order, one paragraph each. No label, no connective, no rewording."""
-    return "\n\n".join(part.finding.evidence_quote.strip() for part in parts if part.finding.evidence_quote.strip())
+    """The verbatim quotes of the parts, in their order, one paragraph each. No label, no connective, no rewording; the
+    first step of a D-111 guide procedure puts its printed heading on its own line (post-freeze PF-3C)."""
+    from . import guide_grounding as _guides
+    return "\n\n".join(_guides.render_part(part.finding.evidence_quote.strip(), (part.finding.metadata or {}).get(_guides.GUIDE_KEY))
+                       for part in parts if part.finding.evidence_quote.strip())
 
 
 __all__ = [

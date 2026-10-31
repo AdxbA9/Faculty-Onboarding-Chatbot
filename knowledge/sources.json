@@ -22,6 +22,7 @@
       "enabled": true,
       "sha256": "fc9bc650529c85363ce87b452b93e0e0bdf3caae15acf587ba232b0ca4ea7ea7",
       "page_filter": "",
+      "audience": ["faculty"],
       "domains": ["teaching", "research", "faculty_services", "institutional"],
       "conflicts": []
     },
@@ -46,6 +47,7 @@
       "enabled": true,
       "sha256": "4a9072699167a917e69b436064f4e54fce1b297587c39bce25d950bbe1a2448b",
       "page_filter": "english_only",
+      "audience": ["faculty", "instructor"],
       "domains": ["teaching", "institutional"],
       "conflicts": []
     },
@@ -70,6 +72,7 @@
       "enabled": true,
       "sha256": "06018cb153bc833831e651461eefe298ad7e8f4cf86b57c5c0b96b8dfc733892",
       "page_filter": "english_only",
+      "audience": ["faculty", "instructor"],
       "domains": ["teaching", "institutional"],
       "conflicts": []
     },
@@ -94,6 +97,7 @@
       "enabled": true,
       "sha256": "e1171901516f58cd80af50ce442816eb919725ba30a4b13cb4155f443e87a2dc",
       "page_filter": "english_only",
+      "audience": ["faculty", "instructor"],
       "domains": ["teaching"],
       "conflicts": []
     },
@@ -118,6 +122,7 @@
       "enabled": true,
       "sha256": "061c30a2688a15cdae59aa5fd543538b146e6d7bf76706bd9d63c692de82371d",
       "page_filter": "english_only",
+      "audience": ["faculty", "researcher"],
       "domains": ["research"],
       "conflicts": [
         {
@@ -149,6 +154,7 @@
       "enabled": false,
       "sha256": "",
       "page_filter": "english_only",
+      "audience": [],
       "domains": ["faculty_services"],
       "conflicts": []
     }

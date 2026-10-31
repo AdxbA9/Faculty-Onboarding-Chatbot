@@ -1,0 +1,2252 @@
+{
+ "method": "Write ``review.json``: the manual review of the PF-3B evaluation.\n\nNo guide answer was served by Plan F, so the \"newly served\" review is empty. For every question the review records the\nPlan F outcome, the layer that stopped it, and, where the reopened specialists returned guide evidence, a hand-written\nassessment of that evidence (ON_TARGET: the quote states the asked fact or procedure; PARTIAL: right page or heading, not\nthe answer; OFF_TARGET: a different topic, typically the gradebook guide's page-1 introduction chosen because it names\n\"Blackboard Ultra\"). The assessment answers the question the next decision record must face: would relaxing the frozen\ngrounding rules have served correct answers, or wrong ones?\n\n    python -X utf8 qa/post_freeze_pf3b/make_review.py <results.json> <review.json>",
+ "summary": {
+  "newly_served_guide_answers": [],
+  "verdicts": {
+   "CORRECT": 4,
+   "NOT SERVED": 40,
+   "SAFE FALLBACK": 26
+  },
+  "guide_evidence_returned": 24,
+  "guide_evidence_assessment": {
+   "ON_TARGET": 5,
+   "PARTIAL": 5,
+   "OFF_TARGET": 14
+  }
+ },
+ "questions": {
+  "G01": {
+   "question": "How do I access Blackboard from outside the campus?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "quote": "How to access Blackboard: - Open the University website http://www.sharjah.ac.ae | - Click Quick Links “MyUOS” , If you "
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "quote": "How to access Blackboard: - If you are singing from outside university campus, click on Login from the main page. | - Cl"
+    }
+   ],
+   "guide_evidence_assessment": "ON_TARGET",
+   "guide_evidence_note": "page 1 access procedure window (website, MyUOS, Login, off-campus login)"
+  },
+  "G02": {
+   "question": "How do I verify my identity when signing in to Blackboard?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "quote": "How to access Blackboard: - You must verify your identity using the multifactor factor authentication service by receivi"
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "quote": "How to access Blackboard: - Then sign in using your University of Sharjah email address and password. | - You must verif"
+    }
+   ],
+   "guide_evidence_assessment": "ON_TARGET",
+   "guide_evidence_note": "page 1 multi-factor step (SMS or Microsoft Authenticator)"
+  },
+  "G03": {
+   "question": "How can I pin a course to the top of my course list in Blackboard Ultra?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    3
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 1,
+     "quote": "Blackboard Ultra Guide: Gradebook In Blackboard Ultra grading, you can see what you need to grade in all your courses, o"
+    }
+   ],
+   "guide_evidence_assessment": "OFF_TARGET",
+   "guide_evidence_note": "gradebook page-1 introduction; the favourite/pin sentence (short guide page 3) not chosen"
+  },
+  "G04": {
+   "question": "What can I manage from the Details & Actions panel of a Blackboard course?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    4
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 1,
+     "quote": "Blackboard Ultra Guide: Gradebook In Blackboard Ultra grading, you can see what you need to grade in all your courses, o"
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 4,
+     "quote": "o Private: Make a course private while you add or experiment with content, and then open it to students when you are rea"
+    }
+   ],
+   "guide_evidence_assessment": "OFF_TARGET",
+   "guide_evidence_note": "gradebook page-1 introduction first; the Private availability sentence second; the Details & Actions list not quoted"
+  },
+  "G05": {
+   "question": "What is the minimum size of a Blackboard course banner image?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    4,
+    5
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 4,
+     "quote": "You can also create groups for activities other than graded work, such as volunteering or field trips and ask students t"
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 5,
+     "quote": "E. You want to be confident that your course is well designed and functions as you expect before your students see it. W"
+    }
+   ],
+   "guide_evidence_assessment": "OFF_TARGET",
+   "guide_evidence_note": "page-4 groups sentence and page-5 student preview sentence; the 1200 x 240 / 25 KB sentence not chosen"
+  },
+  "G06": {
+   "question": "How do I keep a Blackboard course hidden from students while I build it?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    4
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 4,
+     "quote": "o Private: Make a course private while you add or experiment with content, and then open it to students when you are rea"
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "quote": "BLACKBOARD ULTRA FACULTY SHORT GUIDE  How to access Blackboard: - Open the University website http://www.sharjah.ac.ae "
+    }
+   ],
+   "guide_evidence_assessment": "ON_TARGET",
+   "guide_evidence_note": "page 4 Private availability sentence"
+  },
+  "G07": {
+   "question": "Which file types can I upload to Blackboard course content?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    6
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 6,
+     "quote": "Adding Contents: - Copy Content: Copy an entire course or select items from the courses you teach. | - Upload: Browse fo"
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 6,
+     "quote": "A. Managing Content:  Create Content: Select the plus sign wherever you want to add content. You can also expand or cre"
+    }
+   ],
+   "guide_evidence_assessment": "ON_TARGET",
+   "guide_evidence_note": "page 6 procedure window with the Upload item and the supported file types"
+  },
+  "G08": {
+   "question": "How do I move a content item with the keyboard in Blackboard Ultra?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    7
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": []
+  },
+  "G09": {
+   "question": "How do I add a learning module in Blackboard Ultra?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    8
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 1,
+     "quote": "Blackboard Ultra Guide: Gradebook In Blackboard Ultra grading, you can see what you need to grade in all your courses, o"
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "quote": "BLACKBOARD ULTRA FACULTY SHORT GUIDE  How to access Blackboard: - Open the University website http://www.sharjah.ac.ae "
+    }
+   ],
+   "guide_evidence_assessment": "OFF_TARGET",
+   "guide_evidence_note": "gradebook introduction and the access procedure; the learning-module steps (page 8) not chosen"
+  },
+  "G10": {
+   "question": "How do I send an announcement to my students in Blackboard?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    9
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "quote": "BLACKBOARD ULTRA FACULTY SHORT GUIDE  How to access Blackboard: - Open the University website http://www.sharjah.ac.ae "
+    }
+   ],
+   "guide_evidence_assessment": "OFF_TARGET",
+   "guide_evidence_note": "the short guide's title paragraph; the announcement steps (page 9) not chosen"
+  },
+  "G11": {
+   "question": "How do I create an assignment in Blackboard Ultra?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    10
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 1,
+     "quote": "Blackboard Ultra Guide: Gradebook In Blackboard Ultra grading, you can see what you need to grade in all your courses, o"
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "quote": "BLACKBOARD ULTRA FACULTY SHORT GUIDE  How to access Blackboard: - Open the University website http://www.sharjah.ac.ae "
+    }
+   ],
+   "guide_evidence_assessment": "OFF_TARGET",
+   "guide_evidence_note": "gradebook introduction and the access procedure; the assignment steps (page 10) not chosen"
+  },
+  "G12": {
+   "question": "Can I add a time limit to a group assignment in Blackboard Ultra?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    11
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": []
+  },
+  "G13": {
+   "question": "How can I review my Blackboard course from a student's perspective?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    5
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 1,
+     "quote": "Blackboard Ultra Guide: Gradebook In Blackboard Ultra grading, you can see what you need to grade in all your courses, o"
+    }
+   ],
+   "guide_evidence_assessment": "OFF_TARGET",
+   "guide_evidence_note": "gradebook introduction; the student preview sentence (page 5) not chosen"
+  },
+  "G14": {
+   "question": "Where do I find the course gradebook in Blackboard Ultra?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "institutional"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": []
+  },
+  "G15": {
+   "question": "What are the two views of the Blackboard Ultra gradebook?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 1,
+     "quote": "Blackboard Ultra Guide: Gradebook In Blackboard Ultra grading, you can see what you need to grade in all your courses, o"
+    }
+   ],
+   "guide_evidence_assessment": "PARTIAL",
+   "guide_evidence_note": "gradebook page-1 paragraph; the two views are on that page but the quote opens with the introduction"
+  },
+  "G16": {
+   "question": "How do I post grades to students from the Blackboard gradebook?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    6
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 1,
+     "quote": "Blackboard Ultra Guide: Gradebook In Blackboard Ultra grading, you can see what you need to grade in all your courses, o"
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 1,
+     "quote": "Grade Transfer Dashboard Guide This guide provides simple steps for transferring grades from Blackboard to Banner. Follo"
+    }
+   ],
+   "guide_evidence_assessment": "OFF_TARGET",
+   "guide_evidence_note": "gradebook introduction and the grade transfer introduction; the Post step (page 6) not chosen"
+  },
+  "G17": {
+   "question": "How do I make Blackboard assign zeros to missing work automatically?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    8
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": []
+  },
+  "G18": {
+   "question": "How do I download the gradebook from Blackboard?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    10
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 1,
+     "quote": "1. Log in to Blackboard and use your credentials to log in to Blackboard securely."
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 1,
+     "quote": "Blackboard Ultra Guide: Gradebook In Blackboard Ultra grading, you can see what you need to grade in all your courses, o"
+    }
+   ],
+   "guide_evidence_assessment": "OFF_TARGET",
+   "guide_evidence_note": "the grade transfer login step; the download workflow (page 10) not chosen"
+  },
+  "G19": {
+   "question": "How do I set accommodations for a student in the Blackboard gradebook?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    4,
+    5
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 1,
+     "quote": "Blackboard Ultra Guide: Gradebook In Blackboard Ultra grading, you can see what you need to grade in all your courses, o"
+    }
+   ],
+   "guide_evidence_assessment": "OFF_TARGET",
+   "guide_evidence_note": "gradebook introduction; the accommodations steps (pages 4-5) not chosen"
+  },
+  "G20": {
+   "question": "How do I add an attendance row to the Blackboard gradebook?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    3
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 3,
+     "quote": "c. Add Attendance: Add a row for attendance. After you add attendance, the add option will not appear in the menu again."
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 1,
+     "quote": "Blackboard Ultra Guide: Gradebook In Blackboard Ultra grading, you can see what you need to grade in all your courses, o"
+    }
+   ],
+   "guide_evidence_assessment": "ON_TARGET",
+   "guide_evidence_note": "page 3 Add Attendance item"
+  },
+  "G21": {
+   "question": "How long can the title of a gradebook item be in Blackboard Ultra?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    3,
+    9
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 1,
+     "quote": "Blackboard Ultra Guide: Gradebook In Blackboard Ultra grading, you can see what you need to grade in all your courses, o"
+    }
+   ],
+   "guide_evidence_assessment": "OFF_TARGET",
+   "guide_evidence_note": "gradebook introduction; the 255-character limit (pages 3 and 9) not chosen"
+  },
+  "G22": {
+   "question": "How do I filter the Blackboard gradebook by merged child courses?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    8
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 1,
+     "quote": "Blackboard Ultra Guide: Gradebook In Blackboard Ultra grading, you can see what you need to grade in all your courses, o"
+    }
+   ],
+   "guide_evidence_assessment": "OFF_TARGET",
+   "guide_evidence_note": "gradebook introduction; the child-course filter (page 8) not chosen"
+  },
+  "G23": {
+   "question": "What can I change from the Gradebook Settings panel in Blackboard Ultra?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    7
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 1,
+     "quote": "Blackboard Ultra Guide: Gradebook In Blackboard Ultra grading, you can see what you need to grade in all your courses, o"
+    }
+   ],
+   "guide_evidence_assessment": "OFF_TARGET",
+   "guide_evidence_note": "gradebook introduction; the settings panel list (page 7) not chosen"
+  },
+  "G24": {
+   "question": "How do I transfer grades from Blackboard to Banner?",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "expected_pages": [
+    2
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_grade_transfer_dashboard_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 1,
+     "quote": "Grade Transfer Dashboard Guide This guide provides simple steps for transferring grades from Blackboard to Banner. Follo"
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 2,
+     "quote": "2 How to Send Grades to Banner as instructor?"
+    }
+   ],
+   "guide_evidence_assessment": "PARTIAL",
+   "guide_evidence_note": "the guide introduction and the page-2 heading 'How to Send Grades to Banner as instructor?' without its steps"
+  },
+  "G25": {
+   "question": "Where is the Grade Transfer Dashboard link?",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_grade_transfer_dashboard_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": []
+  },
+  "G26": {
+   "question": "Who approves the grade transfer to Banner?",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "expected_pages": [
+    2,
+    3
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_grade_transfer_dashboard_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 3,
+     "quote": "3 How to approve Grades to Banner as Chair/Dean?"
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 1,
+     "quote": "Grade Transfer Dashboard Guide This guide provides simple steps for transferring grades from Blackboard to Banner. Follo"
+    }
+   ],
+   "guide_evidence_assessment": "PARTIAL",
+   "guide_evidence_note": "the page-3 heading 'How to approve Grades to Banner as Chair/Dean?' (names Chair and Dean, no statement)"
+  },
+  "G27": {
+   "question": "How can I find my course in the Grade Transfer Dashboard?",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "expected_pages": [
+    2
+   ],
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "routing_final": [
+    "teaching",
+    "institutional"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_grade_transfer_dashboard_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": []
+  },
+  "G28": {
+   "question": "How does a Dean approve grades in the Grade Transfer portal?",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "expected_pages": [
+    3
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_grade_transfer_dashboard_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 3,
+     "quote": "3 How to approve Grades to Banner as Chair/Dean?"
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 1,
+     "quote": "Grade Transfer Dashboard Guide This guide provides simple steps for transferring grades from Blackboard to Banner. Follo"
+    }
+   ],
+   "guide_evidence_assessment": "PARTIAL",
+   "guide_evidence_note": "the page-3 heading without the approval steps"
+  },
+  "G29": {
+   "question": "How do I access iThenticate?",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_ithenticate_guidelines"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": []
+  },
+  "G30": {
+   "question": "How do I upload a document to iThenticate?",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_ithenticate_guidelines"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": []
+  },
+  "G31": {
+   "question": "How many documents can I submit to iThenticate per year?",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_ithenticate_guidelines"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_ithenticate_guidelines",
+     "page": 1,
+     "quote": "How to access IThenticate 1) Open www.ithenticate.com 2) Click on login 3) Type your university email and your password "
+    }
+   ],
+   "guide_evidence_assessment": "OFF_TARGET",
+   "guide_evidence_note": "the access procedure; the disputed quota row is conflict-stamped and would be blocked in any case"
+  },
+  "G32": {
+   "question": "What is the maximum file size for an iThenticate upload?",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_ithenticate_guidelines"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": []
+  },
+  "G33": {
+   "question": "Whom do I e-mail if I cannot access iThenticate?",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "institutional"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_ithenticate_guidelines"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": []
+  },
+  "G34": {
+   "question": "How do I upload a revised version of my paper to iThenticate without it counting as a new document?",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_ithenticate_guidelines"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": []
+  },
+  "G35": {
+   "question": "Where do I find the similarity report in iThenticate?",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "institutional"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_ithenticate_guidelines"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": []
+  },
+  "G36": {
+   "question": "When must final grades be submitted and how do I transfer them to Banner?",
+   "category": "cross_document",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "expected_pages": [
+    2
+   ],
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_grade_transfer_dashboard_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 2,
+     "quote": "2 How to Send Grades to Banner as instructor?"
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 1,
+     "quote": "Grade Transfer Dashboard Guide This guide provides simple steps for transferring grades from Blackboard to Banner."
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 2,
+     "quote": "2 How to Send Grades to Banner as instructor?"
+    }
+   ],
+   "guide_evidence_assessment": "PARTIAL",
+   "guide_evidence_note": "grade transfer headings for the procedure clause; the handbook deadline clause unsupported"
+  },
+  "G37": {
+   "question": "What does the handbook say about plagiarism in research, and how do I check a paper with iThenticate?",
+   "category": "cross_document",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "research"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_ithenticate_guidelines"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": []
+  },
+  "G38": {
+   "question": "How do I submit final grades?",
+   "category": "ambiguous",
+   "expected_source": null,
+   "expected_pages": null,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": false,
+    "named": []
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": []
+  },
+  "G39": {
+   "question": "How do I reset my Blackboard password?",
+   "category": "wrong_source",
+   "expected_source": null,
+   "expected_pages": null,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "quote": "How to access Blackboard: - Then sign in using your University of Sharjah email address and password. | - You must verif"
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "quote": "BLACKBOARD ULTRA FACULTY SHORT GUIDE  How to access Blackboard: - Open the University website http://www.sharjah.ac.ae "
+    }
+   ]
+  },
+  "G40": {
+   "question": "How do I enter grades in Banner Self Service directly?",
+   "category": "wrong_source",
+   "expected_source": null,
+   "expected_pages": null,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_grade_transfer_dashboard_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 2,
+     "quote": "2 How to Send Grades to Banner as instructor?"
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 3,
+     "quote": "3 How to approve Grades to Banner as Chair/Dean?"
+    }
+   ]
+  },
+  "G41": {
+   "question": "What is the Turnitin similarity threshold for a thesis?",
+   "category": "wrong_source",
+   "expected_source": null,
+   "expected_pages": null,
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "routing_final": [],
+   "guide_scope": {
+    "enabled": true,
+    "selected": false,
+    "named": []
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": []
+  },
+  "G42": {
+   "question": "How do I start the Phase 2 progress review in the HR Portal?",
+   "category": "wrong_source",
+   "expected_source": null,
+   "expected_pages": null,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "faculty_services"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": false,
+    "named": []
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": []
+  },
+  "G43": {
+   "question": "How many credit hours is a full teaching load?",
+   "category": "handbook_only",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "expected_pages": [
+    91
+   ],
+   "plan_f_outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": false,
+    "named": []
+   },
+   "served": true,
+   "answer": "o Ranked full time regular faculty, visiting faculty or senior lecturer workload equal to 12 credit hours per regular semester or 24 credit hours per academic year.",
+   "pages": [
+    91
+   ],
+   "served_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "verdict": "CORRECT",
+   "note": "handbook answer identical to the I-9 reviewed answer",
+   "guide_findings_returned": []
+  },
+  "G44": {
+   "question": "How many theses can a faculty member supervise at once?",
+   "category": "handbook_only",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "expected_pages": [
+    81
+   ],
+   "plan_f_outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "research"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": false,
+    "named": []
+   },
+   "served": true,
+   "answer": "• A faculty member is allowed to supervise a maximum of four theses/dissertations simultaneously, exception may be granted by the College of Graduate Studies. This limitation ensures that each student receives adequate attention and support throughout the thesis process.",
+   "pages": [
+    81
+   ],
+   "served_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "verdict": "CORRECT",
+   "note": "handbook answer identical to the I-9 reviewed answer",
+   "guide_findings_returned": []
+  },
+  "G45": {
+   "question": "What is the phone number of the Human Resources Department?",
+   "category": "handbook_only",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "expected_pages": [
+    54
+   ],
+   "plan_f_outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "institutional"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": false,
+    "named": []
+   },
+   "served": true,
+   "answer": "Human Resources +971 6 5050023 +971 6 5585200",
+   "pages": [
+    54
+   ],
+   "served_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "verdict": "CORRECT",
+   "note": "handbook answer identical to the I-9 reviewed answer",
+   "guide_findings_returned": []
+  },
+  "G46": {
+   "question": "What does Human Resources do?",
+   "category": "known_hr",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "expected_pages": null,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "faculty_services"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": false,
+    "named": []
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": []
+  },
+  "G47": {
+   "question": "How many days of annual leave do faculty members get?",
+   "category": "annual_leave",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "expected_pages": null,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "faculty_services"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": false,
+    "named": []
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": []
+  },
+  "G48": {
+   "question": "Does HR arrange travel and hotel accommodations for new faculty members?",
+   "category": "handbook_only",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "expected_pages": [
+    61
+   ],
+   "plan_f_outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "faculty_services"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": false,
+    "named": []
+   },
+   "served": true,
+   "answer": "• HR arranges travel and hotel accommodations for new faculty members.",
+   "pages": [
+    61
+   ],
+   "served_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "verdict": "CORRECT",
+   "note": "handbook answer identical to the I-9 reviewed answer",
+   "guide_findings_returned": []
+  },
+  "P01": {
+   "question": "How many documents can I submit to iThenticate per year?",
+   "category": "conflict",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_ithenticate_guidelines"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_ithenticate_guidelines",
+     "page": 1,
+     "quote": "How to access IThenticate 1) Open www.ithenticate.com 2) Click on login 3) Type your university email and your password "
+    }
+   ]
+  },
+  "P02": {
+   "question": "What is the yearly iThenticate submission quota for each instructor?",
+   "category": "conflict",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "routing_final": [
+    "research",
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_ithenticate_guidelines"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": []
+  },
+  "P03": {
+   "question": "Is the iThenticate limit 30 documents per year?",
+   "category": "conflict",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_ithenticate_guidelines"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_ithenticate_guidelines",
+     "page": 1,
+     "quote": "How to access IThenticate 1) Open www.ithenticate.com 2) Click on login 3) Type your university email and your password "
+    }
+   ]
+  },
+  "P04": {
+   "question": "Is the iThenticate limit 15 documents per year?",
+   "category": "conflict",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_ithenticate_guidelines"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_ithenticate_guidelines",
+     "page": 1,
+     "quote": "File Requirements: - Each instructor is limited to a specific amount of submission (Maximum 30 Documents per year)"
+    }
+   ]
+  },
+  "P05": {
+   "question": "How do I upload a document to iThenticate and how many documents can I submit per year?",
+   "category": "conflict",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "research"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_ithenticate_guidelines"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": []
+  },
+  "P06": {
+   "question": "Within how many hours must instructors submit final examination results after Blackboard grading?",
+   "category": "handbook_contamination",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "expected_pages": [
+    224
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": []
+  },
+  "P07": {
+   "question": "What attendance requirement applies to students, and does Blackboard record it?",
+   "category": "handbook_contamination",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "expected_pages": null,
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "quote": "How to access Blackboard: - You must verify your identity using the multifactor factor authentication service by receivi"
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "quote": "How to access Blackboard: - If you are singing from outside university campus, click on Login from the main page."
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "quote": "How to access Blackboard: - You must verify your identity using the multifactor factor authentication service by receivi"
+    }
+   ]
+  },
+  "P08": {
+   "question": "What is the research misconduct policy on plagiarism, and does iThenticate enforce it?",
+   "category": "handbook_contamination",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "expected_pages": null,
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "research"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_ithenticate_guidelines"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": []
+  },
+  "P09": {
+   "question": "Who must approve final grades according to university policy before they go to Banner?",
+   "category": "handbook_contamination",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "expected_pages": null,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_grade_transfer_dashboard_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 3,
+     "quote": "3 How to approve Grades to Banner as Chair/Dean?"
+    }
+   ]
+  },
+  "P10": {
+   "question": "What is the required teaching load for faculty who teach on Blackboard?",
+   "category": "handbook_contamination",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "expected_pages": [
+    91
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": []
+  },
+  "P11": {
+   "question": "Which button do I use in the Blackboard gradebook to release grades to students?",
+   "category": "guide_contamination",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    6
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 1,
+     "quote": "Grade Transfer Dashboard Guide This guide provides simple steps for transferring grades from Blackboard to Banner. Follo"
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 1,
+     "quote": "Blackboard Ultra Guide: Gradebook In Blackboard Ultra grading, you can see what you need to grade in all your courses, o"
+    }
+   ]
+  },
+  "P12": {
+   "question": "What do I click in the Grade Transfer Dashboard to send my grades to Banner?",
+   "category": "guide_contamination",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "expected_pages": [
+    2
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_grade_transfer_dashboard_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 2,
+     "quote": "2 How to Send Grades to Banner as instructor?"
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 1,
+     "quote": "Grade Transfer Dashboard Guide This guide provides simple steps for transferring grades from Blackboard to Banner. Follo"
+    }
+   ]
+  },
+  "P13": {
+   "question": "Which link do I use in iThenticate to submit a new document?",
+   "category": "guide_contamination",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_ithenticate_guidelines"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_ithenticate_guidelines",
+     "page": 1,
+     "quote": "How to access IThenticate 1) Open www.ithenticate.com 2) Click on login 3) Type your university email and your password "
+    }
+   ]
+  },
+  "P14": {
+   "question": "How many office hours must faculty hold, and how do I create an assignment in Blackboard?",
+   "category": "cross_document",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    10
+   ],
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 1,
+     "quote": "Blackboard Ultra Guide: Gradebook In Blackboard Ultra grading, you can see what you need to grade in all your courses, o"
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 1,
+     "quote": "Blackboard Ultra Guide: Gradebook In Blackboard Ultra grading, you can see what you need to grade in all your courses, o"
+    }
+   ]
+  },
+  "P15": {
+   "question": "Within how many hours must instructors submit final examination results, and who approves the grade transfer to Banner?",
+   "category": "cross_document",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "expected_pages": [
+    3
+   ],
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_grade_transfer_dashboard_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 3,
+     "quote": "3 How to approve Grades to Banner as Chair/Dean?"
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 1,
+     "quote": "Grade Transfer Dashboard Guide This guide provides simple steps for transferring grades from Blackboard to Banner. Follo"
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 3,
+     "quote": "3 How to approve Grades to Banner as Chair/Dean?"
+    }
+   ]
+  },
+  "P16": {
+   "question": "How many theses can a faculty member supervise at once, and how do I access iThenticate?",
+   "category": "cross_document",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "research"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_ithenticate_guidelines"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "NOT SERVED",
+   "note": "safe fallback; no Plan F guide answer",
+   "guide_findings_returned": []
+  },
+  "P17": {
+   "question": "How do I change a student's final grade in Banner after the transfer?",
+   "category": "wrong_source",
+   "expected_source": null,
+   "expected_pages": null,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_grade_transfer_dashboard_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 1,
+     "quote": "Grade Transfer Dashboard Guide This guide provides simple steps for transferring grades from Blackboard to Banner. Follo"
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 2,
+     "quote": "2 How to Send Grades to Banner as instructor?"
+    }
+   ]
+  },
+  "P18": {
+   "question": "How do I log in to Banner Self Service?",
+   "category": "wrong_source",
+   "expected_source": null,
+   "expected_pages": null,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_grade_transfer_dashboard_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": []
+  },
+  "P19": {
+   "question": "How do I submit my research grant application in the research portal?",
+   "category": "wrong_source",
+   "expected_source": null,
+   "expected_pages": null,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": false,
+    "named": []
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": []
+  },
+  "P20": {
+   "question": "How do I check my students' originality reports with SafeAssign in Blackboard?",
+   "category": "wrong_source",
+   "expected_source": null,
+   "expected_pages": null,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": [
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "quote": "How to access Blackboard: - Then sign in using your University of Sharjah email address and password. | - You must verif"
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "quote": "BLACKBOARD ULTRA FACULTY SHORT GUIDE  How to access Blackboard: - Open the University website http://www.sharjah.ac.ae "
+    }
+   ]
+  },
+  "P21": {
+   "question": "Can I see a review of my teaching evaluation in Blackboard?",
+   "category": "wrong_source",
+   "expected_source": null,
+   "expected_pages": null,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": []
+  },
+  "P22": {
+   "question": "Who supports me if Blackboard is down?",
+   "category": "wrong_source",
+   "expected_source": null,
+   "expected_pages": null,
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_HANDOFF",
+   "routing_final": [
+    "teaching"
+   ],
+   "guide_scope": {
+    "enabled": true,
+    "selected": true,
+    "named": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ]
+   },
+   "served": false,
+   "answer": null,
+   "pages": null,
+   "served_sources": null,
+   "verdict": "SAFE FALLBACK",
+   "note": "control question: not served, as required",
+   "guide_findings_returned": []
+  }
+ }
+}

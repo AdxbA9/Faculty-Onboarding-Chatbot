@@ -225,6 +225,9 @@ def _verified(attempt: Any) -> bool:
     return _accepted_record(getattr(attempt, "verification", None))
 
 
+_HANDBOOK_SOURCE_ID = "uos_faculty_handbook_2025_26"
+
+
 def _source_ids_of(result: Any) -> List[str]:
     """Distinct source ids behind a result's evidence items, in citation order (post-freeze PF-2; ids only)."""
     out: List[str] = []
@@ -243,6 +246,8 @@ def _diagnose(mode: str, served: str, attempt: Any, entry: Any, error: Optional[
         "specialist_id": None, "status": None, "accepted": False, "fallback_reason": None,
         "plan_f_pages": [], "legacy_pages": list(legacy.pages) if legacy is not None else None,
         "plan_f_sources": [], "legacy_sources": _source_ids_of(legacy) if legacy is not None else None,
+        "guide_scope_enabled": None, "guide_scope_selected": None, "guide_sources_named": [], "plan_f_guide_served": False,
+        "guide_answer_forms": [], "guide_answer_parts": 0,
         "answer_equal": None, "pages_equal": None, "page_overlap": 0,
         "plan_f_ms": None, "plan_f_timings": {},
         "registry_ok": None, "registry_reused": None, "registry_build_ms": None, "registry_errors": {},
@@ -276,6 +281,16 @@ def _diagnose(mode: str, served: str, attempt: Any, entry: Any, error: Optional[
             d["status"] = getattr(attempt, "status", None)
             d["accepted"] = outcome == _ACCEPTED and getattr(attempt, "result", None) is not None
             d["plan_f_sources"] = _source_ids_of(getattr(attempt, "result", None)) if d["accepted"] else []
+            guide = getattr(attempt, "guide_scope", None) or {}        # post-freeze PF-3B: source ids and flags only
+            d["guide_scope_enabled"] = bool(guide.get("enabled"))
+            d["guide_scope_selected"] = bool(guide.get("selected"))
+            d["guide_sources_named"] = [str(s) for s in (guide.get("named") or [])]
+            d["plan_f_guide_served"] = bool(d["accepted"]) and any(s != _HANDBOOK_SOURCE_ID for s in d["plan_f_sources"])
+            if d["accepted"]:                                       # post-freeze PF-3C (D-111): the form of each guide answer, no text
+                records = [((i.get("meta") or {}).get("plan_f") or {}).get("guide") for i in (attempt.result.items or [])]
+                records = [r for r in records if isinstance(r, dict)]
+                d["guide_answer_forms"] = sorted({str(r.get("form")) for r in records})
+                d["guide_answer_parts"] = len(records)
             timings = dict(getattr(attempt, "timings", {}) or {})
             d["plan_f_ms"] = float(timings.get("total_ms", 0.0))
             d["plan_f_timings"] = {k: float(v) for k, v in timings.items()}

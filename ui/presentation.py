@@ -336,6 +336,18 @@ def _yes_no(value: Any) -> str:
     return "yes" if value else "no"
 
 
+def _source_scope_label(d: Mapping[str, Any]) -> str:
+    """Which sources the specialists could accept for this question (post-freeze PF-3B): handbook only, or the approved
+    guides the question names (ids, Developer mode only)."""
+    if d.get("guide_scope_enabled") is None:
+        return NA
+    if not d.get("guide_scope_enabled"):
+        return "handbook only (guide scopes off)"
+    if not d.get("guide_scope_selected"):
+        return "handbook only (no guide system named)"
+    return "handbook + guides: " + ", ".join(str(s) for s in (d.get("guide_sources_named") or []))
+
+
 def dev_sections(result: Any, diagnostics: Optional[Mapping[str, Any]], kb_stats: Optional[Mapping[str, Any]] = None,
                  wall_ms: Optional[float] = None) -> List[Tuple[str, List[Tuple[str, str]]]]:
     """The Developer panel: (section title, rows). Sections that do not apply to the turn are left out; a value the
@@ -362,6 +374,12 @@ def dev_sections(result: Any, diagnostics: Optional[Mapping[str, Any]], kb_stats
                    ("Final specialist(s)", ", ".join(_names(d.get("routing_final"))) or NA),
                    ("Routing reason", str(d.get("routing_reason") or NA)),
                    ("Specialist calls", str(d["specialist_calls"]) if _present(d, "specialist_calls") else NA)]
+        if d.get("guide_scope_enabled") is not None:              # post-freeze PF-3B: only when the runtime recorded it
+            routing.append(("Source scope", _source_scope_label(d)))
+        if d.get("guide_answer_forms"):                            # post-freeze PF-3C (D-111): how the guide answer was assembled
+            routing.append(("Guide answer", "%s (%d part%s)" % (", ".join(str(f).replace("_", " ") for f in d["guide_answer_forms"]),
+                                                                int(d.get("guide_answer_parts") or 0),
+                                                                "" if int(d.get("guide_answer_parts") or 0) == 1 else "s")))
         sections.append(("Routing", routing))
         verification = [("Findings verifier", ("accepted" if d.get("findings_accepted") else "rejected") if d.get("findings_verified") else NA),
                         ("Reason", str(d.get("findings_reason") or NA)),
