@@ -202,6 +202,16 @@ def test_a_last_step_that_points_at_a_figure_is_not_a_missing_step():
     assert GG.dangling_lead_in("Select Download.") is None
 
 
+def test_a_list_whose_last_item_continues_on_the_next_page_is_refused():
+    index = _index({1: ["Discussion options:", G, "Show the discussion. Select Display on the page.", G,
+                        "Align goals. You can use goals to measure"],
+                    2: ["student achievement across programs and courses.", "Next topic:", "Select something."]})
+    lst = next(s for s in index.structures_of(SHORT_GUIDE) if s.kind == "list" and s.heading == "Discussion options")
+    assert lst.problems and "continues on page 2" in lst.problems[0]
+    binding = _bind("Which discussion options are there in Blackboard?")
+    assert "continues on page 2" in GG.structure_problem(lst, binding, index)
+
+
 def test_a_heading_that_belongs_to_another_procedure_is_refused():
     index = _index({1: ["How to publish a course:", "1. Open the course and check it.", "2. Select Open.", "How to archive a course:",
                         "1. Open the course menu.", "2. Select Archive."], 2: ["Next topic:", "Select something."]})

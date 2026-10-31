@@ -1,0 +1,854 @@
+{
+ "method": "Per held-out question: what the ACTIVE runtime did (guide scopes on), with the label's answerability.",
+ "questions": [
+  {
+   "id": "H01",
+   "question": "How do I create a new assignment in my Blackboard Ultra course and attach a rubric to it?",
+   "category": "held_out_workflow",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1,
+    10
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H02",
+   "question": "How do I take attendance for today's lecture using the attendance tool in Blackboard?",
+   "category": "held_out_workflow",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H03",
+   "question": "How do I send my final course grades to Banner through the grade transfer dashboard?",
+   "category": "held_out_workflow",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1,
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H04",
+   "question": "How do I check my manuscript draft for similarity in iThenticate before sending it to a journal?",
+   "category": "held_out_workflow",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H05",
+   "question": "How do I schedule a virtual class session in Blackboard Collaborate for my students?",
+   "category": "held_out_workflow",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1,
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H06",
+   "question": "How do I post an announcement to all the students in my Blackboard course?",
+   "category": "held_out_workflow",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    4,
+    9
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H07",
+   "question": "How do I create a timed quiz with multiple choice questions in Blackboard Ultra?",
+   "category": "held_out_workflow",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H08",
+   "question": "What is the process for a faculty member to apply for annual leave?",
+   "category": "held_out_workflow",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    62,
+    109
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H09",
+   "question": "Where can I see all of my students' grades together in one place in Blackboard Ultra?",
+   "category": "held_out_navigation",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H10",
+   "question": "Where do I find the recordings of my Collaborate sessions after the class is over?",
+   "category": "held_out_navigation",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H11",
+   "question": "Where is the option to make my course visible to students in Blackboard Ultra?",
+   "category": "held_out_navigation",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H12",
+   "question": "Where in iThenticate do I see the similarity report once my document has finished processing?",
+   "category": "held_out_navigation",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_HANDOFF",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H13",
+   "question": "Where can I find a list of the main university offices and contacts that new faculty might need?",
+   "category": "held_out_navigation",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H14",
+   "question": "How do I set up weighted grade categories so that exams count for 60 percent of the final grade?",
+   "category": "held_out_configuration",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    227
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H15",
+   "question": "How can I change the due date of an assignment that is already visible to students?",
+   "category": "held_out_configuration",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    8,
+    10
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H16",
+   "question": "How do I exclude the bibliography and quoted text from the similarity score in iThenticate?",
+   "category": "held_out_configuration",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H17",
+   "question": "How do I turn on the setting that lets students see their overall grade in the gradebook?",
+   "category": "held_out_configuration",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    2,
+    4
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H18",
+   "question": "Who should I contact if Blackboard stops working for my course?",
+   "category": "held_out_support_contact",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H19",
+   "question": "Who do I reach out to if I can't get into my iThenticate account?",
+   "category": "held_out_support_contact",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H20",
+   "question": "Who has to approve my final grades after I send them from the grade transfer dashboard?",
+   "category": "held_out_approval_authority",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1,
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H21",
+   "question": "Who approves a faculty member's request for sabbatical leave?",
+   "category": "held_out_approval_authority",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    170,
+    173,
+    260
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H22",
+   "question": "Who decides whether I'm allowed to teach an overload course in a semester?",
+   "category": "held_out_approval_authority",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    91
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H23",
+   "question": "How do I add students?",
+   "category": "held_out_ambiguous",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "guide_served": false,
+   "pages": [
+    3,
+    6
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H24",
+   "question": "Can I change a grade?",
+   "category": "held_out_ambiguous",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    7
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H25",
+   "question": "How does the report work?",
+   "category": "held_out_ambiguous",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "guide_served": false,
+   "pages": [
+    101,
+    170
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H26",
+   "question": "how do i make a new colum in the gradbook on BB ultra",
+   "category": "held_out_abbreviation_misspelling",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H27",
+   "question": "how to upload my paper to ithentcate for plagarism check",
+   "category": "held_out_abbreviation_misspelling",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": "yes",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H28",
+   "question": "whats the max teching load for asst prof per sem",
+   "category": "held_out_abbreviation_misspelling",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "yes",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H29",
+   "question": "how do i start a colab ultra sesion from my blackbord course",
+   "category": "held_out_abbreviation_misspelling",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H30",
+   "question": "hey quick q, I just joined UOS this fall, how many office hours am I supposed to hold each week?",
+   "category": "held_out_conversational",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "yes",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    79
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H31",
+   "question": "hi! my students keep telling me they can't see the test I made, any idea what I did wrong?",
+   "category": "held_out_conversational",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "guide_served": false,
+   "pages": [
+    2,
+    5,
+    10
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H32",
+   "question": "ok so grades are due soon and I honestly have no clue how the grade transfer thing works, can you walk me through it?",
+   "category": "held_out_conversational",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H33",
+   "question": "What happens after I submit grades on the grade transfer dashboard, can I still edit them?",
+   "category": "held_out_what_happens_after",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H34",
+   "question": "If I mark a student absent in the Blackboard attendance tool, does it change their grade automatically?",
+   "category": "held_out_what_happens_after",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H35",
+   "question": "What happens to submissions students already made if I edit the assignment afterwards?",
+   "category": "held_out_what_happens_after",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    10,
+    11
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H36",
+   "question": "Since iThenticate is the tool for checking student homework, can I link it to my Blackboard assignments?",
+   "category": "held_out_yes_no_false_premise",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": "partial",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H37",
+   "question": "Is it true that the department Chair enters the final grades into Banner for each faculty member?",
+   "category": "held_out_yes_no_false_premise",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "guide_served": false,
+   "pages": [
+    224
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H38",
+   "question": "Do I have to email each student individually since Blackboard has no way to message the whole class?",
+   "category": "held_out_yes_no_false_premise",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H39",
+   "question": "What does the university require for faculty office hours, and how can I share my office hours with students through Blackboard?",
+   "category": "held_out_cross_source",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    79,
+    80
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H40",
+   "question": "What are the research and publication expectations for faculty, and how do I run my manuscript through iThenticate before submitting it?",
+   "category": "held_out_cross_source",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "yes",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H41",
+   "question": "What is the university policy on student absences, and how do I record attendance in Blackboard Ultra?",
+   "category": "held_out_cross_source",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "yes",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H42",
+   "question": "What is the deadline for submitting final grades in the grade transfer dashboard each semester?",
+   "category": "held_out_policy_vs_system_trap",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1,
+    212
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H43",
+   "question": "What is the highest similarity percentage iThenticate allows before the university says a paper can't be submitted?",
+   "category": "held_out_policy_vs_system_trap",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H44",
+   "question": "According to the Blackboard attendance tool, how many absences can a student have before they fail the course?",
+   "category": "held_out_policy_vs_system_trap",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H45",
+   "question": "How do I submit my annual faculty appraisal report?",
+   "category": "held_out_wrong_source_collision",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "guide_served": false,
+   "pages": [
+    142
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H46",
+   "question": "Where do I upload the documents for my promotion application?",
+   "category": "held_out_wrong_source_collision",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    148,
+    151
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H47",
+   "question": "Who gives approval for me to attend an international conference?",
+   "category": "held_out_wrong_source_collision",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    117,
+    169
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H48",
+   "question": "How do I get a parking permit for the faculty parking area on campus?",
+   "category": "held_out_unsupported",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "guide_served": false,
+   "pages": [
+    252
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H49",
+   "question": "How do I create a Microsoft Teams meeting with my department colleagues?",
+   "category": "held_out_unsupported",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "H50",
+   "question": "How do I access the library's journal databases from off campus?",
+   "category": "held_out_unsupported",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  }
+ ]
+}

@@ -1,0 +1,4 @@
+{
+ "method": "PF-4 manual review: every Plan F-served answer of the P1 and held-out sets (guide or handbook) and every P0 answer.\n\nA hand verdict (CORRECT / ACCEPTABLE BUT LIMITED / WRONG) is bound to the SHA-256 (first 16 hex digits) of the exact answer\ntext that was read against the official page, so a verdict never carries over to a changed answer: a served answer whose\nhash differs, or that has no verdict, gets none and fails ``analyze.py``. P0 answers keep the PF-3D verdict only when the\nrendered answer is byte-identical to the PF-3D one.\n\nWrites ``p1_results.json``, ``held_out_review.json``, ``held_out_results.json``, ``p0_regression.json`` and the review\ntable that ``analyze.py`` reads.\n\n    python -X utf8 qa/post_freeze_pf4/make_review.py <results.json> <out dir> <review table out>",
+ "served": {}
+}

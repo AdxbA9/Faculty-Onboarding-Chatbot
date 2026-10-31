@@ -1,0 +1,376 @@
+{
+ "frozen_run": {
+  "file": "qa/plan_f_i8/results_2026-10-30.json",
+  "kb": {
+   "pages": 272,
+   "chunks": 13688,
+   "build_s": 22.93997560000571,
+   "groq_client_configured": false
+  },
+  "total_script_s": 935.2835294000106
+ },
+ "rerun": {
+  "kb": {
+   "pages": 272,
+   "chunks": 15000,
+   "build_s": 23.594639899994945,
+   "groq_client_configured": false
+  },
+  "total_script_s": 916.1663203000207,
+  "cold": {
+   "active": {
+    "first_request_wall_ms": 1741.6310000116937,
+    "registry_build_ms": 683.0316999985371,
+    "registry_reused": false,
+    "plan_f_ms": 661.7277000041213
+   },
+   "shadow": {
+    "first_request_wall_ms": 1510.3384999965783,
+    "registry_build_ms": 96.55959997326136,
+    "registry_reused": false
+   }
+  }
+ },
+ "frozen_metrics_i9": {
+  "questions": 192,
+  "served": 55,
+  "fallback": 137,
+  "coverage_pct": 28.6,
+  "correct": 55,
+  "limited": 0,
+  "wrong": 0,
+  "precision_pct": 100.0,
+  "false_acceptances": 0,
+  "false_fallbacks": 11,
+  "shadow_mismatches": 0,
+  "plan_f_llm_calls": 0,
+  "tests": 6674
+ },
+ "rerun_metrics": {
+  "questions": 192,
+  "served": 55,
+  "fallback": 137,
+  "coverage_pct": 28.6,
+  "correct": 0,
+  "limited": 0,
+  "wrong": 0,
+  "unreviewed": 55,
+  "precision_pct": 0.0,
+  "false_acceptances": [],
+  "false_fallbacks": [
+   "T10",
+   "T11",
+   "T12",
+   "T14",
+   "T19",
+   "R35",
+   "H13",
+   "H30",
+   "I45",
+   "X19",
+   "X29"
+  ],
+  "exceptions": 0,
+  "adversarial_questions": 98,
+  "adversarial_category_questions": 40,
+  "domains": {
+   "teaching": {
+    "questions": 24,
+    "served": 8,
+    "UNREVIEWED": 8,
+    "fallback": 16
+   },
+   "adversarial/unsupported": {
+    "questions": 67,
+    "fallback": 66,
+    "served": 1,
+    "UNREVIEWED": 1
+   },
+   "research": {
+    "questions": 29,
+    "served": 13,
+    "UNREVIEWED": 13,
+    "fallback": 16
+   },
+   "hr": {
+    "questions": 25,
+    "served": 9,
+    "UNREVIEWED": 9,
+    "fallback": 16
+   },
+   "institutional": {
+    "questions": 25,
+    "served": 13,
+    "UNREVIEWED": 13,
+    "fallback": 12
+   },
+   "cross-domain": {
+    "questions": 22,
+    "served": 11,
+    "UNREVIEWED": 11,
+    "fallback": 11
+   }
+  },
+  "routing": {
+   "CORRECT": 160,
+   "WRONG": 5,
+   "AMBIGUOUS-SAFE-FALLBACK": 20,
+   "ACCEPTABLE": 7
+  },
+  "routing_codes": {
+   "ROUTE_UNCHANGED": 142,
+   "ROUTE_AMBIGUOUS": 12,
+   "ROUTE_REFINED_BY_REQUEST_KIND": 22,
+   "ROUTE_CLAUSES_SCOPED": 15,
+   "None": 1
+  },
+  "routing_wrong_served": [],
+  "aggregates_served": 11,
+  "aggregates_attempted": 27,
+  "handoffs_attempted": 6,
+  "handoffs_executed": 3,
+  "handoffs_accepted": 0,
+  "handoff_max_depth": 1,
+  "fallback_reasons": {
+   "expected safety fallback (rejected_by_findings_verifier)": 12,
+   "expected safety fallback (rejected_by_subject_guard)": 2,
+   "unsupported capability (nothing found)": 25,
+   "partial support": 52,
+   "general question / no domain cue (legacy-only behaviour)": 12,
+   "routing ambiguity": 12,
+   "general question": 6,
+   "handoff unresolved": 6,
+   "enumeration incomplete": 2,
+   "unexpected Plan F rejection (PLAN_F_REJECTED_BY_VERIFIER)": 2,
+   "expected safety fallback (rejected_by_aggregator)": 5,
+   "greeting (legacy-only behaviour)": 1
+  },
+  "shadow_records": 192,
+  "shadow_mismatches": 0,
+  "shadow_leaks": 0,
+  "determinism_questions": 24,
+  "determinism_unstable": 0,
+  "latency": {
+   "served single Plan F (ACTIVE wall)": {
+    "n": 43,
+    "median": 649.7111000062432,
+    "p90": 736.154100013664,
+    "max": 807.1837000024971,
+    "min": 1.178200007416308
+   },
+   "served aggregate (ACTIVE wall)": {
+    "n": 11,
+    "median": 1282.1936999971513,
+    "p90": 1425.17180001596,
+    "max": 1468.5001999896485,
+    "min": 2.958299999590963
+   },
+   "routing rejection attempt (plan_f_ms)": {
+    "n": 12,
+    "median": 1.1432999890530482,
+    "p90": 1.7794000159483403,
+    "max": 1.8447999900672585,
+    "min": 0.6487999926321208
+   },
+   "Plan F attempt before a legacy fallback (plan_f_ms)": {
+    "n": 137,
+    "median": 626.0712999792304,
+    "p90": 757.2070000169333,
+    "max": 2105.241199984448,
+    "min": 0.05699999746866524
+   },
+   "legacy fallback (ACTIVE wall, attempt + legacy)": {
+    "n": 137,
+    "median": 1459.3145999824628,
+    "p90": 2545.8159999980126,
+    "max": 3523.372900002869,
+    "min": 0.1677999971434474
+   },
+   "total ACTIVE response (all warm questions)": {
+    "n": 191,
+    "median": 1291.9423000130337,
+    "p90": 2484.214600000996,
+    "max": 3523.372900002869,
+    "min": 0.1677999971434474
+   },
+   "direct legacy call (SHADOW pass)": {
+    "n": 192,
+    "median": 816.0914000036428,
+    "p90": 1713.9418999722693,
+    "max": 1929.9721000134014,
+    "min": 0.01379998866468668
+   },
+   "SHADOW response (legacy + Plan F attempt)": {
+    "n": 191,
+    "median": 1462.4201000260655,
+    "p90": 2390.7801000168547,
+    "max": 3202.1108999906573,
+    "min": 0.21740002557635307
+   },
+   "LEGACY sample (in-process)": {
+    "n": 30,
+    "median": 756.7211500136182,
+    "p90": 1701.021299988497,
+    "max": 1781.1449999862816,
+    "min": 0.02579999272711575
+   }
+  },
+  "cold": {
+   "active": {
+    "first_request_wall_ms": 1741.6310000116937,
+    "registry_build_ms": 683.0316999985371,
+    "registry_reused": false,
+    "plan_f_ms": 661.7277000041213
+   },
+   "shadow": {
+    "first_request_wall_ms": 1510.3384999965783,
+    "registry_build_ms": 96.55959997326136,
+    "registry_reused": false
+   }
+  },
+  "kb_build_s": 23.594639899994945,
+  "specialist_calls": {
+   "1": 154,
+   "0": 25,
+   "2": 12,
+   "3+": 1
+  },
+  "plan_f_llm_calls": 0,
+  "legacy_llm_calls": 0,
+  "diag_records": 486,
+  "diag_with_question": 0,
+  "diag_with_answer": 0,
+  "citation_items": 67,
+  "citation_defects": 0,
+  "citation_review": {
+   "UNREVIEWED": 55
+  },
+  "paraphrase_groups": 10,
+  "paraphrase_groups_single_page_set": 10
+ },
+ "modes": {
+  "active": {
+   "questions_common": 192,
+   "served_frozen": 55,
+   "served_rerun": 55,
+   "served_ids_equal": true,
+   "questions_changed": 1,
+   "changes": [
+    {
+     "id": "T07",
+     "question": "Is attendance mandatory for students?",
+     "fields": [
+      "pages"
+     ],
+     "frozen": {
+      "pages": [
+       193,
+       228
+      ]
+     },
+     "rerun": {
+      "pages": [
+       2,
+       193,
+       228
+      ]
+     }
+    }
+   ],
+   "latency_frozen": {
+    "n": 192,
+    "p50_ms": 1251.6,
+    "p95_ms": 2590.4,
+    "max_ms": 3489.5,
+    "mean_ms": 1226.0
+   },
+   "latency_rerun": {
+    "n": 192,
+    "p50_ms": 1303.4,
+    "p95_ms": 2593.6,
+    "max_ms": 3523.4,
+    "mean_ms": 1226.2
+   },
+   "plan_f_ms_frozen": {
+    "n": 192,
+    "p50_ms": 653.4,
+    "p95_ms": 1392.5,
+    "max_ms": 2084.9,
+    "mean_ms": 498.1
+   },
+   "plan_f_ms_rerun": {
+    "n": 192,
+    "p50_ms": 643.3,
+    "p95_ms": 1372.5,
+    "max_ms": 2105.2,
+    "mean_ms": 488.0
+   }
+  },
+  "shadow": {
+   "questions_common": 192,
+   "served_frozen": 0,
+   "served_rerun": 0,
+   "served_ids_equal": true,
+   "questions_changed": 1,
+   "changes": [
+    {
+     "id": "T07",
+     "question": "Is attendance mandatory for students?",
+     "fields": [
+      "pages"
+     ],
+     "frozen": {
+      "pages": [
+       193,
+       228
+      ]
+     },
+     "rerun": {
+      "pages": [
+       2,
+       193,
+       228
+      ]
+     }
+    }
+   ],
+   "latency_frozen": {
+    "n": 192,
+    "p50_ms": 1497.8,
+    "p95_ms": 2620.5,
+    "max_ms": 3607.5,
+    "mean_ms": 1501.4
+   },
+   "latency_rerun": {
+    "n": 192,
+    "p50_ms": 1462.9,
+    "p95_ms": 2491.0,
+    "max_ms": 3202.1,
+    "mean_ms": 1430.1
+   },
+   "plan_f_ms_frozen": {
+    "n": 192,
+    "p50_ms": 639.5,
+    "p95_ms": 1433.7,
+    "max_ms": 2227.0,
+    "mean_ms": 495.7
+   },
+   "plan_f_ms_rerun": {
+    "n": 192,
+    "p50_ms": 627.6,
+    "p95_ms": 1272.3,
+    "max_ms": 1917.3,
+    "mean_ms": 467.5
+   },
+   "identical_to_direct_legacy_frozen": 192,
+   "identical_to_direct_legacy_rerun": 192
+  }
+ },
+ "determinism_repeat_differences": [],
+ "legacy_sample": {
+  "questions": 30,
+  "minimal_diagnostics": 30,
+  "cache_untouched": true
+ },
+ "verdict": "CHANGED"
+}

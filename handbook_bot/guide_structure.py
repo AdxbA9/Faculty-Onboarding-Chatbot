@@ -107,6 +107,13 @@ class Block:
         return any(_INSTRUCTION.match(s) for s in self.sentences())
 
 
+def is_instruction(text: str) -> bool:
+    """Post-freeze PF-4 (D-113): one sentence of ``text`` opens with an instruction (the test ``Block.instruction`` applies),
+    for step quotes read by the D-111 procedure index (a printed bullet or label in front of the step is skipped)."""
+    _marker, _label, body = _strip_marker((text or "").strip())
+    return any(_INSTRUCTION.match(s.strip()) for s in _SENTENCE_END.split(body) if s.strip())
+
+
 def _strip_marker(text: str) -> Tuple[str, str, str]:
     """(marker, label, text) of a row that opens an item; ("", "", text) otherwise."""
     m = _GLYPH_START.match(text)
@@ -398,6 +405,10 @@ def recover(source_id: str, pages: Sequence[Mapping[str, Any]], page_chunks: Pag
                     lead_block = Block("prose", "", "", last_sentence, before.page, 0, ())
             run_end = "next heading or section end" if k == len(body) else "a block that is not an item"
             run_problems = list(gap) if k == len(body) else []
+            if k < len(body) and body[k].kind == "prose" and body[k].page != run[-1].page and body[k].text[:1].islower():
+                # post-freeze PF-4 (D-113): the next page opens with the rest of the last item ("... can use goals to measure" /
+                # "student achievement across programs"): a list never ends on a cut item
+                run_problems.append("the last item continues on page %d, outside the list" % body[k].page)
             context = lead_in or block.title
             list_type = classify(context, run, action(block.title) or action(lead_in or ""))
             parts, problems = parts_of("lead_in" if lead_block is not None else "heading", lead_block or block, run)

@@ -160,8 +160,8 @@ def test_registry_loading_is_deterministic(registry):
     again = load_source_registry(str(REPO / "knowledge" / "sources.json"))
     assert [r.to_dict() for r in again.list_sources()] == [r.to_dict() for r in registry.list_sources()]
     assert list(again) == list(registry)
-    # post-freeze PF-2: the handbook, four approved pilot guides and one held (disabled) record
-    assert len(registry) == 6 and len(registry.enabled_sources()) == 5
+    # post-freeze PF-2: the handbook, four approved pilot guides and one held (disabled) record; PF-4 (D-113): three P1 guides
+    assert len(registry) == 9 and len(registry.enabled_sources()) == 8
     assert registry.list_sources()[0].source_id == HANDBOOK_ID
 
 

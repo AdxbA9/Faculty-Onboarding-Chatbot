@@ -1,0 +1,5502 @@
+{
+ "kb": {
+  "primary_pages": 272,
+  "chunks": 15000,
+  "build_s": 23.212064699997427,
+  "corpus_key": "c8987b6079b11f39",
+  "groq_client_configured": false
+ },
+ "questions": 191,
+ "sets": {
+  "p0": 100,
+  "p1": 41,
+  "held_out": 50
+ },
+ "p0": {
+  "core_guide": {
+   "questions": 37,
+   "plan_f_served": 19,
+   "guide_served": 19,
+   "fallback": 18,
+   "coverage_pct": 51.4,
+   "correct": 19,
+   "limited": 0,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": 100.0,
+   "served_ids": [
+    "G01",
+    "G03",
+    "G05",
+    "G08",
+    "G09",
+    "G10",
+    "G11",
+    "G12",
+    "G15",
+    "G17",
+    "G18",
+    "G19",
+    "G22",
+    "G23",
+    "G24",
+    "G25",
+    "G28",
+    "G29",
+    "G30"
+   ],
+   "stop_layers": {
+    "relation (heading names another action or object)": 1,
+    "structure recovery / completeness": 5,
+    "grounding (an asked word the evidence does not print)": 3,
+    "evidence selection (generic introduction)": 3,
+    "no approved guide for the owning specialist": 3,
+    "routing ambiguity": 1,
+    "aggregation (a clause unsupported)": 2
+   }
+  },
+  "all_guide_served": {
+   "questions": 100,
+   "plan_f_served": 33,
+   "guide_served": 33,
+   "fallback": 67,
+   "coverage_pct": 33.0,
+   "correct": 32,
+   "limited": 1,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": 100.0,
+   "served_ids": [
+    "G01",
+    "G03",
+    "G05",
+    "G08",
+    "G09",
+    "G10",
+    "G11",
+    "G12",
+    "G15",
+    "G17",
+    "G18",
+    "G19",
+    "G22",
+    "G23",
+    "G24",
+    "G25",
+    "G28",
+    "G29",
+    "G30",
+    "P11",
+    "P14",
+    "P16",
+    "C01",
+    "C04",
+    "C05",
+    "C06",
+    "C07",
+    "C09",
+    "C11",
+    "C15",
+    "C16",
+    "C17",
+    "C29"
+   ],
+   "stop_layers": {
+    "relation (heading names another action or object)": 8,
+    "structure recovery / completeness": 8,
+    "grounding (an asked word the evidence does not print)": 5,
+    "evidence selection (generic introduction)": 7,
+    "no approved guide for the owning specialist": 11,
+    "routing ambiguity": 4,
+    "aggregation (a clause unsupported)": 7,
+    "no guide system named (handbook path decided)": 7,
+    "routing (no specialist selected)": 1,
+    "served": 4,
+    "retrieval / selection (no guide candidate reached the selection)": 1,
+    "handoff": 2,
+    "conflict": 1,
+    "verification": 1
+   }
+  },
+  "per_source": {
+   "uos_blackboard_faculty_short_guide": "8 of 13",
+   "uos_blackboard_gradebook_guide": "6 of 10",
+   "uos_grade_transfer_dashboard_guide": "3 of 6",
+   "uos_ithenticate_guidelines": "2 of 8"
+  }
+ },
+ "p1": {
+  "all": {
+   "questions": 41,
+   "plan_f_served": 7,
+   "guide_served": 7,
+   "fallback": 34,
+   "coverage_pct": 17.1,
+   "correct": 5,
+   "limited": 2,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": 100.0,
+   "served_ids": [
+    "A09",
+    "B05",
+    "B10",
+    "M01",
+    "M06",
+    "M08",
+    "X03"
+   ],
+   "stop_layers": {
+    "structure recovery / completeness": 12,
+    "grounding (an asked word the evidence does not print)": 5,
+    "no approved guide for the owning specialist": 6,
+    "routing ambiguity": 4,
+    "no guide system named (handbook path decided)": 3,
+    "aggregation (a clause unsupported)": 3,
+    "grounding (subject / D-111 guard)": 1
+   }
+  },
+  "p1_guide_questions": {
+   "questions": 28,
+   "plan_f_served": 6,
+   "guide_served": 6,
+   "fallback": 22,
+   "coverage_pct": 21.4,
+   "correct": 5,
+   "limited": 1,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": 100.0,
+   "served_ids": [
+    "A09",
+    "B05",
+    "B10",
+    "M01",
+    "M06",
+    "M08"
+   ],
+   "stop_layers": {
+    "structure recovery / completeness": 11,
+    "grounding (an asked word the evidence does not print)": 5,
+    "no approved guide for the owning specialist": 6
+   }
+  },
+  "per_source": {
+   "uos_blackboard_attendance_guide": {
+    "questions": 10,
+    "plan_f_served": 1,
+    "guide_served": 1,
+    "fallback": 9,
+    "coverage_pct": 10.0,
+    "correct": 1,
+    "limited": 0,
+    "wrong": 0,
+    "not_reviewed": 0,
+    "precision_pct": 100.0,
+    "served_ids": [
+     "A09"
+    ],
+    "stop_layers": {
+     "structure recovery / completeness": 3,
+     "grounding (an asked word the evidence does not print)": 3,
+     "no approved guide for the owning specialist": 3
+    }
+   },
+   "uos_blackboard_collaborate_guide": {
+    "questions": 10,
+    "plan_f_served": 2,
+    "guide_served": 2,
+    "fallback": 8,
+    "coverage_pct": 20.0,
+    "correct": 2,
+    "limited": 0,
+    "wrong": 0,
+    "not_reviewed": 0,
+    "precision_pct": 100.0,
+    "served_ids": [
+     "B05",
+     "B10"
+    ],
+    "stop_layers": {
+     "structure recovery / completeness": 6,
+     "grounding (an asked word the evidence does not print)": 1,
+     "no approved guide for the owning specialist": 1
+    }
+   },
+   "uos_blackboard_communication_guide": {
+    "questions": 8,
+    "plan_f_served": 3,
+    "guide_served": 3,
+    "fallback": 5,
+    "coverage_pct": 37.5,
+    "correct": 2,
+    "limited": 1,
+    "wrong": 0,
+    "not_reviewed": 0,
+    "precision_pct": 100.0,
+    "served_ids": [
+     "M01",
+     "M06",
+     "M08"
+    ],
+    "stop_layers": {
+     "grounding (an asked word the evidence does not print)": 1,
+     "structure recovery / completeness": 2,
+     "no approved guide for the owning specialist": 2
+    }
+   }
+  },
+  "must_not_serve_guide": {
+   "M09": false,
+   "M10": false,
+   "N02": false,
+   "N03": false,
+   "N04": false,
+   "N05": false
+  },
+  "by_category": {
+   "conflict": {
+    "questions": 2,
+    "plan_f_served": 0,
+    "guide_served": 0,
+    "fallback": 2,
+    "coverage_pct": 0.0,
+    "correct": 0,
+    "limited": 0,
+    "wrong": 0,
+    "not_reviewed": 0,
+    "precision_pct": null,
+    "served_ids": [],
+    "stop_layers": {
+     "routing ambiguity": 2
+    }
+   },
+   "cross_document": {
+    "questions": 3,
+    "plan_f_served": 1,
+    "guide_served": 1,
+    "fallback": 2,
+    "coverage_pct": 33.3,
+    "correct": 0,
+    "limited": 1,
+    "wrong": 0,
+    "not_reviewed": 0,
+    "precision_pct": 100.0,
+    "served_ids": [
+     "X03"
+    ],
+    "stop_layers": {
+     "aggregation (a clause unsupported)": 2
+    }
+   },
+   "p1_guide": {
+    "questions": 28,
+    "plan_f_served": 6,
+    "guide_served": 6,
+    "fallback": 22,
+    "coverage_pct": 21.4,
+    "correct": 5,
+    "limited": 1,
+    "wrong": 0,
+    "not_reviewed": 0,
+    "precision_pct": 100.0,
+    "served_ids": [
+     "A09",
+     "B05",
+     "B10",
+     "M01",
+     "M06",
+     "M08"
+    ],
+    "stop_layers": {
+     "structure recovery / completeness": 11,
+     "grounding (an asked word the evidence does not print)": 5,
+     "no approved guide for the owning specialist": 6
+    }
+   },
+   "policy_boundary": {
+    "questions": 2,
+    "plan_f_served": 0,
+    "guide_served": 0,
+    "fallback": 2,
+    "coverage_pct": 0.0,
+    "correct": 0,
+    "limited": 0,
+    "wrong": 0,
+    "not_reviewed": 0,
+    "precision_pct": null,
+    "served_ids": [],
+    "stop_layers": {
+     "no guide system named (handbook path decided)": 1,
+     "aggregation (a clause unsupported)": 1
+    }
+   },
+   "unsupported": {
+    "questions": 2,
+    "plan_f_served": 0,
+    "guide_served": 0,
+    "fallback": 2,
+    "coverage_pct": 0.0,
+    "correct": 0,
+    "limited": 0,
+    "wrong": 0,
+    "not_reviewed": 0,
+    "precision_pct": null,
+    "served_ids": [],
+    "stop_layers": {
+     "no guide system named (handbook path decided)": 2
+    }
+   },
+   "wrong_source": {
+    "questions": 4,
+    "plan_f_served": 0,
+    "guide_served": 0,
+    "fallback": 4,
+    "coverage_pct": 0.0,
+    "correct": 0,
+    "limited": 0,
+    "wrong": 0,
+    "not_reviewed": 0,
+    "precision_pct": null,
+    "served_ids": [],
+    "stop_layers": {
+     "structure recovery / completeness": 1,
+     "routing ambiguity": 2,
+     "grounding (subject / D-111 guard)": 1
+    }
+   }
+  }
+ },
+ "held_out": {
+  "all": {
+   "questions": 50,
+   "plan_f_served": 0,
+   "guide_served": 0,
+   "fallback": 50,
+   "coverage_pct": 0.0,
+   "correct": 0,
+   "limited": 0,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": null,
+   "served_ids": [],
+   "stop_layers": {
+    "structure recovery / completeness": 5,
+    "grounding (an asked word the evidence does not print)": 2,
+    "conflict": 3,
+    "no guide system named (handbook path decided)": 11,
+    "aggregation (a clause unsupported)": 12,
+    "no approved guide for the owning specialist": 4,
+    "handoff": 1,
+    "routing (no specialist selected)": 9,
+    "retrieval / selection (no guide candidate reached the selection)": 1,
+    "routing ambiguity": 2
+   }
+  },
+  "answerable_yes": {
+   "questions": 15,
+   "plan_f_served": 0,
+   "guide_served": 0,
+   "fallback": 15,
+   "coverage_pct": 0.0,
+   "correct": 0,
+   "limited": 0,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": null,
+   "served_ids": [],
+   "stop_layers": {
+    "grounding (an asked word the evidence does not print)": 2,
+    "conflict": 1,
+    "structure recovery / completeness": 1,
+    "aggregation (a clause unsupported)": 6,
+    "handoff": 1,
+    "retrieval / selection (no guide candidate reached the selection)": 1,
+    "routing (no specialist selected)": 2,
+    "no guide system named (handbook path decided)": 1
+   }
+  },
+  "partial": {
+   "questions": 19,
+   "plan_f_served": 0,
+   "guide_served": 0,
+   "fallback": 19,
+   "coverage_pct": 0.0,
+   "correct": 0,
+   "limited": 0,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": null,
+   "served_ids": [],
+   "stop_layers": {
+    "structure recovery / completeness": 2,
+    "no guide system named (handbook path decided)": 6,
+    "aggregation (a clause unsupported)": 5,
+    "no approved guide for the owning specialist": 2,
+    "routing (no specialist selected)": 2,
+    "routing ambiguity": 2
+   }
+  },
+  "not_answerable": {
+   "questions": 16,
+   "plan_f_served": 0,
+   "guide_served": 0,
+   "fallback": 16,
+   "coverage_pct": 0.0,
+   "correct": 0,
+   "limited": 0,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": null,
+   "served_ids": [],
+   "stop_layers": {
+    "structure recovery / completeness": 2,
+    "no approved guide for the owning specialist": 2,
+    "no guide system named (handbook path decided)": 4,
+    "conflict": 2,
+    "routing (no specialist selected)": 5,
+    "aggregation (a clause unsupported)": 1
+   }
+  },
+  "coverage_all_pct": 0.0,
+  "coverage_answerable_pct": 0.0,
+  "should_serve_true": {
+   "H03": false,
+   "H04": false,
+   "H05": false,
+   "H06": false,
+   "H09": false,
+   "H12": false,
+   "H19": false,
+   "H32": false
+  },
+  "should_serve_false_but_served": [],
+  "false_fallbacks_answerable": {
+   "H03": "grounding (an asked word the evidence does not print)",
+   "H04": "conflict",
+   "H05": "structure recovery / completeness",
+   "H06": "grounding (an asked word the evidence does not print)",
+   "H09": "aggregation (a clause unsupported)",
+   "H12": "handoff",
+   "H19": "aggregation (a clause unsupported)",
+   "H26": "retrieval / selection (no guide candidate reached the selection)",
+   "H27": "routing (no specialist selected)",
+   "H28": "routing (no specialist selected)",
+   "H29": "no guide system named (handbook path decided)",
+   "H30": "aggregation (a clause unsupported)",
+   "H32": "aggregation (a clause unsupported)",
+   "H40": "aggregation (a clause unsupported)",
+   "H41": "aggregation (a clause unsupported)"
+  },
+  "by_category": {
+   "held_out_abbreviation_misspelling": {
+    "questions": 4,
+    "plan_f_served": 0,
+    "guide_served": 0,
+    "fallback": 4,
+    "coverage_pct": 0.0,
+    "correct": 0,
+    "limited": 0,
+    "wrong": 0,
+    "not_reviewed": 0,
+    "precision_pct": null,
+    "served_ids": [],
+    "stop_layers": {
+     "retrieval / selection (no guide candidate reached the selection)": 1,
+     "routing (no specialist selected)": 2,
+     "no guide system named (handbook path decided)": 1
+    }
+   },
+   "held_out_ambiguous": {
+    "questions": 3,
+    "plan_f_served": 0,
+    "guide_served": 0,
+    "fallback": 3,
+    "coverage_pct": 0.0,
+    "correct": 0,
+    "limited": 0,
+    "wrong": 0,
+    "not_reviewed": 0,
+    "precision_pct": null,
+    "served_ids": [],
+    "stop_layers": {
+     "routing (no specialist selected)": 2,
+     "no guide system named (handbook path decided)": 1
+    }
+   },
+   "held_out_approval_authority": {
+    "questions": 3,
+    "plan_f_served": 0,
+    "guide_served": 0,
+    "fallback": 3,
+    "coverage_pct": 0.0,
+    "correct": 0,
+    "limited": 0,
+    "wrong": 0,
+    "not_reviewed": 0,
+    "precision_pct": null,
+    "served_ids": [],
+    "stop_layers": {
+     "no approved guide for the owning specialist": 1,
+     "no guide system named (handbook path decided)": 2
+    }
+   },
+   "held_out_configuration": {
+    "questions": 4,
+    "plan_f_served": 0,
+    "guide_served": 0,
+    "fallback": 4,
+    "coverage_pct": 0.0,
+    "correct": 0,
+    "limited": 0,
+    "wrong": 0,
+    "not_reviewed": 0,
+    "precision_pct": null,
+    "served_ids": [],
+    "stop_layers": {
+     "no guide system named (handbook path decided)": 2,
+     "conflict": 1,
+     "structure recovery / completeness": 1
+    }
+   },
+   "held_out_conversational": {
+    "questions": 3,
+    "plan_f_served": 0,
+    "guide_served": 0,
+    "fallback": 3,
+    "coverage_pct": 0.0,
+    "correct": 0,
+    "limited": 0,
+    "wrong": 0,
+    "not_reviewed": 0,
+    "precision_pct": null,
+    "served_ids": [],
+    "stop_layers": {
+     "aggregation (a clause unsupported)": 2,
+     "routing (no specialist selected)": 1
+    }
+   },
+   "held_out_cross_source": {
+    "questions": 3,
+    "plan_f_served": 0,
+    "guide_served": 0,
+    "fallback": 3,
+    "coverage_pct": 0.0,
+    "correct": 0,
+    "limited": 0,
+    "wrong": 0,
+    "not_reviewed": 0,
+    "precision_pct": null,
+    "served_ids": [],
+    "stop_layers": {
+     "aggregation (a clause unsupported)": 3
+    }
+   },
+   "held_out_navigation": {
+    "questions": 5,
+    "plan_f_served": 0,
+    "guide_served": 0,
+    "fallback": 5,
+    "coverage_pct": 0.0,
+    "correct": 0,
+    "limited": 0,
+    "wrong": 0,
+    "not_reviewed": 0,
+    "precision_pct": null,
+    "served_ids": [],
+    "stop_layers": {
+     "aggregation (a clause unsupported)": 2,
+     "no approved guide for the owning specialist": 1,
+     "handoff": 1,
+     "no guide system named (handbook path decided)": 1
+    }
+   },
+   "held_out_policy_vs_system_trap": {
+    "questions": 3,
+    "plan_f_served": 0,
+    "guide_served": 0,
+    "fallback": 3,
+    "coverage_pct": 0.0,
+    "correct": 0,
+    "limited": 0,
+    "wrong": 0,
+    "not_reviewed": 0,
+    "precision_pct": null,
+    "served_ids": [],
+    "stop_layers": {
+     "no approved guide for the owning specialist": 1,
+     "conflict": 1,
+     "aggregation (a clause unsupported)": 1
+    }
+   },
+   "held_out_support_contact": {
+    "questions": 2,
+    "plan_f_served": 0,
+    "guide_served": 0,
+    "fallback": 2,
+    "coverage_pct": 0.0,
+    "correct": 0,
+    "limited": 0,
+    "wrong": 0,
+    "not_reviewed": 0,
+    "precision_pct": null,
+    "served_ids": [],
+    "stop_layers": {
+     "aggregation (a clause unsupported)": 2
+    }
+   },
+   "held_out_unsupported": {
+    "questions": 3,
+    "plan_f_served": 0,
+    "guide_served": 0,
+    "fallback": 3,
+    "coverage_pct": 0.0,
+    "correct": 0,
+    "limited": 0,
+    "wrong": 0,
+    "not_reviewed": 0,
+    "precision_pct": null,
+    "served_ids": [],
+    "stop_layers": {
+     "routing (no specialist selected)": 3
+    }
+   },
+   "held_out_what_happens_after": {
+    "questions": 3,
+    "plan_f_served": 0,
+    "guide_served": 0,
+    "fallback": 3,
+    "coverage_pct": 0.0,
+    "correct": 0,
+    "limited": 0,
+    "wrong": 0,
+    "not_reviewed": 0,
+    "precision_pct": null,
+    "served_ids": [],
+    "stop_layers": {
+     "aggregation (a clause unsupported)": 2,
+     "no guide system named (handbook path decided)": 1
+    }
+   },
+   "held_out_workflow": {
+    "questions": 8,
+    "plan_f_served": 0,
+    "guide_served": 0,
+    "fallback": 8,
+    "coverage_pct": 0.0,
+    "correct": 0,
+    "limited": 0,
+    "wrong": 0,
+    "not_reviewed": 0,
+    "precision_pct": null,
+    "served_ids": [],
+    "stop_layers": {
+     "structure recovery / completeness": 4,
+     "grounding (an asked word the evidence does not print)": 2,
+     "conflict": 1,
+     "no guide system named (handbook path decided)": 1
+    }
+   },
+   "held_out_wrong_source_collision": {
+    "questions": 3,
+    "plan_f_served": 0,
+    "guide_served": 0,
+    "fallback": 3,
+    "coverage_pct": 0.0,
+    "correct": 0,
+    "limited": 0,
+    "wrong": 0,
+    "not_reviewed": 0,
+    "precision_pct": null,
+    "served_ids": [],
+    "stop_layers": {
+     "routing (no specialist selected)": 1,
+     "no guide system named (handbook path decided)": 2
+    }
+   },
+   "held_out_yes_no_false_premise": {
+    "questions": 3,
+    "plan_f_served": 0,
+    "guide_served": 0,
+    "fallback": 3,
+    "coverage_pct": 0.0,
+    "correct": 0,
+    "limited": 0,
+    "wrong": 0,
+    "not_reviewed": 0,
+    "precision_pct": null,
+    "served_ids": [],
+    "stop_layers": {
+     "routing ambiguity": 2,
+     "no approved guide for the owning specialist": 1
+    }
+   }
+  }
+ },
+ "safety_groups": {
+  "conflict": {
+   "questions": 8,
+   "served": [],
+   "guide_served": []
+  },
+  "guide_contamination": {
+   "questions": 3,
+   "served": [
+    "P11"
+   ],
+   "guide_served": [
+    "P11"
+   ]
+  },
+  "handbook_contamination": {
+   "questions": 6,
+   "served": [],
+   "guide_served": []
+  },
+  "wrong_source": {
+   "questions": 22,
+   "served": [],
+   "guide_served": []
+  },
+  "appraisal": {
+   "questions": 1,
+   "served": [],
+   "guide_served": []
+  },
+  "known_hr": {
+   "questions": 1,
+   "served": [],
+   "guide_served": []
+  },
+  "annual_leave": {
+   "questions": 1,
+   "served": [],
+   "guide_served": []
+  },
+  "authority": {
+   "questions": 1,
+   "served": [],
+   "guide_served": []
+  },
+  "incomplete_procedure": {
+   "questions": 2,
+   "served": [
+    "C29"
+   ],
+   "guide_served": [
+    "C29"
+   ]
+  },
+  "policy_boundary": {
+   "questions": 2,
+   "served": [],
+   "guide_served": []
+  },
+  "unsupported": {
+   "questions": 2,
+   "served": [],
+   "guide_served": []
+  }
+ },
+ "held_out_traps": {
+  "held_out_policy_vs_system_trap": {
+   "served": [],
+   "guide_served": []
+  },
+  "held_out_wrong_source_collision": {
+   "served": [],
+   "guide_served": []
+  },
+  "held_out_unsupported": {
+   "served": [],
+   "guide_served": []
+  },
+  "held_out_yes_no_false_premise": {
+   "served": [],
+   "guide_served": []
+  }
+ },
+ "shadow": {
+  "questions": 191,
+  "identical_to_direct_legacy": 191,
+  "visible_mismatches": 0,
+  "per_set_mismatches": {
+   "p0": 0,
+   "p1": 0,
+   "held_out": 0
+  }
+ },
+ "control_scopes_off_vs_on": {
+  "changed": 40,
+  "unexplained": []
+ },
+ "determinism": {
+  "repeat_records": 368,
+  "differences": []
+ },
+ "latency": {
+  "active": {
+   "all": {
+    "n": 191,
+    "p50_ms": 1681.7,
+    "p95_ms": 3353.5,
+    "max_ms": 4561.6
+   },
+   "guide_served": {
+    "n": 40,
+    "p50_ms": 613.0,
+    "p95_ms": 2488.9,
+    "max_ms": 2514.7
+   },
+   "guide_scope_fallback": {
+    "n": 110,
+    "p50_ms": 2058.3,
+    "p95_ms": 3550.4,
+    "max_ms": 4561.6
+   },
+   "p1_served": {
+    "n": 7,
+    "p50_ms": 591.7,
+    "p95_ms": 1211.5,
+    "max_ms": 1211.5
+   }
+  },
+  "shadow": {
+   "all": {
+    "n": 191,
+    "p50_ms": 1648.3,
+    "p95_ms": 3134.6,
+    "max_ms": 4013.3
+   },
+   "guide_served": {
+    "n": 40,
+    "p50_ms": 1494.2,
+    "p95_ms": 3564.4,
+    "max_ms": 4013.3
+   },
+   "guide_scope_fallback": {
+    "n": 110,
+    "p50_ms": 1952.2,
+    "p95_ms": 3185.5,
+    "max_ms": 3922.0
+   },
+   "p1_served": {
+    "n": 7,
+    "p50_ms": 1340.2,
+    "p95_ms": 2001.9,
+    "max_ms": 2001.9
+   }
+  },
+  "active_off": {
+   "all": {
+    "n": 191,
+    "p50_ms": 1432.4,
+    "p95_ms": 2275.4,
+    "max_ms": 2917.8
+   },
+   "guide_served": null,
+   "guide_scope_fallback": null,
+   "p1_served": null
+  },
+  "legacy": {
+   "all": {
+    "n": 191,
+    "p50_ms": 812.4,
+    "p95_ms": 1696.7,
+    "max_ms": 1767.8
+   },
+   "guide_served": null,
+   "guide_scope_fallback": null,
+   "p1_served": null
+  },
+  "guide_retrieval_ms_per_clause": {
+   "n": 113,
+   "p50_ms": 599.9,
+   "p95_ms": 1195.3,
+   "max_ms": 1257.9
+  },
+  "guide_selection_ms_per_clause": {
+   "n": 113,
+   "p50_ms": 1.4,
+   "p95_ms": 9.0,
+   "max_ms": 11.0
+  },
+  "direct_verification_ms": {
+   "guards_ms": {
+    "n": 34,
+    "p50_ms": 0.8,
+    "p95_ms": 1.3,
+    "max_ms": 1.5
+   },
+   "findings_verify_ms": {
+    "n": 34,
+    "p50_ms": 1.0,
+    "p95_ms": 1.6,
+    "max_ms": 1.7
+   },
+   "verify_ms": {
+    "n": 40,
+    "p50_ms": 0.5,
+    "p95_ms": 3.0,
+    "max_ms": 4.9
+   }
+  }
+ },
+ "llm": {
+  "plan_f_llm_calls_max": 0,
+  "direct_llm_calls_max": 0
+ },
+ "exceptions": 0,
+ "legacy_minimal": true,
+ "legacy_cache_untouched": true,
+ "rows": [
+  {
+   "id": "G01",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 7,
+   "pages": [
+    1
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "G02",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "relation (heading names another action or object)",
+   "verdict": null
+  },
+  {
+   "id": "G03",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "list_item"
+   ],
+   "parts": 1,
+   "pages": [
+    3
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "G04",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "G05",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "statement"
+   ],
+   "parts": 1,
+   "pages": [
+    4
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "G06",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    2,
+    4
+   ],
+   "stop_layer": "grounding (an asked word the evidence does not print)",
+   "verdict": null
+  },
+  {
+   "id": "G07",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    6
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "G08",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 5,
+   "pages": [
+    7
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "G09",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 6,
+   "pages": [
+    8
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "G10",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 9,
+   "pages": [
+    9
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "G11",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 14,
+   "pages": [
+    10,
+    11
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "G12",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "statement"
+   ],
+   "parts": 1,
+   "pages": [
+    11
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "G13",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    5
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "G14",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "institutional"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "grounding (an asked word the evidence does not print)",
+   "verdict": null
+  },
+  {
+   "id": "G15",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 5,
+   "pages": [
+    1
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "G16",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "G17",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 2,
+   "pages": [
+    8
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "G18",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 6,
+   "pages": [
+    10
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "G19",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 2,
+   "pages": [
+    5
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "G20",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    3
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "G21",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "evidence selection (generic introduction)",
+   "verdict": null
+  },
+  {
+   "id": "G22",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 5,
+   "pages": [
+    8
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "G23",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 4,
+   "pages": [
+    7
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "G24",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 4,
+   "pages": [
+    2
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "G25",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "forms": [
+    "statement"
+   ],
+   "parts": 1,
+   "pages": [
+    1
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "G26",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    3
+   ],
+   "stop_layer": "no approved guide for the owning specialist",
+   "verdict": null
+  },
+  {
+   "id": "G27",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "routing_final": [
+    "teaching",
+    "institutional"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    2
+   ],
+   "stop_layer": "routing ambiguity",
+   "verdict": null
+  },
+  {
+   "id": "G28",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 4,
+   "pages": [
+    3
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "G29",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 3,
+   "pages": [
+    1
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "G30",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 4,
+   "pages": [
+    1
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "G31",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "evidence selection (generic introduction)",
+   "verdict": null
+  },
+  {
+   "id": "G32",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "evidence selection (generic introduction)",
+   "verdict": null
+  },
+  {
+   "id": "G33",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "institutional"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "no approved guide for the owning specialist",
+   "verdict": null
+  },
+  {
+   "id": "G34",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "grounding (an asked word the evidence does not print)",
+   "verdict": null
+  },
+  {
+   "id": "G35",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "institutional"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "no approved guide for the owning specialist",
+   "verdict": null
+  },
+  {
+   "id": "G36",
+   "set": "p0",
+   "category": "cross_document",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    2,
+    3
+   ],
+   "stop_layer": "aggregation (a clause unsupported)",
+   "verdict": null
+  },
+  {
+   "id": "G37",
+   "set": "p0",
+   "category": "cross_document",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "aggregation (a clause unsupported)",
+   "verdict": null
+  },
+  {
+   "id": "G38",
+   "set": "p0",
+   "category": "ambiguous",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    224,
+    225
+   ],
+   "stop_layer": "no guide system named (handbook path decided)",
+   "verdict": null
+  },
+  {
+   "id": "G39",
+   "set": "p0",
+   "category": "wrong_source",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "relation (heading names another action or object)",
+   "verdict": null
+  },
+  {
+   "id": "G40",
+   "set": "p0",
+   "category": "wrong_source",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    2
+   ],
+   "stop_layer": "relation (heading names another action or object)",
+   "verdict": null
+  },
+  {
+   "id": "G41",
+   "set": "p0",
+   "category": "wrong_source",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "routing_final": [],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [],
+   "stop_layer": "routing (no specialist selected)",
+   "verdict": null
+  },
+  {
+   "id": "G42",
+   "set": "p0",
+   "category": "wrong_source",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "faculty_services"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [],
+   "stop_layer": "no guide system named (handbook path decided)",
+   "verdict": null
+  },
+  {
+   "id": "G43",
+   "set": "p0",
+   "category": "handbook_only",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": true,
+   "guide_served": false,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    91
+   ],
+   "stop_layer": "served",
+   "verdict": null
+  },
+  {
+   "id": "G44",
+   "set": "p0",
+   "category": "handbook_only",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": true,
+   "guide_served": false,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    81
+   ],
+   "stop_layer": "served",
+   "verdict": null
+  },
+  {
+   "id": "G45",
+   "set": "p0",
+   "category": "handbook_only",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": true,
+   "guide_served": false,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "institutional"
+   ],
+   "plan_f_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    54
+   ],
+   "stop_layer": "served",
+   "verdict": null
+  },
+  {
+   "id": "G46",
+   "set": "p0",
+   "category": "known_hr",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "faculty_services"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    20,
+    57
+   ],
+   "stop_layer": "no guide system named (handbook path decided)",
+   "verdict": null
+  },
+  {
+   "id": "G47",
+   "set": "p0",
+   "category": "annual_leave",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "faculty_services"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    107
+   ],
+   "stop_layer": "no guide system named (handbook path decided)",
+   "verdict": null
+  },
+  {
+   "id": "G48",
+   "set": "p0",
+   "category": "handbook_only",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": true,
+   "guide_served": false,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "faculty_services"
+   ],
+   "plan_f_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    61
+   ],
+   "stop_layer": "served",
+   "verdict": null
+  },
+  {
+   "id": "P01",
+   "set": "p0",
+   "category": "conflict",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "evidence selection (generic introduction)",
+   "verdict": null
+  },
+  {
+   "id": "P02",
+   "set": "p0",
+   "category": "conflict",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "routing_final": [
+    "research",
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "routing ambiguity",
+   "verdict": null
+  },
+  {
+   "id": "P03",
+   "set": "p0",
+   "category": "conflict",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "evidence selection (generic introduction)",
+   "verdict": null
+  },
+  {
+   "id": "P04",
+   "set": "p0",
+   "category": "conflict",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "evidence selection (generic introduction)",
+   "verdict": null
+  },
+  {
+   "id": "P05",
+   "set": "p0",
+   "category": "conflict",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "aggregation (a clause unsupported)",
+   "verdict": null
+  },
+  {
+   "id": "P06",
+   "set": "p0",
+   "category": "handbook_contamination",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    224
+   ],
+   "stop_layer": "no approved guide for the owning specialist",
+   "verdict": null
+  },
+  {
+   "id": "P07",
+   "set": "p0",
+   "category": "handbook_contamination",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "aggregation (a clause unsupported)",
+   "verdict": null
+  },
+  {
+   "id": "P08",
+   "set": "p0",
+   "category": "handbook_contamination",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    99,
+    162
+   ],
+   "stop_layer": "aggregation (a clause unsupported)",
+   "verdict": null
+  },
+  {
+   "id": "P09",
+   "set": "p0",
+   "category": "handbook_contamination",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    3
+   ],
+   "stop_layer": "no approved guide for the owning specialist",
+   "verdict": null
+  },
+  {
+   "id": "P10",
+   "set": "p0",
+   "category": "handbook_contamination",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    94,
+    96
+   ],
+   "stop_layer": "no approved guide for the owning specialist",
+   "verdict": null
+  },
+  {
+   "id": "P11",
+   "set": "p0",
+   "category": "guide_contamination",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "forms": [
+    "statement"
+   ],
+   "parts": 1,
+   "pages": [
+    6
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "P12",
+   "set": "p0",
+   "category": "guide_contamination",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    2
+   ],
+   "stop_layer": "no approved guide for the owning specialist",
+   "verdict": null
+  },
+  {
+   "id": "P13",
+   "set": "p0",
+   "category": "guide_contamination",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "evidence selection (generic introduction)",
+   "verdict": null
+  },
+  {
+   "id": "P14",
+   "set": "p0",
+   "category": "cross_document",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 14,
+   "pages": [
+    79,
+    10,
+    11
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "P15",
+   "set": "p0",
+   "category": "cross_document",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    224
+   ],
+   "stop_layer": "aggregation (a clause unsupported)",
+   "verdict": null
+  },
+  {
+   "id": "P16",
+   "set": "p0",
+   "category": "cross_document",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_ithenticate_guidelines"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 3,
+   "pages": [
+    81,
+    1
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "P17",
+   "set": "p0",
+   "category": "wrong_source",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    2
+   ],
+   "stop_layer": "relation (heading names another action or object)",
+   "verdict": null
+  },
+  {
+   "id": "P18",
+   "set": "p0",
+   "category": "wrong_source",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    183
+   ],
+   "stop_layer": "relation (heading names another action or object)",
+   "verdict": null
+  },
+  {
+   "id": "P19",
+   "set": "p0",
+   "category": "wrong_source",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    165
+   ],
+   "stop_layer": "no guide system named (handbook path decided)",
+   "verdict": null
+  },
+  {
+   "id": "P20",
+   "set": "p0",
+   "category": "wrong_source",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "grounding (an asked word the evidence does not print)",
+   "verdict": null
+  },
+  {
+   "id": "P21",
+   "set": "p0",
+   "category": "wrong_source",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    141,
+    142
+   ],
+   "stop_layer": "retrieval / selection (no guide candidate reached the selection)",
+   "verdict": null
+  },
+  {
+   "id": "P22",
+   "set": "p0",
+   "category": "wrong_source",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_HANDOFF",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [],
+   "stop_layer": "handoff",
+   "verdict": null
+  },
+  {
+   "id": "C01",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 4,
+   "pages": [
+    2
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "C02",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "no approved guide for the owning specialist",
+   "verdict": null
+  },
+  {
+   "id": "C03",
+   "set": "p0",
+   "category": "authority",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "no approved guide for the owning specialist",
+   "verdict": null
+  },
+  {
+   "id": "C04",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "forms": [
+    "statement"
+   ],
+   "parts": 1,
+   "pages": [
+    1
+   ],
+   "stop_layer": "served",
+   "verdict": "ACCEPTABLE BUT LIMITED"
+  },
+  {
+   "id": "C05",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 5,
+   "pages": [
+    1
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "C06",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 7,
+   "pages": [
+    1
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "C07",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 9,
+   "pages": [
+    2,
+    3
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "C08",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "C09",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "list_item"
+   ],
+   "parts": 1,
+   "pages": [
+    3
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "C10",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "grounding (an asked word the evidence does not print)",
+   "verdict": null
+  },
+  {
+   "id": "C11",
+   "set": "p0",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 1,
+   "pages": [
+    1
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "C12",
+   "set": "p0",
+   "category": "conflict",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "conflict",
+   "verdict": null
+  },
+  {
+   "id": "C13",
+   "set": "p0",
+   "category": "routing",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    162
+   ],
+   "stop_layer": "no guide system named (handbook path decided)",
+   "verdict": null
+  },
+  {
+   "id": "C14",
+   "set": "p0",
+   "category": "routing",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "teaching",
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    193,
+    233
+   ],
+   "stop_layer": "aggregation (a clause unsupported)",
+   "verdict": null
+  },
+  {
+   "id": "C15",
+   "set": "p0",
+   "category": "cross_document",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 7,
+   "pages": [
+    79,
+    1
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "C16",
+   "set": "p0",
+   "category": "cross_document",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 4,
+   "pages": [
+    96,
+    91,
+    2
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "C17",
+   "set": "p0",
+   "category": "cross_document",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_ithenticate_guidelines"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 4,
+   "pages": [
+    81,
+    1
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "C18",
+   "set": "p0",
+   "category": "wrong_source",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "routing_final": [
+    "faculty_services",
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [],
+   "stop_layer": "routing ambiguity",
+   "verdict": null
+  },
+  {
+   "id": "C19",
+   "set": "p0",
+   "category": "wrong_source",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "relation (heading names another action or object)",
+   "verdict": null
+  },
+  {
+   "id": "C20",
+   "set": "p0",
+   "category": "wrong_source",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "no approved guide for the owning specialist",
+   "verdict": null
+  },
+  {
+   "id": "C21",
+   "set": "p0",
+   "category": "wrong_source",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_HANDOFF",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "handoff",
+   "verdict": null
+  },
+  {
+   "id": "C22",
+   "set": "p0",
+   "category": "wrong_source",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    114
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "C23",
+   "set": "p0",
+   "category": "wrong_source",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "relation (heading names another action or object)",
+   "verdict": null
+  },
+  {
+   "id": "C24",
+   "set": "p0",
+   "category": "wrong_source",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    2
+   ],
+   "stop_layer": "relation (heading names another action or object)",
+   "verdict": null
+  },
+  {
+   "id": "C25",
+   "set": "p0",
+   "category": "wrong_source",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "routing_final": [
+    "research",
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "routing ambiguity",
+   "verdict": null
+  },
+  {
+   "id": "C26",
+   "set": "p0",
+   "category": "appraisal",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "faculty_services"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    142
+   ],
+   "stop_layer": "no guide system named (handbook path decided)",
+   "verdict": null
+  },
+  {
+   "id": "C27",
+   "set": "p0",
+   "category": "handbook_contamination",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    224
+   ],
+   "stop_layer": "no approved guide for the owning specialist",
+   "verdict": null
+  },
+  {
+   "id": "C28",
+   "set": "p0",
+   "category": "handbook_only",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_FINDINGS_VERIFIER",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    81
+   ],
+   "stop_layer": "verification",
+   "verdict": null
+  },
+  {
+   "id": "C29",
+   "set": "p0",
+   "category": "incomplete_procedure",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 5,
+   "pages": [
+    7
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "C30",
+   "set": "p0",
+   "category": "incomplete_procedure",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    10
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "A01",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "A02",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "A03",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    7
+   ],
+   "stop_layer": "grounding (an asked word the evidence does not print)",
+   "verdict": null
+  },
+  {
+   "id": "A04",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "A05",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "grounding (an asked word the evidence does not print)",
+   "verdict": null
+  },
+  {
+   "id": "A06",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    2
+   ],
+   "stop_layer": "grounding (an asked word the evidence does not print)",
+   "verdict": null
+  },
+  {
+   "id": "A07",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    2
+   ],
+   "stop_layer": "no approved guide for the owning specialist",
+   "verdict": null
+  },
+  {
+   "id": "A08",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    2
+   ],
+   "stop_layer": "no approved guide for the owning specialist",
+   "verdict": null
+  },
+  {
+   "id": "A09",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_attendance_guide"
+   ],
+   "forms": [
+    "statement"
+   ],
+   "parts": 1,
+   "pages": [
+    2
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "A10",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    2
+   ],
+   "stop_layer": "no approved guide for the owning specialist",
+   "verdict": null
+  },
+  {
+   "id": "B01",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    2
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "B02",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "institutional"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "grounding (an asked word the evidence does not print)",
+   "verdict": null
+  },
+  {
+   "id": "B03",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "B04",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    2
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "B05",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "forms": [
+    "statement"
+   ],
+   "parts": 1,
+   "pages": [
+    2
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "B06",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    2
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "B07",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    2
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "B08",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    2
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "B09",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    2,
+    4
+   ],
+   "stop_layer": "no approved guide for the owning specialist",
+   "verdict": null
+  },
+  {
+   "id": "B10",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 3,
+   "pages": [
+    4
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "M01",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_communication_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_communication_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 3,
+   "pages": [
+    1
+   ],
+   "stop_layer": "served",
+   "verdict": "ACCEPTABLE BUT LIMITED"
+  },
+  {
+   "id": "M02",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_communication_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    2
+   ],
+   "stop_layer": "grounding (an asked word the evidence does not print)",
+   "verdict": null
+  },
+  {
+   "id": "M03",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_communication_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "M04",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_communication_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    2
+   ],
+   "stop_layer": "no approved guide for the owning specialist",
+   "verdict": null
+  },
+  {
+   "id": "M05",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_communication_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    2
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "M06",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_communication_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_communication_guide"
+   ],
+   "forms": [
+    "statement"
+   ],
+   "parts": 1,
+   "pages": [
+    3
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "M07",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_communication_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    3
+   ],
+   "stop_layer": "no approved guide for the owning specialist",
+   "verdict": null
+  },
+  {
+   "id": "M08",
+   "set": "p1",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_communication_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_communication_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 2,
+   "pages": [
+    4
+   ],
+   "stop_layer": "served",
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "M09",
+   "set": "p1",
+   "category": "conflict",
+   "expected_source": "uos_blackboard_communication_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "routing_final": [
+    "research",
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    5
+   ],
+   "stop_layer": "routing ambiguity",
+   "verdict": null
+  },
+  {
+   "id": "M10",
+   "set": "p1",
+   "category": "conflict",
+   "expected_source": "uos_blackboard_communication_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "routing_final": [
+    "teaching",
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    5
+   ],
+   "stop_layer": "routing ambiguity",
+   "verdict": null
+  },
+  {
+   "id": "N01",
+   "set": "p1",
+   "category": "policy_boundary",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": null,
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    225,
+    228
+   ],
+   "stop_layer": "no guide system named (handbook path decided)",
+   "verdict": null
+  },
+  {
+   "id": "N02",
+   "set": "p1",
+   "category": "policy_boundary",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "aggregation (a clause unsupported)",
+   "verdict": null
+  },
+  {
+   "id": "N03",
+   "set": "p1",
+   "category": "unsupported",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    2,
+    4
+   ],
+   "stop_layer": "no guide system named (handbook path decided)",
+   "verdict": null
+  },
+  {
+   "id": "N04",
+   "set": "p1",
+   "category": "unsupported",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [],
+   "stop_layer": "no guide system named (handbook path decided)",
+   "verdict": null
+  },
+  {
+   "id": "N05",
+   "set": "p1",
+   "category": "wrong_source",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    2
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "N06",
+   "set": "p1",
+   "category": "wrong_source",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": null,
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "routing_final": [
+    "research",
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    82,
+    163
+   ],
+   "stop_layer": "routing ambiguity",
+   "verdict": null
+  },
+  {
+   "id": "N07",
+   "set": "p1",
+   "category": "wrong_source",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": null,
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "routing_final": [
+    "research",
+    "faculty_services"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    147,
+    148
+   ],
+   "stop_layer": "routing ambiguity",
+   "verdict": null
+  },
+  {
+   "id": "N08",
+   "set": "p1",
+   "category": "wrong_source",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": null,
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_SUBJECT_GUARD",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    117
+   ],
+   "stop_layer": "grounding (subject / D-111 guard)",
+   "verdict": null
+  },
+  {
+   "id": "X01",
+   "set": "p1",
+   "category": "cross_document",
+   "expected_source": "uos_faculty_handbook_2025_26+uos_blackboard_attendance_guide",
+   "answerable": null,
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    2
+   ],
+   "stop_layer": "aggregation (a clause unsupported)",
+   "verdict": null
+  },
+  {
+   "id": "X02",
+   "set": "p1",
+   "category": "cross_document",
+   "expected_source": "uos_faculty_handbook_2025_26+uos_blackboard_collaborate_guide",
+   "answerable": null,
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    2,
+    80
+   ],
+   "stop_layer": "aggregation (a clause unsupported)",
+   "verdict": null
+  },
+  {
+   "id": "X03",
+   "set": "p1",
+   "category": "cross_document",
+   "expected_source": "uos_blackboard_faculty_short_guide+uos_blackboard_communication_guide",
+   "answerable": null,
+   "plan_f_should_serve": null,
+   "served": true,
+   "guide_served": true,
+   "outcome": "PLAN_F_ACCEPTED",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_communication_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 12,
+   "pages": [
+    9,
+    1
+   ],
+   "stop_layer": "served",
+   "verdict": "ACCEPTABLE BUT LIMITED"
+  },
+  {
+   "id": "H01",
+   "set": "held_out",
+   "category": "held_out_workflow",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    10
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "H02",
+   "set": "held_out",
+   "category": "held_out_workflow",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "H03",
+   "set": "held_out",
+   "category": "held_out_workflow",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    2
+   ],
+   "stop_layer": "grounding (an asked word the evidence does not print)",
+   "verdict": null
+  },
+  {
+   "id": "H04",
+   "set": "held_out",
+   "category": "held_out_workflow",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "conflict",
+   "verdict": null
+  },
+  {
+   "id": "H05",
+   "set": "held_out",
+   "category": "held_out_workflow",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    2
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "H06",
+   "set": "held_out",
+   "category": "held_out_workflow",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    4,
+    9
+   ],
+   "stop_layer": "grounding (an asked word the evidence does not print)",
+   "verdict": null
+  },
+  {
+   "id": "H07",
+   "set": "held_out",
+   "category": "held_out_workflow",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "H08",
+   "set": "held_out",
+   "category": "held_out_workflow",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "faculty_services"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    62,
+    109
+   ],
+   "stop_layer": "no guide system named (handbook path decided)",
+   "verdict": null
+  },
+  {
+   "id": "H09",
+   "set": "held_out",
+   "category": "held_out_navigation",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "aggregation (a clause unsupported)",
+   "verdict": null
+  },
+  {
+   "id": "H10",
+   "set": "held_out",
+   "category": "held_out_navigation",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "institutional"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    2
+   ],
+   "stop_layer": "no approved guide for the owning specialist",
+   "verdict": null
+  },
+  {
+   "id": "H11",
+   "set": "held_out",
+   "category": "held_out_navigation",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "aggregation (a clause unsupported)",
+   "verdict": null
+  },
+  {
+   "id": "H12",
+   "set": "held_out",
+   "category": "held_out_navigation",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_HANDOFF",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "handoff",
+   "verdict": null
+  },
+  {
+   "id": "H13",
+   "set": "held_out",
+   "category": "held_out_navigation",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "institutional"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [],
+   "stop_layer": "no guide system named (handbook path decided)",
+   "verdict": null
+  },
+  {
+   "id": "H14",
+   "set": "held_out",
+   "category": "held_out_configuration",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    227
+   ],
+   "stop_layer": "no guide system named (handbook path decided)",
+   "verdict": null
+  },
+  {
+   "id": "H15",
+   "set": "held_out",
+   "category": "held_out_configuration",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    8,
+    10
+   ],
+   "stop_layer": "no guide system named (handbook path decided)",
+   "verdict": null
+  },
+  {
+   "id": "H16",
+   "set": "held_out",
+   "category": "held_out_configuration",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "conflict",
+   "verdict": null
+  },
+  {
+   "id": "H17",
+   "set": "held_out",
+   "category": "held_out_configuration",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    2,
+    4
+   ],
+   "stop_layer": "structure recovery / completeness",
+   "verdict": null
+  },
+  {
+   "id": "H18",
+   "set": "held_out",
+   "category": "held_out_support_contact",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [],
+   "stop_layer": "aggregation (a clause unsupported)",
+   "verdict": null
+  },
+  {
+   "id": "H19",
+   "set": "held_out",
+   "category": "held_out_support_contact",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "aggregation (a clause unsupported)",
+   "verdict": null
+  },
+  {
+   "id": "H20",
+   "set": "held_out",
+   "category": "held_out_approval_authority",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    2
+   ],
+   "stop_layer": "no approved guide for the owning specialist",
+   "verdict": null
+  },
+  {
+   "id": "H21",
+   "set": "held_out",
+   "category": "held_out_approval_authority",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "faculty_services"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    170,
+    173,
+    260
+   ],
+   "stop_layer": "no guide system named (handbook path decided)",
+   "verdict": null
+  },
+  {
+   "id": "H22",
+   "set": "held_out",
+   "category": "held_out_approval_authority",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    91
+   ],
+   "stop_layer": "no guide system named (handbook path decided)",
+   "verdict": null
+  },
+  {
+   "id": "H23",
+   "set": "held_out",
+   "category": "held_out_ambiguous",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "routing_final": [],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    3,
+    6
+   ],
+   "stop_layer": "routing (no specialist selected)",
+   "verdict": null
+  },
+  {
+   "id": "H24",
+   "set": "held_out",
+   "category": "held_out_ambiguous",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    7
+   ],
+   "stop_layer": "no guide system named (handbook path decided)",
+   "verdict": null
+  },
+  {
+   "id": "H25",
+   "set": "held_out",
+   "category": "held_out_ambiguous",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "routing_final": [],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    101,
+    170
+   ],
+   "stop_layer": "routing (no specialist selected)",
+   "verdict": null
+  },
+  {
+   "id": "H26",
+   "set": "held_out",
+   "category": "held_out_abbreviation_misspelling",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [],
+   "stop_layer": "retrieval / selection (no guide candidate reached the selection)",
+   "verdict": null
+  },
+  {
+   "id": "H27",
+   "set": "held_out",
+   "category": "held_out_abbreviation_misspelling",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": "yes",
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "routing_final": [],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "routing (no specialist selected)",
+   "verdict": null
+  },
+  {
+   "id": "H28",
+   "set": "held_out",
+   "category": "held_out_abbreviation_misspelling",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "yes",
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "routing_final": [],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [],
+   "stop_layer": "routing (no specialist selected)",
+   "verdict": null
+  },
+  {
+   "id": "H29",
+   "set": "held_out",
+   "category": "held_out_abbreviation_misspelling",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [],
+   "stop_layer": "no guide system named (handbook path decided)",
+   "verdict": null
+  },
+  {
+   "id": "H30",
+   "set": "held_out",
+   "category": "held_out_conversational",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "yes",
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    79
+   ],
+   "stop_layer": "aggregation (a clause unsupported)",
+   "verdict": null
+  },
+  {
+   "id": "H31",
+   "set": "held_out",
+   "category": "held_out_conversational",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "routing_final": [],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    2,
+    5,
+    10
+   ],
+   "stop_layer": "routing (no specialist selected)",
+   "verdict": null
+  },
+  {
+   "id": "H32",
+   "set": "held_out",
+   "category": "held_out_conversational",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [],
+   "stop_layer": "aggregation (a clause unsupported)",
+   "verdict": null
+  },
+  {
+   "id": "H33",
+   "set": "held_out",
+   "category": "held_out_what_happens_after",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "aggregation (a clause unsupported)",
+   "verdict": null
+  },
+  {
+   "id": "H34",
+   "set": "held_out",
+   "category": "held_out_what_happens_after",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "aggregation (a clause unsupported)",
+   "verdict": null
+  },
+  {
+   "id": "H35",
+   "set": "held_out",
+   "category": "held_out_what_happens_after",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    10,
+    11
+   ],
+   "stop_layer": "no guide system named (handbook path decided)",
+   "verdict": null
+  },
+  {
+   "id": "H36",
+   "set": "held_out",
+   "category": "held_out_yes_no_false_premise",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": "partial",
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "routing_final": [
+    "teaching",
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "routing ambiguity",
+   "verdict": null
+  },
+  {
+   "id": "H37",
+   "set": "held_out",
+   "category": "held_out_yes_no_false_premise",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "routing_final": [
+    "teaching",
+    "institutional"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    224
+   ],
+   "stop_layer": "routing ambiguity",
+   "verdict": null
+  },
+  {
+   "id": "H38",
+   "set": "held_out",
+   "category": "held_out_yes_no_false_premise",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "institutional"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [],
+   "stop_layer": "no approved guide for the owning specialist",
+   "verdict": null
+  },
+  {
+   "id": "H39",
+   "set": "held_out",
+   "category": "held_out_cross_source",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    79,
+    80
+   ],
+   "stop_layer": "aggregation (a clause unsupported)",
+   "verdict": null
+  },
+  {
+   "id": "H40",
+   "set": "held_out",
+   "category": "held_out_cross_source",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "yes",
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [],
+   "stop_layer": "aggregation (a clause unsupported)",
+   "verdict": null
+  },
+  {
+   "id": "H41",
+   "set": "held_out",
+   "category": "held_out_cross_source",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "yes",
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "aggregation (a clause unsupported)",
+   "verdict": null
+  },
+  {
+   "id": "H42",
+   "set": "held_out",
+   "category": "held_out_policy_vs_system_trap",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1,
+    212
+   ],
+   "stop_layer": "no approved guide for the owning specialist",
+   "verdict": null
+  },
+  {
+   "id": "H43",
+   "set": "held_out",
+   "category": "held_out_policy_vs_system_trap",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "conflict",
+   "verdict": null
+  },
+  {
+   "id": "H44",
+   "set": "held_out",
+   "category": "held_out_policy_vs_system_trap",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "routing_final": [
+    "teaching"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    1
+   ],
+   "stop_layer": "aggregation (a clause unsupported)",
+   "verdict": null
+  },
+  {
+   "id": "H45",
+   "set": "held_out",
+   "category": "held_out_wrong_source_collision",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "routing_final": [],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    142
+   ],
+   "stop_layer": "routing (no specialist selected)",
+   "verdict": null
+  },
+  {
+   "id": "H46",
+   "set": "held_out",
+   "category": "held_out_wrong_source_collision",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "faculty_services"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    148,
+    151
+   ],
+   "stop_layer": "no guide system named (handbook path decided)",
+   "verdict": null
+  },
+  {
+   "id": "H47",
+   "set": "held_out",
+   "category": "held_out_wrong_source_collision",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "routing_final": [
+    "research"
+   ],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    117,
+    169
+   ],
+   "stop_layer": "no guide system named (handbook path decided)",
+   "verdict": null
+  },
+  {
+   "id": "H48",
+   "set": "held_out",
+   "category": "held_out_unsupported",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "routing_final": [],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [
+    252
+   ],
+   "stop_layer": "routing (no specialist selected)",
+   "verdict": null
+  },
+  {
+   "id": "H49",
+   "set": "held_out",
+   "category": "held_out_unsupported",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "routing_final": [],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [],
+   "stop_layer": "routing (no specialist selected)",
+   "verdict": null
+  },
+  {
+   "id": "H50",
+   "set": "held_out",
+   "category": "held_out_unsupported",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": false,
+   "guide_served": false,
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "routing_final": [],
+   "plan_f_sources": [],
+   "forms": [],
+   "parts": 0,
+   "pages": [],
+   "stop_layer": "routing (no specialist selected)",
+   "verdict": null
+  }
+ ],
+ "total_script_s": 2078.890013600001,
+ "corpus": {
+  "enabled_sources": 8,
+  "pages": 309,
+  "chunks": 15000,
+  "chunk_types": {
+   "paragraph": 911,
+   "row": 9040,
+   "row_window": 4821,
+   "procedure_step": 160,
+   "procedure_window": 68
+  },
+  "per_source": {
+   "uos_faculty_handbook_2025_26": {
+    "pages": 272,
+    "chunks": 13688,
+    "chunk_types": {
+     "paragraph": 847,
+     "row": 8412,
+     "row_window": 4429
+    },
+    "d111_procedures": null,
+    "d112_structures": null,
+    "conflict_chunks": 0
+   },
+   "uos_blackboard_faculty_short_guide": {
+    "pages": 11,
+    "chunks": 403,
+    "chunk_types": {
+     "paragraph": 22,
+     "row": 202,
+     "row_window": 134,
+     "procedure_step": 32,
+     "procedure_window": 13
+    },
+    "d111_procedures": 9,
+    "d112_structures": 30,
+    "conflict_chunks": 0
+   },
+   "uos_grade_transfer_dashboard_guide": {
+    "pages": 3,
+    "chunks": 68,
+    "chunk_types": {
+     "paragraph": 3,
+     "row": 30,
+     "row_window": 16,
+     "procedure_step": 13,
+     "procedure_window": 6
+    },
+    "d111_procedures": 3,
+    "d112_structures": 9,
+    "conflict_chunks": 0
+   },
+   "uos_blackboard_gradebook_guide": {
+    "pages": 10,
+    "chunks": 308,
+    "chunk_types": {
+     "paragraph": 14,
+     "row": 142,
+     "row_window": 84,
+     "procedure_step": 48,
+     "procedure_window": 20
+    },
+    "d111_procedures": 13,
+    "d112_structures": 36,
+    "conflict_chunks": 0
+   },
+   "uos_ithenticate_guidelines": {
+    "pages": 2,
+    "chunks": 82,
+    "chunk_types": {
+     "paragraph": 3,
+     "row": 35,
+     "row_window": 21,
+     "procedure_step": 16,
+     "procedure_window": 7
+    },
+    "d111_procedures": 4,
+    "d112_structures": 10,
+    "conflict_chunks": 8
+   },
+   "uos_blackboard_attendance_guide": {
+    "pages": 2,
+    "chunks": 89,
+    "chunk_types": {
+     "paragraph": 3,
+     "row": 41,
+     "row_window": 33,
+     "procedure_step": 9,
+     "procedure_window": 3
+    },
+    "d111_procedures": 5,
+    "d112_structures": 19,
+    "conflict_chunks": 0
+   },
+   "uos_blackboard_collaborate_guide": {
+    "pages": 4,
+    "chunks": 150,
+    "chunk_types": {
+     "paragraph": 7,
+     "row": 60,
+     "row_window": 38,
+     "procedure_step": 31,
+     "procedure_window": 14
+    },
+    "d111_procedures": 4,
+    "d112_structures": 17,
+    "conflict_chunks": 0
+   },
+   "uos_blackboard_communication_guide": {
+    "pages": 5,
+    "chunks": 212,
+    "chunk_types": {
+     "paragraph": 12,
+     "row": 118,
+     "row_window": 66,
+     "procedure_step": 11,
+     "procedure_window": 5
+    },
+    "d111_procedures": 4,
+    "d112_structures": 20,
+    "conflict_chunks": 38
+   }
+  },
+  "new_p1_chunks": 451,
+  "pf3d": {
+   "enabled_sources": 5,
+   "pages": 298,
+   "chunks": 14549
+  },
+  "build": {
+   "cold_kb_build_s": 358.9,
+   "cached_kb_build_s": 13.9,
+   "embeddings_shape": [
+    15000,
+    768
+   ],
+   "embeddings_mb": 46.1,
+   "pf3d_embeddings_mb": 44.7,
+   "guide_index_build_ms": 20.1,
+   "note": "the embedding cache is keyed by the whole enabled corpus, so adding a source re-embeds every chunk once",
+   "pf3d_guide_index_build_ms": 12.5
+  }
+ }
+}

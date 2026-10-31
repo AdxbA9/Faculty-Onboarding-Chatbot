@@ -9,6 +9,84 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-10-31 - Controlled P1 guide expansion and held-out evaluation (post-freeze phase PF-4)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/post-freeze-knowledge-expansion` |
+| Starting commit | `75d81cd` (PF-3D after the history rewrite that removed old co-author trailers; file tree identical to PF-3D) |
+| Ending state | COMPLETE. Three P1 guides activated under D-113 (two held); 0 wrong Plan F answers in every set; P0 unchanged; held-out generalisation measured honestly (0 of 15 answerable questions served); one local commit for the project owner to push; `PLAN_F_GUIDE_SCOPES` stays off by default |
+| Freeze status | I-9 (`runtime-freeze-i9`, D-108) remains the frozen baseline and comparison control; the frozen specialists are not changed |
+| Elapsed | 2h08m08s (start 2026-10-31T06:32:37Z, end 2026-10-31T08:40:45Z; includes the background evaluation runs) |
+
+### Before and after
+
+| | PF-3D | PF-4 |
+|---|---|---|
+| enabled sources / pages / chunks | 5 / 298 / 14,549 | 8 / 309 / 15,000 (451 new) |
+| P0 core guide questions served (correct / wrong) | 19 of 37 (19 / 0) | 19 of 37 (19 / 0), answers byte-identical |
+| P1 questions served (correct / limited / wrong) | - | 7 of 41 (5 / 2 / 0); 6 of the 28 source questions |
+| held-out questions served (answerable) | - | 0 of 50 (0 of 15) |
+| frozen 192-question set | 55 served, 0 wrong | 55 served (same set), 0 wrong, 0 false acceptances; 1 legacy citation page differs (T07) |
+
+### Completed
+
+- P1 revalidation of the five PF-1 candidates (hash, officiality, language, extraction, conflicts, privacy): three activated
+  (Attendance Tool in Blackboard Ultra, Blackboard Collaborate Ultra Guide, Blackboard Learn Ultra: Communication Tools),
+  two held (Assignments and Tests: 25 pages collide with frozen page-keyed indexes; Grade Categories: interleaved
+  English and Arabic). Registry records, Teaching-only scopes, system vocabulary (Collaborate by product, never by the
+  verb), a registered unresolved conflict for the 2022 journal recommendation.
+- A held-out set of 50 questions written blind by an independent agent and frozen (hash pinned by a test) before any P1
+  text was read; labelled afterwards (15 answerable, 19 partial, 16 not).
+- Four generic refinements that only refuse (ordered bullets in the D-111 index, labelled sub-sections titled after their
+  object, lists whose last item continues on the next page, academic-standing policy words). D-113 recorded.
+
+### Tests performed
+
+- PF-4 evaluation (191 questions: P0 100, P1 41, held-out 50; ACTIVE, DIRECT, SHADOW, scopes off, LEGACY, two repeats):
+  results above; SHADOW 191 of 191 identical; scopes off versus on: 40 differences, all reviewed answers; 368 repeat
+  records, 0 differences; 0 exceptions; 0 model calls. Every served P1 answer reviewed by hand.
+- Frozen 192-question set with guide scopes on: Plan F identical to I-9 (55 served, 0 wrong, 0 false acceptances, SHADOW
+  192 of 192); T07 (legacy fallback) now also cites attendance guide page 2 through the unscoped legacy retrieval.
+- Wrong-source adversarial with the real models: 36 cases, 0 wrong-source acceptances, 0 violations.
+- Application smoke: ACTIVE 16 turns (one answer per P1 guide, P0 answers unchanged, held-out fallback, conflicts,
+  collision, handbook, HR, annual leave, cross-document, appraisal); SHADOW 2; LEGACY fresh process 12 of 12 minimal.
+- Targeted gate (31 modules): 2,495 passed. Full suite: 6,947 passed, 0 failed, 0 skipped (6,926 at the start; 21 new).
+  `pip check`: no broken requirements. Security scan: 0 problems.
+
+### Known limitations
+
+- Held-out generalisation: 0 of 15 answerable questions served. Causes: asked words the guide does not print (modifiers,
+  synonyms), conversational and cross-source questions split into clauses one of which is unsupported, "where/who"
+  clauses handed to Institutional Navigation (not approved for those guides), misspelled system names, chunk-level
+  over-blocking by the iThenticate quota conflict, procedures mixing A./1./bullets.
+- P1 coverage is low (6 of 28 source questions); attendance-guide steps are wrapped beside screenshots and read as
+  fragments, which the rules refuse.
+- The unscoped legacy retrieval now cites P1 tool pages for some student-attendance policy questions (T07, C20); Plan F
+  never answers policy from a guide, but a legacy answer with a model key could draw on them.
+- Adding a source re-embeds the whole corpus once (about 6 minutes cold).
+- The Assignments and Tests guide needs a decision record making the frozen page-keyed indexes source-aware.
+
+### Next task
+
+PF-5B: targeted false-fallback refinement of the systematic defects the held-out set exposed, measured on a NEW held-out
+set before and after; no new documents until held-out coverage is credible. `PLAN_F_GUIDE_SCOPES` default stays a
+project-owner decision (recommended OFF).
+
+### Blockers
+
+None.
+
+### Files changed
+
+`knowledge/sources.json` (three P1 records, one conflict), `data/guides/` (three P1 PDFs), `handbook_bot/source_scopes.py`,
+`handbook_bot/guide_grounding.py`, `handbook_bot/guide_structure.py`, `tests/test_p1_guides.py` (new),
+`tests/test_guide_structure.py`, `tests/test_guide_grounding.py`, `tests/test_multi_source.py`, `tests/test_sources.py`,
+`qa/post_freeze_pf4/` (new), `docs/DECISIONS.md` (D-113), `docs/STATUS.md`.
+
+---
+
 ## 2026-10-31 - Deterministic guide structure recovery and coverage refinement (post-freeze phase PF-3D)
 
 | Field | Value |

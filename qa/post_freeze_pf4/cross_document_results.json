@@ -1,0 +1,349 @@
+{
+ "method": "PF-4 derived QA records from the evaluation results and the review table (no answer text beyond 120 characters):\n\n* ``cross_document_results.json``: every cross-document question of the three sets (P0 ``cross_document``, P1\n  ``cross_document``, held-out ``cross_source``): served or not, path, sources and pages per clause, verdict;\n* the procedure QA block of ``p1_results.json``: for every newly served P1 or held-out procedure, section or list, its\n  pages, part count, first and last unit, and the hand verdict.\n\n    python -X utf8 qa/post_freeze_pf4/derive.py <results.json> <review table> <qa dir>",
+ "summary": {
+  "questions": 14,
+  "served": 6,
+  "served_ids": [
+   "P14",
+   "P16",
+   "C15",
+   "C16",
+   "C17",
+   "X03"
+  ],
+  "wrong": [],
+  "per_set": {
+   "p0": 8,
+   "p1": 3,
+   "held_out": 3
+  }
+ },
+ "questions": [
+  {
+   "id": "G36",
+   "set": "p0",
+   "question": "When must final grades be submitted and how do I transfer them to Banner?",
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "path": "multi_finding_aggregate",
+   "sources": [],
+   "pages": [
+    1,
+    2,
+    3
+   ],
+   "clauses": null,
+   "verdict": null,
+   "note": null
+  },
+  {
+   "id": "G37",
+   "set": "p0",
+   "question": "What does the handbook say about plagiarism in research, and how do I check a paper with iThenticate?",
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "path": "multi_finding_aggregate",
+   "sources": [],
+   "pages": [
+    1
+   ],
+   "clauses": null,
+   "verdict": null,
+   "note": null
+  },
+  {
+   "id": "P14",
+   "set": "p0",
+   "question": "How many office hours must faculty hold, and how do I create an assignment in Blackboard?",
+   "served": "plan_f",
+   "outcome": "PLAN_F_ACCEPTED",
+   "path": "multi_finding_aggregate",
+   "sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "pages": [
+    79,
+    10,
+    11
+   ],
+   "clauses": {
+    "0": [
+     [
+      "uos_faculty_handbook_2025_26",
+      79
+     ]
+    ],
+    "1": [
+     [
+      "uos_blackboard_faculty_short_guide",
+      10
+     ],
+     [
+      "uos_blackboard_faculty_short_guide",
+      11
+     ]
+    ]
+   },
+   "verdict": "CORRECT",
+   "note": "two clauses each verified on its own: handbook p79 (full-time faculty: a minimum of five office hours per week over at least two days) and the complete 'Create an Assignment' section (pages 10-11); no bridge text"
+  },
+  {
+   "id": "P15",
+   "set": "p0",
+   "question": "Within how many hours must instructors submit final examination results, and who approves the grade transfer to Banner?",
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "path": "multi_finding_aggregate",
+   "sources": [],
+   "pages": [
+    224
+   ],
+   "clauses": null,
+   "verdict": null,
+   "note": null
+  },
+  {
+   "id": "P16",
+   "set": "p0",
+   "question": "How many theses can a faculty member supervise at once, and how do I access iThenticate?",
+   "served": "plan_f",
+   "outcome": "PLAN_F_ACCEPTED",
+   "path": "multi_finding_aggregate",
+   "sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_ithenticate_guidelines"
+   ],
+   "pages": [
+    81,
+    1
+   ],
+   "clauses": {
+    "0": [
+     [
+      "uos_faculty_handbook_2025_26",
+      81
+     ]
+    ],
+    "1": [
+     [
+      "uos_ithenticate_guidelines",
+      1
+     ]
+    ]
+   },
+   "verdict": "CORRECT",
+   "note": "two clauses each verified on its own: handbook p81 (four theses) and the iThenticate p1 access procedure; no bridge text; Research"
+  },
+  {
+   "id": "C15",
+   "set": "p0",
+   "question": "How many office hours must faculty hold, and how do I access Blackboard?",
+   "served": "plan_f",
+   "outcome": "PLAN_F_ACCEPTED",
+   "path": "multi_finding_aggregate",
+   "sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "pages": [
+    79,
+    1
+   ],
+   "clauses": {
+    "0": [
+     [
+      "uos_faculty_handbook_2025_26",
+      79
+     ]
+    ],
+    "1": [
+     [
+      "uos_blackboard_faculty_short_guide",
+      1
+     ]
+    ]
+   },
+   "verdict": "CORRECT",
+   "note": "two clauses each verified on its own: handbook p79 (full-time faculty: at least five office hours per week over two days) and the complete p1 Blackboard access procedure; no bridge text"
+  },
+  {
+   "id": "C16",
+   "set": "p0",
+   "question": "How many credit hours is a full teaching load, and how do I send grades to Banner?",
+   "served": "plan_f",
+   "outcome": "PLAN_F_ACCEPTED",
+   "path": "multi_finding_aggregate",
+   "sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "pages": [
+    96,
+    91,
+    2
+   ],
+   "clauses": {
+    "0": [
+     [
+      "uos_faculty_handbook_2025_26",
+      91
+     ],
+     [
+      "uos_faculty_handbook_2025_26",
+      96
+     ]
+    ],
+    "1": [
+     [
+      "uos_grade_transfer_dashboard_guide",
+      2
+     ]
+    ]
+   },
+   "verdict": "CORRECT",
+   "note": "two clauses each verified on its own: handbook p96 and p91 (12 credit hours per semester; the two statements agree) and the complete p2 send-grades procedure; the guide does not answer the workload clause"
+  },
+  {
+   "id": "C17",
+   "set": "p0",
+   "question": "How many theses can a faculty member supervise at once, and how do I upload a document to iThenticate?",
+   "served": "plan_f",
+   "outcome": "PLAN_F_ACCEPTED",
+   "path": "multi_finding_aggregate",
+   "sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_ithenticate_guidelines"
+   ],
+   "pages": [
+    81,
+    1
+   ],
+   "clauses": {
+    "0": [
+     [
+      "uos_faculty_handbook_2025_26",
+      81
+     ]
+    ],
+    "1": [
+     [
+      "uos_ithenticate_guidelines",
+      1
+     ]
+    ]
+   },
+   "verdict": "CORRECT",
+   "note": "two clauses each verified on its own: handbook p81 (four theses) and the complete iThenticate p1 upload procedure"
+  },
+  {
+   "id": "X01",
+   "set": "p1",
+   "question": "What is the student attendance policy, and how do I add attendance in Blackboard Ultra?",
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "path": "multi_finding_aggregate",
+   "sources": [],
+   "pages": [
+    1,
+    2
+   ],
+   "clauses": null,
+   "verdict": null,
+   "note": null
+  },
+  {
+   "id": "X02",
+   "set": "p1",
+   "question": "How many office hours must faculty hold, and how do I create a scheduled session in Blackboard Collaborate?",
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "path": "multi_finding_aggregate",
+   "sources": [],
+   "pages": [
+    1,
+    2,
+    80
+   ],
+   "clauses": null,
+   "verdict": null,
+   "note": null
+  },
+  {
+   "id": "X03",
+   "set": "p1",
+   "question": "How do I send an announcement in Blackboard, and how do I create a discussion in Blackboard Ultra?",
+   "served": "plan_f",
+   "outcome": "PLAN_F_ACCEPTED",
+   "path": "multi_finding_aggregate",
+   "sources": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_communication_guide"
+   ],
+   "pages": [
+    9,
+    1
+   ],
+   "clauses": {
+    "0": [
+     [
+      "uos_blackboard_faculty_short_guide",
+      9
+     ]
+    ],
+    "1": [
+     [
+      "uos_blackboard_communication_guide",
+      1
+     ]
+    ]
+   },
+   "verdict": "ACCEPTABLE BUT LIMITED",
+   "note": "two clauses, each verified on its own: the complete short-guide announcement section (p9, correct) and the two discussion locations (p1, limited as in M01); no bridge text"
+  },
+  {
+   "id": "H39",
+   "set": "held_out",
+   "question": "What does the university require for faculty office hours, and how can I share my office hours with students through Blackboard?",
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "path": "multi_finding_aggregate",
+   "sources": [],
+   "pages": [
+    79,
+    80
+   ],
+   "clauses": null,
+   "verdict": null,
+   "note": null
+  },
+  {
+   "id": "H40",
+   "set": "held_out",
+   "question": "What are the research and publication expectations for faculty, and how do I run my manuscript through iThenticate before submitting it?",
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "path": "multi_finding_aggregate",
+   "sources": [],
+   "pages": [],
+   "clauses": null,
+   "verdict": null,
+   "note": null
+  },
+  {
+   "id": "H41",
+   "set": "held_out",
+   "question": "What is the university policy on student absences, and how do I record attendance in Blackboard Ultra?",
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "path": "multi_finding_aggregate",
+   "sources": [],
+   "pages": [
+    1
+   ],
+   "clauses": null,
+   "verdict": null,
+   "note": null
+  }
+ ]
+}

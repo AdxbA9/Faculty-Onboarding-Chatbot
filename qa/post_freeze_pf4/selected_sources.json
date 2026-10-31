@@ -1,0 +1,27 @@
+{
+ "method": "The PF-4 batch: the smallest useful P1 subset that is official, faculty-facing, clean English, below the frozen page-keyed indexes, low-conflict, and maps to an existing specialist. No new specialist; Teaching & Learning only.",
+ "selected": [
+  {"source_id": "uos_blackboard_attendance_guide", "title": "Attendance Tool in Blackboard Ultra", "pages_indexed": [1, 2], "chunks": 89,
+   "why": "A tool every instructor uses each week; new step-by-step workflow the handbook does not have (the handbook states the absence policy, not the tool); clean 2-page text.",
+   "primary_specialist": "teaching", "secondary_specialist": null,
+   "allowed_claim_types": ["procedure (opening the tool, attendance reporting settings)", "statement of interface behaviour (grade schema, display, where the column appears)", "usage tip (system behaviour)"],
+   "disallowed_claim_types": ["absence limits or any student attendance policy (handbook 12.15)", "what counts as an acceptable excuse", "grading policy"],
+   "system_terms": "blackboard | bb ultra", "declared_names": ["Blackboard Ultra", "BB Ultra", "Blackboard"]},
+  {"source_id": "uos_blackboard_collaborate_guide", "title": "Blackboard Collaborate Ultra Guide", "pages_indexed": [1, 2, 3, 4], "chunks": 150,
+   "why": "Virtual-classroom sessions (scheduling, settings, recording, attendance) are a frequent faculty task; the newest guide (2026); names UOS; clean text.",
+   "primary_specialist": "teaching", "secondary_specialist": null,
+   "allowed_claim_types": ["procedure (sessions, recording, participants, attendance overview/export)", "setting or default value stated by the guide", "list of shareable content"],
+   "disallowed_claim_types": ["how often online classes must run (policy)", "attendance policy", "authority/approval"],
+   "system_terms": "blackboard | bb ultra | collaborate ultra/session(s)/room(s)/recording(s) (never the verb 'collaborate')",
+   "declared_names": ["Blackboard Collaborate Ultra", "Blackboard Collaborate", "Collaborate Ultra", "Blackboard Ultra", "BB Ultra", "Blackboard", "Collaborate"]},
+  {"source_id": "uos_blackboard_communication_guide", "title": "Blackboard Learn Ultra: Communication Tools", "pages_indexed": [1, 2, 3, 4, 5], "chunks": 212,
+   "why": "Discussions and class conversations are core course communication not covered by the P0 guides beyond a mention; clean text.",
+   "primary_specialist": "teaching", "secondary_specialist": null,
+   "allowed_claim_types": ["procedure (create a discussion, enable conversations)", "statement of interface behaviour (visibility, editing and deletion rules, grading column)"],
+   "disallowed_claim_types": ["journal guidance (registered unresolved conflict: every page-5 journal chunk is blocked)", "messaging (not documented)", "policy"],
+   "system_terms": "blackboard | bb ultra", "declared_names": ["Blackboard Learn Ultra", "Blackboard Learn", "Blackboard Ultra", "BB Ultra", "Blackboard"]}
+ ],
+ "not_selected": {"uos_bb_assignments_tests (PF-1 guide_bb_assignments_tests)": "HOLD (architectural: 25 pages collide with the frozen page-keyed indexes)",
+                  "uos_bb_grade_categories (PF-1 guide_bb_grade_categories)": "HOLD (language/extraction: interleaved English and Arabic on the only page)"},
+ "unchanged": {"research": "handbook + iThenticate", "faculty_services": "handbook only (appraisal guide on HOLD)", "institutional": "handbook + short guide + grade transfer guide"}
+}

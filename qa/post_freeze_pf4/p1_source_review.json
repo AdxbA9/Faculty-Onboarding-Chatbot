@@ -1,0 +1,55 @@
+{
+ "method": "PF-4 revalidation of the five PF-1 P1 candidates. File identity: SHA-256 of the file in the PF-1 source folder ('Tutorials', recorded by base name only) compared with the PF-1 inventory. Text: read as production reads it (handbook_bot.pdf_loader.load_pdf, then the english_only page filter). No OCR. The held-out question set was frozen before any of this text was read.",
+ "candidates": [
+  {
+   "pf1_id": "guide_bb_attendance", "filename": "Attendance_En.pdf", "sha256_matches_pf1": true,
+   "sha256": "8959d5bb2d1f7e37183585b8039c27b68b7591d1843f48be0bc7f194cefd6864",
+   "canonical_title": "Attendance Tool in Blackboard Ultra", "issuer": "ITC Academic Computing, University of Sharjah",
+   "officiality": "official UOS ITC guide (unbranded text; UOS author family; the UOS Blackboard Ultra deployment)", "audience": ["faculty", "instructor"],
+   "language": "en (Arabic share 0.0)", "date": "2022-07-20 (file date; DATE UNKNOWN beyond the file date)", "system_topic": "Blackboard Ultra attendance tool; Collaborate attendance reporting",
+   "extraction": "GOOD: pages 1-2 indexed (page 3 is a single image without text); narrow-column text beside screenshots wraps some steps across rows",
+   "screenshot_dependence": "text sufficient; screenshots illustrate", "conflict_status": "harmless overlap with the Collaborate guide (same attendance reporting settings); different context from the gradebook guide's Add Attendance row; the student absence POLICY is handbook 12.15 (p228), never this guide",
+   "specialist_mapping": "teaching (primary); no secondary", "source_authority": "system_guide", "privacy_security": "no personal data in the content; author name only in PDF metadata (not indexed); no URLs, e-mails or phone numbers",
+   "supersession": "none known; consistent with the 2026 Collaborate guide", "decision": "APPROVE FOR PF-4"
+  },
+  {
+   "pf1_id": "guide_bb_collaborate_instructor", "filename": "bb_collab_en.pdf", "sha256_matches_pf1": true,
+   "sha256": "2ba9ecd552662828226301bf4bc86ddcbfbf841a6f66547569f195100ae5e122",
+   "canonical_title": "Blackboard Collaborate Ultra Guide", "issuer": "ITC Academic Computing, University of Sharjah",
+   "officiality": "official UOS ITC guide (names UOS)", "audience": ["faculty", "instructor"], "language": "en (Arabic share 0.0)",
+   "date": "2026-03-02 (file date; DATE UNKNOWN beyond the file date)", "system_topic": "Blackboard Collaborate Ultra: scheduling sessions, settings, attendance reporting, joining, recording, chat, participants, sharing content, attendance overview and export",
+   "extraction": "GOOD: 4 pages; stray callout numbers ([1], [2]) kept verbatim", "screenshot_dependence": "text sufficient",
+   "conflict_status": "harmless overlap with the attendance guide; 'The online classes in UOS are weekly' is a contextual statement inside a procedure (policy asks are never answered from a guide)",
+   "specialist_mapping": "teaching (primary); no secondary", "source_authority": "system_guide", "privacy_security": "no personal data; author name only in PDF metadata",
+   "supersession": "newest of the batch (2026)", "decision": "APPROVE FOR PF-4"
+  },
+  {
+   "pf1_id": "guide_bb_communication", "filename": "bb_commun_en.pdf", "sha256_matches_pf1": true,
+   "sha256": "2982032fa476e4b8ae7e0b1a51898de766a476627ee150f502ed9488d3ed6875",
+   "canonical_title": "Blackboard Learn Ultra: Communication Tools", "issuer": "ITC Academic Computing, University of Sharjah",
+   "officiality": "official UOS ITC guide (unbranded text adapted from vendor help)", "audience": ["faculty", "instructor"], "language": "en (Arabic share 0.0)",
+   "date": "2022-08-23 (file date; DATE UNKNOWN beyond the file date)", "system_topic": "discussions (create, settings, grading, groups, delete), class conversations, journals",
+   "extraction": "GOOD: 5 pages", "screenshot_dependence": "text sufficient",
+   "conflict_status": "LIKELY UPDATED INFORMATION: the 2022 recommendation to limit the teaching and grading use of journals 'until additional improvements are completed' is registered as an unresolved conflict; every journal chunk (page 5) is blocked. Harmless overlap with the short guide (class conversations).",
+   "specialist_mapping": "teaching (primary); no secondary", "source_authority": "system_guide", "privacy_security": "no personal data; author name only in PDF metadata",
+   "supersession": "journal guidance may be superseded (registered conflict)", "decision": "APPROVE FOR PF-4 (journal section blocked)"
+  },
+  {
+   "pf1_id": "guide_bb_assignments_tests", "filename": "bb_assignment_en.pdf", "sha256_matches_pf1": true,
+   "canonical_title": "Blackboard Ultra Assignments and Tests Guide", "issuer": "ITC Academic Computing, University of Sharjah",
+   "officiality": "official UOS ITC guide", "audience": ["faculty"], "language": "en (25 pages, 0 dropped)", "date": "2022-08-22 (file date)",
+   "extraction": "GOOD WITH MINOR CLEANUP (stray callout numbers; page 14 image-dominated)", "screenshot_dependence": "text sufficient",
+   "decision": "HOLD (architectural)",
+   "hold_reason": "25 pages. The frozen Teaching calendar-row index (teaching.py, built from every 'row' chunk whose page is in the handbook calendar pages) and the Institutional page-start index (institutional.py _page_starts_clean, the last paragraph of every page number) are keyed by page number without a source filter, so the PF-2 collision check refuses the whole Plan F registry for any enabled guide with pages at or above 14 (the lowest scoped handbook page). Ingesting it needs a decision record that makes those frozen indexes source-aware, with its own evaluation."
+  },
+  {
+   "pf1_id": "guide_bb_grade_categories", "filename": "Grade_category_short_guide.pdf", "sha256_matches_pf1": true,
+   "canonical_title": "Setting Grade Categories in the Blackboard Gradebook", "issuer": "ITC Academic Computing, University of Sharjah",
+   "officiality": "official UOS ITC guide", "audience": ["faculty"], "language": "en+ar interleaved on one page (Arabic share 0.475)", "date": "2023-10-10 (file date)",
+   "extraction": "NEEDS STRUCTURED CLEANUP: English and Arabic interleave inside the same rows", "screenshot_dependence": "text sufficient",
+   "decision": "HOLD (language / extraction)",
+   "hold_reason": "The single page exceeds the english_only page threshold (0.30) and is dropped, so the source has no indexable page and would fail to load; row-level filtering would still leave mixed rows. PF-4 does not activate Arabic support; a language split of the source is needed first."
+  }
+ ],
+ "summary": {"reviewed": 5, "approved": 3, "ingested": 3, "held": 2, "rejected": 0}
+}

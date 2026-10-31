@@ -55,7 +55,9 @@ HANDBOOK_SOURCE_ID = "uos_faculty_handbook_2025_26"
 #: Guide sources each specialist may ever accept (D-110). The registry must agree (enabled, domains); this table can only
 #: narrow what the registry says, never widen it.
 GUIDE_ALLOWLIST: Mapping[str, FrozenSet[str]] = {
-    "teaching": frozenset({"uos_blackboard_faculty_short_guide", "uos_blackboard_gradebook_guide", "uos_grade_transfer_dashboard_guide"}),
+    "teaching": frozenset({"uos_blackboard_faculty_short_guide", "uos_blackboard_gradebook_guide", "uos_grade_transfer_dashboard_guide",
+                           # post-freeze PF-4 (D-113): the first P1 batch, Teaching & Learning only
+                           "uos_blackboard_attendance_guide", "uos_blackboard_collaborate_guide", "uos_blackboard_communication_guide"}),
     "research": frozenset({"uos_ithenticate_guidelines"}),
     "faculty_services": frozenset(),          # handbook only; the Performance Appraisal guide is on INGESTION HOLD
     "institutional": frozenset({"uos_blackboard_faculty_short_guide", "uos_grade_transfer_dashboard_guide"}),
@@ -71,6 +73,11 @@ SYSTEM_TERMS: Mapping[str, "re.Pattern[str]"] = {
         r"\b(?:grade\s+transfer|transfer(?:ring|red|s)?\s+(?:the\s+|my\s+|our\s+|final\s+|course\s+|student\s+)?(?:grades?|marks?))\b|"
         r"(?<!course\s)\bbanner\b(?!\s+(?:images?|photos?|pictures?|graphics?|pixels?))", re.I),
     "uos_ithenticate_guidelines": re.compile(r"\bi\s?thenticate\b", re.I),
+    # post-freeze PF-4 (D-113). Collaborate is named by the product or one of its objects, never by the verb "collaborate"
+    "uos_blackboard_attendance_guide": re.compile(r"\b(?:blackboard|bb\s+ultra)\b", re.I),
+    "uos_blackboard_collaborate_guide": re.compile(
+        r"\b(?:blackboard|bb\s+ultra)\b|\bcollaborate\s+(?:ultra|sessions?|rooms?|recordings?)\b", re.I),
+    "uos_blackboard_communication_guide": re.compile(r"\b(?:blackboard|bb\s+ultra)\b", re.I),
 }
 
 #: Post-freeze PF-3C (D-111): the names under which each guide's DECLARED system is written in a question. When a clause
@@ -86,6 +93,12 @@ SYSTEM_NAMES: Mapping[str, Tuple[str, ...]] = {
     # Dashboard (Blackboard to Banner)"); "transfer grades" is the action it documents and is NOT bound
     "uos_grade_transfer_dashboard_guide": ("Grade Transfer Dashboard", "Grade Transfer Portal", "Blackboard", "Banner"),
     "uos_ithenticate_guidelines": ("iThenticate",),
+    # post-freeze PF-4 (D-113): the module a guide's title names is declared like the gradebook guide's ("Collaborate");
+    # the attendance tool is NOT a declared name: "attendance" must be stated by the evidence
+    "uos_blackboard_attendance_guide": ("Blackboard Ultra", "BB Ultra", "Blackboard"),
+    "uos_blackboard_collaborate_guide": ("Blackboard Collaborate Ultra", "Blackboard Collaborate", "Collaborate Ultra", "Blackboard Ultra",
+                                         "BB Ultra", "Blackboard", "Collaborate"),
+    "uos_blackboard_communication_guide": ("Blackboard Learn Ultra", "Blackboard Learn", "Blackboard Ultra", "BB Ultra", "Blackboard"),
 }
 
 #: Audiences whose documents may let second-person procedural text stand for the faculty member asking (D-111).
@@ -99,7 +112,11 @@ _POLICY_ASK = re.compile(
     r"\b(?:polic(?:y|ies)|regulations?|rules?|entitle\w*|eligib\w*|obligat\w*|mandatory|compulsory|required\s+to|"
     r"(?:am|are|is)\s+(?:i|we|faculty|instructors?)\s+(?:required|allowed|permitted|obliged)|must\s+(?:i|we|faculty|instructors?)|"
     r"(?:i|we|faculty|instructors?)\s+must|have\s+to|deadlines?|due\s+(?:date|by)|within\s+how\s+(?:many|long)|"
-    r"how\s+many\s+(?:days|hours|weeks|months)|penalt(?:y|ies)|sanctions?|disciplin\w*|misconduct|approv(?:e|al)\s+policy)\b", re.I)
+    r"how\s+many\s+(?:days|hours|weeks|months)|penalt(?:y|ies)|sanctions?|disciplin\w*|misconduct|approv(?:e|al)\s+policy|"
+    # post-freeze PF-4 (D-113): academic-standing limits are policy even when a system is named ("how many absences are
+    # allowed before a student fails")
+    r"how\s+many\s+absences|absences?\s+(?:are|is)\s+(?:allowed|permitted)|(?:allowed|permitted)\s+(?:before|to\s+miss)|"
+    r"fail(?:s|ed|ing)?\s+(?:the\s+|a\s+|their\s+|his\s+|her\s+)?(?:course|class|subject|exam))\b", re.I)
 
 #: A request for a procedure ("how do I", "steps", "walk me through"): answered by the whole procedure or not at all.
 _HOWTO_ASK = re.compile(

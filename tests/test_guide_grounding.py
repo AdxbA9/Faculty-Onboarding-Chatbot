@@ -449,7 +449,8 @@ def test_the_real_guides_index_without_skipped_pages_and_with_their_procedures(r
     assert send.steps[-1].quote.endswith("after the approval from Chair and Dean as below:") and not send.problems
     merged = next(p for p in real_index.procedures_of(GRADEBOOK) if p.pages == (2, 3))
     assert merged.labels[:6] == ("1.", "2.", "3.", "4.", "5.", "6.") and GG.label_problem(merged.labels) is None
-    assert real_index.policy["teaching"] == frozenset({HANDBOOK, SHORT_GUIDE, GRADEBOOK, GRADE_TRANSFER})
+    assert real_index.policy["teaching"] == frozenset({HANDBOOK, SHORT_GUIDE, GRADEBOOK, GRADE_TRANSFER, "uos_blackboard_attendance_guide",
+                                                       "uos_blackboard_collaborate_guide", "uos_blackboard_communication_guide"})   # PF-4
     assert APPRAISAL not in real_index.records
 
 

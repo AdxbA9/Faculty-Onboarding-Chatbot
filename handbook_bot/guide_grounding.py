@@ -504,10 +504,17 @@ class Procedure:
 
     @property
     def sequential(self) -> bool:
-        """Ordered steps: numbered or lettered labels, or a "how to / steps" heading over a bulleted list."""
+        """Ordered steps: numbered or lettered labels, or a "how to / steps" heading over a bulleted list, or (post-freeze
+        PF-4, D-113) a bulleted list under an action heading with at least two instruction steps, which D-112 reads as an
+        ordered procedure ("Checking Session Attendance": open the tool, select overview, export): one of its items never
+        answers alone."""
         if any(label != "-" for label in self.labels):
             return True
-        return bool(self.heading and _HOWTO_HEADING.match(self.heading))
+        if self.heading and _HOWTO_HEADING.match(self.heading):
+            return True
+        from . import guide_structure as _structure
+        return bool(self.heading and is_action_heading(self.heading)
+                    and sum(1 for step in self.steps if _structure.is_instruction(step.quote)) >= 2)
 
     def text(self) -> str:
         return " ".join([self.heading or ""] + [s.quote for s in self.steps])
@@ -849,7 +856,7 @@ def same_action(a: Optional[str], b: Optional[str]) -> bool:
 
 def is_action_heading(text: Optional[str]) -> bool:
     """A heading that names an action ("Send an Announcement", "How to access ...") (D-112 list classification)."""
-    title = re.sub(r"^\s*(?:\d{1,2}|[A-Za-z])\s*[.)]\s+", "", text or "")
+    title = re.sub(r"^\s*(?:\d{1,2}|[A-Za-z])\s*[.)-]\s+", "", text or "")     # "1.", "a)", "D-" (post-freeze PF-4)
     return heading_verb(title) is not None or bool(_HOWTO_HEADING.match(title))
 
 
@@ -942,6 +949,13 @@ def structure_problem(structure: Any, binding: Binding, index: GuideIndex) -> Op
     if intent is GuideIntent.PROCEDURE:
         if any(_CAPABILITY_HEADING.search(t or "") for t in (structure.heading, structure.section_title)):
             return "a list of what can be done is not a procedure"
+        # post-freeze PF-4 (D-113): a numbered or lettered sub-section titled after its object ("1. Session Details" under
+        # "A. Create New Scheduled Sessions") is one part of a larger workflow, never the whole procedure of the asked action
+        head = structure.context[0] if structure.kind == "section" and structure.context else None
+        if head is not None and head.kind == "heading" and head.label:
+            asked_verb, named_verb = clause_verb(binding), heading_verb(structure.heading)
+            if named_verb is None or (asked_verb and not same_action(asked_verb, named_verb)):
+                return "a labelled sub-section that does not name the asked action is one part of a larger procedure"
         verb, named = clause_verb(binding), heading_verb(re.sub(r"^\s*(?:\d{1,2}|[A-Za-z])\s*[.)]\s+", "", structure.section_title or ""))
         if verb and named and not same_action(verb, named):
             objects = [t for t in binding.core if t != verb and t not in _ROLE_STEMS]

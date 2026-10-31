@@ -1,0 +1,935 @@
+{
+ "method": "Labelled after the questions were frozen (sha256 in held_out_freeze), from the official documents of the enabled sources. answerable: yes = an enabled source states a complete answer; partial = part of the ask, a premise correction or an authority/policy case; no = no enabled source. plan_f_should_serve: true = a verified Plan F answer is expected; false = Plan F must not serve; null = either a verified answer or a fallback is acceptable.",
+ "frozen": {
+  "frozen_at": "2026-10-31T06:35:11Z",
+  "sha256": "86db375970f6262edbbd70251420aee43251f58285d827a176ba5479a0de33c3",
+  "count": 50,
+  "author": "an independent agent given only document titles and categories; it read no project file"
+ },
+ "summary": {
+  "yes": 15,
+  "partial": 19,
+  "no": 16
+ },
+ "labels": {
+  "H01": {
+   "id": "H01",
+   "question": "How do I create a new assignment in my Blackboard Ultra course and attach a rubric to it?",
+   "category": "workflow",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_faculty_short_guide": [
+     10,
+     11
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Assignment creation is in the short guide; no enabled source documents attaching a rubric (the gradebook guide only links out). The whole ask is not supported."
+  },
+  "H02": {
+   "id": "H02",
+   "question": "How do I take attendance for today's lecture using the attendance tool in Blackboard?",
+   "category": "workflow",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_blackboard_attendance_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_attendance_guide": [
+     1
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "The attendance guide opens the tool and adds attendance; marking each student's status is not described step by step."
+  },
+  "H03": {
+   "id": "H03",
+   "question": "How do I send my final course grades to Banner through the grade transfer dashboard?",
+   "category": "workflow",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "expected_pages": {
+    "uos_grade_transfer_dashboard_guide": [
+     2
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "How to Send Grades to Banner as instructor (steps 1-4)."
+  },
+  "H04": {
+   "id": "H04",
+   "question": "How do I check my manuscript draft for similarity in iThenticate before sending it to a journal?",
+   "category": "workflow",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": {
+    "uos_ithenticate_guidelines": [
+     1
+    ]
+   },
+   "expected_specialist": "research",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Access and upload procedure; similarity report."
+  },
+  "H05": {
+   "id": "H05",
+   "question": "How do I schedule a virtual class session in Blackboard Collaborate for my students?",
+   "category": "workflow",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_collaborate_guide": [
+     1,
+     2
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "A. Create New Scheduled Sessions: 1 Session Details, 2 Session Settings, 3 Session Attendance Reporting."
+  },
+  "H06": {
+   "id": "H06",
+   "question": "How do I post an announcement to all the students in my Blackboard course?",
+   "category": "workflow",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_faculty_short_guide": [
+     9
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Send an Announcement (short guide page 9)."
+  },
+  "H07": {
+   "id": "H07",
+   "question": "How do I create a timed quiz with multiple choice questions in Blackboard Ultra?",
+   "category": "workflow",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Tests and question types are in the held Assignments and Tests guide (Blackboard Ultra Assignments and Tests Guide (P1, HOLD in PF-4))."
+  },
+  "H08": {
+   "id": "H08",
+   "question": "What is the process for a faculty member to apply for annual leave?",
+   "category": "workflow",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     107
+    ]
+   },
+   "expected_specialist": "faculty_services",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Handbook 4.3.1 states the entitlement, not an application process: the known annual-leave partial, never served."
+  },
+  "H09": {
+   "id": "H09",
+   "question": "Where can I see all of my students' grades together in one place in Blackboard Ultra?",
+   "category": "navigation",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_gradebook_guide": [
+     1,
+     6
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "location",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Gradebook views (list, student grid)."
+  },
+  "H10": {
+   "id": "H10",
+   "question": "Where do I find the recordings of my Collaborate sessions after the class is over?",
+   "category": "navigation",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "teaching",
+   "expected_answer_type": "location",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "The Collaborate guide covers starting/stopping and downloading recordings, not where recordings are listed."
+  },
+  "H11": {
+   "id": "H11",
+   "question": "Where is the option to make my course visible to students in Blackboard Ultra?",
+   "category": "navigation",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_faculty_short_guide": [
+     4
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "location",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Short guide page 4: a course can be kept private and opened to students; the control is not fully described."
+  },
+  "H12": {
+   "id": "H12",
+   "question": "Where in iThenticate do I see the similarity report once my document has finished processing?",
+   "category": "navigation",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": {
+    "uos_ithenticate_guidelines": [
+     1
+    ]
+   },
+   "expected_specialist": "research",
+   "expected_answer_type": "location",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "The similarity index and originality report are under Documents."
+  },
+  "H13": {
+   "id": "H13",
+   "question": "Where can I find a list of the main university offices and contacts that new faculty might need?",
+   "category": "navigation",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {},
+   "expected_specialist": "institutional",
+   "expected_answer_type": "list",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "The handbook directory lists offices; no single list for new faculty."
+  },
+  "H14": {
+   "id": "H14",
+   "question": "How do I set up weighted grade categories so that exams count for 60 percent of the final grade?",
+   "category": "configuration",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Weighted categories are not described in the enabled guides (Setting Grade Categories in the Blackboard Gradebook (P1, HOLD in PF-4))."
+  },
+  "H15": {
+   "id": "H15",
+   "question": "How can I change the due date of an assignment that is already visible to students?",
+   "category": "configuration",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Changing a due date is in the held Assignments and Tests guide."
+  },
+  "H16": {
+   "id": "H16",
+   "question": "How do I exclude the bibliography and quoted text from the similarity score in iThenticate?",
+   "category": "configuration",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "research",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Exclusion filters are not in the iThenticate guidelines."
+  },
+  "H17": {
+   "id": "H17",
+   "question": "How do I turn on the setting that lets students see their overall grade in the gradebook?",
+   "category": "configuration",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Overall-grade visibility settings are not described."
+  },
+  "H18": {
+   "id": "H18",
+   "question": "Who should I contact if Blackboard stops working for my course?",
+   "category": "support_contact",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     183
+    ]
+   },
+   "expected_specialist": "institutional",
+   "expected_answer_type": "contact",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Handbook names the ITC Service Help Desk without a contact channel."
+  },
+  "H19": {
+   "id": "H19",
+   "question": "Who do I reach out to if I can't get into my iThenticate account?",
+   "category": "support_contact",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": {
+    "uos_ithenticate_guidelines": [
+     1
+    ]
+   },
+   "expected_specialist": "research",
+   "expected_answer_type": "contact",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "If you are unable to access iThenticate email servicedesk@sharjah.ac.ae."
+  },
+  "H20": {
+   "id": "H20",
+   "question": "Who has to approve my final grades after I send them from the grade transfer dashboard?",
+   "category": "approval_authority",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "expected_pages": {
+    "uos_grade_transfer_dashboard_guide": [
+     2,
+     3
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "authority",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "The guide shows the Chair and Dean approval workflow; an authority ask is not answered from a system guide (D-111), fallback acceptable."
+  },
+  "H21": {
+   "id": "H21",
+   "question": "Who approves a faculty member's request for sabbatical leave?",
+   "category": "approval_authority",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     170,
+     173
+    ]
+   },
+   "expected_specialist": "research",
+   "expected_answer_type": "authority",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Only research-group sabbatical awards are covered."
+  },
+  "H22": {
+   "id": "H22",
+   "question": "Who decides whether I'm allowed to teach an overload course in a semester?",
+   "category": "approval_authority",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     91
+    ]
+   },
+   "expected_specialist": "faculty_services",
+   "expected_answer_type": "authority",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Overload rules for faculty with administrative release (Chancellor exception) only."
+  },
+  "H23": {
+   "id": "H23",
+   "question": "How do I add students?",
+   "category": "ambiguous",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": null,
+   "expected_answer_type": "ambiguous",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Ambiguous: enrolment, groups, roster..."
+  },
+  "H24": {
+   "id": "H24",
+   "question": "Can I change a grade?",
+   "category": "ambiguous",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": null,
+   "expected_answer_type": "ambiguous",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Ambiguous: policy or system; no grade-change rule found."
+  },
+  "H25": {
+   "id": "H25",
+   "question": "How does the report work?",
+   "category": "ambiguous",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": null,
+   "expected_answer_type": "ambiguous",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Ambiguous."
+  },
+  "H26": {
+   "id": "H26",
+   "question": "how do i make a new colum in the gradbook on BB ultra",
+   "category": "abbreviation_misspelling",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_gradebook_guide": [
+     3,
+     9
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Add a row / Add Item in the gradebook; misspelled wording (fallback acceptable)."
+  },
+  "H27": {
+   "id": "H27",
+   "question": "how to upload my paper to ithentcate for plagarism check",
+   "category": "abbreviation_misspelling",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": {
+    "uos_ithenticate_guidelines": [
+     1
+    ]
+   },
+   "expected_specialist": "research",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Upload procedure; the system name is misspelled (fallback acceptable)."
+  },
+  "H28": {
+   "id": "H28",
+   "question": "whats the max teching load for asst prof per sem",
+   "category": "abbreviation_misspelling",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     91
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "value",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "WLAM: 12 credit hours per regular semester for ranked full-time faculty."
+  },
+  "H29": {
+   "id": "H29",
+   "question": "how do i start a colab ultra sesion from my blackbord course",
+   "category": "abbreviation_misspelling",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_collaborate_guide": [
+     2
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Join session; misspelled wording (fallback acceptable)."
+  },
+  "H30": {
+   "id": "H30",
+   "question": "hey quick q, I just joined UOS this fall, how many office hours am I supposed to hold each week?",
+   "category": "conversational",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     79
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "value",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Full-time faculty: at least five office hours per week over two days."
+  },
+  "H31": {
+   "id": "H31",
+   "question": "hi! my students keep telling me they can't see the test I made, any idea what I did wrong?",
+   "category": "conversational",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_faculty_short_guide": [
+     8
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Content is hidden by default and made visible; tests are in the held guide."
+  },
+  "H32": {
+   "id": "H32",
+   "question": "ok so grades are due soon and I honestly have no clue how the grade transfer thing works, can you walk me through it?",
+   "category": "conversational",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "expected_pages": {
+    "uos_grade_transfer_dashboard_guide": [
+     2
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Grade transfer procedure."
+  },
+  "H33": {
+   "id": "H33",
+   "question": "What happens after I submit grades on the grade transfer dashboard, can I still edit them?",
+   "category": "what_happens_after",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "teaching",
+   "expected_answer_type": "statement",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Editing after transfer is not described."
+  },
+  "H34": {
+   "id": "H34",
+   "question": "If I mark a student absent in the Blackboard attendance tool, does it change their grade automatically?",
+   "category": "what_happens_after",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_blackboard_attendance_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_attendance_guide": [
+     1
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "what_happens",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Attendance can count toward the overall grade according to the grade schema; automatic change not stated as such."
+  },
+  "H35": {
+   "id": "H35",
+   "question": "What happens to submissions students already made if I edit the assignment afterwards?",
+   "category": "what_happens_after",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "teaching",
+   "expected_answer_type": "what_happens",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "In the held Assignments and Tests guide."
+  },
+  "H36": {
+   "id": "H36",
+   "question": "Since iThenticate is the tool for checking student homework, can I link it to my Blackboard assignments?",
+   "category": "yes_no_false_premise",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": {
+    "uos_ithenticate_guidelines": [
+     1
+    ]
+   },
+   "expected_specialist": "research",
+   "expected_answer_type": "yes_no",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "False premise: iThenticate is for authors' manuscripts; no source documents a Blackboard link."
+  },
+  "H37": {
+   "id": "H37",
+   "question": "Is it true that the department Chair enters the final grades into Banner for each faculty member?",
+   "category": "yes_no_false_premise",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "expected_pages": {
+    "uos_grade_transfer_dashboard_guide": [
+     2,
+     3
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "yes_no",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "False premise: the instructor transfers, Chair and Dean approve."
+  },
+  "H38": {
+   "id": "H38",
+   "question": "Do I have to email each student individually since Blackboard has no way to message the whole class?",
+   "category": "yes_no_false_premise",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_faculty_short_guide": [
+     2,
+     4,
+     9
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "yes_no",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "False premise: announcements and messages exist."
+  },
+  "H39": {
+   "id": "H39",
+   "question": "What does the university require for faculty office hours, and how can I share my office hours with students through Blackboard?",
+   "category": "cross_source",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     79
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "mixed",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Office hours policy yes; sharing office hours through Blackboard is not documented."
+  },
+  "H40": {
+   "id": "H40",
+   "question": "What are the research and publication expectations for faculty, and how do I run my manuscript through iThenticate before submitting it?",
+   "category": "cross_source",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     81
+    ],
+    "uos_ithenticate_guidelines": [
+     1
+    ]
+   },
+   "expected_specialist": "research",
+   "expected_answer_type": "mixed",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Research visibility expectations plus the iThenticate upload procedure."
+  },
+  "H41": {
+   "id": "H41",
+   "question": "What is the university policy on student absences, and how do I record attendance in Blackboard Ultra?",
+   "category": "cross_source",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_blackboard_attendance_guide"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     228
+    ],
+    "uos_blackboard_attendance_guide": [
+     1
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "mixed",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Handbook 12.15 plus the attendance tool."
+  },
+  "H42": {
+   "id": "H42",
+   "question": "What is the deadline for submitting final grades in the grade transfer dashboard each semester?",
+   "category": "policy_vs_system_trap",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "teaching",
+   "expected_answer_type": "policy",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Policy trap: no grade-submission deadline is stated; a guide must never answer a deadline."
+  },
+  "H43": {
+   "id": "H43",
+   "question": "What is the highest similarity percentage iThenticate allows before the university says a paper can't be submitted?",
+   "category": "policy_vs_system_trap",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "research",
+   "expected_answer_type": "policy",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Policy trap: no similarity threshold is stated."
+  },
+  "H44": {
+   "id": "H44",
+   "question": "According to the Blackboard attendance tool, how many absences can a student have before they fail the course?",
+   "category": "policy_vs_system_trap",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     228
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "policy",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Policy trap: the handbook is authoritative; no guide answer may be served."
+  },
+  "H45": {
+   "id": "H45",
+   "question": "How do I submit my annual faculty appraisal report?",
+   "category": "wrong_source_collision",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     129,
+     142
+    ]
+   },
+   "expected_specialist": "faculty_services",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Collision: annual evaluation in the Faculty Information System; the held appraisal guide must never be cited."
+  },
+  "H46": {
+   "id": "H46",
+   "question": "Where do I upload the documents for my promotion application?",
+   "category": "wrong_source_collision",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     151
+    ]
+   },
+   "expected_specialist": "faculty_services",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Collision: promotion documents listed; upload channel not stated."
+  },
+  "H47": {
+   "id": "H47",
+   "question": "Who gives approval for me to attend an international conference?",
+   "category": "wrong_source_collision",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     117,
+     119
+    ]
+   },
+   "expected_specialist": "research",
+   "expected_answer_type": "authority",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Collision: conference participation rules; approval chain partly stated."
+  },
+  "H48": {
+   "id": "H48",
+   "question": "How do I get a parking permit for the faculty parking area on campus?",
+   "category": "unsupported",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "institutional",
+   "expected_answer_type": "unsupported",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Parking permits are not documented."
+  },
+  "H49": {
+   "id": "H49",
+   "question": "How do I create a Microsoft Teams meeting with my department colleagues?",
+   "category": "unsupported",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": null,
+   "expected_answer_type": "unsupported",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Microsoft Teams is not documented."
+  },
+  "H50": {
+   "id": "H50",
+   "question": "How do I access the library's journal databases from off campus?",
+   "category": "unsupported",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "institutional",
+   "expected_answer_type": "unsupported",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "notes": "Off-campus library access is not documented."
+  }
+ }
+}

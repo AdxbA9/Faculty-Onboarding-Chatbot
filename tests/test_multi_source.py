@@ -47,7 +47,12 @@ GRADE_TRANSFER = "uos_grade_transfer_dashboard_guide"
 GRADEBOOK = "uos_blackboard_gradebook_guide"
 ITHENTICATE = "uos_ithenticate_guidelines"
 APPRAISAL = "uos_performance_appraisal_phase2_guide"
-GUIDES = (SHORT_GUIDE, GRADE_TRANSFER, GRADEBOOK, ITHENTICATE)
+# post-freeze PF-4 (D-113): the first P1 batch, approved for Teaching & Learning only
+ATTENDANCE = "uos_blackboard_attendance_guide"
+COLLABORATE = "uos_blackboard_collaborate_guide"
+COMMUNICATION = "uos_blackboard_communication_guide"
+P1_GUIDES = (ATTENDANCE, COLLABORATE, COMMUNICATION)
+GUIDES = (SHORT_GUIDE, GRADE_TRANSFER, GRADEBOOK, ITHENTICATE, *P1_GUIDES)
 HANDBOOK_CHUNKS = 13688
 ARABIC = "كيفية إرسال الدرجات"   # "how to send the grades"
 
@@ -104,9 +109,9 @@ def _item(source_id, title, page, section=None, chunk_type="row"):
 # ---------------------------------------------------------------------------
 # The registry
 # ---------------------------------------------------------------------------
-def test_registry_holds_the_handbook_four_enabled_guides_and_one_held_record(registry):
+def test_registry_holds_the_handbook_the_enabled_guides_and_one_held_record(registry):
     ids = [r.source_id for r in registry]
-    assert ids == [HANDBOOK, SHORT_GUIDE, GRADE_TRANSFER, GRADEBOOK, ITHENTICATE, APPRAISAL]
+    assert ids == [HANDBOOK, SHORT_GUIDE, GRADE_TRANSFER, GRADEBOOK, ITHENTICATE, *P1_GUIDES, APPRAISAL]
     assert [r.source_id for r in registry.enabled_sources()] == [HANDBOOK, *GUIDES]
     held = registry.get_source(APPRAISAL)
     assert not held.enabled and held.access == "internal_use" and "HOLD" in held.verification_status
@@ -306,6 +311,9 @@ def test_guides_keep_their_own_page_numbers_and_the_arabic_pages_are_not_indexed
     assert reports[HANDBOOK] is None
     assert reports[GRADE_TRANSFER]["pages_dropped"] == [4, 5, 6] and reports[ITHENTICATE]["pages_dropped"] == [2]
     assert reports[SHORT_GUIDE]["pages_dropped"] == [] and reports[GRADEBOOK]["pages_dropped"] == []
+    # post-freeze PF-4: the P1 guides are English throughout (the attendance guide's image-only page 3 has no text)
+    assert pages[ATTENDANCE] == [1, 2] and pages[COLLABORATE] == [1, 2, 3, 4] and pages[COMMUNICATION] == [1, 2, 3, 4, 5]
+    assert all(reports[g]["pages_dropped"] == [] for g in P1_GUIDES)
 
 
 def test_no_guide_chunk_carries_arabic_script(by_source):
@@ -334,13 +342,22 @@ def test_procedure_chunks_exist_only_in_the_guides_and_classic_chunks_are_kept(p
     assert step.startswith("How to Send Grades to Banner as instructor?: 1. Search for the course")
 
 
-def test_the_conflict_phrases_mark_only_ithenticate_chunks_that_carry_them(parts, by_source, registry):
-    (conflict,) = registry.get_source(ITHENTICATE).conflicts
+def test_the_conflict_phrases_mark_only_the_chunks_of_their_own_source_that_carry_them(parts, by_source, registry):
+    """The iThenticate quota (PF-2) and, post-freeze PF-4, the communication guide's 2022 journal recommendation: each
+    registered conflict stamps exactly the chunks of its own source that carry one of its phrases, nothing else."""
+    conflicts = {ITHENTICATE: registry.get_source(ITHENTICATE).conflicts, COMMUNICATION: registry.get_source(COMMUNICATION).conflicts}
+    assert len(conflicts[ITHENTICATE]) == 1 and len(conflicts[COMMUNICATION]) == 1
     flagged = [(text, meta) for text, meta in zip(parts.chunks, parts.metadata) if meta.get("source_conflict")]
-    assert flagged and all(meta["source_id"] == ITHENTICATE for _, meta in flagged)
-    assert all(meta["source_conflict"] == conflict.topic and conflict.matches(text) for text, meta in flagged)
-    assert all(meta["source_conflict"] is None for text, meta in by_source[ITHENTICATE] if not conflict.matches(text))
-    assert next(s for s in parts.per_source if s["source_id"] == ITHENTICATE)["conflict_chunks"] == len(flagged)
+    assert {meta["source_id"] for _, meta in flagged} == {ITHENTICATE, COMMUNICATION}
+    for source_id, (conflict,) in conflicts.items():
+        own = [(text, meta) for text, meta in flagged if meta["source_id"] == source_id]
+        assert own and all(meta["source_conflict"] == conflict.topic and conflict.matches(text) for text, meta in own)
+        assert all(meta["source_conflict"] is None for text, meta in by_source[source_id] if not conflict.matches(text))
+    journal = [meta["page"] for text, meta in flagged if meta["source_id"] == COMMUNICATION]
+    assert set(journal) == {5}                                      # the journal section, and only it
+    for source_id in conflicts:
+        own = sum(1 for _, meta in flagged if meta["source_id"] == source_id)
+        assert next(s for s in parts.per_source if s["source_id"] == source_id)["conflict_chunks"] == own
 
 
 def test_corpus_identity_is_deterministic_path_free_and_sensitive_to_the_enabled_set(registry, parts):
@@ -408,7 +425,7 @@ def test_approved_source_set_has_no_wildcard_and_always_keeps_the_handbook(bad, 
 
 def test_domain_policy_is_read_from_the_records_and_ignores_disabled_ones(registry):
     policy = SS.domain_sources(registry.list_sources())
-    assert policy["teaching"] == frozenset({HANDBOOK, SHORT_GUIDE, GRADE_TRANSFER, GRADEBOOK})
+    assert policy["teaching"] == frozenset({HANDBOOK, SHORT_GUIDE, GRADEBOOK, GRADE_TRANSFER, *P1_GUIDES})
     assert policy["research"] == frozenset({HANDBOOK, ITHENTICATE})
     assert policy["faculty_services"] == frozenset({HANDBOOK})          # the appraisal guide is on hold
     assert policy["institutional"] == frozenset({HANDBOOK, SHORT_GUIDE, GRADE_TRANSFER})
@@ -416,7 +433,7 @@ def test_domain_policy_is_read_from_the_records_and_ignores_disabled_ones(regist
 
 def test_source_policy_is_the_d110_map_and_needs_both_the_allowlist_and_the_registry(registry):
     policy = SS.source_policy(registry.list_sources())
-    assert policy == {"teaching": frozenset({HANDBOOK, SHORT_GUIDE, GRADEBOOK, GRADE_TRANSFER}),
+    assert policy == {"teaching": frozenset({HANDBOOK, SHORT_GUIDE, GRADEBOOK, GRADE_TRANSFER, *P1_GUIDES}),
                       "research": frozenset({HANDBOOK, ITHENTICATE}),
                       "faculty_services": frozenset({HANDBOOK}),
                       "institutional": frozenset({HANDBOOK, SHORT_GUIDE, GRADE_TRANSFER})}
@@ -470,14 +487,14 @@ def test_the_i9_registry_stays_handbook_only_and_the_guide_registry_is_built_bes
     assert report["enabled"] and report["collisions"] == [] and report["guide_registry"]["ok"]
     assert report["policy"]["research"] == sorted([HANDBOOK, ITHENTICATE]) and report["policy"]["faculty_services"] == [HANDBOOK]
     guides = on.guide_registry
-    assert guides.resolve("teaching").approved_sources == frozenset({HANDBOOK, SHORT_GUIDE, GRADEBOOK, GRADE_TRANSFER})
+    assert guides.resolve("teaching").approved_sources == frozenset({HANDBOOK, SHORT_GUIDE, GRADEBOOK, GRADE_TRANSFER, *P1_GUIDES})
     assert guides.resolve("research").approved_sources == frozenset({HANDBOOK, ITHENTICATE})
     assert guides.resolve("institutional").approved_sources == frozenset({HANDBOOK, SHORT_GUIDE, GRADE_TRANSFER})
     assert not hasattr(guides.resolve("faculty_services"), "approved_sources")                  # Faculty Services & HR untouched
     # PF-3C (D-111): the guide registry wraps the SAME I-9 specialist objects; their extraction stays handbook-only and guide
     # evidence enters only through the D-111 guide path, for exactly the D-110 approved guides
     from handbook_bot.agents.specialists.guide_evidence import GuideCapableSpecialist
-    assert guides.resolve("teaching").approved_guides == frozenset({SHORT_GUIDE, GRADEBOOK, GRADE_TRANSFER})
+    assert guides.resolve("teaching").approved_guides == frozenset({SHORT_GUIDE, GRADEBOOK, GRADE_TRANSFER, *P1_GUIDES})
     assert guides.resolve("research").approved_guides == frozenset({ITHENTICATE})
     assert guides.resolve("faculty_services") is on.registry.resolve("faculty_services")
     for sid in ("teaching", "research", "institutional"):
@@ -493,10 +510,12 @@ def test_the_i9_registry_stays_handbook_only_and_the_guide_registry_is_built_bes
 def test_the_guide_registry_is_used_only_for_a_question_that_names_a_guide_system(kb):
     runtime, _ = PF.build_runtime(kb, guide_scopes=True)
     for question, named in [
-        ("How do I post grades in the Blackboard gradebook?", [SHORT_GUIDE, GRADEBOOK]),
+        ("How do I post grades in the Blackboard gradebook?", [SHORT_GUIDE, GRADEBOOK, *P1_GUIDES]),
+        ("Where are the recordings of my Collaborate sessions?", [COLLABORATE]),                # post-freeze PF-4
+        ("How do I collaborate with colleagues on a research grant?", []),                    # the verb names no system
         ("How do I transfer grades to Banner?", [GRADE_TRANSFER]),
         ("How do I access iThenticate?", [ITHENTICATE]),
-        ("What is the minimum size of a Blackboard course banner image?", [SHORT_GUIDE, GRADEBOOK]),   # a banner image is not Banner
+        ("What is the minimum size of a Blackboard course banner image?", [SHORT_GUIDE, GRADEBOOK, *P1_GUIDES]),   # not Banner
         ("Can I upload a banner image for my course?", []),
         ("How many credit hours is a full teaching load?", []),
         ("How do I start the Phase 2 progress review in the HR Portal?", []),          # the held appraisal guide has no scope
@@ -674,7 +693,7 @@ def test_the_adapter_refuses_a_guide_finding_outside_its_system_or_on_a_policy_a
     runtime = _stub_runtime(kb, "teaching", cid, quote)
     attempt = runtime.attempt("What is the minimum size of a Blackboard course banner image?")
     assert attempt.outcome is PF.PlanFOutcome.REJECTED_BY_SOURCE_AUTHORITY and "does not name the system" in attempt.reason
-    assert attempt.guide_scope == {"enabled": True, "selected": True, "named": [SHORT_GUIDE, GRADEBOOK]}
+    assert attempt.guide_scope == {"enabled": True, "selected": True, "named": [SHORT_GUIDE, GRADEBOOK, *P1_GUIDES]}
     cid = _first(kb, GRADEBOOK)
     runtime = _stub_runtime(kb, "teaching", cid, kb.chunks[cid][:80])
     attempt = runtime.attempt("What grading policy applies to the Blackboard gradebook?")
