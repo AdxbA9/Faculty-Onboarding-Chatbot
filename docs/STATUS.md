@@ -9,6 +9,95 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-10-31 - Deterministic guide structure recovery and coverage refinement (post-freeze phase PF-3D)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/post-freeze-knowledge-expansion` |
+| Starting commit | `b1d4bd1` (Enable verified guide-grounded specialist answers) |
+| Ending state | COMPLETE. Plan F reads the printed structure of the guides under D-112 and serves 19 of 37 core guide questions (PF-3C 10), all correct; 33 guide answers over the 100-question evaluation, 32 correct, 1 limited, 0 wrong; the frozen 192-question set is identical to I-9; one local commit for the project owner to push; `PLAN_F_GUIDE_SCOPES` stays off by default |
+| Freeze status | I-9 (`runtime-freeze-i9`, D-108) remains the frozen baseline and comparison control. D-112 adds structure recovery inside the D-111 guide path, used only with `PLAN_F_GUIDE_SCOPES` on; the frozen specialists and the handbook path are unchanged |
+| Elapsed | 1h43m41s (start 2026-10-31T03:47:20Z, end 2026-10-31T05:31:01Z; includes the background evaluation runs) |
+
+### Before and after
+
+| | PF-3C | PF-3D |
+|---|---|---|
+| core guide questions served by Plan F | 10 of 37 (27.0%) | 19 of 37 (51.4%) |
+| core served correct / limited / wrong | 10 / 0 / 0 | 19 / 0 / 0 |
+| Blackboard short guide / gradebook / grade transfer / iThenticate | 4 of 13 / 1 of 10 / 3 of 6 / 2 of 8 | 8 of 13 / 6 of 10 / 3 of 6 / 2 of 8 |
+| structural false fallbacks (identified before any change) | 10 | 9 recovered, 1 remaining (refused correctly) |
+| all served guide answers (100 questions): correct / limited / wrong | 21 / 1 / 0 | 32 / 1 / 0 |
+| guide evidence selected: on target / partial / off target | 12 / 0 / 0 | 21 / 0 / 0 (set measure) |
+| frozen 192-question set | 55 served, 0 wrong, 0 changed | 55 served, 0 wrong, 0 changed |
+
+### Completed
+
+- Measured before changing: the 27 PF-3C core fallbacks classified by hand (8 legitimate, 10 structural, 9 other false
+  fallbacks) in `qa/post_freeze_pf3d/fallback_classification.json`.
+- D-112 recorded: structure may be recovered only from deterministic formatting and text evidence (no LLM, no invented
+  steps, no guessed sequence): printed blocks, headings, section boundaries, page continuation only under no heading,
+  list lead-ins and list types, exact quotes of every unit, completeness proof (one ordered label list, a heading that
+  names the asked action, no missing last step); bullets never renumbered; unordered lists never presented as steps.
+- New module `handbook_bot/guide_structure.py`; `guide_grounding.py` (structure index, `structure_problem`, answer form
+  `section`, adapter verification, missing-last-step rule for D-111 procedures too, `citation_heading`);
+  `guide_evidence.py` (structure ranks); `plan_f_runtime.py` (`guide_citation_items`: verified guide items cited under
+  their printed heading instead of the carried page hint).
+- Recovered and reviewed: keyboard reorder, learning module, announcement, assignment (pages 10 and 11), the two
+  gradebook views, automatic zeros, gradebook download, accommodations, child-course filter; the cross-document P14; C29
+  (labelled incomplete in PF-3C from the PF-2 misreading of a section label; complete on the printed page).
+
+### Tests performed
+
+- Frozen 192-question set with guide scopes on (final code): identical to I-9 and to the PF-3C rerun (0 changed
+  questions in ACTIVE and SHADOW; 55 served, 0 wrong, 0 false acceptances, 11 false fallbacks, SHADOW 192 of 192, 0
+  model calls; no master question selects the guide registry).
+- Guide evaluation (100 questions; ACTIVE, SHADOW, DIRECT, scopes off, LEGACY, two repeats): core 19 of 37 served, 19
+  correct, 0 wrong (precision 100%); all served guide answers 33 (32 correct, 1 limited, 0 wrong); every PF-3C answer
+  unchanged; conflict, contamination, wrong-source, appraisal, authority, known HR and annual leave all fall back; SHADOW
+  100 of 100 identical; scopes off versus on: 33 differences, all reviewed guide answers; determinism 0 differences;
+  0 exceptions; 0 model calls.
+- Evidence selection (`evidence_selection.py --pf3c`, final code): 21 of 37 with evidence, all on target as a set, 0 off
+  target; PF-3C's 12 unchanged.
+- Adversarial: first, middle and last step missing, continuation not indexed, heading of another procedure, two
+  procedures mixed, forged or incomplete answers, unordered lists: all refused (`adversarial_results.json`).
+- Application smoke with guide scopes on: ACTIVE 13 turns (recovered Blackboard and gradebook sections, grade transfer,
+  iThenticate, quota fallback, handbook teaching load, known HR, annual leave, incomplete procedure, Banner Self Service,
+  cross-document, held appraisal, guide statement); SHADOW 3; LEGACY fresh process 10 of 10 minimal, no D-112 module
+  imported.
+- Real-model wrong-source retrieval: 16 of 16 unchanged.
+- Targeted gate (the PF-3C gate plus `test_guide_structure.py`): 2,320 passed. Full suite: 6,926 passed, 0 failed,
+  0 skipped (6,858 at the start; 68 new D-112 tests). `pip check`: no broken requirements. Security scan of the changed and new files: 0 problems.
+
+### Known limitations
+
+- 18 of 37 core guide questions still fall back: 8 legitimately (no answer in the guide, specialist not approved for the
+  guide, the policy/system boundary, the quota conflict, an ambiguous ask), G20 (an option inside a capability list,
+  refused by design) and 9 for reasons other than structure (an asked word the guide does not print, evidence below the
+  reranker gate).
+- The D-112 rules were developed and measured on the same 47 guide questions; no held-out guide question set exists yet.
+- A guide question that still falls back pays one scoped retrieval before the legacy path (p50 about 0.5 s more).
+- `PLAN_F_GUIDE_SCOPES` stays off by default.
+
+### Next task
+
+Controlled P1 guide expansion under D-109, D-111 and D-112, with a held-out guide question set written without
+reference to the guides' layout; the Performance Appraisal guide stays on HOLD. Enabling `PLAN_F_GUIDE_SCOPES` by
+default is the project owner's decision.
+
+### Blockers
+
+None.
+
+### Files changed
+
+`handbook_bot/guide_structure.py` (new), `handbook_bot/guide_grounding.py`,
+`handbook_bot/agents/specialists/guide_evidence.py`, `handbook_bot/plan_f_runtime.py`, `tests/test_guide_structure.py`
+(new), `qa/post_freeze_pf3d/` (new), `docs/DECISIONS.md` (D-112), `docs/STATUS.md`.
+
+---
+
 ## 2026-10-31 - Guide grounding, evidence selection and verified procedure assembly (post-freeze phase PF-3C)
 
 | Field | Value |

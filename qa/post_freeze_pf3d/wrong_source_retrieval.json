@@ -1,0 +1,640 @@
+{
+ "method": "Wrong-source adversarial retrieval with the REAL models (brief sections 30, 31 and 33): questions whose key terms\n(\"approval\", \"submission\", \"review\", \"attendance\", \"support\", \"login\") occur in several documents, plus system-versus-\npolicy pairs. For each question the unscoped legacy retrieval (dense + lexical candidates, then the production cross-\nencoder rerank, exactly as ``qa.answer_question`` ranks them) is read and the top five are checked against the source and\npage the question belongs to. Writes ``wrong_source_retrieval.json``.\n\n    python -X utf8 qa/post_freeze_pf2/wrong_source_retrieval.py <repo> <out json>",
+ "summary": {
+  "cases": 16,
+  "top1_expected_source": 16,
+  "expected_page_in_top5": 16,
+  "wrong_source_first": [],
+  "seconds": 36.7
+ },
+ "cases": [
+  {
+   "id": "W01",
+   "term": "approval",
+   "question": "Who approves the grades before they reach Banner?",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "expected_pages": [
+    2,
+    3
+   ],
+   "top5": [
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3,
+     "procedure_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3,
+     "procedure_step"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3,
+     "procedure_step"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3,
+     "paragraph"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "wrong_source_first": null
+  },
+  {
+   "id": "W02",
+   "term": "approval",
+   "question": "Who approves conference travel?",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "expected_pages": [
+    117
+   ],
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     117,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     117,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     119,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     118,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     119,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "wrong_source_first": null
+  },
+  {
+   "id": "W03",
+   "term": "submission",
+   "question": "How do I submit a document for a similarity check?",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "wrong_source_first": null
+  },
+  {
+   "id": "W04",
+   "term": "submission",
+   "question": "Where can I see which submissions still need grading?",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    1,
+    2,
+    4
+   ],
+   "top5": [
+    [
+     "uos_blackboard_gradebook_guide",
+     2,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     4,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     4,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     2,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "wrong_source_first": null
+  },
+  {
+   "id": "W05",
+   "term": "submission",
+   "question": "Within how many hours must instructors submit final examination results?",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "expected_pages": [
+    224
+   ],
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     224,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     224,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     224,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     224,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     223,
+     "paragraph"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "wrong_source_first": null
+  },
+  {
+   "id": "W06",
+   "term": "review",
+   "question": "How do I review my course as a student would see it?",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    5
+   ],
+   "top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     5,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     5,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     5,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     5,
+     "row"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     4,
+     "paragraph"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "wrong_source_first": null
+  },
+  {
+   "id": "W07",
+   "term": "review",
+   "question": "How do I review the similarity report of my paper?",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "wrong_source_first": null
+  },
+  {
+   "id": "W08",
+   "term": "attendance",
+   "question": "How do I add attendance to the gradebook?",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    3
+   ],
+   "top5": [
+    [
+     "uos_blackboard_gradebook_guide",
+     3,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     3,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     3,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     3,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     3,
+     "row"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "wrong_source_first": null
+  },
+  {
+   "id": "W09",
+   "term": "attendance",
+   "question": "What percentage of absences bars a student from the final examination?",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "expected_pages": null,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     228,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     228,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     228,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     228,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     228,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "wrong_source_first": null
+  },
+  {
+   "id": "W10",
+   "term": "support",
+   "question": "Whom do I contact if I cannot access iThenticate?",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "wrong_source_first": null
+  },
+  {
+   "id": "W11",
+   "term": "login",
+   "question": "How do I log in to Blackboard from outside the campus?",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    1
+   ],
+   "top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "row"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "wrong_source_first": null
+  },
+  {
+   "id": "W12",
+   "term": "login",
+   "question": "How do I log in to iThenticate?",
+   "expected_source": "uos_ithenticate_guidelines",
+   "expected_pages": [
+    1
+   ],
+   "top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "wrong_source_first": null
+  },
+  {
+   "id": "W13",
+   "term": "login",
+   "question": "How do I log in to the Grade Transfer Dashboard?",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "expected_pages": [
+    1
+   ],
+   "top5": [
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "procedure_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "wrong_source_first": null
+  },
+  {
+   "id": "W14",
+   "term": "login",
+   "question": "How do I verify my identity when I sign in to Blackboard from outside the campus?",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "expected_pages": [
+    1
+   ],
+   "top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     2,
+     "row"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     2,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "wrong_source_first": null
+  },
+  {
+   "id": "W15",
+   "term": "policy_boundary",
+   "question": "What grading policy applies to final examinations?",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "expected_pages": [
+    222,
+    223,
+    224
+   ],
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     227,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     223,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     226,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     227,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     223,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "wrong_source_first": null
+  },
+  {
+   "id": "W16",
+   "term": "policy_boundary",
+   "question": "How do I post grades to students in Blackboard?",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "expected_pages": [
+    3,
+    6
+   ],
+   "top5": [
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     6,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     6,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     6,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "wrong_source_first": null
+  }
+ ]
+}

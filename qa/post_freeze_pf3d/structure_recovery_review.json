@@ -1,0 +1,238 @@
+{
+ "method": "For each STRUCTURAL false fallback of fallback_classification.json: recovered by PF-3D or not, the D-112 structure used (key, chunk ids, pages) and the hand verdict; when not recovered, the first reasons the D-111/D-112 selection gave.",
+ "summary": {
+  "structural_false_fallbacks": 10,
+  "recovered": [
+   "G08",
+   "G09",
+   "G10",
+   "G11",
+   "G15",
+   "G17",
+   "G18",
+   "G19",
+   "G22"
+  ],
+  "remaining": [
+   "G20"
+  ]
+ },
+ "questions": {
+  "G08": {
+   "question": "How do I move a content item with the keyboard in Blackboard Ultra?",
+   "source": "uos_blackboard_faculty_short_guide",
+   "primary": "mixed list",
+   "pf3c_note": "the keyboard steps 1-4 under the lead-in sentence 'With your keyboard, you can move an item ...' are complete; the PF-2 reading took the next section label 'D. Edit and delete content:' for a fifth (lettered) step and carried an earlier heading.",
+   "recovered": true,
+   "form": "section",
+   "structure": "uos_blackboard_faculty_short_guide:L:7:45:1",
+   "chunk_ids": [
+    13923,
+    13925,
+    13926,
+    13927,
+    13928
+   ],
+   "pages": [
+    7
+   ],
+   "verdict": "CORRECT",
+   "reason_if_not": null
+  },
+  "G09": {
+   "question": "How do I add a learning module in Blackboard Ultra?",
+   "source": "uos_blackboard_faculty_short_guide",
+   "primary": "unnumbered steps",
+   "pf3c_note": "section 'Add a Learning Module or Folder:' (page 8) with glyph-bulleted action lines, bounded by the next heading 'Add a Document or martials:'; the glyph bullets are not read as list markers.",
+   "recovered": true,
+   "form": "section",
+   "structure": "uos_blackboard_faculty_short_guide:L:8:54:0",
+   "chunk_ids": [
+    13932,
+    13932,
+    13932,
+    13932,
+    13932,
+    13932
+   ],
+   "pages": [
+    8
+   ],
+   "verdict": "CORRECT",
+   "reason_if_not": null
+  },
+  "G10": {
+   "question": "How do I send an announcement to my students in Blackboard?",
+   "source": "uos_blackboard_faculty_short_guide",
+   "primary": "unnumbered steps",
+   "pf3c_note": "section 'Send an Announcement:' (page 9): eight glyph-bulleted action lines in order; page 10 opens with its own heading.",
+   "recovered": true,
+   "form": "section",
+   "structure": "uos_blackboard_faculty_short_guide:L:9:67:0",
+   "chunk_ids": [
+    13978,
+    13978,
+    13978,
+    13978,
+    13978,
+    13978,
+    13978,
+    13978,
+    13978
+   ],
+   "pages": [
+    9
+   ],
+   "verdict": "CORRECT",
+   "reason_if_not": null
+  },
+  "G11": {
+   "question": "How do I create an assignment in Blackboard Ultra?",
+   "source": "uos_blackboard_faculty_short_guide",
+   "primary": "unnumbered steps",
+   "pf3c_note": "section 'Create an Assignment:' (page 10) continued on page 11, which opens under no heading; unmarked instructions mixed with assignment settings.",
+   "recovered": true,
+   "form": "section",
+   "structure": "uos_blackboard_faculty_short_guide:S:10:76",
+   "chunk_ids": [
+    14005,
+    14005,
+    14005,
+    14005,
+    14005,
+    14005,
+    14006,
+    14006,
+    14007,
+    14007,
+    14008,
+    14008,
+    14078,
+    14078
+   ],
+   "pages": [
+    10,
+    11
+   ],
+   "verdict": "CORRECT",
+   "reason_if_not": null
+  },
+  "G15": {
+   "question": "What are the two views of the Blackboard Ultra gradebook?",
+   "source": "uos_blackboard_gradebook_guide",
+   "primary": "heading mismatch",
+   "pf3c_note": "the list 1. List View / a) / b) / 2. Student grid View is introduced by the sentence 'You can grade coursework, manage items, and post grades from two views:', split across two rows; the PF-2 reading kept only the fragment 'items, and post grades from two views' as a heading (a fragment, so refused), and read '1. Global Grades Page' and '2. Course gradebook' (sub-section titles) as steps.",
+   "recovered": true,
+   "form": "section",
+   "structure": "uos_blackboard_gradebook_guide:L:1:6:2",
+   "chunk_ids": [
+    14159,
+    14199,
+    14200,
+    14201,
+    14202
+   ],
+   "pages": [
+    1
+   ],
+   "verdict": "CORRECT",
+   "reason_if_not": null
+  },
+  "G17": {
+   "question": "How do I make Blackboard assign zeros to missing work automatically?",
+   "source": "uos_blackboard_gradebook_guide",
+   "primary": "unnumbered steps",
+   "pf3c_note": "section 'Assign automatic zeros:' (page 8) is narrative with three instructions (select Settings, select the check box, Next select Assign Zeros); its end, the short heading 'Filter by child courses', is not detected.",
+   "recovered": true,
+   "form": "section",
+   "structure": "uos_blackboard_gradebook_guide:S:8:59",
+   "chunk_ids": [
+    14378,
+    14378
+   ],
+   "pages": [
+    8
+   ],
+   "verdict": "CORRECT",
+   "reason_if_not": null
+  },
+  "G18": {
+   "question": "How do I download the gradebook from Blackboard?",
+   "source": "uos_blackboard_gradebook_guide",
+   "primary": "mixed list",
+   "pf3c_note": "'1. Download Worflow' and '2. Upload a file to the gradebook' are numbered sub-section titles, not steps; the download sub-section holds one instruction and the bulleted selections under 'Make your selections:'.",
+   "recovered": true,
+   "form": "section",
+   "structure": "uos_blackboard_gradebook_guide:S:10:75",
+   "chunk_ids": [
+    14460,
+    14460,
+    14461,
+    14461,
+    14462,
+    14463
+   ],
+   "pages": [
+    10
+   ],
+   "verdict": "CORRECT",
+   "reason_if_not": null
+  },
+  "G19": {
+   "question": "How do I set accommodations for a student in the Blackboard gradebook?",
+   "source": "uos_blackboard_gradebook_guide",
+   "primary": "unnumbered steps",
+   "pf3c_note": "section 'Add accommodations from the Student list view:' (page 5): 'You can set accommodations for individual students ... Select the three-dot options menu ... Select the Accommodations option ...'; unmarked steps and a heading verb ('Add') that differs from the asked one ('set') while the section's own first sentence states it.",
+   "recovered": true,
+   "form": "section",
+   "structure": "uos_blackboard_gradebook_guide:S:5:41",
+   "chunk_ids": [
+    14318,
+    14318
+   ],
+   "pages": [
+    5
+   ],
+   "verdict": "CORRECT",
+   "reason_if_not": null
+  },
+  "G20": {
+   "question": "How do I add an attendance row to the Blackboard gradebook?",
+   "source": "uos_blackboard_gradebook_guide",
+   "primary": "mixed list",
+   "pf3c_note": "'6. Add a row: Select the plus sign ...:' with the alternatives a) Add Item, b) Add Calculation, c) Add Attendance, inside the capability list 'In the gradable items list, you can:'.",
+   "recovered": false,
+   "form": null,
+   "structure": null,
+   "chunk_ids": null,
+   "pages": null,
+   "verdict": null,
+   "reason_if_not": [
+    "the list mixes bullets, letters and numbers",
+    "a list of what can be done is not a procedure",
+    "the structure does not state 1 asked term(s)"
+   ]
+  },
+  "G22": {
+   "question": "How do I filter the Blackboard gradebook by merged child courses?",
+   "source": "uos_blackboard_gradebook_guide",
+   "primary": "unnumbered steps",
+   "pf3c_note": "section 'Filter by child courses' (page 8): a short heading without a colon, a lead-in ending with ':' and glyph-bulleted lines (select Filter ...); page 9 opens with its own heading.",
+   "recovered": true,
+   "form": "section",
+   "structure": "uos_blackboard_gradebook_guide:S:8:61",
+   "chunk_ids": [
+    14378,
+    14378,
+    14378,
+    14378,
+    14379
+   ],
+   "pages": [
+    8
+   ],
+   "verdict": "CORRECT",
+   "reason_if_not": null
+  }
+ }
+}

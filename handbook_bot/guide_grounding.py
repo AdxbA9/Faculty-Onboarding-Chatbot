@@ -52,7 +52,8 @@ GUIDE_KEY = "guide"
 FORM_PROCEDURE = "procedure"        # every step of one complete procedure, in source order
 FORM_LIST_ITEM = "list_item"        # one item of an unordered (bulleted) list that is not a procedure
 FORM_STATEMENT = "statement"        # one statement (a step, a sentence or two adjacent sentences) of one chunk
-FORMS = (FORM_PROCEDURE, FORM_LIST_ITEM, FORM_STATEMENT)
+FORM_SECTION = "section"            # post-freeze PF-3D (D-112): a recovered section or list, every unit in source order
+FORMS = (FORM_PROCEDURE, FORM_LIST_ITEM, FORM_STATEMENT, FORM_SECTION)
 
 
 class GuideIntent(str, Enum):
@@ -690,6 +691,28 @@ class GuideIndex:
             for proc in self.procedures[source_id]:
                 for step in proc.steps:
                     self.by_chunk[step.chunk_id] = proc
+        # ---- post-freeze PF-3D (D-112): sections and lists recovered from the printed formatting -----------------------
+        from . import guide_structure as _structure
+        guide_ids = [sid for sid in pages_by_source if sid in self.records and self.records[sid].document_type in GUIDE_DOCUMENT_TYPES]
+        page_chunks = _structure.PageChunks(chunks, metadata, guide_ids)
+        self.structures: Dict[str, List[Any]] = {}
+        self.structure_by_key: Dict[str, Any] = {}
+        self.structures_by_chunk: Dict[int, List[str]] = {}
+        for source_id in guide_ids:
+            found = _structure.recover(source_id, pages_by_source[source_id], page_chunks, is_action_heading)
+            self.structures[source_id] = found
+            for structure in found:
+                self.structure_by_key[structure.key] = structure
+                for part in structure.parts:
+                    keys = self.structures_by_chunk.setdefault(part.chunk_id, [])
+                    if structure.key not in keys:
+                        keys.append(structure.key)
+
+    def structures_of(self, source_id: str) -> List[Any]:
+        return list(self.structures.get(source_id, ()))
+
+    def structure(self, key: str) -> Any:
+        return self.structure_by_key.get(key)
 
     def _complete_step(self, source_id: str, page: int, step: Step, continuation: str) -> Optional[Step]:
         """The cut last step completed with its continuation row, quoted from the page's prose chunk that holds the whole
@@ -787,6 +810,16 @@ transfer transferring upload uploading verify verifying
 """.split())
 _CAPABILITY_HEADING = re.compile(r"\byou\s+can\s*:?\s*$", re.I)
 _PROPER_HEADING = re.compile(r"^[^A-Za-z0-9]*[A-Z0-9]")
+_FIGURE_LEAD = re.compile(r"\b(?:below|figure|screenshot|image|picture)\s*:\s*$", re.I)
+
+
+def dangling_lead_in(text: Optional[str]) -> Optional[str]:
+    """Post-freeze PF-3D (D-112): a last step that ends with ":" announces content the answer does not contain (a missing
+    last step), unless it points at a figure the text extraction cannot carry ("... after the approval as below:")."""
+    text = (text or "").rstrip()
+    if text.endswith(":") and not _FIGURE_LEAD.search(text):
+        return "the last step announces content that does not follow it, so a step is missing"
+    return None
 
 
 def heading_verb(heading: Optional[str]) -> Optional[str]:
@@ -814,13 +847,130 @@ def same_action(a: Optional[str], b: Optional[str]) -> bool:
     return bool(a and b) and (a == b or any(a in group and b in group for group in SAME_ACTION))
 
 
+def is_action_heading(text: Optional[str]) -> bool:
+    """A heading that names an action ("Send an Announcement", "How to access ...") (D-112 list classification)."""
+    title = re.sub(r"^\s*(?:\d{1,2}|[A-Za-z])\s*[.)]\s+", "", text or "")
+    return heading_verb(title) is not None or bool(_HOWTO_HEADING.match(title))
+
+
+# ---------------------------------------------------------------------------
+# Post-freeze PF-3D (D-112): may a recovered section or list answer the clause?
+# ---------------------------------------------------------------------------
+_LABEL_DIGIT = re.compile(r"^(\d{1,2})\s*[.)]$")
+_LABEL_LETTER_ANY = re.compile(r"^([A-Za-z])\s*[.)]$")
+
+
+def _normal_label(label: str) -> str:
+    """"1)" and "1." -> "1."; "a." and "a)" -> "a)" (the shapes ``label_problem`` reads); a bullet -> "-"."""
+    m = _LABEL_DIGIT.match(label or "")
+    if m:
+        return "%s." % m.group(1)
+    m = _LABEL_LETTER_ANY.match(label or "")
+    if m:
+        return "%s)" % m.group(1)
+    return "-"
+
+
+def _labelled_runs(blocks: Sequence[Any]) -> List[List[Any]]:
+    runs: List[List[Any]] = []
+    current: List[Any] = []
+    for block in blocks:
+        if block.kind == "item" and block.marker in ("numbered", "lettered"):
+            current.append(block)
+        else:
+            if current:
+                runs.append(current)
+            current = []
+    if current:
+        runs.append(current)
+    return runs
+
+
+def _states_action(verb: str, objects: Sequence[str], text: str) -> bool:
+    """The text states the asked action on its object ("You can set accommodations ..."): the verb's stem followed by an
+    object stem within three words (D-112 heading-verb override)."""
+    words = [stem(t) for t in _TOKEN.findall(text or "")]
+    for i, word in enumerate(words):
+        if word == verb and any(o in words[i + 1:i + 4] for o in objects):
+            return True
+    return False
+
+
+def structure_problem(structure: Any, binding: Binding, index: GuideIndex) -> Optional[str]:
+    """Why a D-112 recovered section or list is not a provably complete answer to the procedure or list ask of ``binding``,
+    or None. Every D-111 rule still applies (one approved source, conflicts, every term and entity stated, a heading that
+    names the asked action or object); D-112 adds the completeness rules of recovered structure."""
+    if structure is None:
+        return "the claimed structure is not in the structure index"
+    if structure.source_id != binding.source_id:
+        return "the structure belongs to another source"
+    if structure.problems:
+        return structure.problems[0]
+    if not structure.parts:
+        return "the structure has no exact quotes"
+    problem = dangling_lead_in(structure.parts[-1].quote)
+    if problem:
+        return problem
+    for part in structure.parts:
+        conflict = index.conflict_problem(part.chunk_id, part.quote)
+        if conflict:
+            return conflict
+    text = structure.text()
+    if missing_terms(binding, text):
+        return "the structure does not state %d asked term(s)" % len(missing_terms(binding, text))
+    if missing_entities(binding, text):
+        return "a named entity of the clause is not in the structure"
+    context = " ".join(filter(None, [structure.heading, structure.section_title]))
+    if not _PROPER_HEADING.match(structure.heading or ""):
+        return "the structure's heading or lead-in is a sentence fragment"
+    intent = binding.intent
+    asked = set(binding.core) if intent is GuideIntent.PROCEDURE and binding.core else set(binding.terms)
+    # the declared system names are bound by the registry: they never also count as the heading naming the asked action
+    # ("How to use the Grade Transfer Dashboard" does not name "transfer grades")
+    named_context = context
+    for name in sorted(SYSTEM_NAMES.get(structure.source_id, ()), key=len, reverse=True):
+        named_context = _name_pattern(name).sub(" ", named_context)
+    if not asked & stems(named_context):
+        return "the structure's heading names neither the asked action nor its object"
+    head = (binding.info or {}).get("object_head")
+    if intent is GuideIntent.ENUMERATION and isinstance(head, str) and head and stem(head) not in stems(named_context):
+        return "the list's heading does not name the asked set"
+    for run in _labelled_runs(structure.blocks):
+        problem = label_problem([_normal_label(b.label) for b in run])
+        if problem:
+            return problem
+    if intent is GuideIntent.PROCEDURE:
+        if any(_CAPABILITY_HEADING.search(t or "") for t in (structure.heading, structure.section_title)):
+            return "a list of what can be done is not a procedure"
+        verb, named = clause_verb(binding), heading_verb(re.sub(r"^\s*(?:\d{1,2}|[A-Za-z])\s*[.)]\s+", "", structure.section_title or ""))
+        if verb and named and not same_action(verb, named):
+            objects = [t for t in binding.core if t != verb and t not in _ROLE_STEMS]
+            if not _states_action(verb, objects, " ".join(b.text for b in structure.blocks)):
+                return "the structure's heading names another action than the one asked"
+        if structure.kind == "list":
+            if structure.list_type != "ordered_procedure":
+                return "a %s list is not an ordered procedure" % structure.list_type.replace("_", " ")
+            if any(b.marker == "bullet" for b in structure.blocks):
+                outside = [b for b in structure.section_blocks if b not in structure.blocks and b.kind in ("item", "prose") and b.instruction]
+                if outside:
+                    return "the section gives instructions outside this bulleted list, so the list alone is not the procedure"
+        elif not any(b.instruction for b in structure.blocks if b.kind in ("item", "prose")):
+            return "a section without an instruction is not a procedure"
+        return None
+    if intent is GuideIntent.ENUMERATION:
+        if structure.kind != "list":
+            return "an enumeration is answered by a complete list"
+        return None
+    return "a %s ask is not answered by a recovered structure" % intent.value
+
+
 def procedure_problem(proc: Procedure, binding: Binding, index: GuideIndex) -> Optional[str]:
     """Why ``proc`` is not a provably complete answer to the procedure (or list) ask of ``binding``, or None."""
     if proc.source_id != binding.source_id:
         return "the procedure belongs to another source"
     if proc.problems:
         return proc.problems[0]
-    problem = label_problem(proc.labels)
+    problem = label_problem(proc.labels) or dangling_lead_in(proc.steps[-1].quote if proc.steps else None)
     if problem:
         return problem
     if proc.provenance not in RELIABLE_HEADINGS or not proc.heading:
@@ -868,6 +1018,8 @@ class GuideAnswer:
     parts: Tuple[Part, ...]
     procedure_key: Optional[str] = None
     heading: Optional[str] = None
+    markers: Tuple[str, ...] = ()            # D-112: how each part is printed (heading, lead_in, bullet, numbered, prose)
+    list_type: Optional[str] = None          # D-112: the recovered list type (or "section")
 
     @property
     def pages(self) -> Tuple[int, ...]:
@@ -875,8 +1027,12 @@ class GuideAnswer:
 
     def record(self, part_index: int) -> Dict[str, Any]:
         """The D-111 record a finding carries (ids, stems and labels only; no question text)."""
-        return {"version": VERSION, "phase": PHASE, "source_id": self.binding.source_id, "form": self.form, "intent": self.binding.intent.value,
-                "procedure_key": self.procedure_key, "part": part_index, "parts": len(self.parts), "binding": self.binding.to_dict()}
+        record = {"version": VERSION, "phase": PHASE, "source_id": self.binding.source_id, "form": self.form, "intent": self.binding.intent.value,
+                  "procedure_key": self.procedure_key, "part": part_index, "parts": len(self.parts), "binding": self.binding.to_dict()}
+        if self.form == FORM_SECTION:
+            record["marker"] = self.markers[part_index] if part_index < len(self.markers) else "prose"
+            record["list_type"] = self.list_type
+        return record
 
 
 def _procedure_parts(proc: Procedure, index: GuideIndex) -> Tuple[Part, ...]:
@@ -896,15 +1052,25 @@ _HEADED_FIRST_STEP = re.compile(r"^(?P<heading>[^\n]{2,160}?):\s+(?P<step>(?:\d{
 
 def render_part(quote: str, record: Optional[Mapping[str, Any]]) -> str:
     """Minimal deterministic formatting of one rendered guide part (D-111 rendering): the first part of a procedure puts
-    its printed heading on its own line above step 1. Every word stays the source's; any other quote is returned as is."""
+    its printed heading on its own line above step 1; a bulleted unit of a D-112 structure is shown as a bullet ("- ").
+    Every word stays the source's; nothing is numbered that the source did not number; any other quote is returned as is."""
+    if isinstance(record, Mapping) and record.get("form") == FORM_SECTION:
+        return "- " + quote if record.get("marker") == "bullet" else quote
     if not isinstance(record, Mapping) or record.get("form") != FORM_PROCEDURE or record.get("part") != 0:
         return quote
     m = _HEADED_FIRST_STEP.match(quote or "")
     return "%s:\n\n%s" % (m.group("heading"), m.group("step")) if m else quote
 
 
-def select_answer(binding: Binding, units: Sequence[Unit], index: GuideIndex,
-                  procedure_ranks: Mapping[str, int]) -> Tuple[Optional[GuideAnswer], List[Dict[str, Any]]]:
+def structure_answer(structure: Any, binding: Binding) -> GuideAnswer:
+    """The D-112 answer of a recovered structure: every exact unit in source order, its printed marker kept."""
+    parts = tuple(Part(p.chunk_id, structure.source_id, p.page, p.quote) for p in structure.parts)
+    return GuideAnswer(binding, FORM_SECTION, parts, structure.key, structure.heading, tuple(p.marker for p in structure.parts),
+                       structure.list_type)
+
+
+def select_answer(binding: Binding, units: Sequence[Unit], index: GuideIndex, procedure_ranks: Mapping[str, int],
+                  structure_ranks: Optional[Mapping[str, int]] = None) -> Tuple[Optional[GuideAnswer], List[Dict[str, Any]]]:
     """The evidence for the clause of ``binding`` from its guide, or None, with the candidates considered (ids, kinds
     and reasons for the diagnostics). ``units`` are the statement units of the retrieved chunks of this source in
     retrieval order; ``procedure_ranks`` maps the key of every procedure retrieval reached (one of its step or window
@@ -931,6 +1097,20 @@ def select_answer(binding: Binding, units: Sequence[Unit], index: GuideIndex,
             considered.append({"procedure": proc.key, "form": FORM_PROCEDURE, "accepted": problem is None, "reason": problem})
             if problem is None:
                 return GuideAnswer(binding, FORM_PROCEDURE, _procedure_parts(proc, index), proc.key, proc.heading), considered
+        # ---- post-freeze PF-3D (D-112): recovered sections and lists, after every D-111 procedure was refused ----------
+        ranks = structure_ranks or {}
+        candidates = [s for s in index.structures_of(binding.source_id) if s.key in ranks]
+
+        def structure_order(s: Any) -> Tuple[int, int, int, int]:
+            context = " ".join(filter(None, [s.heading, s.section_title]))
+            return (-len(asked & stems(context)), ranks.get(s.key, 10 ** 6), 0 if s.kind == "list" else 1, len(s.parts))
+
+        for structure in sorted(candidates, key=structure_order):
+            problem = structure_problem(structure, binding, index)
+            considered.append({"structure": structure.key, "form": FORM_SECTION, "list_type": structure.list_type, "accepted": problem is None,
+                               "reason": problem})
+            if problem is None:
+                return structure_answer(structure, binding), considered
         if intent is GuideIntent.PROCEDURE:
             return None, considered
     for unit in units:
@@ -948,6 +1128,29 @@ def select_answer(binding: Binding, units: Sequence[Unit], index: GuideIndex,
         if problem is None:
             return GuideAnswer(binding, FORM_STATEMENT, (Part(unit.chunk_id, unit.source_id, unit.page, unit.quote),)), considered
     return None, considered
+
+
+_LABEL_TRIM = re.compile(r"^[^\w\"“(]+|[\s:]+$")
+
+
+def citation_heading(record: Optional[Mapping[str, Any]], index: Optional[GuideIndex]) -> str:
+    """Post-freeze PF-3D (D-112): the printed heading a VERIFIED guide answer is cited under, read from the guide index for
+    the record's procedure or structure (never from the specialist's report, and never the chunk's ``section`` metadata,
+    which is the PF-2 chunker's page hint and is often carried from an earlier page). A D-111 procedure or unordered list:
+    its heading; a D-112 list: its section's title, else its lead-in; a D-112 section: its title; a statement: none ("")."""
+    if not isinstance(record, Mapping) or index is None:
+        return ""
+    key = str(record.get("procedure_key") or "")
+    heading: Optional[str] = None
+    if record.get("form") == FORM_SECTION:
+        structure = index.structure(key)
+        if structure is not None:
+            heading = structure.section_title if structure.kind == "list" and structure.section_title else structure.heading
+    elif record.get("form") in (FORM_PROCEDURE, FORM_LIST_ITEM):
+        proc = index.procedure(key)
+        if proc is not None:
+            heading = proc.heading
+    return _LABEL_TRIM.sub("", heading or "").strip()
 
 
 def verify_answer(clause: str, form: str, parts: Sequence[Tuple[int, str, Optional[int]]], procedure_key: Optional[str], index: GuideIndex,
@@ -988,6 +1191,16 @@ def verify_answer(clause: str, form: str, parts: Sequence[Tuple[int, str, Option
         if len(parts) != 1:
             return "a statement answer has exactly one quote"
         return statement_problem(binding, parts[0][1])
+    if form == FORM_SECTION:                                   # post-freeze PF-3D (D-112)
+        structure = index.structure(procedure_key or "")
+        if structure is None or structure.source_id != source_id:
+            return "the claimed structure is not in the structure index"
+        problem = structure_problem(structure, binding, index)
+        if problem:
+            return problem
+        if tuple((p[0], p[1]) for p in parts) != tuple((p.chunk_id, p.quote) for p in structure.parts):
+            return "the units are not exactly the claimed structure's units in source order"
+        return None
     proc = index.procedure(procedure_key or "")
     if proc is None or proc.source_id != source_id:
         return "the claimed procedure is not in the procedure index"

@@ -748,6 +748,23 @@ def accepted_pages(items: Sequence[Dict[str, Any]]) -> List[int]:
     return pages
 
 
+def guide_citation_items(items: Sequence[Dict[str, Any]], index: Optional[_guides.GuideIndex]) -> List[Dict[str, Any]]:
+    """Post-freeze PF-3D (D-112): the citation label of each verified guide item is the printed heading of its verified
+    procedure or structure (``guide_grounding.citation_heading``), or none (the page alone) for a statement, instead of
+    the chunk's carried page hint. Runs after every check, so it changes no decision; any other item is returned as is."""
+    out: List[Dict[str, Any]] = []
+    for item in items:
+        meta = item.get("meta") or {}
+        record = (meta.get("plan_f") or {}).get(_guides.GUIDE_KEY)
+        if not record:
+            out.append(item)
+            continue
+        meta = {k: v for k, v in meta.items() if k != "section_title"}
+        meta["section"] = _guides.citation_heading(record, index)
+        out.append(dict(item, meta=meta))
+    return out
+
+
 # ---------------------------------------------------------------------------
 # The adapter
 # ---------------------------------------------------------------------------
@@ -995,6 +1012,7 @@ class PlanFRuntime:
                                     "verifier %s" % ("rejected the rendered answer" if not verdict.accepted else "cited no accepted page"),
                                     specialist=sid.value, status=status, dispatched=dispatched, verification=verification)
 
+            accepted = guide_citation_items(accepted, self.guide_index)    # post-freeze PF-3D: printed headings only
             first = accepted[0]["meta"]
             best_section = first.get("section_title") or first.get("section") or "Page %d" % cited[0]
             preview = accepted[0]["chunk"]
@@ -1159,6 +1177,7 @@ class PlanFRuntime:
             for cov, clause in zip(record.clauses, clauses):
                 intent = intents.get(cov.task_id)
                 sub_questions.append(SubQuestion(clause, intent if intent in ALL_ROUTES and intent != "greeting" else route))
+            items = guide_citation_items(items, self.guide_index)          # post-freeze PF-3D: printed headings only
             first = items[0]["meta"]
             best_section = first.get("section_title") or first.get("section") or "Page %d" % cited[0]
             preview = items[0]["chunk"]
@@ -1363,4 +1382,5 @@ __all__ = [
     "build_runtime", "handoff_outcome",
     "build_specialist_registry", "clause_covered_by", "decision_problem", "entity_in_text", "missing_specialists",
     "named_entities", "quote_problem", "render_answer", "result_problem", "source_conflict_problem", "guide_evidence_problem", "guide_builders", "subject_binding",
+    "guide_citation_items",
 ]

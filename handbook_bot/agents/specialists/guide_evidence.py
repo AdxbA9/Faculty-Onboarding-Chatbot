@@ -130,6 +130,7 @@ class GuideEvidence:
         for binding in sorted(bindings, key=lambda b: first_rank.get(b.source_id, 10 ** 6)):
             units = []
             procedure_ranks: Dict[str, int] = {}
+            structure_ranks: Dict[str, int] = {}                 # post-freeze PF-3D (D-112): recovered sections and lists
             for rank, item in enumerate(pool):
                 meta = item["meta"]
                 if meta.get("source_id") != binding.source_id:
@@ -138,8 +139,10 @@ class GuideEvidence:
                 proc = self.guide_index.procedure_of_chunk(cid)
                 if proc is not None:
                     procedure_ranks.setdefault(proc.key, rank)
+                for key in getattr(self.guide_index, "structures_by_chunk", {}).get(cid, ()):
+                    structure_ranks.setdefault(key, rank)
                 units.extend(statement_units(cid, self.chunks[cid], meta, rank, binding))
-            chosen, tried = select_answer(binding, units, self.guide_index, procedure_ranks)
+            chosen, tried = select_answer(binding, units, self.guide_index, procedure_ranks, structure_ranks)
             considered.append({"source_id": binding.source_id, "intent": binding.intent.value, "tried": tried[:12]})
             if chosen is not None:
                 diag.update({"considered": considered, "form": chosen.form, "source_id": binding.source_id, "procedure_key": chosen.procedure_key,

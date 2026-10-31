@@ -1,0 +1,488 @@
+{
+ "method": "PF-3D evidence-selection review: reads the output of ``qa/post_freeze_pf3c/evidence_selection.py --pf3c`` run on the\nPF-3D code and the committed PF-3C ``evidence_after.json``, and writes a compact comparison (no chunk text beyond the first\n80 characters of the first unit).\n\nTwo measures per question for which the guide path selects evidence:\n  * TOP-1 (the PF-3C measure): the first selected unit against the hand-labelled target passage (``guide_targets.json``):\n    ON_TARGET when it is on the target source and page and holds a target phrase, PARTIAL when it is on the target page\n    without one, OFF_TARGET otherwise. A D-112 section starts with its printed heading row, so its first unit is the\n    heading and this measure reads PARTIAL even when the section is the target passage.\n  * SET: the same categories over the whole selected evidence: every unit on the target source, at least one on a target\n    page, and the units together holding a target phrase. Units on a page outside the hand-labelled target pages (a\n    section continued on the next page) are listed in ``units_off_target_pages`` for the hand review.\n\n    python -X utf8 qa/post_freeze_pf3d/evidence_review.py <pf3d evidence.json> <out.json>",
+ "summary": {
+  "questions": 37,
+  "pf3c": {
+   "with_evidence": 12,
+   "on_target": 12,
+   "partial": 0,
+   "off_target": 0
+  },
+  "pf3d_top1": {
+   "with_evidence": 21,
+   "on_target": 14,
+   "partial": 7,
+   "off_target": 0
+  },
+  "pf3d_set": {
+   "with_evidence": 21,
+   "on_target": 21,
+   "partial": 0,
+   "off_target": 0
+  },
+  "lost_evidence": [],
+  "changed_pf3c_category": [],
+  "top1_partial_but_set_on_target": [
+   "G08",
+   "G09",
+   "G10",
+   "G11",
+   "G17",
+   "G18",
+   "G19"
+  ],
+  "median_ms": 570.2
+ },
+ "rows": [
+  {
+   "id": "G01",
+   "pf3c_top1": "ON_TARGET",
+   "pf3d_form": "procedure",
+   "pf3d_top1": "ON_TARGET",
+   "pf3d_set": "ON_TARGET",
+   "units": 7,
+   "pages": [
+    1
+   ],
+   "units_off_target_pages": 0,
+   "first_unit": "How to access Blackboard: - Open the University website http://www.sharjah.ac.ae"
+  },
+  {
+   "id": "G02",
+   "pf3c_top1": null,
+   "pf3d_form": null,
+   "pf3d_top1": null,
+   "pf3d_set": null,
+   "units": 0,
+   "pages": [],
+   "units_off_target_pages": 0,
+   "first_unit": null
+  },
+  {
+   "id": "G03",
+   "pf3c_top1": "ON_TARGET",
+   "pf3d_form": "list_item",
+   "pf3d_top1": "ON_TARGET",
+   "pf3d_set": "ON_TARGET",
+   "units": 1,
+   "pages": [
+    3
+   ],
+   "units_off_target_pages": 0,
+   "first_unit": "- You can mark one of your courses as a favorite, this will allow you to pin thi"
+  },
+  {
+   "id": "G04",
+   "pf3c_top1": null,
+   "pf3d_form": null,
+   "pf3d_top1": null,
+   "pf3d_set": null,
+   "units": 0,
+   "pages": [],
+   "units_off_target_pages": 0,
+   "first_unit": null
+  },
+  {
+   "id": "G05",
+   "pf3c_top1": "ON_TARGET",
+   "pf3d_form": "statement",
+   "pf3d_top1": "ON_TARGET",
+   "pf3d_set": "ON_TARGET",
+   "units": 1,
+   "pages": [
+    4
+   ],
+   "units_off_target_pages": 0,
+   "first_unit": "Course Image: You will be able to upload a course banner image, the image always"
+  },
+  {
+   "id": "G06",
+   "pf3c_top1": null,
+   "pf3d_form": null,
+   "pf3d_top1": null,
+   "pf3d_set": null,
+   "units": 0,
+   "pages": [],
+   "units_off_target_pages": 0,
+   "first_unit": null
+  },
+  {
+   "id": "G07",
+   "pf3c_top1": null,
+   "pf3d_form": null,
+   "pf3d_top1": null,
+   "pf3d_set": null,
+   "units": 0,
+   "pages": [],
+   "units_off_target_pages": 0,
+   "first_unit": null
+  },
+  {
+   "id": "G08",
+   "pf3c_top1": null,
+   "pf3d_form": "section",
+   "pf3d_top1": "PARTIAL",
+   "pf3d_set": "ON_TARGET",
+   "units": 5,
+   "pages": [
+    7
+   ],
+   "units_off_target_pages": 0,
+   "first_unit": "With your keyboard, you can move an item to a new location, move an item into an"
+  },
+  {
+   "id": "G09",
+   "pf3c_top1": null,
+   "pf3d_form": "section",
+   "pf3d_top1": "PARTIAL",
+   "pf3d_set": "ON_TARGET",
+   "units": 6,
+   "pages": [
+    8
+   ],
+   "units_off_target_pages": 0,
+   "first_unit": "Add a Learning Module or Folder:"
+  },
+  {
+   "id": "G10",
+   "pf3c_top1": null,
+   "pf3d_form": "section",
+   "pf3d_top1": "PARTIAL",
+   "pf3d_set": "ON_TARGET",
+   "units": 9,
+   "pages": [
+    9
+   ],
+   "units_off_target_pages": 0,
+   "first_unit": "Send an Announcement:"
+  },
+  {
+   "id": "G11",
+   "pf3c_top1": null,
+   "pf3d_form": "section",
+   "pf3d_top1": "PARTIAL",
+   "pf3d_set": "ON_TARGET",
+   "units": 14,
+   "pages": [
+    10,
+    11
+   ],
+   "units_off_target_pages": 2,
+   "first_unit": "Create an Assignment:"
+  },
+  {
+   "id": "G12",
+   "pf3c_top1": "ON_TARGET",
+   "pf3d_form": "statement",
+   "pf3d_top1": "ON_TARGET",
+   "pf3d_set": "ON_TARGET",
+   "units": 1,
+   "pages": [
+    11
+   ],
+   "units_off_target_pages": 0,
+   "first_unit": "At this time, you cannot add a time limit to group assignments."
+  },
+  {
+   "id": "G13",
+   "pf3c_top1": null,
+   "pf3d_form": null,
+   "pf3d_top1": null,
+   "pf3d_set": null,
+   "units": 0,
+   "pages": [],
+   "units_off_target_pages": 0,
+   "first_unit": null
+  },
+  {
+   "id": "G14",
+   "pf3c_top1": "ON_TARGET",
+   "pf3d_form": "statement",
+   "pf3d_top1": "ON_TARGET",
+   "pf3d_set": "ON_TARGET",
+   "units": 1,
+   "pages": [
+    1
+   ],
+   "units_off_target_pages": 0,
+   "first_unit": "2. Course gradebook Inside your course, you can access the course gradebook on t"
+  },
+  {
+   "id": "G15",
+   "pf3c_top1": null,
+   "pf3d_form": "section",
+   "pf3d_top1": "ON_TARGET",
+   "pf3d_set": "ON_TARGET",
+   "units": 5,
+   "pages": [
+    1
+   ],
+   "units_off_target_pages": 0,
+   "first_unit": "You can grade coursework, manage items, and post grades from two views:"
+  },
+  {
+   "id": "G16",
+   "pf3c_top1": null,
+   "pf3d_form": null,
+   "pf3d_top1": null,
+   "pf3d_set": null,
+   "units": 0,
+   "pages": [],
+   "units_off_target_pages": 0,
+   "first_unit": null
+  },
+  {
+   "id": "G17",
+   "pf3c_top1": null,
+   "pf3d_form": "section",
+   "pf3d_top1": "PARTIAL",
+   "pf3d_set": "ON_TARGET",
+   "units": 2,
+   "pages": [
+    8
+   ],
+   "units_off_target_pages": 0,
+   "first_unit": "Assign automatic zeros:"
+  },
+  {
+   "id": "G18",
+   "pf3c_top1": null,
+   "pf3d_form": "section",
+   "pf3d_top1": "PARTIAL",
+   "pf3d_set": "ON_TARGET",
+   "units": 6,
+   "pages": [
+    10
+   ],
+   "units_off_target_pages": 0,
+   "first_unit": "1. Download Worflow"
+  },
+  {
+   "id": "G19",
+   "pf3c_top1": null,
+   "pf3d_form": "section",
+   "pf3d_top1": "PARTIAL",
+   "pf3d_set": "ON_TARGET",
+   "units": 2,
+   "pages": [
+    5
+   ],
+   "units_off_target_pages": 0,
+   "first_unit": "Add accommodations from the Student list view:"
+  },
+  {
+   "id": "G20",
+   "pf3c_top1": null,
+   "pf3d_form": null,
+   "pf3d_top1": null,
+   "pf3d_set": null,
+   "units": 0,
+   "pages": [],
+   "units_off_target_pages": 0,
+   "first_unit": null
+  },
+  {
+   "id": "G21",
+   "pf3c_top1": null,
+   "pf3d_form": null,
+   "pf3d_top1": null,
+   "pf3d_set": null,
+   "units": 0,
+   "pages": [],
+   "units_off_target_pages": 0,
+   "first_unit": null
+  },
+  {
+   "id": "G22",
+   "pf3c_top1": null,
+   "pf3d_form": "section",
+   "pf3d_top1": "ON_TARGET",
+   "pf3d_set": "ON_TARGET",
+   "units": 5,
+   "pages": [
+    8
+   ],
+   "units_off_target_pages": 0,
+   "first_unit": "Filter by child courses"
+  },
+  {
+   "id": "G23",
+   "pf3c_top1": "ON_TARGET",
+   "pf3d_form": "procedure",
+   "pf3d_top1": "ON_TARGET",
+   "pf3d_set": "ON_TARGET",
+   "units": 4,
+   "pages": [
+    7
+   ],
+   "units_off_target_pages": 0,
+   "first_unit": "From the Gradebook Settings panel, you can: 1. You can make changes to the defau"
+  },
+  {
+   "id": "G24",
+   "pf3c_top1": "ON_TARGET",
+   "pf3d_form": "procedure",
+   "pf3d_top1": "ON_TARGET",
+   "pf3d_set": "ON_TARGET",
+   "units": 4,
+   "pages": [
+    2
+   ],
+   "units_off_target_pages": 0,
+   "first_unit": "How to Send Grades to Banner as instructor?: 1. Search for the course by using t"
+  },
+  {
+   "id": "G25",
+   "pf3c_top1": "ON_TARGET",
+   "pf3d_form": "statement",
+   "pf3d_top1": "ON_TARGET",
+   "pf3d_set": "ON_TARGET",
+   "units": 1,
+   "pages": [
+    1
+   ],
+   "units_off_target_pages": 0,
+   "first_unit": "NOTE: You can access directly by clicking on below link https://op.sharjah.ac.ae"
+  },
+  {
+   "id": "G26",
+   "pf3c_top1": null,
+   "pf3d_form": null,
+   "pf3d_top1": null,
+   "pf3d_set": null,
+   "units": 0,
+   "pages": [],
+   "units_off_target_pages": 0,
+   "first_unit": null
+  },
+  {
+   "id": "G27",
+   "pf3c_top1": null,
+   "pf3d_form": null,
+   "pf3d_top1": null,
+   "pf3d_set": null,
+   "units": 0,
+   "pages": [],
+   "units_off_target_pages": 0,
+   "first_unit": null
+  },
+  {
+   "id": "G28",
+   "pf3c_top1": "ON_TARGET",
+   "pf3d_form": "procedure",
+   "pf3d_top1": "ON_TARGET",
+   "pf3d_set": "ON_TARGET",
+   "units": 4,
+   "pages": [
+    3
+   ],
+   "units_off_target_pages": 0,
+   "first_unit": "How to approve Grades to Banner as Chair/Dean?: 1. Click on below link to access"
+  },
+  {
+   "id": "G29",
+   "pf3c_top1": "ON_TARGET",
+   "pf3d_form": "procedure",
+   "pf3d_top1": "ON_TARGET",
+   "pf3d_set": "ON_TARGET",
+   "units": 3,
+   "pages": [
+    1
+   ],
+   "units_off_target_pages": 0,
+   "first_unit": "How to access IThenticate: 1. Open www.ithenticate.com"
+  },
+  {
+   "id": "G30",
+   "pf3c_top1": "ON_TARGET",
+   "pf3d_form": "procedure",
+   "pf3d_top1": "ON_TARGET",
+   "pf3d_set": "ON_TARGET",
+   "units": 4,
+   "pages": [
+    1
+   ],
+   "units_off_target_pages": 0,
+   "first_unit": "How to upload a document: 1. Select the “Upload a File” link under the “Submit a"
+  },
+  {
+   "id": "G31",
+   "pf3c_top1": null,
+   "pf3d_form": null,
+   "pf3d_top1": null,
+   "pf3d_set": null,
+   "units": 0,
+   "pages": [],
+   "units_off_target_pages": 0,
+   "first_unit": null
+  },
+  {
+   "id": "G32",
+   "pf3c_top1": null,
+   "pf3d_form": null,
+   "pf3d_top1": null,
+   "pf3d_set": null,
+   "units": 0,
+   "pages": [],
+   "units_off_target_pages": 0,
+   "first_unit": null
+  },
+  {
+   "id": "G33",
+   "pf3c_top1": null,
+   "pf3d_form": null,
+   "pf3d_top1": null,
+   "pf3d_set": null,
+   "units": 0,
+   "pages": [],
+   "units_off_target_pages": 0,
+   "first_unit": null
+  },
+  {
+   "id": "G34",
+   "pf3c_top1": null,
+   "pf3d_form": null,
+   "pf3d_top1": null,
+   "pf3d_set": null,
+   "units": 0,
+   "pages": [],
+   "units_off_target_pages": 0,
+   "first_unit": null
+  },
+  {
+   "id": "G35",
+   "pf3c_top1": "ON_TARGET",
+   "pf3d_form": "statement",
+   "pf3d_top1": "ON_TARGET",
+   "pf3d_set": "ON_TARGET",
+   "units": 1,
+   "pages": [
+    1
+   ],
+   "units_off_target_pages": 0,
+   "first_unit": "- The similarity index and originality report can be found under the “Documents”"
+  },
+  {
+   "id": "G36",
+   "pf3c_top1": null,
+   "pf3d_form": null,
+   "pf3d_top1": null,
+   "pf3d_set": null,
+   "units": 0,
+   "pages": [],
+   "units_off_target_pages": 0,
+   "first_unit": null
+  },
+  {
+   "id": "G37",
+   "pf3c_top1": null,
+   "pf3d_form": null,
+   "pf3d_top1": null,
+   "pf3d_set": null,
+   "units": 0,
+   "pages": [],
+   "units_off_target_pages": 0,
+   "first_unit": null
+  }
+ ]
+}

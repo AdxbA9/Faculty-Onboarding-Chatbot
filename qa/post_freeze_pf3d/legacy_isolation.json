@@ -1,0 +1,8 @@
+{
+ "mode": "legacy",
+ "questions": 10,
+ "minimal_diagnostics": 10,
+ "exceptions": 0,
+ "watched_modules_imported": [],
+ "runtime_cache_created": false
+}

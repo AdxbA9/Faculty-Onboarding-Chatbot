@@ -1,0 +1,3048 @@
+{
+ "method": "PF-3C versus PF-3D, per question, from the two ``metrics.json`` files (no answer text): writes ``guide_results.json`` and\nadds the after-PF-3D state to ``fallback_classification.json`` (its before-change measurement is left as captured).\n\n    python -X utf8 qa/post_freeze_pf3d/compare.py",
+ "summary": {
+  "core_guide": {
+   "pf3c": {
+    "questions": 37,
+    "plan_f_served": 10,
+    "fallback": 27,
+    "coverage_pct": 27.0,
+    "correct": 10,
+    "limited": 0,
+    "wrong": 0,
+    "precision_pct": 100.0,
+    "forms": {
+     "procedure": 6,
+     "list_item": 1,
+     "statement": 3
+    }
+   },
+   "pf3d": {
+    "questions": 37,
+    "plan_f_served": 19,
+    "fallback": 18,
+    "coverage_pct": 51.4,
+    "correct": 19,
+    "limited": 0,
+    "wrong": 0,
+    "precision_pct": 100.0,
+    "forms": {
+     "procedure": 6,
+     "list_item": 1,
+     "statement": 3,
+     "section": 9
+    }
+   }
+  },
+  "per_source": {
+   "uos_blackboard_faculty_short_guide": {
+    "pf3c": "4 of 13",
+    "pf3d": "8 of 13",
+    "pf3d_wrong": 0
+   },
+   "uos_blackboard_gradebook_guide": {
+    "pf3c": "1 of 10",
+    "pf3d": "6 of 10",
+    "pf3d_wrong": 0
+   },
+   "uos_grade_transfer_dashboard_guide": {
+    "pf3c": "3 of 6",
+    "pf3d": "3 of 6",
+    "pf3d_wrong": 0
+   },
+   "uos_ithenticate_guidelines": {
+    "pf3c": "2 of 8",
+    "pf3d": "2 of 8",
+    "pf3d_wrong": 0
+   }
+  },
+  "all_served_guide_answers": {
+   "pf3c": {
+    "CORRECT": 21,
+    "ACCEPTABLE BUT LIMITED": 1
+   },
+   "pf3d": {
+    "CORRECT": 32,
+    "ACCEPTABLE BUT LIMITED": 1
+   }
+  },
+  "newly_served": [
+   "C29",
+   "G08",
+   "G09",
+   "G10",
+   "G11",
+   "G15",
+   "G17",
+   "G18",
+   "G19",
+   "G22",
+   "P14"
+  ],
+  "no_longer_served": [],
+  "other_changes": []
+ },
+ "questions": [
+  {
+   "id": "G01",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "pf3c": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 7,
+    "pages": [
+     1
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 7,
+    "pages": [
+     1
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": false
+  },
+  {
+   "id": "G02",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G03",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "pf3c": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "list_item"
+    ],
+    "parts": 1,
+    "pages": [
+     3
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "list_item"
+    ],
+    "parts": 1,
+    "pages": [
+     3
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": false
+  },
+  {
+   "id": "G04",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     4,
+     5
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     4,
+     5
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G05",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "pf3c": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "statement"
+    ],
+    "parts": 1,
+    "pages": [
+     4
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "statement"
+    ],
+    "parts": 1,
+    "pages": [
+     4
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": false
+  },
+  {
+   "id": "G06",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     4,
+     8,
+     222
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     4,
+     8,
+     222
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G07",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     6
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     6
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G08",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     7
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "section"
+    ],
+    "parts": 5,
+    "pages": [
+     7
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": true
+  },
+  {
+   "id": "G09",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     8
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "section"
+    ],
+    "parts": 6,
+    "pages": [
+     8
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": true
+  },
+  {
+   "id": "G10",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     9
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "section"
+    ],
+    "parts": 9,
+    "pages": [
+     9
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": true
+  },
+  {
+   "id": "G11",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     10
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "section"
+    ],
+    "parts": 14,
+    "pages": [
+     10,
+     11
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": true
+  },
+  {
+   "id": "G12",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "pf3c": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "statement"
+    ],
+    "parts": 1,
+    "pages": [
+     11
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "statement"
+    ],
+    "parts": 1,
+    "pages": [
+     11
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": false
+  },
+  {
+   "id": "G13",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     5
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     5
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G14",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G15",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "section"
+    ],
+    "parts": 5,
+    "pages": [
+     1
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": true
+  },
+  {
+   "id": "G16",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G17",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     7,
+     8
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "section"
+    ],
+    "parts": 2,
+    "pages": [
+     8
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": true
+  },
+  {
+   "id": "G18",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     10
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "section"
+    ],
+    "parts": 6,
+    "pages": [
+     10
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": true
+  },
+  {
+   "id": "G19",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     5,
+     10
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "section"
+    ],
+    "parts": 2,
+    "pages": [
+     5
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": true
+  },
+  {
+   "id": "G20",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     3
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     3
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G21",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G22",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     8
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "section"
+    ],
+    "parts": 5,
+    "pages": [
+     8
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": true
+  },
+  {
+   "id": "G23",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "pf3c": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 4,
+    "pages": [
+     7
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 4,
+    "pages": [
+     7
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": false
+  },
+  {
+   "id": "G24",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "pf3c": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 4,
+    "pages": [
+     2
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 4,
+    "pages": [
+     2
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": false
+  },
+  {
+   "id": "G25",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "pf3c": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "statement"
+    ],
+    "parts": 1,
+    "pages": [
+     1
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "statement"
+    ],
+    "parts": 1,
+    "pages": [
+     1
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": false
+  },
+  {
+   "id": "G26",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     3
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     3
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G27",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     2
+    ],
+    "stop_layer": "routing ambiguity",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     2
+    ],
+    "stop_layer": "routing ambiguity",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G28",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "pf3c": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 4,
+    "pages": [
+     3
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 4,
+    "pages": [
+     3
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": false
+  },
+  {
+   "id": "G29",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "pf3c": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 3,
+    "pages": [
+     1
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 3,
+    "pages": [
+     1
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": false
+  },
+  {
+   "id": "G30",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "pf3c": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 4,
+    "pages": [
+     1
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 4,
+    "pages": [
+     1
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": false
+  },
+  {
+   "id": "G31",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G32",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G33",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G34",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G35",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G36",
+   "category": "cross_document",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     2,
+     3
+    ],
+    "stop_layer": "aggregator (a clause unsupported)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     2,
+     3
+    ],
+    "stop_layer": "aggregator (a clause unsupported)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G37",
+   "category": "cross_document",
+   "expected_source": "uos_ithenticate_guidelines",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "aggregator (a clause unsupported)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "aggregator (a clause unsupported)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G38",
+   "category": "ambiguous",
+   "expected_source": null,
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     224,
+     225
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     224,
+     225
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G39",
+   "category": "wrong_source",
+   "expected_source": null,
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G40",
+   "category": "wrong_source",
+   "expected_source": null,
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     2
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     2
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G41",
+   "category": "wrong_source",
+   "expected_source": null,
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_NOT_APPLICABLE",
+    "forms": [],
+    "parts": 0,
+    "pages": [],
+    "stop_layer": "no specialist selected (routing)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_NOT_APPLICABLE",
+    "forms": [],
+    "parts": 0,
+    "pages": [],
+    "stop_layer": "no specialist selected (routing)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G42",
+   "category": "wrong_source",
+   "expected_source": null,
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G43",
+   "category": "handbook_only",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     91
+    ],
+    "stop_layer": "served",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     91
+    ],
+    "stop_layer": "served",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G44",
+   "category": "handbook_only",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     81
+    ],
+    "stop_layer": "served",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     81
+    ],
+    "stop_layer": "served",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G45",
+   "category": "handbook_only",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     54
+    ],
+    "stop_layer": "served",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     54
+    ],
+    "stop_layer": "served",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G46",
+   "category": "known_hr",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     20,
+     57
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     20,
+     57
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G47",
+   "category": "annual_leave",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     107
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     107
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "G48",
+   "category": "handbook_only",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     61
+    ],
+    "stop_layer": "served",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     61
+    ],
+    "stop_layer": "served",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "P01",
+   "category": "conflict",
+   "expected_source": "uos_ithenticate_guidelines",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "P02",
+   "category": "conflict",
+   "expected_source": "uos_ithenticate_guidelines",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "routing ambiguity",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "routing ambiguity",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "P03",
+   "category": "conflict",
+   "expected_source": "uos_ithenticate_guidelines",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "P04",
+   "category": "conflict",
+   "expected_source": "uos_ithenticate_guidelines",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "P05",
+   "category": "conflict",
+   "expected_source": "uos_ithenticate_guidelines",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "aggregator (a clause unsupported)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "aggregator (a clause unsupported)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "P06",
+   "category": "handbook_contamination",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     224
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     224
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "P07",
+   "category": "handbook_contamination",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     224
+    ],
+    "stop_layer": "aggregator (a clause unsupported)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     224
+    ],
+    "stop_layer": "aggregator (a clause unsupported)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "P08",
+   "category": "handbook_contamination",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     99,
+     162
+    ],
+    "stop_layer": "aggregator (a clause unsupported)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     99,
+     162
+    ],
+    "stop_layer": "aggregator (a clause unsupported)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "P09",
+   "category": "handbook_contamination",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     3
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     3
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "P10",
+   "category": "handbook_contamination",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     94,
+     96
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     94,
+     96
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "P11",
+   "category": "guide_contamination",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "pf3c": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "statement"
+    ],
+    "parts": 1,
+    "pages": [
+     6
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "statement"
+    ],
+    "parts": 1,
+    "pages": [
+     6
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": false
+  },
+  {
+   "id": "P12",
+   "category": "guide_contamination",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     2
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     2
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "P13",
+   "category": "guide_contamination",
+   "expected_source": "uos_ithenticate_guidelines",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "P14",
+   "category": "cross_document",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     79
+    ],
+    "stop_layer": "aggregator (a clause unsupported)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "section"
+    ],
+    "parts": 14,
+    "pages": [
+     79,
+     10,
+     11
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": true
+  },
+  {
+   "id": "P15",
+   "category": "cross_document",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     224
+    ],
+    "stop_layer": "aggregator (a clause unsupported)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     224
+    ],
+    "stop_layer": "aggregator (a clause unsupported)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "P16",
+   "category": "cross_document",
+   "expected_source": "uos_ithenticate_guidelines",
+   "pf3c": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 3,
+    "pages": [
+     81,
+     1
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 3,
+    "pages": [
+     81,
+     1
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": false
+  },
+  {
+   "id": "P17",
+   "category": "wrong_source",
+   "expected_source": null,
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     2
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     2
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "P18",
+   "category": "wrong_source",
+   "expected_source": null,
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     183
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     183
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "P19",
+   "category": "wrong_source",
+   "expected_source": null,
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     165
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     165
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "P20",
+   "category": "wrong_source",
+   "expected_source": null,
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "P21",
+   "category": "wrong_source",
+   "expected_source": null,
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     141,
+     142
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     141,
+     142
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "P22",
+   "category": "wrong_source",
+   "expected_source": null,
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_HANDOFF",
+    "forms": [],
+    "parts": 0,
+    "pages": [],
+    "stop_layer": "handoff",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_HANDOFF",
+    "forms": [],
+    "parts": 0,
+    "pages": [],
+    "stop_layer": "handoff",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "C01",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "pf3c": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 4,
+    "pages": [
+     2
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 4,
+    "pages": [
+     2
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": false
+  },
+  {
+   "id": "C02",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "C03",
+   "category": "authority",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "C04",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "pf3c": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "statement"
+    ],
+    "parts": 1,
+    "pages": [
+     1
+    ],
+    "stop_layer": "served",
+    "verdict": "ACCEPTABLE BUT LIMITED"
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "statement"
+    ],
+    "parts": 1,
+    "pages": [
+     1
+    ],
+    "stop_layer": "served",
+    "verdict": "ACCEPTABLE BUT LIMITED"
+   },
+   "changed": false
+  },
+  {
+   "id": "C05",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "pf3c": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 5,
+    "pages": [
+     1
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 5,
+    "pages": [
+     1
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": false
+  },
+  {
+   "id": "C06",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "pf3c": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 7,
+    "pages": [
+     1
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 7,
+    "pages": [
+     1
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": false
+  },
+  {
+   "id": "C07",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "pf3c": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 9,
+    "pages": [
+     2,
+     3
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 9,
+    "pages": [
+     2,
+     3
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": false
+  },
+  {
+   "id": "C08",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "C09",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "pf3c": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "list_item"
+    ],
+    "parts": 1,
+    "pages": [
+     3
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "list_item"
+    ],
+    "parts": 1,
+    "pages": [
+     3
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": false
+  },
+  {
+   "id": "C10",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "C11",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "pf3c": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 1,
+    "pages": [
+     1
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 1,
+    "pages": [
+     1
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": false
+  },
+  {
+   "id": "C12",
+   "category": "conflict",
+   "expected_source": "uos_ithenticate_guidelines",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "C13",
+   "category": "routing",
+   "expected_source": null,
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     162
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     162
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "C14",
+   "category": "routing",
+   "expected_source": null,
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     193,
+     233
+    ],
+    "stop_layer": "aggregator (a clause unsupported)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     193,
+     233
+    ],
+    "stop_layer": "aggregator (a clause unsupported)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "C15",
+   "category": "cross_document",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "pf3c": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 7,
+    "pages": [
+     79,
+     1
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 7,
+    "pages": [
+     79,
+     1
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": false
+  },
+  {
+   "id": "C16",
+   "category": "cross_document",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "pf3c": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 4,
+    "pages": [
+     96,
+     91,
+     2
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 4,
+    "pages": [
+     96,
+     91,
+     2
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": false
+  },
+  {
+   "id": "C17",
+   "category": "cross_document",
+   "expected_source": "uos_ithenticate_guidelines",
+   "pf3c": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 4,
+    "pages": [
+     81,
+     1
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "procedure"
+    ],
+    "parts": 4,
+    "pages": [
+     81,
+     1
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": false
+  },
+  {
+   "id": "C18",
+   "category": "wrong_source",
+   "expected_source": null,
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+    "forms": [],
+    "parts": 0,
+    "pages": [],
+    "stop_layer": "routing ambiguity",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+    "forms": [],
+    "parts": 0,
+    "pages": [],
+    "stop_layer": "routing ambiguity",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "C19",
+   "category": "wrong_source",
+   "expected_source": null,
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "C20",
+   "category": "wrong_source",
+   "expected_source": null,
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     4,
+     222,
+     228
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     4,
+     222,
+     228
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "C21",
+   "category": "wrong_source",
+   "expected_source": null,
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_HANDOFF",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "handoff",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_HANDOFF",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "handoff",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "C22",
+   "category": "wrong_source",
+   "expected_source": null,
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     114
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     114
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "C23",
+   "category": "wrong_source",
+   "expected_source": null,
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "C24",
+   "category": "wrong_source",
+   "expected_source": null,
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     2
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     2
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "C25",
+   "category": "wrong_source",
+   "expected_source": null,
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "routing ambiguity",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1
+    ],
+    "stop_layer": "routing ambiguity",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "C26",
+   "category": "appraisal",
+   "expected_source": null,
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     142
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     142
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "C27",
+   "category": "handbook_contamination",
+   "expected_source": null,
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     224
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     224
+    ],
+    "stop_layer": "no approved guide applies (handbook path decided)",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "C28",
+   "category": "handbook_only",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_FINDINGS_VERIFIER",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     81
+    ],
+    "stop_layer": "verification",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_REJECTED_BY_FINDINGS_VERIFIER",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     81
+    ],
+    "stop_layer": "verification",
+    "verdict": null
+   },
+   "changed": false
+  },
+  {
+   "id": "C29",
+   "category": "incomplete_procedure",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     7
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": true,
+    "outcome": "PLAN_F_ACCEPTED",
+    "forms": [
+     "section"
+    ],
+    "parts": 5,
+    "pages": [
+     7
+    ],
+    "stop_layer": "served",
+    "verdict": "CORRECT"
+   },
+   "changed": true
+  },
+  {
+   "id": "C30",
+   "category": "incomplete_procedure",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "pf3c": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     10
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "pf3d": {
+    "guide_served": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "forms": [],
+    "parts": 0,
+    "pages": [
+     1,
+     10
+    ],
+    "stop_layer": "D-111 guide path found no provably complete, fully covered evidence",
+    "verdict": null
+   },
+   "changed": false
+  }
+ ]
+}

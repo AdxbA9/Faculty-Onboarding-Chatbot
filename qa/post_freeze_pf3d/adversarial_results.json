@@ -1,0 +1,203 @@
+{
+ "method": "PF-3D adversarial results: runs the adversarial cases of ``tests/test_guide_structure.py`` (synthetic pages built by the\nPF-2 chunker, the real corpus without a model, and the adapter end to end) and reads the safety groups of the PF-3D\nevaluation (``metrics.json``). Writes ``adversarial_results.json``.\n\n    python -X utf8 qa/post_freeze_pf3d/adversarial.py <repo> <metrics.json> <out.json>",
+ "summary": {
+  "synthetic_and_corpus_cases": 33,
+  "passed": 33,
+  "failed": [],
+  "evaluation_guide_served_in_blocked_groups": {
+   "guide_contamination": [
+    "P11"
+   ],
+   "incomplete_procedure": [
+    "C29"
+   ]
+  },
+  "notes": {
+   "P11": "guide_contamination: an interface question that must be answered from the gradebook guide and never from a handbook policy sentence; served from the guide (the Post option, page 6) and reviewed CORRECT, unchanged since PF-3C",
+   "C29": "incomplete_procedure: labelled incomplete in PF-3C because the PF-2 reading took the section label 'D.' for a fifth step; the printed page holds the complete four-step keyboard list under 'C. Reorder content:' (reviewed CORRECT); C30 still falls back"
+  },
+  "unexplained": []
+ },
+ "tests": {
+  "incomplete procedure: first or middle step missing, two procedures mixed": {
+   "test": "test_incomplete_or_mixed_numbered_procedures_are_refused",
+   "cases": 3,
+   "passed": 3,
+   "failed": []
+  },
+  "incomplete procedure: last step announces content that does not follow": {
+   "test": "test_a_last_step_that_announces_missing_content_is_refused",
+   "cases": 2,
+   "passed": 2,
+   "failed": []
+  },
+  "incomplete procedure: a figure reference is not a missing step": {
+   "test": "test_a_last_step_that_points_at_a_figure_is_not_a_missing_step",
+   "cases": 1,
+   "passed": 1,
+   "failed": []
+  },
+  "incomplete procedure: page continuation not indexed": {
+   "test": "test_a_page_continuation_that_is_not_indexed_leaves_the_end_unproven",
+   "cases": 1,
+   "passed": 1,
+   "failed": []
+  },
+  "incomplete procedure: heading from another procedure": {
+   "test": "test_a_heading_that_belongs_to_another_procedure_is_refused",
+   "cases": 1,
+   "passed": 1,
+   "failed": []
+  },
+  "verification: a dropped last unit, reordered or repeated units, an unapproved specialist": {
+   "test": "test_the_verification_refuses_a_structure_that_is_not_exactly_complete",
+   "cases": 3,
+   "passed": 3,
+   "failed": []
+  },
+  "verification: a forged section answer through the adapter": {
+   "test": "test_forged_section_answers_are_refused_by_the_adapter",
+   "cases": 1,
+   "passed": 1,
+   "failed": []
+  },
+  "exact quotes: a block no chunk holds verbatim": {
+   "test": "test_a_block_that_no_chunk_holds_verbatim_makes_the_structure_unusable",
+   "cases": 1,
+   "passed": 1,
+   "failed": []
+  },
+  "conflict: a registered conflict inside a structure": {
+   "test": "test_a_registered_conflict_inside_a_structure_refuses_it",
+   "cases": 1,
+   "passed": 1,
+   "failed": []
+  },
+  "unordered list: never presented as Step 1/2/3": {
+   "test": "test_an_unordered_list_is_never_presented_as_steps",
+   "cases": 1,
+   "passed": 1,
+   "failed": []
+  },
+  "unordered list: lettered titled callouts are options": {
+   "test": "test_lettered_callouts_with_titles_are_options_not_a_sequence",
+   "cases": 1,
+   "passed": 1,
+   "failed": []
+  },
+  "list types: classification": {
+   "test": "test_list_type_classification",
+   "cases": 10,
+   "passed": 10,
+   "failed": []
+  },
+  "mixed list: lettered sub-steps keep their printed labels": {
+   "test": "test_steps_with_lettered_substeps_keep_their_hierarchy",
+   "cases": 1,
+   "passed": 1,
+   "failed": []
+  },
+  "enumeration: a list must name the asked set": {
+   "test": "test_a_list_must_name_the_asked_set_to_answer_an_enumeration",
+   "cases": 1,
+   "passed": 1,
+   "failed": []
+  },
+  "real corpus: structures never serve what they do not prove": {
+   "test": "test_structures_never_serve_what_they_do_not_prove",
+   "cases": 4,
+   "passed": 4,
+   "failed": []
+  },
+  "real corpus: a system name in a heading never names the asked action": {
+   "test": "test_a_system_name_in_a_heading_never_names_the_asked_action",
+   "cases": 1,
+   "passed": 1,
+   "failed": []
+  }
+ },
+ "evaluation_safety_groups": {
+  "conflict": {
+   "questions": 6,
+   "served": 0,
+   "guide_served": 0,
+   "ids_guide_served": []
+  },
+  "guide_contamination": {
+   "questions": 3,
+   "served": 1,
+   "guide_served": 1,
+   "ids_guide_served": [
+    "P11"
+   ]
+  },
+  "handbook_contamination": {
+   "questions": 6,
+   "served": 0,
+   "guide_served": 0,
+   "ids_guide_served": []
+  },
+  "wrong_source": {
+   "questions": 18,
+   "served": 0,
+   "guide_served": 0,
+   "ids_guide_served": []
+  },
+  "appraisal": {
+   "questions": 1,
+   "served": 0,
+   "guide_served": 0,
+   "ids_guide_served": []
+  },
+  "known_hr": {
+   "questions": 1,
+   "served": 0,
+   "guide_served": 0,
+   "ids_guide_served": []
+  },
+  "annual_leave": {
+   "questions": 1,
+   "served": 0,
+   "guide_served": 0,
+   "ids_guide_served": []
+  },
+  "incomplete_procedure": {
+   "questions": 2,
+   "served": 1,
+   "guide_served": 1,
+   "ids_guide_served": [
+    "C29"
+   ]
+  },
+  "authority": {
+   "questions": 1,
+   "served": 0,
+   "guide_served": 0,
+   "ids_guide_served": []
+  },
+  "ambiguous": {
+   "questions": 1,
+   "served": 0,
+   "guide_served": 0,
+   "ids_guide_served": []
+  },
+  "routing": {
+   "questions": 2,
+   "served": 0,
+   "guide_served": 0,
+   "ids_guide_served": []
+  },
+  "cross_document": {
+   "questions": 8,
+   "served": 5,
+   "guide_served": 5,
+   "ids_guide_served": [
+    "P14",
+    "P16",
+    "C15",
+    "C16",
+    "C17"
+   ]
+  }
+ }
+}

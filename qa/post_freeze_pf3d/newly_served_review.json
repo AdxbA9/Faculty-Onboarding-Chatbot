@@ -1,0 +1,813 @@
+{
+ "method": "Write the PF-3D manual reviews:\n\n* ``newly_served_review.json``: every answer Plan F served from a guide in ACTIVE (any category), with a hand verdict\n  (CORRECT / ACCEPTABLE BUT LIMITED / WRONG) read against the guide page: source, page, system, actor, detail, complete\n  procedure and step order, no omitted step, no conflicted fact, specialist. Answers already reviewed in PF-3C keep that\n  verdict only when the rendered answer is byte-identical; anything else is reviewed again here. An answer served but not\n  listed gets no verdict (NOT REVIEWED) and fails the analysis.\n* ``structure_recovery_review.json``: for each of the 10 STRUCTURAL false fallbacks of ``fallback_classification.json``,\n  whether PF-3D recovered it, with the structure used (kind, list type, start, end, pages, units) and the hand check.\n``newly_served_review.json`` is also the review input of ``analyze.py`` (its ``served`` table).\n\n    python -X utf8 qa/post_freeze_pf3d/make_review.py <results.json> <out dir>",
+ "summary": {
+  "served_guide_answers": 33,
+  "new_in_pf3d": [
+   "C29",
+   "G08",
+   "G09",
+   "G10",
+   "G11",
+   "G15",
+   "G17",
+   "G18",
+   "G19",
+   "G22",
+   "P14"
+  ],
+  "verdicts": {
+   "ACCEPTABLE BUT LIMITED": 1,
+   "CORRECT": 32
+  },
+  "structural_false_fallbacks": 10,
+  "recovered": [
+   "G08",
+   "G09",
+   "G10",
+   "G11",
+   "G15",
+   "G17",
+   "G18",
+   "G19",
+   "G22"
+  ],
+  "remaining": [
+   "G20"
+  ]
+ },
+ "served": {
+  "G01": {
+   "question": "How do I access Blackboard from outside the campus?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answer": "How to access Blackboard:\n\n- Open the University website http://www.sharjah.ac.ae\n\n- Click Quick Links “MyUOS” , If you are connected to the University Network Domain, you will be directly logged in automatically.\n\n- If you are singing from outside university campus, click on Login from the main page.\n\n- Click on Login.\n\n- Then sign in using your University of Sharjah email address and password.\n\n- You must verify your identity using the multifactor factor authentication service by receiving an SMS on the registered phone number or using Microsoft authenticator application.\n\n- Then you will be redirected to the main page of the blackboard.",
+   "pages": [
+    1
+   ],
+   "sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 7,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "short guide p1 'How to access Blackboard': all seven bullets in order, including the outside-campus Login step and multi-factor verification; Teaching; the faculty actor bound by the guide's audience",
+   "basis": "PF-3C review (answer unchanged)",
+   "new_in_pf3d": false
+  },
+  "G03": {
+   "question": "How can I pin a course to the top of my course list in Blackboard Ultra?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answer": "- You can mark one of your courses as a favorite, this will allow you to pin this course on the top of the courses list.",
+   "pages": [
+    3
+   ],
+   "sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "list_item"
+   ],
+   "parts": 1,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "short guide p3 'Your Courses', the one bullet that answers: mark the course as a favourite to pin it on top of the list (an unordered list item answering alone)",
+   "basis": "PF-3C review (answer unchanged)",
+   "new_in_pf3d": false
+  },
+  "G05": {
+   "question": "What is the minimum size of a Blackboard course banner image?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answer": "Course Image: You will be able to upload a course banner image, the image always displays as the course card thumbnail on the Courses page. In Ultra Course View courses, you can toggle the Course Image to display the image within your course as well, Image must be at least 1200 x 240 pixels.",
+   "pages": [
+    4
+   ],
+   "sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "statement"
+   ],
+   "parts": 1,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "short guide p4 Course Image item: the banner image must be at least 1200 x 240 pixels (the asked minimum); p5 also states a 25 KB maximum, not asked",
+   "basis": "PF-3C review (answer unchanged)",
+   "new_in_pf3d": false
+  },
+  "G08": {
+   "question": "How do I move a content item with the keyboard in Blackboard Ultra?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answer": "With your keyboard, you can move an item to a new location, move an item into an expanded folder, and move a folder into another expanded folder.\n\n1. Tab to an item's move icon.\n\n2. Press Enter to activate move mode.\n\n3. Use the arrow keys to choose a location.\n\n4. Press Enter to drop the item in the new location.",
+   "pages": [
+    7
+   ],
+   "sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 5,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "short guide p7: the lead-in 'With your keyboard, you can move an item ...' and steps 1-4 in order; the next section label 'D. Edit and delete content:' is a heading, not a fifth step (D-112 lettered title)",
+   "basis": "PF-3D review",
+   "new_in_pf3d": true
+  },
+  "G09": {
+   "question": "How do I add a learning module in Blackboard Ultra?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answer": "Add a Learning Module or Folder:\n\n- You can use learning modules or Folders in your course as containers for organized collections of content. Modules let students navigate from one content item to the next without distractions or extra clicks. A learning module helps immerse students in the lesson or concept you are teaching. If you use textbook or other materials as the basis for your course curriculum, modules are an effective and logical way to group content to match the pace of these materials.\n\n- To add a Learning Module. Click on plus sign.\n\n- Click on Learning Module or Folder.\n\n- Name the Learning Module and start adding a content to this module.\n\n- You can manage the visibility of the module, by default, it is hidden but you can make it visible or add visibility condition to manage the visibility.",
+   "pages": [
+    8
+   ],
+   "sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 6,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "short guide p8 'Add a Learning Module or Folder:' with every glyph-bulleted unit in order (the module description, plus sign, Learning Module or Folder, name it, visibility note); bounded by the next heading",
+   "basis": "PF-3D review",
+   "new_in_pf3d": true
+  },
+  "G10": {
+   "question": "How do I send an announcement to my students in Blackboard?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answer": "Send an Announcement:\n\n- From details and actions click on create Announcements.\n\n- Click on the Plus sign in the top right of the page.\n\n- Add the Title, recipients and message of the announcement.\n\n- If you want to send a copy of this announcement via Email, check “Send an email copy to recipients” option.\n\n- If you want to schedule the announce and control the visibility, check “schedule announcement” option and choose the start and end dates and time.\n\n- Click on save – a draft of the announcement will be saved.\n\n- Click on Post so the announcement will reach students.\n\n- You can edit copy or delete announcement by going to the announcement page, then click on the “Three dots” icon, then you will find Edit, Copy and delete.",
+   "pages": [
+    9
+   ],
+   "sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 9,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "short guide p9 'Send an Announcement:' with all eight glyph-bulleted units in order (create Announcements, plus sign, title, recipients and message, e-mail copy, schedule, save, Post, edit/copy/delete); page 10 opens with a heading",
+   "basis": "PF-3D review",
+   "new_in_pf3d": true
+  },
+  "G11": {
+   "question": "How do I create an assignment in Blackboard Ultra?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answer": "Create an Assignment:\n\nYou can create assignments alongside other content. Students can access their work next to the content they need, right when they need it. You can also create a group assignment and release it to one or more groups in your course. Feel free to experiment! Students cannot see what you add until you make your assignments visible.\n\n- On the Course Content page, select the plus sign wherever you want to add an assignment.\n\n- In the menu, select Create to open the Create Item panel and select Assignment. The New Assignment page opens.\n\n- When you create an assignment, a gradebook item is created automatically.\n\n- Provide a descriptive title so students can easily find the assignment among your course content.\n\n- Add text, files, and questions. Select the plus sign to open the menu and make a selection. You can choose a question type, add a question pool, or reuse questions and content from existing assessments. You can add files and text, such as instructions for the assignment.\n\n- Show or hide the assignment. Students cannot see an assignment until you choose to show it. You can create all your content ahead of time and choose what you want students to see based on your schedule. You can also set availability conditions based on date, time, and performance on other items in the course gradebook.\n\n- Provide a due date. Due dates appear on the calendar and in the activity stream. Late submissions appear with a late label in the course gradebook. Encourage students to review what’s due now and what is ahead so they can ask questions as soon as possible.\n\n- View accommodations. You can set accommodations for students and make them exempt from certain course requirements, such as assignment due dates and time limits. To select accommodations, go to the Roster and open a student's menu. The number of accommodations you have made appears on the assignment page in the Assignment Settings section.\n\n- Allow class conversations. What if your students have questions about an assignment? You can allow conversations within an assignment, and anyone can contribute. As the conversation develops, it appears only with the relevant assignment.\n\n- Collect submissions offline. You may want to grade student work that does not require students to upload a submission. For example, you can add grades to your gradebook for oral presentations, science fair projects, acting performances, and artwork delivered in person.\n\n- Randomize questions and answers. You can randomize questions and their answers to support practice/drilling activities and help students avoid academic dishonesty. You can use one or both settings so assignments appear differently for each student.\n\n- Add a time limit. A time limit can keep students on track and focused on the assignment because each person has a limited amount of time to submit. The assignment attempts are saved and submitted automatically when time is up. You can also allow students to work past the time limit. At this time, you cannot add a time limit to group assignments.",
+   "pages": [
+    10,
+    11
+   ],
+   "sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 14,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "short guide 'Create an Assignment:' continued from page 10 onto page 11 (which opens under no heading): the description, the two creation steps and every assignment setting, cited on both pages; complete and verbatim, long",
+   "basis": "PF-3D review",
+   "new_in_pf3d": true
+  },
+  "G12": {
+   "question": "Can I add a time limit to a group assignment in Blackboard Ultra?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answer": "At this time, you cannot add a time limit to group assignments.",
+   "pages": [
+    11
+   ],
+   "sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "statement"
+   ],
+   "parts": 1,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "short guide p11: 'At this time, you cannot add a time limit to group assignments.' (a direct no)",
+   "basis": "PF-3C review (answer unchanged)",
+   "new_in_pf3d": false
+  },
+  "G15": {
+   "question": "What are the two views of the Blackboard Ultra gradebook?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answer": "You can grade coursework, manage items, and post grades from two views:\n\n1. List View.\n\na) Gradable Items list.\n\nb) Student list.\n\n2. Student grid View. You can change the view using the toggle button on the top left of the gradebook page.",
+   "pages": [
+    1
+   ],
+   "sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 5,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "gradebook p1: the lead-in 'You can grade coursework, manage items, and post grades from two views:' recovered across two rows, then 1. List View (a, b) and 2. Student grid View: the two views",
+   "basis": "PF-3D review",
+   "new_in_pf3d": true
+  },
+  "G17": {
+   "question": "How do I make Blackboard assign zeros to missing work automatically?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answer": "Assign automatic zeros:\n\nYou can choose to automatically assign zeros to missing work past the due date. Students and groups can still submit work after an automatic zero is assigned. Then, you can grade as normal. In the Gradebook, select the Settings icon to access the Gradebook Settings panel. Select the Assign automatic zeros for past due work check box. This setting is enabled by default in new courses. Next, select Assign Zeros. All past due work will receive automatic zeros. Affected students’ point totals will update. In list view, students' grade pills display \"0\" when no submissions exist and the due date has passed. The label Automatic zero appears next to the grade pills.",
+   "pages": [
+    8
+   ],
+   "sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 2,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "gradebook p8 'Assign automatic zeros:' (settings icon, the check box, Next select Assign Zeros, the result) bounded by the short heading 'Filter by child courses'",
+   "basis": "PF-3D review",
+   "new_in_pf3d": true
+  },
+  "G18": {
+   "question": "How do I download the gradebook from Blackboard?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answer": "1. Download Worflow\n\nIn the gradebook list or grid view, select the icon with the down arrow to open the Download Gradebook panel.\n\nMake your selections:\n\n- Download the full gradebook or select columns.\n\n- Select the file type for the downloaded file. Data files are comma-delimited (CSV) or tab-delimited (XLS).\n\n- Select the location for the download. You can save the file to your device or Browse to select a folder in the Content Collection.",
+   "pages": [
+    10
+   ],
+   "sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 6,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "gradebook p10 sub-section '1. Download Worflow': select the down-arrow icon, then 'Make your selections:' with the three selections; bounded by '2. Upload a file to the gradebook'",
+   "basis": "PF-3D review",
+   "new_in_pf3d": true
+  },
+  "G19": {
+   "question": "How do I set accommodations for a student in the Blackboard gradebook?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answer": "Add accommodations from the Student list view:\n\nYou can set accommodations for individual students. You can exempt students from assessment due dates or time limits. Use accommodations to help students progress in the course even though they may have difficulty with some requirements. Select the three-dot options menu at the right end of a student row. Select the Accommodations option. The Accommodations panel will open at the right side of the screen.",
+   "pages": [
+    5
+   ],
+   "sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 2,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "gradebook p5 'Add accommodations from the Student list view:': set accommodations, three-dot menu, Accommodations option, the panel opens; the section's own first sentence states 'set accommodations'",
+   "basis": "PF-3D review",
+   "new_in_pf3d": true
+  },
+  "G22": {
+   "question": "How do I filter the Blackboard gradebook by merged child courses?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answer": "Filter by child courses\n\nYou can filter your gradebook view based on merged courses:\n\n- In the student grid view, select Filter to open the Filter Criteria panel.\n\n- Filter only appears if you have merged courses.\n\n- All the students from all your child courses appear in the active filter area.",
+   "pages": [
+    8
+   ],
+   "sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 5,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "gradebook p8 'Filter by child courses': the lead-in and the three bulleted lines (select Filter, filter only for merged courses, all child-course students appear)",
+   "basis": "PF-3D review",
+   "new_in_pf3d": true
+  },
+  "G23": {
+   "question": "What can I change from the Gradebook Settings panel in Blackboard Ultra?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answer": "From the Gradebook Settings panel, you can:\n\n1. You can make changes to the default grading schema.\n\n2. Automatically assign zeros to missing work past the due date\n\n3. view the gradebook categories & add new categories\n\n4. Create & edit Rubrics for more information or rubrics click here.",
+   "pages": [
+    7
+   ],
+   "sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 4,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "gradebook p7 'From the Gradebook Settings panel, you can:' with all four items (grading schema, automatic zeros, categories, rubrics): the complete list",
+   "basis": "PF-3C review (answer unchanged)",
+   "new_in_pf3d": false
+  },
+  "G24": {
+   "question": "How do I transfer grades from Blackboard to Banner?",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answer": "How to Send Grades to Banner as instructor?:\n\n1. Search for the course by using the search bar at the top of the dashboard to locate the specific course you wish to transfer. You can search by Course ID and Term.\n\n2. Click on View Details on the dashboard\n\n3. Click on Transfer:\n\n4. You can click again in View Detail to see the grade under the Banner Column after the approval from Chair and Dean as below:",
+   "pages": [
+    2
+   ],
+   "sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 4,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "grade transfer p2 'How to Send Grades to Banner as instructor?': steps 1-4 in order; step 4 completed from the page prose ('... after the approval from Chair and Dean as below:'); send = transfer as the guide itself says",
+   "basis": "PF-3C review (answer unchanged)",
+   "new_in_pf3d": false
+  },
+  "G25": {
+   "question": "Where is the Grade Transfer Dashboard link?",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answer": "NOTE: You can access directly by clicking on below link https://op.sharjah.ac.ae/GradeTransfer",
+   "pages": [
+    1
+   ],
+   "sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "forms": [
+    "statement"
+   ],
+   "parts": 1,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "grade transfer p1 note: the direct link https://op.sharjah.ac.ae/GradeTransfer (the location asked); the announcement route is in the steps, not needed for 'where is the link'",
+   "basis": "PF-3C review (answer unchanged)",
+   "new_in_pf3d": false
+  },
+  "G28": {
+   "question": "How does a Dean approve grades in the Grade Transfer portal?",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answer": "How to approve Grades to Banner as Chair/Dean?:\n\n1. Click on below link to access Grade transfer Portal https://op.sharjah.ac.ae/GradeTransfer\n\n2. Use your credentials to log in\n\n3. Select the option corresponding to your role and follow the on-screen instructions to complete the process.\n\n4. Navigate to the course search and select the course, revise grades, and approve by selecting Transfer option",
+   "pages": [
+    3
+   ],
+   "sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 4,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "grade transfer p3 'How to approve Grades to Banner as Chair/Dean?': steps 1-4 in order; the Dean is named by the heading; this is the dashboard workflow, not a statement of who has authority",
+   "basis": "PF-3C review (answer unchanged)",
+   "new_in_pf3d": false
+  },
+  "G29": {
+   "question": "How do I access iThenticate?",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answer": "How to access IThenticate:\n\n1. Open www.ithenticate.com\n\n2. Click on login\n\n3. Type your university email and your password (activation password is sent to you through ithenticate.com ) If you are unable to access iThenticate software email: servicedesk@sharjah.ac.ae",
+   "pages": [
+    1
+   ],
+   "sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 3,
+   "specialist": [
+    "research"
+   ],
+   "verdict": "CORRECT",
+   "note": "iThenticate p1 'How to access IThenticate': steps 1-3 with the service-desk note; Research",
+   "basis": "PF-3C review (answer unchanged)",
+   "new_in_pf3d": false
+  },
+  "G30": {
+   "question": "How do I upload a document to iThenticate?",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answer": "How to upload a document:\n\n1. Select the “Upload a File” link under the “Submit a Document” section on the home screen\n\n2. Enter in the author’s name and the document title, then click the “Choose a File” button in order to open your file\n\n3. Once you have opened your file, click “Upload” to upload your file\n\n4. If you will upload the same document but with an updated version use the following button and upload the updated document Note: The analysis may take a few hours",
+   "pages": [
+    1
+   ],
+   "sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 4,
+   "specialist": [
+    "research"
+   ],
+   "verdict": "CORRECT",
+   "note": "iThenticate p1 'How to upload a document': steps 1-4 with the revision step and the note that the analysis may take a few hours; Research",
+   "basis": "PF-3C review (answer unchanged)",
+   "new_in_pf3d": false
+  },
+  "P11": {
+   "question": "Which button do I use in the Blackboard gradebook to release grades to students?",
+   "category": "guide_contamination",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answer": "4. When you're ready to release grades to students, select the Post option in the column header.",
+   "pages": [
+    6
+   ],
+   "sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "forms": [
+    "statement"
+   ],
+   "parts": 1,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "gradebook p6 student grid item 4: 'When you're ready to release grades to students, select the Post option in the column header.' (the control asked); a selection ask may quote one item",
+   "basis": "PF-3C review (answer unchanged)",
+   "new_in_pf3d": false
+  },
+  "P14": {
+   "question": "How many office hours must faculty hold, and how do I create an assignment in Blackboard?",
+   "category": "cross_document",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answer": "1. Full-Time Faculty: Full-time faculty members in academic and career/technical programs are required to schedule a minimum of five office hours per week, spread over a minimum of two days. These office hours provide dedicated time for students to discuss course- related matters, seek clarifications, and receive academic support.\n\nCreate an Assignment:\n\nYou can create assignments alongside other content. Students can access their work next to the content they need, right when they need it. You can also create a group assignment and release it to one or more groups in your course. Feel free to experiment! Students cannot see what you add until you make your assignments visible.\n\n- On the Course Content page, select the plus sign wherever you want to add an assignment.\n\n- In the menu, select Create to open the Create Item panel and select Assignment. The New Assignment page opens.\n\n- When you create an assignment, a gradebook item is created automatically.\n\n- Provide a descriptive title so students can easily find the assignment among your course content.\n\n- Add text, files, and questions. Select the plus sign to open the menu and make a selection. You can choose a question type, add a question pool, or reuse questions and content from existing assessments. You can add files and text, such as instructions for the assignment.\n\n- Show or hide the assignment. Students cannot see an assignment until you choose to show it. You can create all your content ahead of time and choose what you want students to see based on your schedule. You can also set availability conditions based on date, time, and performance on other items in the course gradebook.\n\n- Provide a due date. Due dates appear on the calendar and in the activity stream. Late submissions appear with a late label in the course gradebook. Encourage students to review what’s due now and what is ahead so they can ask questions as soon as possible.\n\n- View accommodations. You can set accommodations for students and make them exempt from certain course requirements, such as assignment due dates and time limits. To select accommodations, go to the Roster and open a student's menu. The number of accommodations you have made appears on the assignment page in the Assignment Settings section.\n\n- Allow class conversations. What if your students have questions about an assignment? You can allow conversations within an assignment, and anyone can contribute. As the conversation develops, it appears only with the relevant assignment.\n\n- Collect submissions offline. You may want to grade student work that does not require students to upload a submission. For example, you can add grades to your gradebook for oral presentations, science fair projects, acting performances, and artwork delivered in person.\n\n- Randomize questions and answers. You can randomize questions and their answers to support practice/drilling activities and help students avoid academic dishonesty. You can use one or both settings so assignments appear differently for each student.\n\n- Add a time limit. A time limit can keep students on track and focused on the assignment because each person has a limited amount of time to submit. The assignment attempts are saved and submitted automatically when time is up. You can also allow students to work past the time limit. At this time, you cannot add a time limit to group assignments.",
+   "pages": [
+    79,
+    10,
+    11
+   ],
+   "sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 14,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "two clauses each verified on its own: handbook p79 (full-time faculty: a minimum of five office hours per week over at least two days) and the complete 'Create an Assignment' section (pages 10-11); no bridge text",
+   "basis": "PF-3D review",
+   "new_in_pf3d": true
+  },
+  "P16": {
+   "question": "How many theses can a faculty member supervise at once, and how do I access iThenticate?",
+   "category": "cross_document",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answer": "• A faculty member is allowed to supervise a maximum of four theses/dissertations simultaneously, exception may be granted by the College of Graduate Studies. This limitation ensures that each student receives adequate attention and support throughout the thesis process.\n\nHow to access IThenticate:\n\n1. Open www.ithenticate.com\n\n2. Click on login\n\n3. Type your university email and your password (activation password is sent to you through ithenticate.com ) If you are unable to access iThenticate software email: servicedesk@sharjah.ac.ae",
+   "pages": [
+    81,
+    1
+   ],
+   "sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_ithenticate_guidelines"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 3,
+   "specialist": [
+    "research"
+   ],
+   "verdict": "CORRECT",
+   "note": "two clauses each verified on its own: handbook p81 (four theses) and the iThenticate p1 access procedure; no bridge text; Research",
+   "basis": "PF-3C review (answer unchanged)",
+   "new_in_pf3d": false
+  },
+  "C01": {
+   "question": "How do I transfer grades to Banner using the Grade Transfer Dashboard?",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answer": "How to Send Grades to Banner as instructor?:\n\n1. Search for the course by using the search bar at the top of the dashboard to locate the specific course you wish to transfer. You can search by Course ID and Term.\n\n2. Click on View Details on the dashboard\n\n3. Click on Transfer:\n\n4. You can click again in View Detail to see the grade under the Banner Column after the approval from Chair and Dean as below:",
+   "pages": [
+    2
+   ],
+   "sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 4,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "the same complete p2 send-grades procedure as G24 (the dashboard name bound by the registry)",
+   "basis": "PF-3C review (answer unchanged)",
+   "new_in_pf3d": false
+  },
+  "C04": {
+   "question": "Where do I access the Grade Transfer Dashboard?",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answer": "NOTE: You can access directly by clicking on below link https://op.sharjah.ac.ae/GradeTransfer",
+   "pages": [
+    1
+   ],
+   "sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "forms": [
+    "statement"
+   ],
+   "parts": 1,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "ACCEPTABLE BUT LIMITED",
+   "note": "grade transfer p1 note: the direct link is a correct place to access the dashboard; the other route (the announcement on the Blackboard Institution Page) is not shown",
+   "basis": "PF-3C review (answer unchanged)",
+   "new_in_pf3d": false
+  },
+  "C05": {
+   "question": "What are the steps to access the Grade Transfer link in Blackboard?",
+   "category": "guide",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answer": "To access the Grade Transfer link follow these steps:\n\n1. Log in to Blackboard and use your credentials to log in to Blackboard securely.\n\n2. After logging in, select the Institution Page tab from the main navigation menu.\n\n3. Look for the announcement containing the Grade Transfer link and click on it. NOTE: You can access directly by clicking on below link https://op.sharjah.ac.ae/GradeTransfer\n\n4. Once in the Grade Transfer Dashboard, select the option corresponding to your role and follow the on-screen instructions to complete the process.\n\n5. Once logged in, navigate to the Grade Transfer section, where you’ll find the dashboard and its associated tools for managing the grade transfer process.",
+   "pages": [
+    1
+   ],
+   "sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 5,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "grade transfer p1 'To access the Grade Transfer link follow these steps': all five steps in order",
+   "basis": "PF-3C review (answer unchanged)",
+   "new_in_pf3d": false
+  },
+  "C06": {
+   "question": "How do I access Blackboard?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answer": "How to access Blackboard:\n\n- Open the University website http://www.sharjah.ac.ae\n\n- Click Quick Links “MyUOS” , If you are connected to the University Network Domain, you will be directly logged in automatically.\n\n- If you are singing from outside university campus, click on Login from the main page.\n\n- Click on Login.\n\n- Then sign in using your University of Sharjah email address and password.\n\n- You must verify your identity using the multifactor factor authentication service by receiving an SMS on the registered phone number or using Microsoft authenticator application.\n\n- Then you will be redirected to the main page of the blackboard.",
+   "pages": [
+    1
+   ],
+   "sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 7,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "the complete p1 Blackboard access procedure",
+   "basis": "PF-3C review (answer unchanged)",
+   "new_in_pf3d": false
+  },
+  "C07": {
+   "question": "What can I do in the gradable items list of the Blackboard gradebook?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answer": "In the gradable items list, you can:\n\n1. Open items: Select an item's title to open a new layer. See whose submissions need grading and who hasn't received their grades yet. Switch between Gradable Items.\n\n2. Upload & Download grades: You can download the gradebook to modify it and upload it again.\n\n3. Add Graded items or calculated Items.\n\n4. Rearrange the gradebook items: Use the Arrows to rearrange items in the list\n\n5. Check the progress: See how many submissions you need to grade and grades you have to post.\n\n6. Add a row: Select the plus sign wherever you want to add a row:\n\na) Add Item: Add a row for coursework, such as a participation grade. Your title is limited to 255 characters. Choose the grade unit, such as points or letter.\n\nb) Add Calculation: Add a row for a calculation, such as an average assignments grade.\n\nc) Add Attendance: Add a row for attendance. After you add attendance, the add option will not appear in the menu again.",
+   "pages": [
+    2,
+    3
+   ],
+   "sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 9,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "gradebook list 'In the gradable items list, you can:' items 1-5 (page 2) and item 6 with a), b), c) (page 3): the numbered list continued across the page break, merged and cited on both pages",
+   "basis": "PF-3C review (answer unchanged)",
+   "new_in_pf3d": false
+  },
+  "C09": {
+   "question": "How do I mark a course as a favorite in Blackboard?",
+   "category": "guide",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answer": "- You can mark one of your courses as a favorite, this will allow you to pin this course on the top of the courses list.",
+   "pages": [
+    3
+   ],
+   "sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "list_item"
+   ],
+   "parts": 1,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "the p3 favourite bullet (an unordered list item answering alone)",
+   "basis": "PF-3C review (answer unchanged)",
+   "new_in_pf3d": false
+  },
+  "C11": {
+   "question": "How do I check the similarity report in iThenticate?",
+   "category": "guide",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answer": "Checking Similarity Report:\n\n- The similarity index and originality report can be found under the “Documents” You need to click on report percentage shown to be able to view the similarity report You will be able to view the resources as shown below You can discard some resources by clicking on “Exclude resource” The user has a multiple settings and filtering options to deal with documents",
+   "pages": [
+    1
+   ],
+   "sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 1,
+   "specialist": [
+    "research"
+   ],
+   "verdict": "CORRECT",
+   "note": "iThenticate p1 'Checking Similarity Report': the whole item (under Documents, click the report percentage, view and exclude resources); printed without sentence breaks in the guide, quoted verbatim",
+   "basis": "PF-3C review (answer unchanged)",
+   "new_in_pf3d": false
+  },
+  "C15": {
+   "question": "How many office hours must faculty hold, and how do I access Blackboard?",
+   "category": "cross_document",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answer": "1. Full-Time Faculty: Full-time faculty members in academic and career/technical programs are required to schedule a minimum of five office hours per week, spread over a minimum of two days. These office hours provide dedicated time for students to discuss course- related matters, seek clarifications, and receive academic support.\n\nHow to access Blackboard:\n\n- Open the University website http://www.sharjah.ac.ae\n\n- Click Quick Links “MyUOS” , If you are connected to the University Network Domain, you will be directly logged in automatically.\n\n- If you are singing from outside university campus, click on Login from the main page.\n\n- Click on Login.\n\n- Then sign in using your University of Sharjah email address and password.\n\n- You must verify your identity using the multifactor factor authentication service by receiving an SMS on the registered phone number or using Microsoft authenticator application.\n\n- Then you will be redirected to the main page of the blackboard.",
+   "pages": [
+    79,
+    1
+   ],
+   "sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 7,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "two clauses each verified on its own: handbook p79 (full-time faculty: at least five office hours per week over two days) and the complete p1 Blackboard access procedure; no bridge text",
+   "basis": "PF-3C review (answer unchanged)",
+   "new_in_pf3d": false
+  },
+  "C16": {
+   "question": "How many credit hours is a full teaching load, and how do I send grades to Banner?",
+   "category": "cross_document",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answer": "o \"A\" Regular Faculty (Assistant, Associate, Full Professor) is devoted to developing and delivering undergraduate and graduate courses, conducting research, and performing service. The baseline teaching load for this category is 12 credit hours per semester.\n\no Ranked full time regular faculty, visiting faculty or senior lecturer workload equal to 12 credit hours per regular semester or 24 credit hours per academic year.\n\nHow to Send Grades to Banner as instructor?:\n\n1. Search for the course by using the search bar at the top of the dashboard to locate the specific course you wish to transfer. You can search by Course ID and Term.\n\n2. Click on View Details on the dashboard\n\n3. Click on Transfer:\n\n4. You can click again in View Detail to see the grade under the Banner Column after the approval from Chair and Dean as below:",
+   "pages": [
+    96,
+    91,
+    2
+   ],
+   "sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 4,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "two clauses each verified on its own: handbook p96 and p91 (12 credit hours per semester; the two statements agree) and the complete p2 send-grades procedure; the guide does not answer the workload clause",
+   "basis": "PF-3C review (answer unchanged)",
+   "new_in_pf3d": false
+  },
+  "C17": {
+   "question": "How many theses can a faculty member supervise at once, and how do I upload a document to iThenticate?",
+   "category": "cross_document",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answer": "• A faculty member is allowed to supervise a maximum of four theses/dissertations simultaneously, exception may be granted by the College of Graduate Studies. This limitation ensures that each student receives adequate attention and support throughout the thesis process.\n\nHow to upload a document:\n\n1. Select the “Upload a File” link under the “Submit a Document” section on the home screen\n\n2. Enter in the author’s name and the document title, then click the “Choose a File” button in order to open your file\n\n3. Once you have opened your file, click “Upload” to upload your file\n\n4. If you will upload the same document but with an updated version use the following button and upload the updated document Note: The analysis may take a few hours",
+   "pages": [
+    81,
+    1
+   ],
+   "sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_ithenticate_guidelines"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "parts": 4,
+   "specialist": [
+    "research"
+   ],
+   "verdict": "CORRECT",
+   "note": "two clauses each verified on its own: handbook p81 (four theses) and the complete iThenticate p1 upload procedure",
+   "basis": "PF-3C review (answer unchanged)",
+   "new_in_pf3d": false
+  },
+  "C29": {
+   "question": "How do I reorder content with my keyboard in Blackboard?",
+   "category": "incomplete_procedure",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answer": "With your keyboard, you can move an item to a new location, move an item into an expanded folder, and move a folder into another expanded folder.\n\n1. Tab to an item's move icon.\n\n2. Press Enter to activate move mode.\n\n3. Use the arrow keys to choose a location.\n\n4. Press Enter to drop the item in the new location.",
+   "pages": [
+    7
+   ],
+   "sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "parts": 5,
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "the same complete keyboard procedure as G08 (PF-3C labelled this question an incomplete procedure because the PF-2 reading took the section label 'D.' for a fifth step; D-112 reads it as the next heading)",
+   "basis": "PF-3D review",
+   "new_in_pf3d": true
+  }
+ }
+}

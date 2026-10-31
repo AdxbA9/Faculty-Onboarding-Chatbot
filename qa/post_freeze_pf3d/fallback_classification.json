@@ -1,0 +1,410 @@
+{
+ "method": "Captured BEFORE any PF-3D change, from the PF-3C evaluation (qa/post_freeze_pf3c/results.json: the DIRECT pass with the D-111 guide path record) read against the guide page rows (cache pages). Each of the 27 core guide questions Plan F did not serve in PF-3C gets ONE primary reason and a class: LEGITIMATE (the fallback is the correct behaviour: policy or authority, conflict, unsupported specialist, ambiguous ownership, no procedure printed, order not provable), STRUCTURAL (a false fallback caused by how the PDF structure was read: unmarked or glyph-bulleted steps, mixed list shapes, headings not detected or split across rows, sections continued across pages), NON_STRUCTURAL (a false fallback whose cause is not structure: an asked word the guide does not print, the reranker gate, a sub-task inside a larger procedure, a cross-document clause). Only STRUCTURAL cases are in scope for PF-3D.",
+ "summary": {
+  "fallbacks": 27,
+  "legitimate": 8,
+  "structural_false_fallbacks": 10,
+  "non_structural_false_fallbacks": 9,
+  "by_primary_reason": {
+   "unnumbered steps": 6,
+   "mixed list": 3,
+   "heading mismatch": 2,
+   "relevant evidence but no procedure structure": 1,
+   "unsupported specialist": 3,
+   "reranker threshold": 1,
+   "policy/system boundary": 1,
+   "conflict": 1,
+   "ambiguous question": 1,
+   "other": 8
+  },
+  "by_source": {
+   "uos_blackboard_faculty_short_guide": {
+    "fallbacks": 9,
+    "legitimate": 1,
+    "structural": 4,
+    "non_structural": 4
+   },
+   "uos_blackboard_gradebook_guide": {
+    "fallbacks": 9,
+    "legitimate": 2,
+    "structural": 6,
+    "non_structural": 1
+   },
+   "uos_grade_transfer_dashboard_guide": {
+    "fallbacks": 3,
+    "legitimate": 2,
+    "structural": 0,
+    "non_structural": 1
+   },
+   "uos_ithenticate_guidelines": {
+    "fallbacks": 6,
+    "legitimate": 3,
+    "structural": 0,
+    "non_structural": 3
+   }
+  }
+ },
+ "questions": {
+  "G02": {
+   "source": "uos_blackboard_faculty_short_guide",
+   "primary": "heading mismatch",
+   "class": "NON_STRUCTURAL",
+   "note": "identity verification is one bulleted step inside 'How to access Blackboard'; the heading names another action. A sub-task rule, not structure, would be needed."
+  },
+  "G04": {
+   "source": "uos_blackboard_faculty_short_guide",
+   "primary": "other",
+   "class": "NON_STRUCTURAL",
+   "note": "the Details & Actions options are glyph-separated 'Label: description' items (also unmarked), but the asked word 'panel' is not printed; structure alone cannot serve it."
+  },
+  "G06": {
+   "source": "uos_blackboard_faculty_short_guide",
+   "primary": "other",
+   "class": "NON_STRUCTURAL",
+   "note": "the answer is the 'o Private' option ('Make a course private while you add ...'); the asked words 'keep', 'hidden', 'build' are not printed."
+  },
+  "G07": {
+   "source": "uos_blackboard_faculty_short_guide",
+   "primary": "other",
+   "class": "NON_STRUCTURAL",
+   "note": "the Upload item lists the file types but does not print 'course'; the list also opens page 7 under no heading."
+  },
+  "G08": {
+   "source": "uos_blackboard_faculty_short_guide",
+   "primary": "mixed list",
+   "class": "STRUCTURAL",
+   "note": "the keyboard steps 1-4 under the lead-in sentence 'With your keyboard, you can move an item ...' are complete; the PF-2 reading took the next section label 'D. Edit and delete content:' for a fifth (lettered) step and carried an earlier heading."
+  },
+  "G09": {
+   "source": "uos_blackboard_faculty_short_guide",
+   "primary": "unnumbered steps",
+   "class": "STRUCTURAL",
+   "note": "section 'Add a Learning Module or Folder:' (page 8) with glyph-bulleted action lines, bounded by the next heading 'Add a Document or martials:'; the glyph bullets are not read as list markers."
+  },
+  "G10": {
+   "source": "uos_blackboard_faculty_short_guide",
+   "primary": "unnumbered steps",
+   "class": "STRUCTURAL",
+   "note": "section 'Send an Announcement:' (page 9): eight glyph-bulleted action lines in order; page 10 opens with its own heading."
+  },
+  "G11": {
+   "source": "uos_blackboard_faculty_short_guide",
+   "primary": "unnumbered steps",
+   "class": "STRUCTURAL",
+   "note": "section 'Create an Assignment:' (page 10) continued on page 11, which opens under no heading; unmarked instructions mixed with assignment settings."
+  },
+  "G13": {
+   "source": "uos_blackboard_faculty_short_guide",
+   "primary": "relevant evidence but no procedure structure",
+   "class": "LEGITIMATE",
+   "note": "the guide states that student preview lets you review the course (callout E) but prints no steps; a procedure ask is never answered by one statement."
+  },
+  "G14": {
+   "source": "uos_blackboard_gradebook_guide",
+   "primary": "unsupported specialist",
+   "class": "LEGITIMATE",
+   "note": "routed to Institutional Navigation, which D-110 does not approve for the gradebook guide."
+  },
+  "G15": {
+   "source": "uos_blackboard_gradebook_guide",
+   "primary": "heading mismatch",
+   "class": "STRUCTURAL",
+   "note": "the list 1. List View / a) / b) / 2. Student grid View is introduced by the sentence 'You can grade coursework, manage items, and post grades from two views:', split across two rows; the PF-2 reading kept only the fragment 'items, and post grades from two views' as a heading (a fragment, so refused), and read '1. Global Grades Page' and '2. Course gradebook' (sub-section titles) as steps."
+  },
+  "G16": {
+   "source": "uos_blackboard_gradebook_guide",
+   "primary": "other",
+   "class": "LEGITIMATE",
+   "note": "the Post action is item 4 of the numbered student-grid list of independent actions; nothing proves the list is unordered, so one item cannot answer a procedure ask (the selection question P11 is served)."
+  },
+  "G17": {
+   "source": "uos_blackboard_gradebook_guide",
+   "primary": "unnumbered steps",
+   "class": "STRUCTURAL",
+   "note": "section 'Assign automatic zeros:' (page 8) is narrative with three instructions (select Settings, select the check box, Next select Assign Zeros); its end, the short heading 'Filter by child courses', is not detected."
+  },
+  "G18": {
+   "source": "uos_blackboard_gradebook_guide",
+   "primary": "mixed list",
+   "class": "STRUCTURAL",
+   "note": "'1. Download Worflow' and '2. Upload a file to the gradebook' are numbered sub-section titles, not steps; the download sub-section holds one instruction and the bulleted selections under 'Make your selections:'."
+  },
+  "G19": {
+   "source": "uos_blackboard_gradebook_guide",
+   "primary": "unnumbered steps",
+   "class": "STRUCTURAL",
+   "note": "section 'Add accommodations from the Student list view:' (page 5): 'You can set accommodations for individual students ... Select the three-dot options menu ... Select the Accommodations option ...'; unmarked steps and a heading verb ('Add') that differs from the asked one ('set') while the section's own first sentence states it."
+  },
+  "G20": {
+   "source": "uos_blackboard_gradebook_guide",
+   "primary": "mixed list",
+   "class": "STRUCTURAL",
+   "note": "'6. Add a row: Select the plus sign ...:' with the alternatives a) Add Item, b) Add Calculation, c) Add Attendance, inside the capability list 'In the gradable items list, you can:'."
+  },
+  "G21": {
+   "source": "uos_blackboard_gradebook_guide",
+   "primary": "reranker threshold",
+   "class": "NON_STRUCTURAL",
+   "note": "the 255-character limit (pages 3 and 9) is below the production reranker gate for this question."
+  },
+  "G22": {
+   "source": "uos_blackboard_gradebook_guide",
+   "primary": "unnumbered steps",
+   "class": "STRUCTURAL",
+   "note": "section 'Filter by child courses' (page 8): a short heading without a colon, a lead-in ending with ':' and glyph-bulleted lines (select Filter ...); page 9 opens with its own heading."
+  },
+  "G26": {
+   "source": "uos_grade_transfer_dashboard_guide",
+   "primary": "policy/system boundary",
+   "class": "LEGITIMATE",
+   "note": "an approval-authority ask: never inferred from a guide's screens."
+  },
+  "G27": {
+   "source": "uos_grade_transfer_dashboard_guide",
+   "primary": "ambiguous question",
+   "class": "LEGITIMATE",
+   "note": "routing: the clause is claimed by Teaching and Institutional Navigation."
+  },
+  "G31": {
+   "source": "uos_ithenticate_guidelines",
+   "primary": "conflict",
+   "class": "LEGITIMATE",
+   "note": "the disputed yearly quota (English 30, Arabic 15)."
+  },
+  "G32": {
+   "source": "uos_ithenticate_guidelines",
+   "primary": "other",
+   "class": "NON_STRUCTURAL",
+   "note": "'Files must be less than 100MB.' does not print 'upload'."
+  },
+  "G33": {
+   "source": "uos_ithenticate_guidelines",
+   "primary": "unsupported specialist",
+   "class": "LEGITIMATE",
+   "note": "routed to Institutional Navigation, which D-110 does not approve for iThenticate."
+  },
+  "G34": {
+   "source": "uos_ithenticate_guidelines",
+   "primary": "other",
+   "class": "NON_STRUCTURAL",
+   "note": "the revision bullet does not print 'version', 'counting' or 'document' as asked; the File Requirements list carries the quota conflict."
+  },
+  "G35": {
+   "source": "uos_ithenticate_guidelines",
+   "primary": "unsupported specialist",
+   "class": "LEGITIMATE",
+   "note": "routed to Institutional Navigation, which D-110 does not approve for iThenticate."
+  },
+  "G36": {
+   "source": "uos_grade_transfer_dashboard_guide",
+   "primary": "other",
+   "class": "NON_STRUCTURAL",
+   "note": "cross-document: the guide clause 'how do I transfer them to Banner' names no object ('them'), and the handbook deadline clause is not supported."
+  },
+  "G37": {
+   "source": "uos_ithenticate_guidelines",
+   "primary": "other",
+   "class": "NON_STRUCTURAL",
+   "note": "cross-document: 'check a paper' is not printed by the similarity-report item, and the handbook clause is not supported."
+  }
+ },
+ "after_pf3d": {
+  "note": "Added after the PF-3D evaluation; the classification above was captured before any PF-3D code change.",
+  "summary": {
+   "fallbacks_before": 27,
+   "legitimate": 8,
+   "structural_identified": 10,
+   "structural_recovered": [
+    "G08",
+    "G09",
+    "G10",
+    "G11",
+    "G15",
+    "G17",
+    "G18",
+    "G19",
+    "G22"
+   ],
+   "structural_remaining": [
+    "G20"
+   ],
+   "legitimate_served": [],
+   "non_structural_remaining": [
+    "G02",
+    "G04",
+    "G06",
+    "G07",
+    "G21",
+    "G32",
+    "G34",
+    "G36",
+    "G37"
+   ],
+   "fallbacks_after": 18
+  },
+  "questions": {
+   "G02": {
+    "class_before": "NON_STRUCTURAL",
+    "served_after": false,
+    "verdict_after": null,
+    "stop_layer_after": "D-111 guide path found no provably complete, fully covered evidence"
+   },
+   "G04": {
+    "class_before": "NON_STRUCTURAL",
+    "served_after": false,
+    "verdict_after": null,
+    "stop_layer_after": "D-111 guide path found no provably complete, fully covered evidence"
+   },
+   "G06": {
+    "class_before": "NON_STRUCTURAL",
+    "served_after": false,
+    "verdict_after": null,
+    "stop_layer_after": "D-111 guide path found no provably complete, fully covered evidence"
+   },
+   "G07": {
+    "class_before": "NON_STRUCTURAL",
+    "served_after": false,
+    "verdict_after": null,
+    "stop_layer_after": "D-111 guide path found no provably complete, fully covered evidence"
+   },
+   "G08": {
+    "class_before": "STRUCTURAL",
+    "served_after": true,
+    "verdict_after": "CORRECT",
+    "stop_layer_after": null
+   },
+   "G09": {
+    "class_before": "STRUCTURAL",
+    "served_after": true,
+    "verdict_after": "CORRECT",
+    "stop_layer_after": null
+   },
+   "G10": {
+    "class_before": "STRUCTURAL",
+    "served_after": true,
+    "verdict_after": "CORRECT",
+    "stop_layer_after": null
+   },
+   "G11": {
+    "class_before": "STRUCTURAL",
+    "served_after": true,
+    "verdict_after": "CORRECT",
+    "stop_layer_after": null
+   },
+   "G13": {
+    "class_before": "LEGITIMATE",
+    "served_after": false,
+    "verdict_after": null,
+    "stop_layer_after": "D-111 guide path found no provably complete, fully covered evidence"
+   },
+   "G14": {
+    "class_before": "LEGITIMATE",
+    "served_after": false,
+    "verdict_after": null,
+    "stop_layer_after": "D-111 guide path found no provably complete, fully covered evidence"
+   },
+   "G15": {
+    "class_before": "STRUCTURAL",
+    "served_after": true,
+    "verdict_after": "CORRECT",
+    "stop_layer_after": null
+   },
+   "G16": {
+    "class_before": "LEGITIMATE",
+    "served_after": false,
+    "verdict_after": null,
+    "stop_layer_after": "D-111 guide path found no provably complete, fully covered evidence"
+   },
+   "G17": {
+    "class_before": "STRUCTURAL",
+    "served_after": true,
+    "verdict_after": "CORRECT",
+    "stop_layer_after": null
+   },
+   "G18": {
+    "class_before": "STRUCTURAL",
+    "served_after": true,
+    "verdict_after": "CORRECT",
+    "stop_layer_after": null
+   },
+   "G19": {
+    "class_before": "STRUCTURAL",
+    "served_after": true,
+    "verdict_after": "CORRECT",
+    "stop_layer_after": null
+   },
+   "G20": {
+    "class_before": "STRUCTURAL",
+    "served_after": false,
+    "verdict_after": null,
+    "stop_layer_after": "D-111 guide path found no provably complete, fully covered evidence"
+   },
+   "G21": {
+    "class_before": "NON_STRUCTURAL",
+    "served_after": false,
+    "verdict_after": null,
+    "stop_layer_after": "D-111 guide path found no provably complete, fully covered evidence"
+   },
+   "G22": {
+    "class_before": "STRUCTURAL",
+    "served_after": true,
+    "verdict_after": "CORRECT",
+    "stop_layer_after": null
+   },
+   "G26": {
+    "class_before": "LEGITIMATE",
+    "served_after": false,
+    "verdict_after": null,
+    "stop_layer_after": "no approved guide applies (handbook path decided)"
+   },
+   "G27": {
+    "class_before": "LEGITIMATE",
+    "served_after": false,
+    "verdict_after": null,
+    "stop_layer_after": "routing ambiguity"
+   },
+   "G31": {
+    "class_before": "LEGITIMATE",
+    "served_after": false,
+    "verdict_after": null,
+    "stop_layer_after": "D-111 guide path found no provably complete, fully covered evidence"
+   },
+   "G32": {
+    "class_before": "NON_STRUCTURAL",
+    "served_after": false,
+    "verdict_after": null,
+    "stop_layer_after": "D-111 guide path found no provably complete, fully covered evidence"
+   },
+   "G33": {
+    "class_before": "LEGITIMATE",
+    "served_after": false,
+    "verdict_after": null,
+    "stop_layer_after": "no approved guide applies (handbook path decided)"
+   },
+   "G34": {
+    "class_before": "NON_STRUCTURAL",
+    "served_after": false,
+    "verdict_after": null,
+    "stop_layer_after": "D-111 guide path found no provably complete, fully covered evidence"
+   },
+   "G35": {
+    "class_before": "LEGITIMATE",
+    "served_after": false,
+    "verdict_after": null,
+    "stop_layer_after": "no approved guide applies (handbook path decided)"
+   },
+   "G36": {
+    "class_before": "NON_STRUCTURAL",
+    "served_after": false,
+    "verdict_after": null,
+    "stop_layer_after": "aggregator (a clause unsupported)"
+   },
+   "G37": {
+    "class_before": "NON_STRUCTURAL",
+    "served_after": false,
+    "verdict_after": null,
+    "stop_layer_after": "aggregator (a clause unsupported)"
+   }
+  }
+ }
+}
