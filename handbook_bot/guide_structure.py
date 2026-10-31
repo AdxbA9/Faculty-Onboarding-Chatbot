@@ -28,8 +28,16 @@ WHAT (formatting and text evidence only: no model, no invented step, no guessed 
       ordered workflow only under an action heading with at least two instruction items. Nothing is renumbered: an
       item is rendered with its printed label, a bullet as a bullet.
 
+Post-freeze PF-5B (D-114), mixed-label procedures:
+    * a bulleted row that opens in lower case right after an item or sentence without closing punctuation is the rest of
+      that unit (a wrapped line the PDF printed with its own bullet glyph) and is joined to it; the joined text must still
+      be quoted exactly from an indexed chunk;
+    * a lettered row ending with ":" ("A. Create New Scheduled Sessions:") directly followed by the numbered sub-section
+      "1." opens a MIXED section that keeps every numbered sub-section, its items and their order until the next letter,
+      a heading that is not numbered or the end of the document. Nothing is renumbered or merged across sub-sections.
+
 Whether a recovered structure may answer a question is decided by ``guide_grounding.structure_problem`` (D-111 rules plus
-the D-112 completeness rules).
+the D-112 completeness rules and the D-114 cut-unit and mixed-section rules).
 """
 from __future__ import annotations
 
@@ -76,7 +84,26 @@ def titled(block: "Block") -> bool:
     return bool(m) and _words(m.group("title")) <= 5 and _words(m.group("rest")) >= 3
 
 LIST_TYPES = ("ordered_procedure", "ordered_list", "unordered_options", "requirements", "settings", "features", "contacts",
-              "numeric_limits", "approval_stages")
+              "numeric_limits", "approval_stages", "mixed_procedure")
+#: Post-freeze PF-5B (D-114): how a printed unit closes (a unit without one may continue on the next row).
+_CLOSED = (".", "!", "?", ";", ":", ")", "]", "\"", "”", "’", "'")
+_LETTER_OPENER = re.compile(r"^([A-Za-z])\s*[.)-]\s+")
+
+
+def merge_continuations(blocks: Sequence["Block"]) -> List["Block"]:
+    """Post-freeze PF-5B (D-114): join a bulleted row that opens in lower case to the item or sentence before it on the same
+    page when that one has no closing punctuation ("Activate ... to connect blackboard" / "attendance service to collaborate
+    sessions."). The PDF printed a glyph beside each wrapped line; the words, their order and the page are unchanged."""
+    out: List[Block] = []
+    for block in blocks:
+        prev = out[-1] if out else None
+        if (prev is not None and block.kind == "item" and block.marker == "bullet" and block.text[:1].islower()
+                and prev.kind in ("item", "prose") and prev.page == block.page and not prev.text.rstrip().endswith(_CLOSED)):
+            out[-1] = Block(prev.kind, prev.marker, prev.label, normalize_text(prev.text + " " + block.text), prev.page, prev.rank,
+                            prev.rows + block.rows)
+            continue
+        out.append(block)
+    return out
 
 
 @dataclass(frozen=True)
@@ -331,7 +358,8 @@ def recover(source_id: str, pages: Sequence[Mapping[str, Any]], page_chunks: Pag
     ordered = sorted(pages, key=lambda p: p.get("page", 0))
     indexed = [p.get("page") for p in ordered]
     last = max(indexed) if indexed else 0
-    per_page: Dict[int, List[Block]] = {p.get("page"): read_blocks(p.get("rows") or p.get("lines") or [], p.get("page")) for p in ordered}
+    per_page: Dict[int, List[Block]] = {p.get("page"): merge_continuations(read_blocks(p.get("rows") or p.get("lines") or [], p.get("page")))
+                                        for p in ordered}
     stream: List[Block] = []
     page_start: Dict[int, int] = {}
     for number in indexed:
@@ -417,9 +445,52 @@ def recover(source_id: str, pages: Sequence[Mapping[str, Any]], page_chunks: Pag
                                         tuple(dict.fromkeys([(lead_block or block).page] + [b.page for b in run])), tuple(parts),
                                         "lead-in sentence" if lead_in else "section heading", run_end, tuple(run_problems + problems)))
             j = k
+    # ---- post-freeze PF-5B (D-114): a lettered section over numbered sub-sections ----------------------------------------
+    for s, block in enumerate(stream):
+        opener = _LETTER_OPENER.match(block.text)
+        if (block.marker != "lettered" or opener is None or not block.text.rstrip().endswith(":") or _words(block.text) > 10
+                or s + 1 >= len(stream)):
+            continue
+        first = stream[s + 1]
+        if not (first.kind == "heading" and first.marker == "numbered" and re.match(r"^1\s*[.)]$", first.label or "")):
+            continue
+        letter = opener.group(1)
+        problems: List[str] = []
+        i = s + 1
+        why = ""
+        while i < len(stream):
+            current = stream[i]
+            if current.page != stream[i - 1].page and current.page != stream[i - 1].page + 1:
+                problems.append("page %d is not indexed, so the lettered section's end is not proven" % (stream[i - 1].page + 1))
+                why = "page %d end (gap)" % stream[i - 1].page
+                break
+            other = _LETTER_OPENER.match(current.text)              # any block opened by a letter label ("B-" is read as prose)
+            if other is not None and current.marker != "numbered":
+                expected = chr(ord(letter) + 1)
+                why = ("next letter %s on page %d" % (other.group(1), current.page) if other.group(1) == expected
+                       else "another lettered unit %s on page %d" % (other.group(1), current.page))
+                break
+            if current.kind == "heading" and current.marker != "numbered":
+                why = "a heading without a number on page %d" % current.page
+                break
+            i += 1
+        else:
+            tail = stream[-1].page
+            why = "end of document (page %d)" % tail
+            if tail != last:
+                problems.append("the document continues after page %d without indexed text" % tail)
+        body = stream[s + 1:i]
+        if any(_LETTER_OPENER.match(row.strip()) and not re.match(r"^\s*\d", row) for b in body for row in b.rows[1:]):
+            problems.append("a letter-labelled row inside the lettered section's text, so its end is not proven")
+        heading = Block("heading", "lettered", block.label, block.text, block.page, 1, block.rows)
+        parts, quote_problems = parts_of("heading", heading, body)
+        structures.append(Structure("%s:M:%d:%d" % (source_id, block.page, s), "section", source_id, heading.title, heading.title, None,
+                                    (heading,), tuple(body), tuple(body), "mixed_procedure",
+                                    tuple(dict.fromkeys([block.page] + [b.page for b in body])), tuple(parts),
+                                    "lettered heading on page %d" % block.page, why, tuple(problems + quote_problems)))
     # one section key per heading: a heading nested inside a longer section keeps both (each answers its own scope)
     return structures
 
 
 __all__ = ["Block", "GLYPHS", "INSTRUCTION_VERBS", "LIST_TYPES", "PageChunks", "Structure", "StructurePart", "VERSION", "classify",
-           "read_blocks", "recover"]
+           "merge_continuations", "read_blocks", "recover"]

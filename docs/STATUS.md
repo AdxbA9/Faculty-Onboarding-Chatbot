@@ -9,6 +9,84 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-10-31 - Natural-language guide generalization and fresh held-out validation (post-freeze phase PF-5B)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/post-freeze-knowledge-expansion` |
+| Starting commit | `925d341` (PF-4) |
+| Ending state | COMPLETE. D-114 generic wording, routing, misspelling, conflict-granularity and mixed-procedure rules; 0 wrong Plan F answers in every set; P0 21 of 37 core guide questions (19 at PF-4; every PF-4 answer byte-identical, 2 new answers acceptable but limited); P1 unchanged; fresh held-out generalization measured honestly (0 of 56 served, 0 of 20 answerable); one local commit for the project owner to push; `PLAN_F_GUIDE_SCOPES` stays off by default |
+| Freeze status | I-9 (`runtime-freeze-i9`, D-108) remains the frozen baseline and comparison control; the frozen specialists are not changed; with guide scopes off every D-114 rule is inert |
+| Elapsed | 4h02m11s (start 2026-10-31T09:33:41Z, end 2026-10-31T13:35:52Z; includes the background evaluation runs) |
+
+### Before and after
+
+| | PF-4 | PF-5B |
+|---|---|---|
+| P0 core guide questions served (correct / limited / wrong) | 19 of 37 (19 / 0 / 0) | 21 of 37 (19 / 2 / 0); every PF-4 answer byte-identical |
+| P1 questions served (correct / limited / wrong) | 7 of 41 (5 / 2 / 0) | 7 of 41 (5 / 2 / 0), byte-identical |
+| PF-4 held-out served (answerable) | 0 of 50 (0 of 15) | 1 of 50 (1 of 15) |
+| fresh held-out served (answerable) | - | 0 of 56 (0 of 20) |
+| frozen 192-question set | 55 served, 0 wrong | 55 served (same set), 0 wrong, 0 false acceptances; T07 legacy citation as in PF-4 |
+| wrong-source check | 36 cases, 0 acceptances | 60 cases, 0 acceptances, 0 violations |
+
+### Completed
+
+- A fresh held-out set of 56 questions written blind by three independent agents and frozen (hash pinned by a test) before any
+  PF-5B rule was written; labelled afterwards by two independent labelers per question from the source text (20 answerable,
+  23 partially, 13 not at all).
+- D-114 (generic, deterministic, each with positive and negative tests): discourse words; the registry-declared default "final";
+  compounds; two noun synonym pairs; misspelled system names (new module `name_spelling`, routing and grounding only, typed text
+  kept); software "where" questions kept by (or given to) the specialist that owns the guide, physical and organizational asks
+  kept by Institutional Navigation; claim-level isolation of value conflicts (quota blocked, upload and login steps served);
+  mixed-label lettered sections; cut-unit, dangling-statement and list-label refusals.
+- A four-lens adversarial review (31 findings, 17 verified, every one fixed by refusing more) and a HEAD-versus-new worst-case
+  differential over 1,943 probe questions (12 newly accepted: 11 correct, 1 limited, 0 wrong).
+
+### Tests performed
+
+- PF-5B evaluation (247 questions: P0 100, P1 41, PF-4 held-out 50, fresh 56; ACTIVE, DIRECT, SHADOW, scopes off, LEGACY, two
+  repeats): results above; SHADOW 247 of 247 identical; scopes off versus on: 47 differences, all reviewed answers or explained (H09, H11, H12 kept by their specialist; H27 routed by the corrected name; same visible legacy answer); 480 repeat records, 0 differences; 0 exceptions; 0 model calls. Every
+  served answer reviewed by hand (new: H03 correct; P0 G14 and G35 acceptable but limited).
+- Frozen 192-question set with guide scopes on: Plan F identical to I-9 (55 served, 0 wrong, 0 false acceptances, SHADOW 192 of
+  192); the master set never selects the guide registry, so no D-114 rule runs on it.
+- Wrong-source adversarial with the real models: 60 cases (24 new: typo collisions, software versus office, collaborate verb
+  versus product, attendance policy versus tool, grade versus Gradebook, submission versus Grade Transfer, research journal
+  versus Blackboard journal): 0 wrong-source acceptances, 0 violations; Plan F served 10, all correct.
+- Application smoke (ACTIVE, 19 turns): natural and misspelled Blackboard and Collaborate, Gradebook, Grade Transfer, iThenticate
+  procedure, quota conflict, attendance tool and policy trap, communication tools, mixed-label procedure, multi-part,
+  wrong-source, unsupported, appraisal hold, software versus office "where"; 0 wrong, 0 model calls, no internal id leaked.
+  LEGACY fresh process 16 of 16 minimal; no D-111, D-112 or D-114 module imported.
+- Performance (idle, same 191 questions, PF-4 versus PF-5B code): cached start 23.6 / 23.4 s; guide index 19.5 / 20.1 ms; retrieval p50 575 / 564 ms; selection p50 1.3 / 2.4 ms (+1.1 ms, the only change above 20%); served guide answer p50 591 / 582 ms; fallback p50 1,978 / 1,916 ms.
+- Targeted gate (32 modules): 2,630 passed (2,495 at PF-4; 135 new). Full suite: 7,082 passed, 0 failed, 0 skipped, 0 xfail (6,947 at the start; 135 new). `pip check`: no broken requirements. Security scan: 28 changed and new files, 0 problems.
+
+### Known limitations
+
+- Generalization is not achieved: 0 of 56 fresh questions served. About half of the answerable fresh questions
+  never name the system a guide documents (D-110/D-111 bind a guide only to a clause that names its system), and conversational
+  questions add a clause no source supports (the I-5 contract serves all clauses or none). Both need an architectural decision.
+- The guides are short and print a narrow vocabulary; a faithful extractive answer needs the guide's own words.
+- Attendance and Collaborate procedures are cut beside screenshots in the extraction; the completeness rules refuse them.
+- The implementing session saw the fresh questions when freezing them, and a reviewer ran them on a draft; five fresh-only list
+  entries were removed. The next generalization phase needs a new blind set the implementer does not read before the final run.
+
+### Next task
+
+PF-6: final English technical freeze with `PLAN_F_GUIDE_SCOPES` off by default (the guide path stays available behind the switch, evaluated and safe). Guide answers by default would first need a design decision record for inferring the system a question is about and for per-clause partial answers, measured on a new blind held-out set; more wording rules would not close the gap. No Arabic phase before the freeze.
+
+### Blockers
+
+None.
+
+### Files changed
+
+`handbook_bot/guide_grounding.py`, `handbook_bot/guide_structure.py`, `handbook_bot/name_spelling.py` (new),
+`handbook_bot/plan_f_runtime.py`, `handbook_bot/agents/specialists/guide_evidence.py`, `tests/test_pf5b_generalization.py` (new),
+`qa/post_freeze_pf5b/` (new), `docs/DECISIONS.md` (D-114), `docs/STATUS.md`.
+
+---
+
 ## 2026-10-31 - Controlled P1 guide expansion and held-out evaluation (post-freeze phase PF-4)
 
 | Field | Value |

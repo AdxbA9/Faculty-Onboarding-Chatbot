@@ -1,0 +1,724 @@
+{
+ "method": "Why answerable questions fall back. PF-4 taxonomy: the starting defects with the generic PF-5B fix and its result. Fresh set: the stop layer of every answerable question (qa/post_freeze_pf5b/analyze.py stop_layer) and whether the question names a guide's system at all (guide registry selected).",
+ "pf4_taxonomy": {
+  "H03": {
+   "cause": "grounding: an asked modifier the guide does not print ('final')",
+   "fix_and_result": "A: default modifier 'final' (registry-declared, guide silent)",
+   "served_after": true
+  },
+  "H06": {
+   "cause": "grounding: 'course' in 'my Blackboard course' not printed by the announcement section",
+   "fix_and_result": "A: container rule tried, removed after the differential check",
+   "served_after": false
+  },
+  "H04": {
+   "cause": "conflict over-blocking on the iThenticate page",
+   "fix_and_result": "E: claim-level isolation; the clause still asks 'manuscript', 'draft', 'journal' the guide does not print",
+   "served_after": false
+  },
+  "H05": {
+   "cause": "structure: A./1./bullets mixed procedure",
+   "fix_and_result": "F: lettered section recovered; refused because its third sub-section is cut by the extraction",
+   "served_after": false
+  },
+  "H09": {
+   "cause": "handoff: software 'where' clause handed to Institutional",
+   "fix_and_result": "B: kept by Teaching; the guide does not state 'together' / 'place'",
+   "served_after": false
+  },
+  "H12": {
+   "cause": "handoff: software 'where' clause handed to Institutional",
+   "fix_and_result": "B: kept by Research; 'once ... finished processing' not stated",
+   "served_after": false
+  },
+  "H19": {
+   "cause": "handoff: 'who do I reach out to' clause",
+   "fix_and_result": "an authority ask by the request reader: unchanged (not a guide question)",
+   "served_after": false
+  },
+  "H26": {
+   "cause": "misspelling",
+   "fix_and_result": "C: 'gradbook' corrected; 'colum' (not a system name) is never corrected",
+   "served_after": false
+  },
+  "H27": {
+   "cause": "misspelling",
+   "fix_and_result": "C: 'ithentcate' corrected; 'paper', 'plagarism', 'check' not stated by the upload procedure",
+   "served_after": false
+  },
+  "H28": {
+   "cause": "misspelling",
+   "fix_and_result": "C: 'teching' is not a system name: never corrected (handbook question)",
+   "served_after": false
+  },
+  "H29": {
+   "cause": "misspelling",
+   "fix_and_result": "C: 'blackbord' and 'colab' corrected; 'sesion' is not a system name; the Collaborate section is cut",
+   "served_after": false
+  },
+  "H30": {
+   "cause": "multi-clause: conversational preamble",
+   "fix_and_result": "D: unchanged contract (all clauses or none); the frozen Teaching specialist leaves the clause partial",
+   "served_after": false
+  },
+  "H32": {
+   "cause": "multi-clause: conversational",
+   "fix_and_result": "D: unchanged contract; 'walk me through it' refers back to an earlier clause",
+   "served_after": false
+  },
+  "H40": {
+   "cause": "multi-clause: cross-source",
+   "fix_and_result": "D: unchanged contract; the iThenticate clause asks 'manuscript' / 'run'",
+   "served_after": false
+  },
+  "H41": {
+   "cause": "multi-clause: policy plus tool",
+   "fix_and_result": "D: unchanged contract; the attendance procedure is cut beside screenshots",
+   "served_after": false
+  }
+ },
+ "fresh": {
+  "answerable": 20,
+  "answerable_from_a_guide": 18,
+  "answerable_guide_questions_that_name_no_guide_system": [
+   "F01",
+   "F02",
+   "F04",
+   "F05",
+   "F06",
+   "F10",
+   "F15",
+   "F18",
+   "F19",
+   "F26",
+   "F30",
+   "F55"
+  ],
+  "stop_layers_answerable": {
+   "aggregation (a clause unsupported)": 7,
+   "routing (no specialist selected)": 6,
+   "no guide system named (handbook path decided)": 4,
+   "structure recovery / completeness": 1,
+   "grounding (an asked word the evidence does not print)": 1,
+   "routing ambiguity": 1
+  },
+  "stop_layers_all": {
+   "aggregation (a clause unsupported)": 24,
+   "routing (no specialist selected)": 12,
+   "handoff": 1,
+   "no guide system named (handbook path decided)": 11,
+   "routing ambiguity": 3,
+   "structure recovery / completeness": 1,
+   "grounding (an asked word the evidence does not print)": 1,
+   "retrieval / selection (no guide candidate reached the selection)": 1,
+   "no approved guide for the owning specialist": 2
+  },
+  "system_named": {
+   "yes": 17,
+   "no": 39
+  },
+  "questions": [
+   {
+    "id": "F01",
+    "answerable": "yes",
+    "plan_f_should_serve": true,
+    "expected_sources": [
+     "uos_blackboard_faculty_short_guide"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   },
+   {
+    "id": "F02",
+    "answerable": "yes",
+    "plan_f_should_serve": true,
+    "expected_sources": [
+     "uos_blackboard_faculty_short_guide"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_NOT_APPLICABLE",
+    "stop_layer": "routing (no specialist selected)"
+   },
+   {
+    "id": "F03",
+    "answerable": "partial",
+    "plan_f_should_serve": null,
+    "expected_sources": [
+     "uos_blackboard_faculty_short_guide"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_REJECTED_BY_HANDOFF",
+    "stop_layer": "handoff"
+   },
+   {
+    "id": "F04",
+    "answerable": "yes",
+    "plan_f_should_serve": true,
+    "expected_sources": [
+     "uos_blackboard_faculty_short_guide"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_NOT_APPLICABLE",
+    "stop_layer": "routing (no specialist selected)"
+   },
+   {
+    "id": "F05",
+    "answerable": "yes",
+    "plan_f_should_serve": true,
+    "expected_sources": [
+     "uos_blackboard_faculty_short_guide"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_NOT_APPLICABLE",
+    "stop_layer": "routing (no specialist selected)"
+   },
+   {
+    "id": "F06",
+    "answerable": "yes",
+    "plan_f_should_serve": true,
+    "expected_sources": [
+     "uos_blackboard_faculty_short_guide"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "stop_layer": "no guide system named (handbook path decided)"
+   },
+   {
+    "id": "F07",
+    "answerable": "partial",
+    "plan_f_should_serve": null,
+    "expected_sources": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_gradebook_guide"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "stop_layer": "no guide system named (handbook path decided)"
+   },
+   {
+    "id": "F08",
+    "answerable": "partial",
+    "plan_f_should_serve": null,
+    "expected_sources": [
+     "uos_blackboard_faculty_short_guide"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+    "stop_layer": "routing ambiguity"
+   },
+   {
+    "id": "F09",
+    "answerable": "partial",
+    "plan_f_should_serve": null,
+    "expected_sources": [
+     "uos_blackboard_attendance_guide",
+     "uos_blackboard_collaborate_guide"
+    ],
+    "guide_system_named": true,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   },
+   {
+    "id": "F10",
+    "answerable": "yes",
+    "plan_f_should_serve": true,
+    "expected_sources": [
+     "uos_blackboard_collaborate_guide",
+     "uos_blackboard_attendance_guide"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   },
+   {
+    "id": "F11",
+    "answerable": "partial",
+    "plan_f_should_serve": null,
+    "expected_sources": [
+     "uos_blackboard_attendance_guide",
+     "uos_blackboard_gradebook_guide"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   },
+   {
+    "id": "F12",
+    "answerable": "no",
+    "plan_f_should_serve": false,
+    "expected_sources": [],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "stop_layer": "no guide system named (handbook path decided)"
+   },
+   {
+    "id": "F13",
+    "answerable": "yes",
+    "plan_f_should_serve": true,
+    "expected_sources": [
+     "uos_blackboard_collaborate_guide"
+    ],
+    "guide_system_named": true,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "stop_layer": "structure recovery / completeness"
+   },
+   {
+    "id": "F14",
+    "answerable": "no",
+    "plan_f_should_serve": false,
+    "expected_sources": [],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_NOT_APPLICABLE",
+    "stop_layer": "routing (no specialist selected)"
+   },
+   {
+    "id": "F15",
+    "answerable": "yes",
+    "plan_f_should_serve": true,
+    "expected_sources": [
+     "uos_blackboard_collaborate_guide"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_NOT_APPLICABLE",
+    "stop_layer": "routing (no specialist selected)"
+   },
+   {
+    "id": "F16",
+    "answerable": "no",
+    "plan_f_should_serve": false,
+    "expected_sources": [],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   },
+   {
+    "id": "F17",
+    "answerable": "partial",
+    "plan_f_should_serve": null,
+    "expected_sources": [
+     "uos_blackboard_collaborate_guide"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_NOT_APPLICABLE",
+    "stop_layer": "routing (no specialist selected)"
+   },
+   {
+    "id": "F18",
+    "answerable": "yes",
+    "plan_f_should_serve": true,
+    "expected_sources": [
+     "uos_blackboard_communication_guide"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_NOT_APPLICABLE",
+    "stop_layer": "routing (no specialist selected)"
+   },
+   {
+    "id": "F19",
+    "answerable": "yes",
+    "plan_f_should_serve": true,
+    "expected_sources": [
+     "uos_blackboard_communication_guide"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_NOT_APPLICABLE",
+    "stop_layer": "routing (no specialist selected)"
+   },
+   {
+    "id": "F20",
+    "answerable": "no",
+    "plan_f_should_serve": false,
+    "expected_sources": [],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_NOT_APPLICABLE",
+    "stop_layer": "routing (no specialist selected)"
+   },
+   {
+    "id": "F21",
+    "answerable": "yes",
+    "plan_f_should_serve": true,
+    "expected_sources": [
+     "uos_blackboard_gradebook_guide"
+    ],
+    "guide_system_named": true,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   },
+   {
+    "id": "F22",
+    "answerable": "yes",
+    "plan_f_should_serve": true,
+    "expected_sources": [
+     "uos_blackboard_gradebook_guide"
+    ],
+    "guide_system_named": true,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "stop_layer": "grounding (an asked word the evidence does not print)"
+   },
+   {
+    "id": "F23",
+    "answerable": "partial",
+    "plan_f_should_serve": false,
+    "expected_sources": [
+     "uos_faculty_handbook_2025_26"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   },
+   {
+    "id": "F24",
+    "answerable": "partial",
+    "plan_f_should_serve": null,
+    "expected_sources": [
+     "uos_blackboard_gradebook_guide"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "stop_layer": "no guide system named (handbook path decided)"
+   },
+   {
+    "id": "F25",
+    "answerable": "partial",
+    "plan_f_should_serve": null,
+    "expected_sources": [
+     "uos_blackboard_gradebook_guide"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   },
+   {
+    "id": "F26",
+    "answerable": "yes",
+    "plan_f_should_serve": true,
+    "expected_sources": [
+     "uos_blackboard_gradebook_guide"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "stop_layer": "no guide system named (handbook path decided)"
+   },
+   {
+    "id": "F27",
+    "answerable": "partial",
+    "plan_f_should_serve": null,
+    "expected_sources": [
+     "uos_faculty_handbook_2025_26"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "stop_layer": "no guide system named (handbook path decided)"
+   },
+   {
+    "id": "F28",
+    "answerable": "yes",
+    "plan_f_should_serve": true,
+    "expected_sources": [
+     "uos_grade_transfer_dashboard_guide"
+    ],
+    "guide_system_named": true,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   },
+   {
+    "id": "F29",
+    "answerable": "no",
+    "plan_f_should_serve": false,
+    "expected_sources": [],
+    "guide_system_named": true,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   },
+   {
+    "id": "F30",
+    "answerable": "yes",
+    "plan_f_should_serve": true,
+    "expected_sources": [
+     "uos_grade_transfer_dashboard_guide"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "stop_layer": "no guide system named (handbook path decided)"
+   },
+   {
+    "id": "F31",
+    "answerable": "no",
+    "plan_f_should_serve": false,
+    "expected_sources": [],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_NOT_APPLICABLE",
+    "stop_layer": "routing (no specialist selected)"
+   },
+   {
+    "id": "F32",
+    "answerable": "no",
+    "plan_f_should_serve": false,
+    "expected_sources": [],
+    "guide_system_named": true,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   },
+   {
+    "id": "F33",
+    "answerable": "partial",
+    "plan_f_should_serve": false,
+    "expected_sources": [
+     "uos_grade_transfer_dashboard_guide"
+    ],
+    "guide_system_named": true,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   },
+   {
+    "id": "F34",
+    "answerable": "yes",
+    "plan_f_should_serve": true,
+    "expected_sources": [
+     "uos_ithenticate_guidelines"
+    ],
+    "guide_system_named": true,
+    "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+    "stop_layer": "routing ambiguity"
+   },
+   {
+    "id": "F35",
+    "answerable": "yes",
+    "plan_f_should_serve": true,
+    "expected_sources": [
+     "uos_ithenticate_guidelines"
+    ],
+    "guide_system_named": true,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   },
+   {
+    "id": "F36",
+    "answerable": "partial",
+    "plan_f_should_serve": null,
+    "expected_sources": [
+     "uos_ithenticate_guidelines"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_NOT_APPLICABLE",
+    "stop_layer": "routing (no specialist selected)"
+   },
+   {
+    "id": "F37",
+    "answerable": "partial",
+    "plan_f_should_serve": false,
+    "expected_sources": [
+     "uos_ithenticate_guidelines"
+    ],
+    "guide_system_named": true,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "stop_layer": "retrieval / selection (no guide candidate reached the selection)"
+   },
+   {
+    "id": "F38",
+    "answerable": "yes",
+    "plan_f_should_serve": null,
+    "expected_sources": [
+     "uos_faculty_handbook_2025_26"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   },
+   {
+    "id": "F39",
+    "answerable": "partial",
+    "plan_f_should_serve": false,
+    "expected_sources": [
+     "uos_faculty_handbook_2025_26"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "stop_layer": "no guide system named (handbook path decided)"
+   },
+   {
+    "id": "F40",
+    "answerable": "partial",
+    "plan_f_should_serve": false,
+    "expected_sources": [
+     "uos_faculty_handbook_2025_26"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   },
+   {
+    "id": "F41",
+    "answerable": "partial",
+    "plan_f_should_serve": false,
+    "expected_sources": [
+     "uos_faculty_handbook_2025_26"
+    ],
+    "guide_system_named": true,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "stop_layer": "no approved guide for the owning specialist"
+   },
+   {
+    "id": "F42",
+    "answerable": "no",
+    "plan_f_should_serve": false,
+    "expected_sources": [],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "stop_layer": "no guide system named (handbook path decided)"
+   },
+   {
+    "id": "F43",
+    "answerable": "partial",
+    "plan_f_should_serve": false,
+    "expected_sources": [
+     "uos_faculty_handbook_2025_26"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "stop_layer": "no guide system named (handbook path decided)"
+   },
+   {
+    "id": "F44",
+    "answerable": "partial",
+    "plan_f_should_serve": null,
+    "expected_sources": [
+     "uos_faculty_handbook_2025_26"
+    ],
+    "guide_system_named": true,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   },
+   {
+    "id": "F45",
+    "answerable": "partial",
+    "plan_f_should_serve": false,
+    "expected_sources": [
+     "uos_ithenticate_guidelines"
+    ],
+    "guide_system_named": true,
+    "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+    "stop_layer": "routing ambiguity"
+   },
+   {
+    "id": "F46",
+    "answerable": "partial",
+    "plan_f_should_serve": false,
+    "expected_sources": [
+     "uos_faculty_handbook_2025_26"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   },
+   {
+    "id": "F47",
+    "answerable": "no",
+    "plan_f_should_serve": false,
+    "expected_sources": [],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   },
+   {
+    "id": "F48",
+    "answerable": "partial",
+    "plan_f_should_serve": null,
+    "expected_sources": [
+     "uos_blackboard_collaborate_guide"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_NOT_APPLICABLE",
+    "stop_layer": "routing (no specialist selected)"
+   },
+   {
+    "id": "F49",
+    "answerable": "yes",
+    "plan_f_should_serve": null,
+    "expected_sources": [
+     "uos_faculty_handbook_2025_26"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "stop_layer": "no guide system named (handbook path decided)"
+   },
+   {
+    "id": "F50",
+    "answerable": "partial",
+    "plan_f_should_serve": null,
+    "expected_sources": [
+     "uos_faculty_handbook_2025_26",
+     "uos_blackboard_faculty_short_guide"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   },
+   {
+    "id": "F51",
+    "answerable": "no",
+    "plan_f_should_serve": false,
+    "expected_sources": [],
+    "guide_system_named": true,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   },
+   {
+    "id": "F52",
+    "answerable": "no",
+    "plan_f_should_serve": false,
+    "expected_sources": [],
+    "guide_system_named": true,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   },
+   {
+    "id": "F53",
+    "answerable": "no",
+    "plan_f_should_serve": false,
+    "expected_sources": [],
+    "guide_system_named": true,
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "stop_layer": "no approved guide for the owning specialist"
+   },
+   {
+    "id": "F54",
+    "answerable": "partial",
+    "plan_f_should_serve": null,
+    "expected_sources": [
+     "uos_faculty_handbook_2025_26"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   },
+   {
+    "id": "F55",
+    "answerable": "yes",
+    "plan_f_should_serve": true,
+    "expected_sources": [
+     "uos_blackboard_faculty_short_guide"
+    ],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   },
+   {
+    "id": "F56",
+    "answerable": "no",
+    "plan_f_should_serve": false,
+    "expected_sources": [],
+    "guide_system_named": false,
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "stop_layer": "aggregation (a clause unsupported)"
+   }
+  ]
+ },
+ "dominant_causes": [
+  "the question does not name a guide's system ('My course still shows as Private', 'where do collab recordings go'): D-110/D-111 bind a guide only to a clause that names its system, so the guide registry is never selected (an architectural boundary, not a wording rule)",
+  "conversational or multi-part wording: a statement, a complaint or a second ask becomes a request clause the evidence cannot support, and the I-5 contract serves all clauses or none",
+  "the asked words are not printed by the guide (the guides are short; a faithful extractive answer needs the guide's own vocabulary)",
+  "cut or screenshot-bound procedures (attendance, Collaborate) that the completeness rules refuse"
+ ]
+}

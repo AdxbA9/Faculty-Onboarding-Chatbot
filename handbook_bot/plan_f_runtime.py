@@ -88,6 +88,7 @@ FAILURE POLICY
 """
 from __future__ import annotations
 
+import dataclasses
 import re
 import threading
 import time
@@ -485,15 +486,21 @@ def quote_problem(finding: Any, chunks: Sequence[str], metadata: Sequence[Dict[s
     return None
 
 
-def source_conflict_problem(finding: Any, metadata: Sequence[Dict[str, Any]]) -> Optional[str]:
+def source_conflict_problem(finding: Any, metadata: Sequence[Dict[str, Any]], guide_index: Optional[_guides.GuideIndex] = None) -> Optional[str]:
     """Why ``finding`` must not be served because its chunk carries a registered source conflict (post-freeze PF-2),
     or None. A conflict is a statement another version or authority of the same document contradicts; the registry
     marks the chunks (``meta["source_conflict"]``) and this guard keeps them out of every Plan F answer. Read after
-    :func:`quote_problem` passed, so the chunk id is known to be valid; an unreadable id is simply not a conflict."""
+    :func:`quote_problem` passed, so the chunk id is known to be valid; an unreadable id is simply not a conflict.
+    Post-freeze PF-5B (D-114): a finding that carries its D-111 guide record is checked at claim level when the guide
+    index is given (``GuideIndex.conflict_problem``: the unit that states the disputed claim is refused, another unit
+    of the same chunk is not); every other finding keeps the chunk-level rule."""
     meta = getattr(finding, "metadata", None)
     cid = meta.get("chunk_id") if isinstance(meta, dict) else None
     if isinstance(cid, bool) or not isinstance(cid, int) or not 0 <= cid < len(metadata):
         return None
+    if guide_index is not None and _guides.has_guide_record(finding):
+        problem = guide_index.conflict_problem(cid, str(getattr(finding, "evidence_quote", "") or ""))
+        return None if problem is None else "%s; the statement is not served" % problem
     cmeta = metadata[cid]
     topic = cmeta.get("source_conflict") if isinstance(cmeta, dict) else None
     if isinstance(topic, str) and topic:
@@ -804,6 +811,15 @@ class PlanFRuntime:
     def missing_specialists(self) -> List[str]:
         return missing_specialists(self.registry)
 
+    def corpus_word(self, word: str) -> bool:
+        """Post-freeze PF-5B (D-114): whether the knowledge base prints ``word`` (lower case) anywhere; a printed word is never
+        a misspelled system name. The word set is built on the first question that needs it."""
+        words = self.__dict__.get("_corpus_words")
+        if words is None:
+            words = frozenset(re.findall(r"[a-z]+", "\n".join(str(c) for c in self.chunks).lower()))
+            self.__dict__["_corpus_words"] = words
+        return word.lower() in words
+
     def attempt(self, question: str) -> AdapterResult:
         """Try to answer ``question`` through Plan F: the single-clause case of phases I-1 to I-4 (one specialist, one
         request clause; the pass-through path) or, since phase I-5, the deterministic aggregation of the findings of a
@@ -815,7 +831,15 @@ class PlanFRuntime:
             state.add("plan_f_registry", "incomplete", detail={"missing": missing})
             return state.finish(PlanFOutcome.REGISTRY_UNAVAILABLE, "registry lacks: %s" % ", ".join(missing))
         state.add("plan_f_registry", "ok", detail={"specialists": [s.value for s in self.registry.ids()]})
-        state.registry, state.guide = self.select_registry(state.text)
+        if self.guide_registry is not None and state.text:
+            # post-freeze PF-5B (D-114): a misspelled system name is corrected for routing and grounding only; the typed
+            # question stays the display, legacy and log text (records hold the canonical names, never the typed word)
+            from .name_spelling import correct_with_spans
+            state.routing_text, spelling, state.spelling_spans = correct_with_spans(state.text, self.corpus_word)
+            if spelling:
+                state.add("system_name_spelling", "corrected", detail={"names": [r["name"] for r in spelling],
+                                                                         "kinds": [r["kind"] for r in spelling]})
+        state.registry, state.guide = self.select_registry(state.routing_text)
         if state.guide.get("enabled"):
             state.add("source_scope", "guides" if state.guide["selected"] else "handbook", detail=dict(state.guide))
         if not state.text:
@@ -825,7 +849,7 @@ class PlanFRuntime:
         # ---- Coordinator ------------------------------------------------------
         t = time.perf_counter()
         try:
-            decision = coordinate(state.text)
+            decision = coordinate(state.routing_text)
         except Exception as exc:
             state.add("coordinator", "error", detail={"error": redact_error(exc)})
             return state.finish(PlanFOutcome.ERROR_REDACTED, "coordinator raised: %s" % redact_error(exc))
@@ -857,12 +881,51 @@ class PlanFRuntime:
         problem = decision_problem(decision)
         clauses = _aggregation.request_clauses(decision)
         if problem is None and len(clauses) <= 1:
+            decision = self._software_owner(state, decision)        # post-freeze PF-5B (D-114)
             return self._single_clause(state, decision, md)
         if _aggregation.applicable(decision):
             return self._aggregate(state, decision, md, clauses, _aggregation)
         if not decision.selected_specialists or md.get("complexity") == "greeting":
             return state.finish(PlanFOutcome.NOT_APPLICABLE, problem)
         return state.finish(PlanFOutcome.UNSAFE_RESULT, problem)
+
+    # ---- post-freeze PF-5B (D-114): software navigation is the system's specialist's -------------------------------
+    def _software_owner(self, state: "_Attempt", decision: CoordinatorDecision) -> CoordinatorDecision:
+        """A one-clause decision the Coordinator gave to Institutional Navigation is given to the specialist that owns the guide
+        the clause names, when the clause is a software question (an approved guide binds it with a non-contact ask), names no
+        office, team, role or contact, and the guide is approved for exactly one other specialist and not for Institutional
+        Navigation ("Where do I find the gradebook in Blackboard Ultra?"). Guide registry only; any other decision is returned
+        unchanged. The trace records the specialist ids only."""
+        if not (state.guide or {}).get("selected") or self.guide_index is None or len(decision.subtasks) != 1:
+            return decision
+        task = decision.subtasks[0]
+        focus = (task.context or {}).get("focus_clauses") or []
+        if task.specialist_id is not SpecialistId.INSTITUTIONAL or len(focus) != 1 or not isinstance(focus[0], str):
+            return decision
+        clause = focus[0]
+        if _guides.ORGANIZATIONAL.search(clause):
+            return decision
+        from .source_scopes import guide_sources_named
+        policy = self.guide_index.policy
+        owners: set = set()
+        for source_id in guide_sources_named(clause, self.guide_records):
+            if source_id in policy.get(SpecialistId.INSTITUTIONAL.value, frozenset()):
+                continue
+            binding, _problem = self.guide_index.bind(clause, source_id)
+            if binding is None or binding.intent is _guides.GuideIntent.CONTACT:
+                continue
+            owners |= {sid for sid, ids in policy.items() if source_id in ids and sid != SpecialistId.INSTITUTIONAL.value}
+        if len(owners) != 1:
+            return decision
+        owner = SpecialistId.parse(owners.pop())
+        moved = dataclasses.replace(decision, selected_specialists=[owner],
+                                    subtasks=[dataclasses.replace(task, specialist_id=owner, domain=owner.value)])
+        if state.routing is not None and dataclasses.is_dataclass(state.routing):
+            # the routing record names the specialist that now owns the clause (the chip and the diagnostics read it)
+            state.routing = dataclasses.replace(state.routing, final_specialists=(owner.value,),
+                                                owners_after=tuple((owner.value,) for _ in state.routing.owners_after))
+        state.add("software_navigation", "reassigned", detail={"from": SpecialistId.INSTITUTIONAL.value, "to": owner.value})
+        return moved
 
     # ---- the pass-through path (phases I-1 to I-4): one specialist, one request clause ---------------------------
     def _single_clause(self, state: "_Attempt", decision: CoordinatorDecision, md: Dict[str, Any]) -> AdapterResult:
@@ -874,7 +937,7 @@ class PlanFRuntime:
         # ---- Dispatch ------------------------------------------------------------
         t = time.perf_counter()
         try:
-            dispatched = dispatch(decision, state.registry, question=state.text)
+            dispatched = dispatch(decision, state.registry, question=state.routing_text)
         except Exception as exc:
             state.add("dispatcher", "error", detail={"error": redact_error(exc)})
             return state.finish(PlanFOutcome.ERROR_REDACTED, "dispatcher raised: %s" % redact_error(exc), specialist=sid.value)
@@ -920,7 +983,7 @@ class PlanFRuntime:
                     state.add("quote_guard", "rejected", detail={"finding": finding.finding_id, "reason": problem})
                     return state.finish(PlanFOutcome.REJECTED_BY_QUOTE_GUARD, "%s: %s" % (finding.finding_id, problem),
                                         specialist=sid.value, status=status, dispatched=dispatched)
-                conflict = source_conflict_problem(finding, self.metadata)
+                conflict = source_conflict_problem(finding, self.metadata, self.guide_index)
                 if conflict is not None:                          # post-freeze PF-2
                     state.add("source_conflict_guard", "rejected", detail={"finding": finding.finding_id, "reason": conflict})
                     return state.finish(PlanFOutcome.REJECTED_BY_SOURCE_CONFLICT, "%s: %s" % (finding.finding_id, conflict),
@@ -1051,7 +1114,7 @@ class PlanFRuntime:
         # ---- Dispatch: every task of the decision, once; nothing re-routed, no handoff executed ------------------
         t = time.perf_counter()
         try:
-            dispatched = dispatch(decision, state.registry, question=state.text)
+            dispatched = dispatch(decision, state.registry, question=state.routing_text)
         except Exception as exc:
             state.add("dispatcher", "error", detail={"error": redact_error(exc)})
             return state.finish(PlanFOutcome.ERROR_REDACTED, "dispatcher raised: %s" % redact_error(exc), specialist=joined)
@@ -1133,7 +1196,7 @@ class PlanFRuntime:
         # ---- Rendering and the unchanged legacy Verifier ----------------------------------------------------------
         try:
             for part in outcome.parts:                            # post-freeze PF-2: no part may rest on a source conflict
-                conflict = source_conflict_problem(part.finding, self.metadata)
+                conflict = source_conflict_problem(part.finding, self.metadata, self.guide_index)
                 if conflict is not None:
                     state.add("source_conflict_guard", "rejected", detail={"finding": part.finding.finding_id, "reason": conflict})
                     return state.finish(PlanFOutcome.REJECTED_BY_SOURCE_CONFLICT, "%s: %s" % (part.finding.finding_id, conflict),
@@ -1203,6 +1266,8 @@ class _Attempt:
         self.trace: List[TraceEntry] = []
         self.timings: Dict[str, float] = {}
         self.text = (question or "").strip() if isinstance(question, str) else ""
+        self.routing_text = self.text                             # post-freeze PF-5B (D-114): system names spelled correctly
+        self.spelling_spans: List[Any] = []                       # the corrections (typed spans; never logged)
         self.path: Optional[str] = None
         self.routing: Any = None
         self.handoff: Any = None
@@ -1225,10 +1290,24 @@ class _Attempt:
         if result is not None:
             result.timings = dict(self.timings)
             result.agent_trace = list(self.trace)
+            if self.spelling_spans:
+                self._typed_clauses(result)
         return AdapterResult(outcome=outcome, reason=reason, question=self.text, result=result, trace=self.trace, specialist_id=specialist,
                              status=status, timings=dict(self.timings), dispatch=dispatched, verification=verification, aggregation=aggregation,
                              routing=self.routing, handoff=self.handoff, handoff_outcome=self.handoff_outcome,
                              guide_scope=dict(self.guide) if self.guide is not None else None)
+
+    def _typed_clauses(self, result: QAResult) -> None:
+        """Post-freeze PF-5B (D-114): the clauses a served answer records (its sub-questions and each item's focus clause) are
+        mapped back to the words the user typed; the corrected spelling was for routing and grounding only."""
+        from .name_spelling import typed_slice
+        result.sub_questions = [SubQuestion(typed_slice(self.text, self.spelling_spans, self.routing_text, s.question), s.route)
+                                for s in result.sub_questions]
+        for item in result.items:
+            plan_f = (item.get("meta") or {}).get("plan_f")
+            if isinstance(plan_f, dict) and isinstance(plan_f.get("focus_clause"), str):
+                plan_f["focus_clause"] = typed_slice(self.text, self.spelling_spans, self.routing_text, plan_f["focus_clause"])
+
 
 def build_runtime(kb: Any, *, builders: Optional[Mapping[SpecialistId, Callable[[Any], Specialist]]] = None,
                   guide_scopes: Optional[bool] = None) -> Tuple[Optional[PlanFRuntime], RegistryBuild]:

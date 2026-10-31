@@ -1,0 +1,1200 @@
+{
+ "method": "Labelled AFTER the questions were frozen (frozen.sha256), from the official text of the eight enabled sources only, by two independent labeler agents per batch of 14 (workflow pf5b-fresh-labels, run wf_1717faab-c5e); neither saw the chatbot, its code, its tests or any evaluation output. Disagreements on answerability, Plan F expectation, sources, specialist or conflict were adjudicated by reading the source text (field 'adjudication'). answerable: yes = an enabled source states a complete answer to every part; partial = part of the ask, a premise correction or an authority/policy case; no = no enabled source. plan_f_should_serve: true = a verified Plan F answer is expected; false = Plan F must not serve; null = either a verified answer or a fallback is acceptable. fallback_acceptable is true for every question (a fallback is always safe).",
+ "frozen": {
+  "frozen_at": "2026-10-31T09:37:16Z",
+  "sha256": "966b966444fc01c2cf11f16b31bb77c399414739e18d8b0bac452645a692e0a5",
+  "questions": 56,
+  "method": "Three independent blind writer agents (workflow pf5b-fresh-held-out, run wf_2210e145-a51), each given only the eight enabled documents titles with a one-line purpose, a persona and a topic slice, and the required style mix; no tool use other than the structured output, no project file, no PF-4 question, no failure reason, no guide wording. Near-duplicates (token Jaccard > 0.7) removed deterministically; dropped: 0."
+ },
+ "labelling": {
+  "labelers_per_question": 2,
+  "agreed": 43,
+  "adjudicated": 13,
+  "answer_type_only_differences": [
+   "F01",
+   "F12",
+   "F14",
+   "F40",
+   "F48",
+   "F55"
+  ]
+ },
+ "summary": {
+  "yes": 20,
+  "partial": 23,
+  "no": 13,
+  "plan_f_should_serve": {
+   "true": 18,
+   "false": 22,
+   "null": 16
+  }
+ },
+ "labels": {
+  "F01": {
+   "id": "F01",
+   "question": "My course still shows as Private and a few students emailed saying they can't see it. How do I open it up to them?",
+   "category": "configuration",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_faculty_short_guide": [
+     4
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Course Availability: o Open: Open a course when you are ready for students to participate. o Private: Make a course private while you add or experiment with content, and then open it to students when you are ready.",
+   "notes": "The short guide lists Course Availability under Details & Actions. Setting it to Open lets students in. It also explains that students see private courses in their list but cannot open them, which matches the user's symptom."
+  },
+  "F02": {
+   "id": "F02",
+   "question": "how do I hide a module from students until week 5? already uploaded everything for the whole semester",
+   "category": "configuration",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_faculty_short_guide": [
+     7,
+     8
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Select an item's visibility to change it. You can also create rules to release content based on date, time, or how a student performs on other items in your course.",
+   "notes": "Page 7 (Content Visibility) and page 8 (learning modules are hidden by default and can get a visibility condition) cover hiding a module and releasing it on a date. The click-by-click steps for building a release rule are not detailed."
+  },
+  "F03": {
+   "id": "F03",
+   "question": "where's the option to view the course as a student? want to double check what they actually see before the 1st lecture",
+   "category": "navigation",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_faculty_short_guide": [
+     5
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "location",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "With student preview, you can review the course content from a student's perspective. You can also validate course behaviors.",
+   "notes": "The guide names the feature (student preview) and describes what it does. Where the button sits is shown only as callout E in a screenshot and is never stated in the text, so the 'where' part is not covered.",
+   "adjudication": "the short guide names student preview and what it does (p5); where the option sits is only a screenshot callout"
+  },
+  "F04": {
+   "id": "F04",
+   "question": "Is it possible to have a folder show up automatically on a set date, or does it have to be made visible manually each week?",
+   "category": "yes_no",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_faculty_short_guide": [
+     7,
+     8
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "yes_no",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "You can also create rules to release content based on date, time, or how a student performs on other items in your course.",
+   "notes": "Yes, a folder or module can be released automatically with a date or time visibility condition (p7). Page 8 says folders and modules are hidden by default and can get a visibility condition, so weekly manual unhiding is not needed."
+  },
+  "F05": {
+   "id": "F05",
+   "question": "how do i schedule an anouncement for sunday 8am instead of posting it right away",
+   "category": "workflow",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_faculty_short_guide": [
+     9
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "If you want to schedule the announce and control the visibility, check “schedule announcement” option and choose the start and end dates and time.",
+   "notes": "Page 9, 'Send an Announcement', gives the full steps: Details & Actions > Announcements, plus sign, tick 'schedule announcement', set the start date and time, then save and post."
+  },
+  "F06": {
+   "id": "F06",
+   "question": "Can an announcement also go to students' university email, or does it only show inside BB?",
+   "category": "yes_no",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_faculty_short_guide": [
+     9
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "yes_no",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "If you want to send a copy of this announcement via Email, check “Send an email copy to recipients” option.",
+   "notes": "Yes. Ticking 'Send an email copy to recipients' emails the announcement as well. The guide just says 'via Email' and does not name the university mailbox."
+  },
+  "F07": {
+   "id": "F07",
+   "question": "fastest way to message just 6 students who missed the midterm, not the whole section?",
+   "category": "workflow",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_faculty_short_guide": [
+     4
+    ],
+    "uos_blackboard_gradebook_guide": [
+     4
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Roster: View your class list. You can access basic profile cards and match faces to names. You can also send messages to anyone involved with your course.",
+   "notes": "The guides say you can message anyone from the Roster, or a single student from the three-dot menu on a gradebook Students row. Neither describes choosing a few recipients for one message or a 'fastest' method. Announcements go to all course members, so they do not fit."
+  },
+  "F08": {
+   "id": "F08",
+   "question": "Where do I find messages students sent me through the course? Pretty sure I've missed a few.",
+   "category": "navigation",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_faculty_short_guide": [
+     2,
+     4
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "location",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Stay connected by viewing and sending all messages from one place.",
+   "notes": "Page 2 (Ultra navigation) says all messages can be viewed and sent from one place, and page 4 says the course navigation bar has a tab to send a message. The menu item is never named in the text (only in screenshots), so the location is only implied. Do not confuse messages with conversations or discussions.",
+   "adjudication": "the guide says all messages are viewed and sent from one place (p2) but never names where; the location is implied"
+  },
+  "F09": {
+   "id": "F09",
+   "question": "Taking attendance in Blackboard for a section of 120 - how does that work? Do I really have to click every name each lecture?",
+   "category": "multi_part",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_blackboard_attendance_guide",
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_attendance_guide": [
+     1
+    ],
+    "uos_blackboard_collaborate_guide": [
+     4
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "mixed",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "The attendance tool can automatically record blackboard collaborate attendance or be used manually to insert or edit attendance statuses.",
+   "notes": "The attendance guide gives the setup (Details & Actions > Mark attendance > Add Attendance, grade schema, display) and says recording is automatic only for Collaborate sessions and otherwise manual. No source mentions a bulk 'mark all' option for a large in-person class, so the 'click every name' part is unanswered. Student absence policy (handbook 12.15) is a separate topic.",
+   "adjudication": "both guides describe automatic Collaborate attendance; neither describes bulk marking"
+  },
+  "F10": {
+   "id": "F10",
+   "question": "ok and how do I mark someone late or excused instead of absent?",
+   "category": "follow_up",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide",
+    "uos_blackboard_attendance_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_collaborate_guide": [
+     4
+    ],
+    "uos_blackboard_attendance_guide": [
+     1,
+     2
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "On the attendance panel, select overview at the top right. ... the instructor will be able to change the marks as absent, excused, late and present.",
+   "notes": "The route is Details & Actions > attendance tool > Overview, then change the mark to late or excused (Collaborate guide section D). The attendance guide adds that the schema includes Late and that an absence with an acceptable excuse can be changed to excused. The exact click on the status cell is not described."
+  },
+  "F11": {
+   "id": "F11",
+   "question": "Does attendance taken in BB automatically count toward the grade? I don't want it affecting their totals.",
+   "category": "yes_no",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_blackboard_attendance_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_attendance_guide": [
+     1
+    ],
+    "uos_blackboard_gradebook_guide": [
+     3
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "yes_no",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "c) Click Save Attendance column is now added to your Gradebook Attendance for Blackboard Collaborate Ultra Attendance data can be used as part of students’ overall grades",
+   "notes": "The guides say saving attendance adds an attendance column to the gradebook, and that the data can count toward overall grades. They never say whether it is included in the overall grade automatically, or how to leave it out, so the actual concern is unresolved."
+  },
+  "F12": {
+   "id": "F12",
+   "question": "what should I do if I recorded attendance under the wrong date",
+   "category": "workflow",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "",
+   "notes": "No source explains how to fix or move attendance recorded under the wrong date. Near-miss trap: the tips about editing a delayed or cancelled Collaborate session's time or attendance settings (attendance guide p2) do not answer this and should not be served."
+  },
+  "F13": {
+   "id": "F13",
+   "question": "How do I set up a Collaborate room for my Thursday lecture so students can join straight from the course page?",
+   "category": "workflow",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_collaborate_guide": [
+     1,
+     2
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "From The Details & Actions Menu, click on “View All Sessions” under Blackboard Collaborate. ... To create new sessions, Click on Create Session.",
+   "notes": "Collaborate guide section A gives the steps: Create Session, name, start and end, repeat weekly on chosen days until the last session. Section B says students join from Join Session under Blackboard Collaborate on the course page. The guide recommends a scheduled session and disabling the course room so students do not see two links."
+  },
+  "F14": {
+   "id": "F14",
+   "question": "where do collab recordings go after the session ends? students keep asking me for the link",
+   "category": "navigation",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "teaching",
+   "expected_answer_type": "location",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "",
+   "notes": "The Collaborate guide only covers starting and stopping a recording and the 'Allow recording downloads' setting (p2). It never says where recordings are stored or how students find the link. Serving the start/stop recording steps would miss the question."
+  },
+  "F15": {
+   "id": "F15",
+   "question": "Can students download the session recordings or only stream them?",
+   "category": "yes_no",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_collaborate_guide": [
+     2
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "yes_no",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "To allow downloading the recordings select “Allow recording downloads” option.",
+   "notes": "The Collaborate guide's Session Settings section says students can download recordings only when the instructor turns on the 'Allow recording downloads' option. The guide does not say outright that recordings are stream-only without it, but that follows."
+  },
+  "F16": {
+   "id": "F16",
+   "question": "students cant hear me in the virtual class, my mic shows on. what do i do??",
+   "category": "workflow",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "",
+   "notes": "No enabled source has audio troubleshooting for Collaborate. Trap: the participant permission to 'share audio' (Collaborate guide p2) is about students sharing their own audio, not about students hearing the instructor, so serving it would be wrong."
+  },
+  "F17": {
+   "id": "F17",
+   "question": "How do I split students into breakout groups during a live session, and then pull everyone back to the main room?",
+   "category": "multi_part",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_collaborate_guide": [
+     3
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "You can share variety type of files and content by clicking on the third option in the panel ... Divide the participants into breakout groups.",
+   "notes": "The guide only says breakout groups are started from the third (share content) option in the Collaborate panel. It gives no step-by-step and says nothing about ending breakouts or bringing everyone back to the main room."
+  },
+  "F18": {
+   "id": "F18",
+   "question": "I'd like a weekly discussion where students post short reading responses, graded out of 5. What's the best way to set that up?",
+   "category": "workflow",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_blackboard_communication_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_communication_guide": [
+     1,
+     2
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Grade the discussion. ... When you choose to grade a discussion, more options appear such as the due date and maximum points. The maximum points apply to one or more posts made by a student.",
+   "notes": "The Communication guide covers creating a discussion (Course Content page or the Discussions tab), showing or hiding it, scheduling by date availability, and grading with a due date and maximum points (set to 5). It has no recurring-discussion feature; you create one per week. Trap: 'reading responses' must not pull in the journal section, which carries the 2022 recommendation to limit journal use."
+  },
+  "F19": {
+   "id": "F19",
+   "question": "Is there a setting so students can't see classmates' posts until they've posted their own?",
+   "category": "configuration",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_blackboard_communication_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_communication_guide": [
+     2
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "yes_no",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Select Post first to hide discussion activity from students until they respond to the discussion.",
+   "notes": "Yes: the 'Post first' option in Discussion Settings hides classmates' activity until a student posts. The guide adds that Post first must be selected before assigning groups."
+  },
+  "F20": {
+   "id": "F20",
+   "question": "and how can I see who hasn't posted in the discussion yet?",
+   "category": "follow_up",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "",
+   "notes": "No enabled source says how to see which students have not posted in a discussion. The gradebook item view's 'filter by submission status' (Gradebook guide p3) only applies to graded items and is never tied to discussions, so it is an inference, not a stated answer."
+  },
+  "F21": {
+   "id": "F21",
+   "question": "how do I switch the BB gradebook to the grid view? the list-by-submission layout is driving me nuts",
+   "category": "navigation",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_gradebook_guide": [
+     1
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "location",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "You can change the view using the toggle button on the top left of the gradebook page.",
+   "notes": "The Gradebook guide names two views (List View and Student grid View) and says to switch with the toggle button at the top left of the gradebook page. Page 6 describes the grid itself."
+  },
+  "F22": {
+   "id": "F22",
+   "question": "Where do I add a column in the gradebook for an in-class paper quiz that wasnt submitted online?",
+   "category": "workflow",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_gradebook_guide": [
+     2,
+     3,
+     9
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "location",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "You can add grade items that do not require submissions such as participation. These grade items are also called manual grades, manually created items, or offline items. ... Select the plus sign wherever you want to add a row",
+   "notes": "The answer is a manual (offline) grade item: select the plus sign in the Gradable Items list (Add Item) or in the student grid. Scores are entered on the student list page. The Faculty Short Guide p10 'Collect submissions offline' assignment setting is another route."
+  },
+  "F23": {
+   "id": "F23",
+   "question": "Need the final exam to count 40% and coursework 60% in the overall grade. How do I set up the weighting?",
+   "category": "configuration",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     223,
+     227
+    ],
+    "uos_blackboard_gradebook_guide": [
+     3,
+     7
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "40-50% allocated for the final examination ... 50-60% given to course work ... The department shall determine the relative weight of each component.",
+   "notes": "No enabled source gives Blackboard weighting or overall-grade steps; that material is in the held Grade Categories guide. The Gradebook guide only mentions 'Add Calculation' rows and grade categories. The Handbook gives only the policy framework (40/60 fits p223; p227 splits midterm 20-30% from coursework 20-40%). Serving a calculation row or the policy text as the weighting procedure would be wrong.",
+   "adjudication": "the gradebook guide never mentions weighting; only handbook grading rules apply"
+  },
+  "F24": {
+   "id": "F24",
+   "question": "can I keep a grade column hidden from students until I'm done marking all my sections?",
+   "category": "yes_no",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_gradebook_guide": [
+     3,
+     6
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "yes_no",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "When you're ready to release grades to students, select the Post option in the column header.",
+   "notes": "The Gradebook guide implies grades reach students only when you choose Post, so you can hold them until all sections are marked. It says nothing about hiding a grade column itself. Content visibility in the Short Guide p7 is about course content items, not gradebook columns."
+  },
+  "F25": {
+   "id": "F25",
+   "question": "Posted the midterm grades too early by mistake. Can students already see them, and can I pull them back?",
+   "category": "what_happens",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_gradebook_guide": [
+     3,
+     6
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "mixed",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "When you're ready to release grades to students, select the Post option in the column header.",
+   "notes": "Posting releases grades to students, which answers the first part (once posted, students can see them). No enabled source says whether posted grades can be unposted or withdrawn."
+  },
+  "F26": {
+   "id": "F26",
+   "question": "how do i post grades",
+   "category": "ambiguous",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_gradebook_guide": [
+     1,
+     3,
+     6
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "When you're ready to release grades to students, select the Post option in the column header.",
+   "notes": "The Gradebook guide covers posting: the Post option in a column header in the student grid, or 'Post all grades' in an item's view. 'Post grades' could also mean sending final grades to Banner, which is the Grade Transfer Dashboard (see F28)."
+  },
+  "F27": {
+   "id": "F27",
+   "question": "BB lets me drop the lowest quiz score automatically - am I actually allowed to do that under the uni's assessment rules, or do I need the department to OK it first?",
+   "category": "policy_vs_system_trap",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     223,
+     227
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "yes_no",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "The department shall determine the relative weight of each component. ... The Department Council will approve evaluation methods for each course individually",
+   "notes": "Authority case: the Handbook says the department sets component weights and the Department Council approves each course's evaluation methods. Nothing addresses dropping the lowest quiz score. The premise that Blackboard can drop the lowest score is not in any enabled guide (it would be in the held Grade Categories guide), so no system guide should be served as the permission answer."
+  },
+  "F28": {
+   "id": "F28",
+   "question": "Final grades are all done in Blackboard. What are the steps to get them into Banner?",
+   "category": "workflow",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "expected_pages": {
+    "uos_grade_transfer_dashboard_guide": [
+     1,
+     2
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "How to Send Grades to Banner as instructor? 1. Search for the course by using the search bar at the top of the dashboard ... 2. Click on View Details on the dashboard 3. Click on Transfer",
+   "notes": "The Grade Transfer Dashboard guide gives the steps: open the dashboard (Blackboard Institution Page announcement, or op.sharjah.ac.ae/GradeTransfer), pick your role, search by Course ID and Term, View Details, Transfer. Grades appear under the Banner column after Chair and Dean approval (p3). Handbook p224 says Blackboard forwards grades 'automatically' to Banner; this is not a registered conflict, but it is a looser description."
+  },
+  "F29": {
+   "id": "F29",
+   "question": "Does the grade transfer thing pull the overall grade column automatically or do I pick which column goes to Banner? My total column has a custom name",
+   "category": "configuration",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "teaching",
+   "expected_answer_type": "yes_no",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "",
+   "notes": "The Grade Transfer Dashboard guide only gives search, View Details and Transfer steps; it never says which Blackboard column is sent to Banner or whether a custom-named total column is detected. The gradebook guide mentions an Overall Grade column but says nothing about the transfer."
+  },
+  "F30": {
+   "id": "F30",
+   "question": "who approves the final grades after I submit them in the transfer dashboard - chair, dean, or registration?",
+   "category": "approval_authority",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "expected_pages": {
+    "uos_grade_transfer_dashboard_guide": [
+     2,
+     3
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "list",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "You can click again in View Detail to see the grade under the Banner Column after the approval from Chair and Dean",
+   "notes": "The dashboard guide says the Chair and the Dean approve, and its page 3 gives the Chair/Dean approval steps. Registration is not an approver in the dashboard. Handbook p224 describes a separate paper exam-results route (Chair to College Council; Registration announces results), which should not be mixed in."
+  },
+  "F31": {
+   "id": "F31",
+   "question": "ok and if the chair rejects them, do I get notified? can I fix and resubmit or does it go back to square one",
+   "category": "follow_up",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "teaching",
+   "expected_answer_type": "mixed",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "",
+   "notes": "No source covers what happens when a Chair rejects transferred grades: there is nothing on notifications, fixing and resubmitting, or restarting. The dashboard guide only covers instructor transfer and Chair/Dean approval."
+  },
+  "F32": {
+   "id": "F32",
+   "question": "what should I do if a few students show up with no grde in the grade transfer screen? they definitely have grades in BB",
+   "category": "workflow",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "",
+   "notes": "No guide covers troubleshooting students who show no grade in the Grade Transfer Dashboard. The gradebook guide's posting and Overall Grade text is not tied to the transfer, so serving it would be speculative."
+  },
+  "F33": {
+   "id": "F33",
+   "question": "Since grades go straight into Banner the second I hit submit on the dashboard, how do I correct one I entered wrong?",
+   "category": "false_premise",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "expected_pages": {
+    "uos_grade_transfer_dashboard_guide": [
+     2,
+     3
+    ],
+    "uos_faculty_handbook_2025_26": [
+     224
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "You can click again in View Detail to see the grade under the Banner Column after the approval from Chair and Dean as below",
+   "notes": "False premise: the dashboard guide shows grades reach the Banner column only after Chair and Dean approval, not instantly. (Handbook p224 does say Blackboard forwards grades automatically to Banner.) No source gives a procedure for correcting a wrongly entered grade; handbook p225 covers corrections only after a student's petition review.",
+   "adjudication": "the premise is corrected by the grade transfer guide (Chair and Dean approval before Banner); no source describes a grade change"
+  },
+  "F34": {
+   "id": "F34",
+   "question": "Who do I contact to get an iThenticate account? Never had one and I need to check a paper before I submit it asap",
+   "category": "support_contact",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": {
+    "uos_ithenticate_guidelines": [
+     1
+    ]
+   },
+   "expected_specialist": "research",
+   "expected_answer_type": "contact",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Type your university email and your password (activation password is sent to you through ithenticate.com ) If you are unable to access iThenticate software email: servicedesk@sharjah.ac.ae",
+   "notes": "The guide gives the access steps (university email, activation password from ithenticate.com) and the access contact, servicedesk@sharjah.ac.ae. It does not describe a separate account-request process, so the access contact is the stated answer. Do not serve the yearly submission limit from the same page."
+  },
+  "F35": {
+   "id": "F35",
+   "question": "uploading to ithenticate - does it take word docs or only pdf? and is there a file size limit",
+   "category": "multi_part",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": {
+    "uos_ithenticate_guidelines": [
+     1
+    ]
+   },
+   "expected_specialist": "research",
+   "expected_answer_type": "mixed",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Files must be less than 100MB. The maximum document length is 400 pages. ... document types: Word, Text, PostScript, PDF, HTML, Excel, PowerPoint, Word Perfect WPD, OpenOffice ODT, RTF, Hangul HWP",
+   "notes": "File Requirements lists Word and PDF among the accepted types and gives a 100MB size limit (plus 400 pages, 2MB raw text, 20 words minimum). Trap: the same block holds the conflicted 'Maximum 30 Documents per year' line, which must not be served."
+  },
+  "F36": {
+   "id": "F36",
+   "question": "How do I exclude the bibliography and quoted text from the similarity report? My score is way inflated by the references",
+   "category": "configuration",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": {
+    "uos_ithenticate_guidelines": [
+     1
+    ]
+   },
+   "expected_specialist": "research",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "You can discard some resources by clicking on “Exclude resource”  The user has a multiple settings and filtering options to deal with documents",
+   "notes": "The guide only says matched sources can be removed with 'Exclude resource' and that filtering options exist. It gives no steps for excluding the bibliography or quoted text, and 'Exclude resource' is a different action from excluding bibliography or quotes."
+  },
+  "F37": {
+   "id": "F37",
+   "question": "Can I run my PhD students' thesis chapters through iThenticate, or are we supposed to use Turnitin for student work?",
+   "category": "wrong_source_collision",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": {
+    "uos_ithenticate_guidelines": [
+     1
+    ]
+   },
+   "expected_specialist": "research",
+   "expected_answer_type": "yes_no",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "IThenticate is a text-matching tool that is designed to be used by authors to ensure the originality of written work. IThenticate is used for university researchers to enrich the researches and check the plagiarism.",
+   "notes": "The guide only says iThenticate is for authors and university researchers. No source says whether supervisors may submit students' thesis chapters, and Turnitin is not covered by any enabled source. This is a permission question only a system guide touches, so it must not be served as a verified answer."
+  },
+  "F38": {
+   "id": "F38",
+   "question": "What's the normal teaching load for an associate prof here, and does it go down if I'm running a funded research project?",
+   "category": "multi_part",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     91,
+     92,
+     94,
+     95,
+     96
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "mixed",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "\"A\" Regular Faculty (Assistant, Associate, Full Professor) ... The baseline teaching load for this category is 12 credit hours per semester. ... Faculty may buyout teaching loads through external grants at an equivalent salary rate.",
+   "notes": "Handbook WLAM: the associate professor baseline is 12 CH per semester (24 per year). Funding does not reduce the load automatically. The load can be bought out with external grants, or reduced to 9 CH as Active Research Faculty (2 externally funded projects or Q1 papers as PI or main author, on request with Chair and Dean approval). Handbook policy, multi-part."
+  },
+  "F39": {
+   "id": "F39",
+   "question": "do office hours have to be in person on campus or can some be done online thru Collaborate?",
+   "category": "yes_no",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     79,
+     80
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "yes_no",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Full-time faculty members in academic and career/technical programs are required to schedule a minimum of five office hours per week, spread over a minimum of two days.",
+   "notes": "Handbook 3.4 sets the office-hour requirements (5 hours a week over at least 2 days, timetable posted outside the office). It never says whether office hours must be in person or may be online. Trap: the Collaborate and attendance guides mention office-hour sessions only in passing and must not be served as a policy answer."
+  },
+  "F40": {
+   "id": "F40",
+   "question": "The handbook says associate profs need 2 Q1 papers a year to stay in good standing, right? Does a conference paper count toward that?",
+   "category": "false_premise",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     95,
+     129,
+     130
+    ]
+   },
+   "expected_specialist": "faculty_services",
+   "expected_answer_type": "yes_no",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "The threshold for meeting expectations (still defined as 2 publications without quartile requirement). • The criteria for an \"Excellent\" rating in research (still requiring 4 Q1 publications with main authorship).",
+   "notes": "False premise: per the handbook, meeting expectations needs 2 publications with no quartile requirement. Excellent needs 4 Q1 papers with main authorship, and 2 Scopus Q1 papers are for the Active Research workload release (p95). No source says whether a conference paper counts. This is evaluation/appraisal policy, so the held appraisal guide is not a source."
+  },
+  "F41": {
+   "id": "F41",
+   "question": "if a student goes over the absence limit does blackboard auto-drop them or send the warning letter, or is that on me? and whats the limit again, 15%?",
+   "category": "policy_vs_system_trap",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     228
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "mixed",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "If a student's absences exceed 10% ... the instructor will issue a warning. Absences reaching 15% without an acceptable excuse shall result in a final warning. Absences reaching 20% will prohibit the student from sitting for the final examination(s).",
+   "notes": "Handbook 12.15: the instructor issues the warnings (10% warning, 15% final warning), and 20% bars the student from the final exam, so the 15% premise is wrong. No source says Blackboard auto-drops students or sends warning letters. Trap: the attendance tool guide is the wrong source for absence policy.",
+   "adjudication": "the Blackboard part (auto-drop or warning letters) is stated nowhere and the 15% premise is wrong (handbook 12.15: 15% is the final warning, 20% bars); no complete verified answer exists"
+  },
+  "F42": {
+   "id": "F42",
+   "question": "How do I set up a journal so my research group can log weekly progress on the manuscript we're writing?",
+   "category": "wrong_source_collision",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "research",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "",
+   "notes": "Wrong-source collision: Blackboard Ultra journals (communication guide p5) are private student-to-instructor spaces in a course, not a progress log for a research group. Serving them would be wrong and would also hit the unresolved 2022 journal-usage recommendation. No source covers research-group progress logging."
+  },
+  "F43": {
+   "id": "F43",
+   "question": "is there any rule about collaborating with faculty at other universities on a project, like do I need approval first, or can I just start using collaborate with them",
+   "category": "wrong_source_collision",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     161,
+     163,
+     164
+    ]
+   },
+   "expected_specialist": "research",
+   "expected_answer_type": "mixed",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Collaborative agreements with external institutions follow specific principles: 1. The agreement should enhance the University's reputation in research and promote mutual research activities between the collaborating parties.",
+   "notes": "Handbook 8.8/8.10/8.11 covers formal collaborative research agreements and approvals for University-supported collaborative projects (Research Board, VCRGS, Chancellor). It does not say whether informal collaboration with outside faculty needs prior approval. Trap: 'collaborate' here is the ordinary verb; the Blackboard Collaborate guide is a wrong-source collision."
+  },
+  "F44": {
+   "id": "F44",
+   "question": "What's the policy on giving a student an Incomplete, and how do I actually enter an I in the gradebook without it messing up the overall total?",
+   "category": "multi_part",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     225
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "mixed",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "If illness or other compelling circumstances are acceptable reasons for absence, the student will receive an \"Incomplete\" grade.",
+   "notes": "Handbook 12.12.9 states the Incomplete policy: an acceptable excuse for missing the final, removal by special exam in the first week of the next regular semester, otherwise F. Removal dates are in the calendar (pp. 49-51). The gradebook guide does not explain entering an 'I' or keeping it out of the overall total, so the procedural half is missing."
+  },
+  "F45": {
+   "id": "F45",
+   "question": "Since iThenticate now scans student papers automatically when they submit in BB, where do I see the similarity reports for my class?",
+   "category": "false_premise",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": {
+    "uos_ithenticate_guidelines": [
+     1
+    ]
+   },
+   "expected_specialist": "research",
+   "expected_answer_type": "location",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "IThenticate is used for university researchers to enrich the researches and check the plagiarism. ... The similarity index and originality report can be found under the \"Documents\"",
+   "notes": "False premise. The sources describe iThenticate as a researchers' tool used by manually uploading files at ithenticate.com. No source mentions Blackboard integration or automatic scanning of student submissions. Reports for uploaded documents appear under 'Documents' in iThenticate, not in a BB class view."
+  },
+  "F46": {
+   "id": "F46",
+   "question": "A colleague told me we can drop physical office hours as long as we post a Collaborate link on the course page. Is that actually allowed?",
+   "category": "false_premise",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     78,
+     79,
+     80
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "yes_no",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Full-time faculty members in academic and career/technical programs are required to schedule a minimum of five office hours per week, spread over a minimum of two days.",
+   "notes": "Handbook 3.4 requires regular office hours at designated times and locations, with the timetable posted outside the instructor's office. Nothing supports replacing them with a posted Collaborate link, and online office hours are not explicitly addressed. False premise; the Collaborate and attendance guides are a wrong-source collision for this policy question."
+  },
+  "F47": {
+   "id": "F47",
+   "question": "turnitin option missing from assignment settings, how to turn it on",
+   "category": "unsupported",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "",
+   "notes": "Turnitin is an unsupported system. No enabled source mentions it, and the Assignments guide is held. The faculty short guide's assignment section has no originality-check setting. Must fall back."
+  },
+  "F48": {
+   "id": "F48",
+   "question": "how do i record my collab session and then share the recording with my TA on Teams?",
+   "category": "multi_part",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_collaborate_guide": [
+     2
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "mixed",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "instructor can start recording the session by clicking on \"Start recording on the top left tab. Once the session ends, you must click on stop recording to end recording of the session.",
+   "notes": "The Collaborate guide covers starting and stopping a recording and the 'Allow recording downloads' session setting. Sharing the recording with a TA via Microsoft Teams is not covered (Teams is unsupported). Serve only the recording part, never a Teams step."
+  },
+  "F49": {
+   "id": "F49",
+   "question": "grade deadline?",
+   "category": "ambiguous",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     224
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "value",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Instructors must correct final examination answer sheets or booklets and submit the results, documented in letter grades and percentages, to the Department Chair within forty-eight hours of the examination date.",
+   "notes": "Read as the final-grade submission deadline: handbook 12.12.5 gives 48 hours after the exam. The query is terse and ambiguous; it could also mean the Incomplete-removal dates in the calendar (pp. 49-51). No guide gives a Grade Transfer Dashboard deadline."
+  },
+  "F50": {
+   "id": "F50",
+   "question": "How many days of annual leave am I entitled to per year, and is there a way to schedule BB announcements so they still go out while I'm away?",
+   "category": "multi_part",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     107
+    ],
+    "uos_blackboard_faculty_short_guide": [
+     4,
+     9
+    ]
+   },
+   "expected_specialist": "faculty_services",
+   "expected_answer_type": "mixed",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Vacation days are provided as per the Faculty and Staff Pay Grade and Benefits Chart ... check \"schedule announcement\" option and choose the start and end dates and time.",
+   "notes": "The handbook does not give the number of annual leave days; it defers to the Pay Grade and Benefits Chart, which is not in the corpus. The scheduling half is fully answered by the faculty short guide (schedule announcement option, then Post). Two-domain question."
+  },
+  "F51": {
+   "id": "F51",
+   "question": "whats the max similarity % the uni accepts before I can send a paper to a journal? or does ithenticate just decide that for me",
+   "category": "policy_vs_system_trap",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "research",
+   "expected_answer_type": "value",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "",
+   "notes": "No enabled source gives a maximum acceptable similarity percentage, and none says iThenticate makes that decision. Handbook 3.13.3 (p. 100) only says severity is judged by the extent of similarity. The iThenticate guide (p. 1) only explains how to read the similarity report. Serving either as a threshold would be unsupported."
+  },
+  "F52": {
+   "id": "F52",
+   "question": "ok and if the chair rejects my grades in the dashboard, do students see that in banner self service or not",
+   "category": "follow_up",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "teaching",
+   "expected_answer_type": "yes_no",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "You can click again in View Detail to see the grade under the Banner Column after the approval from Chair and Dean",
+   "notes": "The guide implies grades reach Banner only after Chair and Dean approval. It describes no rejection flow and says nothing about what students see in Banner Self Service. 'Not visible' is an inference, not a stated answer.",
+   "adjudication": "no source describes a rejection or what students see in Banner Self Service"
+  },
+  "F53": {
+   "id": "F53",
+   "question": "Who can reopen attendance in Blackboard after the semester has already closed - registrar, IT, or the department?",
+   "category": "approval_authority",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "teaching",
+   "expected_answer_type": "contact",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "",
+   "notes": "The attendance and Collaborate guides cover setting up attendance and editing statuses (for example to excused). Neither covers closed semesters or who can reopen attendance. The handbook is silent on registrar, IT or department authority here. This authority question is not covered and must fall back."
+  },
+  "F54": {
+   "id": "F54",
+   "question": "Need to book flights for a conference in December. Where do I submit the travel request, and is there a yearly cap on conference funding for faculty?",
+   "category": "multi_part",
+   "answerable": "partial",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     117,
+     118,
+     119,
+     49
+    ]
+   },
+   "expected_specialist": "faculty_services",
+   "expected_answer_type": "mixed",
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Faculty members are allowed to attend a maximum of one international and one local university-supported conference per year ... The Vice Chancellor for Academic Affairs approves travel requests and interprets the policy.",
+   "notes": "Handbook 5.4 gives a cap by count (one international and one local conference per year), per-item limits (per diem, $750 registration, economy ticket), a one-month lead time and college approval. VCAA approves. It names no submission portal or office and no annual monetary cap. Trap: December includes the Fall final exams (Dec 6-16), and no travel is permitted during exam periods."
+  },
+  "F55": {
+   "id": "F55",
+   "question": "my students say they cant see anything in the course. what did i do wrong",
+   "category": "ambiguous",
+   "answerable": "yes",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_faculty_short_guide": [
+     4,
+     7,
+     8
+    ]
+   },
+   "expected_specialist": "teaching",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Students see private courses in their course lists, but they cannot access them. ... By default, the content is hidden from the students, you can make it visible by changing the visibility to \"visible to students\"",
+   "notes": "The faculty short guide states both likely causes and their fixes. Course Availability set to Private: open the course. Content hidden by default: set visibility to 'Visible to students' or adjust release conditions. The question is diagnostic, but the guide's statements are safe to serve."
+  },
+  "F56": {
+   "id": "F56",
+   "question": "how do I get a salary certificate from the HR portal? it keeps timing out on me",
+   "category": "unsupported",
+   "answerable": "no",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_specialist": "faculty_services",
+   "expected_answer_type": "procedure",
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "",
+   "notes": "Salary certificates and HR portal timeouts belong to the held HR portal guide. The handbook mentions the HR portal only for resignations (p. 63) and says nothing about certificates. Must fall back, for example to HR or the ITC service desk."
+  }
+ }
+}

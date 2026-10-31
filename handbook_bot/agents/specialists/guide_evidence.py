@@ -18,6 +18,13 @@ WHAT
       handoffs for an answered clause are replaced by the guide clause report and findings. Every guide finding carries
       the D-111 record (ids, stems, labels) that the adapter re-verifies independently.
 
+Post-freeze PF-5B (D-114): a clause the guide path binds to an approved guide (it names the guide's system and asks a
+system question that is not a contact ask) is a SOFTWARE question owned by this specialist: when the guide path does
+not answer it, the frozen specialist's request to hand it to Institutional Navigation ("Where do I find X in
+Blackboard?") is dropped and the clause is reported not found, so the question falls back instead of being answered
+from the handbook's offices. Physical and organizational asks ("Where is the Blackboard support office?") never bind to
+a guide and keep their handoff.
+
 No model call. No file read. The diagnostics carry ids, intents, forms and reasons, never question or answer text.
 """
 from __future__ import annotations
@@ -29,7 +36,7 @@ from typing import Any, Callable, Dict, FrozenSet, Iterable, List, Mapping, Opti
 import numpy as np
 
 from ...config import MIN_RERANK_SCORE
-from ...guide_grounding import (GUIDE_KEY, VERSION, Binding, GuideAnswer, GuideIndex, GuideIntent, bind, select_answer,
+from ...guide_grounding import (GUIDE_KEY, ORGANIZATIONAL, VERSION, Binding, GuideAnswer, GuideIndex, GuideIntent, select_answer,
                                 statement_units)
 from ...retrieval import RetrievalScope, deduplicate_by_text, gather_candidates
 from ...source_scopes import HANDBOOK_SOURCE_ID, guide_sources_named
@@ -40,6 +47,8 @@ from .contracts import Finding, FindingStatus, SpecialistFindings, SpecialistId,
 
 #: Clauses per task the guide path reads (beyond it the frozen specialist decides alone).
 MAX_GUIDE_CLAUSES = 4
+#: Post-freeze PF-5B (D-114): the report marker of a software clause kept by its system's specialist.
+SOFTWARE_NAVIGATION = "D-114 software navigation stays with the system's specialist"
 #: The clause report fields the adapter's I-1 gate and the I-4 report check read (kept true for a guide report).
 ASK_SPECIFIC_RECOGNISED = "specific_recognised"
 RELATION_STRONG = "strong"
@@ -81,7 +90,7 @@ class GuideEvidence:
             if source_id not in allowed:
                 refused.append({"source_id": source_id, "reason": "not approved for this specialist (D-110)"})
                 continue
-            binding, problem = bind(clause, self.guide_index.record(source_id))
+            binding, problem = self.guide_index.bind(clause, source_id)     # D-114: with the guide's vocabulary
             if binding is None:
                 refused.append({"source_id": source_id, "reason": problem})
             else:
@@ -221,13 +230,62 @@ class GuideCapableSpecialist(Specialist):
                 answers[i] = chosen
         guide_ms = (time.perf_counter() - started) * 1000.0
         if not answers:
-            result = self.base.run(task)
+            result = self._keep_software_clauses(clauses, diags, set(), self.base.run(task))
             if diags:
                 result.metadata = dict(result.metadata or {})
                 result.metadata["guide_path"] = {"version": VERSION, "answered": [], "clauses": diags, "ms": guide_ms}
             return result
         base = self.base.run(task) if len(answers) < len(clauses) else None
+        if base is not None:
+            base = self._keep_software_clauses(clauses, diags, set(answers), base)
         return self._merge(task, clauses, route, answers, diags, base, started, guide_ms)
+
+    # ---- post-freeze PF-5B (D-114): software navigation stays with the system's specialist ------------------------------
+    def _keep_software_clauses(self, clauses: List[str], diags: Mapping[str, Any], answered: Iterable[int],
+                               result: SpecialistFindings) -> SpecialistFindings:
+        """``result`` without its handoffs to Institutional Navigation for the clauses an approved guide BOUND (a software
+        question about the guide's system that is not a contact ask and names no organizational unit, place or role) and the
+        guide path did not answer; each such clause is reported not found and listed as missing. Any other result is returned
+        unchanged."""
+        if self.specialist_id is SpecialistId.INSTITUTIONAL or not result.handoff_requests:
+            return result
+        done = set(answered)
+        owned = set()
+        for key, diag in diags.items():
+            intents = {b.get("intent") for b in (diag.get("bindings") or []) if isinstance(b, dict)}
+            if not (intents and GuideIntent.CONTACT.value not in intents and str(key).isdigit() and int(key) not in done):
+                continue
+            clause = clauses[int(key)] if int(key) < len(clauses) else ""
+            if not ORGANIZATIONAL.search(clause):              # an office, team, role or contact keeps its Institutional handoff
+                owned.add(int(key))
+        dropped = [h for h in result.handoff_requests
+                   if h.requested_specialist is SpecialistId.INSTITUTIONAL and (h.metadata or {}).get("clause_index") in owned]
+        if not dropped:
+            return result
+        kept = [h for h in result.handoff_requests if not any(h is d for d in dropped)]
+        metadata = dict(result.metadata or {})
+        reports = list(metadata.get("clauses") or [])
+        missing = list(result.missing)
+        indices = sorted({int((h.metadata or {}).get("clause_index")) for h in dropped})
+        for i in indices:
+            clause = clauses[i] if i < len(clauses) else ""
+            if 0 <= i < len(reports) and isinstance(reports[i], dict):
+                clause = reports[i].get("clause", clause)
+                reports[i] = {"index": i, "clause": clause, "outcome": "not_found", "kept": SOFTWARE_NAVIGATION}
+            missing.append("clause %d: a software question about a guide's system that the approved guide does not answer (D-114)" % i)
+        metadata["clauses"] = reports
+        metadata["software_navigation_kept"] = indices
+        status = result.status
+        if status is FindingStatus.OUT_OF_SCOPE and not kept:
+            status = FindingStatus.PARTIAL if result.findings else FindingStatus.NOT_FOUND
+        elif status is FindingStatus.SUPPORTED:
+            status = FindingStatus.PARTIAL
+        confidence = {FindingStatus.SUPPORTED: 1.0, FindingStatus.PARTIAL: 0.5}.get(status, 0.0)
+        return SpecialistFindings(
+            specialist_id=result.specialist_id, task_id=result.task_id, status=status, findings=list(result.findings),
+            summary="%s; %d software clause(s) kept, not handed to institutional navigation" % (result.summary, len(indices)),
+            missing=missing, handoff_requests=kept, confidence=confidence, limitations=list(result.limitations),
+            llm_used=result.llm_used, ms=result.ms, metadata=metadata)
 
     # ---- the merged result -------------------------------------------------------------------------------------------
     def _guide_parts(self, task: SpecialistTask, index: int, clause: str, route: str, answer: GuideAnswer) -> Tuple[Dict[str, Any], List[Finding]]:
@@ -318,4 +376,4 @@ _WRAPPERS: Dict[SpecialistId, type] = {SpecialistId.TEACHING: GuideCapableTeachi
 
 
 __all__ = ["GuideCapableInstitutional", "GuideCapableResearch", "GuideCapableSpecialist", "GuideCapableTeaching", "GuideEvidence",
-           "MAX_GUIDE_CLAUSES"]
+           "MAX_GUIDE_CLAUSES", "SOFTWARE_NAVIGATION"]

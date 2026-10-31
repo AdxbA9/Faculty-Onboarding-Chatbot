@@ -30,6 +30,12 @@ WHAT (deterministic; no model; no file read)
     * ``procedure_problem``: why a procedure is not provably complete. ``select_answer`` chooses the evidence for a
       clause (a complete procedure, one item of an unordered list, or one statement); ``verify_answer`` is the
       independent re-check the adapter applies to whatever a specialist returns.
+    * Post-freeze PF-5B (D-114), natural faculty wording: discourse words are not terms; the default modifier "final"
+      in a procedure ask is not a term when the guide's registry record declares final grades and the guide text names
+      neither final nor midterm; a term is also stated by a written-together compound ("log in" / "login") or by the
+      other member of two noun synonym pairs; a clause about a physical place is never a guide's; a registered VALUE
+      conflict blocks the units that state the disputed value, not every unit of its chunk; a unit cut mid-sentence by
+      the extraction, or a statement that announces content it does not contain, is never served.
 """
 from __future__ import annotations
 
@@ -125,6 +131,22 @@ what which who whom whose how when where why whether
 any all each every some no not other own same more most very
 please kindly tell explain describe
 """.split())
+#: Post-freeze PF-5B (D-114): greetings and discourse words that never carry what a guide must state ("ok so", "hey",
+#: "honestly"). Scope words ("specific", "particular", "current", "whole", "already") restrict the ask and stay terms;
+#: "quick" stays a term (a guide prints "Quick Links"); determiners such as "all", "this" and "those" were already stop words.
+_NON_CRITICAL = frozenset("""
+ok okay hey hi hello thanks thank honestly
+""".split())
+#: Post-freeze PF-5B (D-114): DEFAULT modifiers and the marked members they contrast with. Only the unmarked default may be
+#: left unstated by the evidence, and only (see ``bind``) as an attributive modifier in a procedure ask ("send my final
+#: grades"), when the guide's registry record declares it ("transferring final grades") and the guide text states neither it
+#: nor a marked partner. A marked member ("midterm", "group", "optional", "required", "available") is always a term.
+_DEFAULT_MODIFIERS: Mapping[str, FrozenSet[str]] = {"final": frozenset({"midterm", "mid", "interim", "partial"})}
+#: Post-freeze PF-5B (D-114): the only synonym pairs, nouns and adjectives with one meaning in a system manual; applied to term
+#: coverage only. Verb synonyms ("remove" for "delete") are not used: a bag of words cannot tell what they act on.
+_SYNONYM_GROUPS: Tuple[FrozenSet[str], ...] = tuple(frozenset(g) for g in (("online", "virtual"), ("student", "learner")))
+#: "before" and "after" stay function words (D-111); a statement that states only the opposite one is refused (D-114).
+_POLARITY = {"before": "after", "after": "before"}
 #: Question frame verbs that never carry the asked content ("Where do I find ...", "How do I make Blackboard assign ...").
 _FRAME = frozenset({"find", "get", "use", "make", "see", "go", "need", "want", "know", "able", "possible", "way", "help", "let", "try"})
 #: Words a request kind supplies itself; the evidence answers them with its value, place, channel or set.
@@ -149,6 +171,34 @@ _HOWTO_FRAME = re.compile(r"^\s*(?:how|what\s+are\s+the\s+steps\s+to|what\s+step
 #: load for faculty who teach on Blackboard?"): workload, hours and entitlements are policy, never a manual's.
 _HANDBOOK_SUBJECT = re.compile(r"\brequired\s+(?:teaching|work|number|hours?|load)\b|\bteaching\s+loads?\b|\bwork\s?loads?\b|"
                                r"\boffice\s+hours\b|\bcredit\s+hours?\b|\bentitle\w*|\beligib\w*|\ballowances?\b|\bsalar(?:y|ies)\b", re.I)
+#: Post-freeze PF-5B (D-114): a physical or organizational place. A clause about one (an office, a building, a department)
+#: is Institutional Navigation's, never a system manual's; a place inside the software (a menu, a page, a Collaborate room)
+#: is the manual's. The list over-refuses rare in-software uses ("lab grades", a "Help Center" page): a fallback, never a
+#: wrong answer.
+_PHYSICAL_PLACE = re.compile(
+    r"\b(?:offices?|buildings?|campus(?:es)?|help\s?desks?|desks?|departments?|deanships?|centers?|centres?|halls?|"
+    r"floors?|librar(?:y|ies)|labs?|laborator(?:y|ies)|room\s+(?:number|no\b|\d))\b", re.I)
+#: Post-freeze PF-5B (D-114): a clause that names an organizational unit, place or role (an office, a team, staff, an
+#: administrator, the registrar, ITC, HR, a dean or chair, a contact channel) is never treated as a pure software question:
+#: the specialist's handoff of it to Institutional Navigation is kept even when a guide binds it.
+ORGANIZATIONAL = re.compile(
+    _PHYSICAL_PLACE.pattern + r"|\b(?:rooms?|spaces?|teams?|staff|admins?|administrators?|coordinators?|trainers?|units?|colleges?|registrar|"
+    r"registration|itc|it\s+(?:department|center|centre|services?)|human\s+resources|hr|deans?|chairs?|chairpersons?|heads?|"
+    r"support|helpdesk|contacts?|e-?mails?|phones?|extensions?|who|whom)\b", re.I)
+
+
+def _core_text(blanked: str) -> str:
+    """The action and object of a "how do I ..." clause, up to its first preposition (D-114: "How do I find the support
+    office?" asks for a place; "How do I log in from outside the campus?" does not)."""
+    rest = _HOWTO_FRAME.sub("", blanked, count=1)
+    words: List[str] = []
+    for tok in _TOKEN.findall(rest):
+        if tok.lower() in _CORE_END:
+            if words:
+                break
+            continue
+        words.append(tok)
+    return " ".join(words)
 
 
 def stem(word: str) -> str:
@@ -180,9 +230,27 @@ def stem(word: str) -> str:
     return w
 
 
+_JOINABLE = re.compile(r"^[\s-]{1,2}$")
+
+
 def stems(text: str) -> FrozenSet[str]:
-    """Stems of every word of ``text`` (stop words included: coverage asks whether a term is stated, nothing more)."""
-    return frozenset(stem(t) for t in _TOKEN.findall(text or ""))
+    """Stems of every word of ``text`` (stop words included: coverage asks whether a term is stated, nothing more). Post-freeze
+    PF-5B (D-114): also the stem of every two adjacent words written together ("log in" -> "login", "grade book" ->
+    "gradebook", "e-mail" -> "email"), so a compound is stated however it is spaced."""
+    text = text or ""
+    found = [m for m in _TOKEN.finditer(text)]
+    out = {stem(m.group(0)) for m in found}
+    for a, b in zip(found, found[1:]):
+        if _JOINABLE.match(text[a.end():b.start()]) and a.group(0).isalpha() and b.group(0).isalpha():
+            out.add(stem(a.group(0) + b.group(0)))
+    return frozenset(out)
+
+
+_SYNONYMS: Dict[str, FrozenSet[str]] = {}
+for _group in _SYNONYM_GROUPS:
+    _stems = frozenset(stem(w) for w in _group)
+    for _s in _stems:
+        _SYNONYMS[_s] = _SYNONYMS.get(_s, frozenset()) | _stems
 
 
 def _name_pattern(name: str) -> "re.Pattern[str]":
@@ -211,20 +279,31 @@ class Binding:
     minimum: bool = False                 # a value ask for a lower bound ("minimum", "at least")
     maximum: bool = False                 # a value ask for an upper bound ("maximum", "largest", "limit")
     info: Mapping[str, Any] = field(default_factory=dict)
+    # post-freeze PF-5B (D-114)
+    alternatives: Tuple[Tuple[str, Tuple[str, ...]], ...] = ()   # term -> the compound stems it forms with a neighbour
+    tolerated: Tuple[str, ...] = ()       # contrast modifiers the guide never contrasts (not terms)
+    polarity: Tuple[str, ...] = ()        # "before" / "after" as asked
 
     def to_dict(self) -> Dict[str, Any]:
         """JSON-serialisable; the registry's system names and counts only (no question text, no word of it)."""
         return {"source_id": self.source_id, "intent": self.intent.value, "names_bound": list(self.names_bound), "actor_bound": self.actor_bound,
-                "terms": len(self.terms), "core": len(self.core), "entities": len(self.entities), "minimum": self.minimum, "maximum": self.maximum}
+                "terms": len(self.terms), "core": len(self.core), "entities": len(self.entities), "minimum": self.minimum, "maximum": self.maximum,
+                "tolerated": len(self.tolerated)}
+
+    def equivalents(self, term: str) -> FrozenSet[str]:
+        """The stems that state ``term`` (D-114): itself, its synonym group and the compounds it forms in the clause."""
+        alts = dict(self.alternatives).get(term, ())
+        return frozenset((term,) + tuple(alts)) | _SYNONYMS.get(term, frozenset())
 
 
 _MIN_WORDS = re.compile(r"\b(?:minimum|min|least|smallest|shortest)\b", re.I)
 _MAX_WORDS = re.compile(r"\b(?:maximum|max|most|largest|longest|biggest|limit|limits|limited)\b", re.I)
 
 
-def bind(clause: str, record: Any) -> Tuple[Optional[Binding], Optional[str]]:
+def bind(clause: str, record: Any, vocabulary: Optional[FrozenSet[str]] = None) -> Tuple[Optional[Binding], Optional[str]]:
     """``(binding, None)`` when ``record`` may answer ``clause`` under D-111, else ``(None, reason)``. Never raises for
-    ordinary input; the reason is a fixed phrase plus ids (no question text)."""
+    ordinary input; the reason is a fixed phrase plus ids (no question text). ``vocabulary`` (post-freeze PF-5B, D-114) is
+    the stem set of the whole guide (``GuideIndex.vocabulary``): without it every contrast modifier is a term (strict)."""
     text = (clause or "").strip()
     if not text:
         return None, "empty clause"
@@ -252,6 +331,8 @@ def bind(clause: str, record: Any) -> Tuple[Optional[Binding], Optional[str]]:
             names.append(name)
     actors = [(m.start(), m.end()) for m in _ACTOR.finditer(text) if not any(not (m.end() <= a or m.start() >= b) for a, b in spans)]
     blanked = _blank(text, spans + actors)                         # the faculty actor is bound by the audience checked above
+    if _PHYSICAL_PLACE.search(blanked) and (intent is not GuideIntent.PROCEDURE or _PHYSICAL_PLACE.search(_core_text(blanked))):
+        return None, "a physical or organizational place is not answered from a system guide"
     from .plan_f_runtime import named_entities                    # imported here: the adapter imports this module
     entities = tuple(named_entities(blanked))
     drop = {stem(w) for w in _INTENT_WORDS.get(intent, frozenset())}
@@ -259,11 +340,37 @@ def bind(clause: str, record: Any) -> Tuple[Optional[Binding], Optional[str]]:
     if intent in (GuideIntent.SELECTION, GuideIntent.ENUMERATION) and isinstance(head, str) and head:
         drop.add(stem(head))                                       # the asked control or set is what the evidence supplies
 
+    tolerated: List[str] = []
+    if intent is GuideIntent.PROCEDURE and vocabulary is not None:
+        declared = stems(" ".join(str(getattr(record, k, "") or "") for k in ("title", "notes", "system")))
+        tokens = list(_TOKEN.finditer(blanked))
+        for i, m in enumerate(tokens):
+            low = m.group(0).lower()
+            partners = _DEFAULT_MODIFIERS.get(low)
+            if partners is None or i + 1 >= len(tokens):
+                continue
+            following = tokens[i + 1].group(0).lower()
+            attributive = following not in _STOP and following not in _FRAME and not blanked[m.end():tokens[i + 1].start()].strip()
+            silent = not ({stem(low)} | {stem(p) for p in partners}) & vocabulary
+            if attributive and silent and stem(low) in declared:
+                tolerated.append(stem(low))                        # D-114: the registry declares it and the text is silent
+    drop |= set(tolerated)
+
     def content(tok: str) -> bool:
         low = tok.lower()
-        return low not in _STOP and low not in _FRAME and stem(tok) not in drop
+        return low not in _STOP and low not in _FRAME and low not in _NON_CRITICAL and stem(tok) not in drop
 
     terms = tuple(dict.fromkeys(stem(t) for t in _TOKEN.findall(blanked) if content(t)))
+    alternatives: Dict[str, List[str]] = {}
+    found = list(_TOKEN.finditer(blanked))
+    for a, b in zip(found, found[1:]):
+        if _JOINABLE.match(blanked[a.end():b.start()]) and a.group(0).isalpha() and b.group(0).isalpha():
+            joined = stem(a.group(0) + b.group(0))
+            for tok in (a.group(0), b.group(0)):
+                if content(tok):
+                    alternatives.setdefault(stem(tok), [])
+                    if joined not in alternatives[stem(tok)]:
+                        alternatives[stem(tok)].append(joined)
     core: Tuple[str, ...] = ()
     if intent is GuideIntent.PROCEDURE:
         rest = _HOWTO_FRAME.sub("", blanked, count=1)
@@ -278,17 +385,26 @@ def bind(clause: str, record: Any) -> Tuple[Optional[Binding], Optional[str]]:
         core = tuple(dict.fromkeys(words))
     if not terms and not entities:
         return None, "the clause asks nothing of %s beyond its system name" % source_id
+    polarity = tuple(w for w in ("before", "after") if re.search(r"\b%s\b" % w, blanked, re.I))
     binding = Binding(source_id, intent, tuple(names), bool(actors), terms, core, entities,
                       minimum=intent is GuideIntent.VALUE and bool(_MIN_WORDS.search(blanked)),
                       maximum=intent is GuideIntent.VALUE and bool(_MAX_WORDS.search(blanked)) and not _MIN_WORDS.search(blanked),
-                      info=dict(info))
+                      info=dict(info), alternatives=tuple((k, tuple(v)) for k, v in alternatives.items() if k in terms),
+                      tolerated=tuple(tolerated), polarity=polarity)
     return binding, None
+
+
+def stated_terms(binding: Binding, terms: Iterable[str], text: str) -> FrozenSet[str]:
+    """The ``terms`` of ``binding`` that ``text`` states (post-freeze PF-5B, D-114): the stem itself, a compound it forms in
+    the clause, or the other member of its synonym pair."""
+    present = stems(text)
+    return frozenset(term for term in terms if binding.equivalents(term) & present)
 
 
 def missing_terms(binding: Binding, text: str) -> List[str]:
     """Terms of ``binding`` that ``text`` does not state."""
-    present = stems(text)
-    return [t for t in binding.terms if t not in present]
+    stated = stated_terms(binding, binding.terms, text)
+    return [t for t in binding.terms if t not in stated]
 
 
 def missing_entities(binding: Binding, text: str) -> List[str]:
@@ -300,7 +416,7 @@ def missing_entities(binding: Binding, text: str) -> List[str]:
 # What a statement must show for each intent
 # ---------------------------------------------------------------------------
 #: A stated quantity: a number with its unit (a list label such as "1." is never a value).
-_QUANTITY = re.compile(r"(?<![\w.])\d[\d,.]*\s*(?:x\s*\d[\d,.]*\s*)?(?:%|percent\b|characters?\b|pixels?\b|px\b|pages?\b|mb\b|kb\b|gb\b|"
+_QUANTITY = re.compile(r"(?<![\w.])\d+(?:[,.]\d+)*\s*(?:x\s*\d+(?:[,.]\d+)*\s*)?(?:%|percent\b|characters?\b|pixels?\b|px\b|pages?\b|mb\b|kb\b|gb\b|"
                        r"words?\b|files?\b|documents?\b|docs?\b|times?\b|minutes?\b|hours?\b|days?\b|weeks?\b|months?\b|years?\b|points?\b|"
                        r"items?\b|students?\b|columns?\b|rows?\b|submissions?\b)", re.I)
 _LEADING_LABEL = re.compile(r"^\s*(?:\d{1,2}[.)]|[A-Za-z][.)]|[-–•])\s+")
@@ -317,6 +433,12 @@ _LOCATION_EVIDENCE = re.compile(
     r"announcement|list|header|icon|screen|view|area|toolbar|home\s+screen)\b|https?://\S+|\bwww\.\S+|"
     r"\b(?:under|in|on|from)\s+(?:the\s+)?[“\"][^”\"]{2,60}[”\"]", re.I)
 _EMAIL = re.compile(r"[\w.+-]+@[\w-]+\.[\w.]+")
+_TRAILING_LABEL = re.compile(r"(?:^|[\s:])\d{1,2}[.)]\s*$")
+#: Post-freeze PF-5B (D-114): a statement that opens as the consequence or continuation of an earlier step ("You will be
+#: redirected to ...", "Then ...", "After that ...", also under a printed heading): one step of a sequence, not a self-contained
+#: answer.
+_DEPENDENT = re.compile(r"^\s*(?:[^:.!?]{1,120}:\s+)?(?:\d{1,2}[.)]\s+|[-–•]\s+)?(?:you\s+will\s+(?:then\s+)?be\s+(?:redirected|taken|sent|moved|returned|brought)|"
+                        r"then\b|next\b|after\s+that\b|afterwards\b)", re.I)
 _PHONE = re.compile(r"\+?\d[\d\s()-]{6,}\d")
 _URL = re.compile(r"https?://\S+|\bwww\.\S+", re.I)
 _INLINE_LIST = re.compile(r"(?:\binclude[sd]?\b|\bincluding\b|\bare\b|:)\s+[^.;]*,[^.;]*,[^.;]*", re.I)
@@ -332,6 +454,15 @@ def statement_problem(binding: Binding, quote: str) -> Optional[str]:
         return "the evidence does not state %d asked term(s)" % len(missing)
     if missing_entities(binding, quote):
         return "a named entity of the clause is not in the evidence"
+    if _TRAILING_LABEL.search(quote or ""):                        # post-freeze PF-5B (D-114)
+        return "the unit ends with the label of the next list item, so it is cut"
+    if dangling_lead_in(quote):                                    # post-freeze PF-5B (D-114)
+        return "the statement announces content it does not contain"
+    if _DEPENDENT.match(quote or ""):                              # post-freeze PF-5B (D-114)
+        return "the statement is the consequence of a step it does not include"
+    for word in binding.polarity:                                  # post-freeze PF-5B (D-114)
+        if re.search(r"\b%s\b" % _POLARITY[word], quote, re.I) and not re.search(r"\b%s\b" % word, quote, re.I):
+            return "the evidence states the opposite condition (%s, not %s)" % (_POLARITY[word], word)
     if intent is GuideIntent.VALUE:
         if not _QUANTITY.search(_LEADING_LABEL.sub("", quote, count=1)):
             return "a value ask needs a stated number with its unit"
@@ -431,7 +562,7 @@ def is_generic_introduction(text: str, meta: Mapping[str, Any], binding: Optiona
     names = SYSTEM_NAMES.get(str(meta.get("source_id")), ())
     if not any(_name_pattern(n).search(text or "") for n in names):
         return False
-    if binding is not None and binding.terms and any(t in stems(text) for t in binding.terms):
+    if binding is not None and binding.terms and stated_terms(binding, binding.terms, text):
         return False
     return True
 
@@ -448,7 +579,7 @@ def statement_units(chunk_id: int, chunk: str, meta: Mapping[str, Any], rank: in
         heading = meta.get("procedure_heading")
         prefix = (heading + ": ") if isinstance(heading, str) and heading and chunk.startswith(heading + ": ") else ""
         units.append(Unit(chunk_id, source_id, page, chunk[len(prefix):].strip(), "step", rank))
-        if prefix:
+        if prefix and not prefix[:1].islower():                    # D-114: a heading opening in lower case is a cut row
             units.append(Unit(chunk_id, source_id, page, chunk.strip(), "step", rank))
         return [u for u in units if u.quote]
     if kind != "paragraph":
@@ -456,8 +587,12 @@ def statement_units(chunk_id: int, chunk: str, meta: Mapping[str, Any], rank: in
     spans = _spans(chunk)
     singles: List[Unit] = []
     pairs: List[Unit] = []
-    for i, (a, b, _before) in enumerate(spans):
+    for i, (a, b, before) in enumerate(spans):
         quote = chunk[a:b].strip(_GLYPH + " ")
+        opening = _LEADING_LABEL.sub("", quote, count=1)[:1]
+        preceding = chunk[:a].rstrip(_GLYPH + " ")
+        if opening.islower() and not preceding.endswith((".", "!", "?", ";", ":")):
+            continue                                               # D-114: the unit opens in the middle of a sentence
         if quote:
             singles.append(Unit(chunk_id, source_id, page, quote, "sentence", rank, is_generic_introduction(quote, meta, binding)))
         if i + 1 < len(spans) and spans[i + 1][2] == "sentence":
@@ -718,6 +853,23 @@ class GuideIndex:
     def structures_of(self, source_id: str) -> List[Any]:
         return list(self.structures.get(source_id, ()))
 
+    def vocabulary(self, source_id: str) -> FrozenSet[str]:
+        """Post-freeze PF-5B (D-114): the stems of every indexed chunk of one guide (with written-together compounds), built
+        once per source. The binding reads it to decide whether the guide draws a contrast ("final" versus "midterm")."""
+        cache = self.__dict__.setdefault("_vocabulary", {})
+        if source_id not in cache:
+            words: set = set()
+            for i, meta in enumerate(self.metadata):
+                if meta.get("source_id") == source_id:
+                    words |= stems(self.chunks[i])
+            cache[source_id] = frozenset(words)
+        return cache[source_id]
+
+    def bind(self, clause: str, source_id: str) -> Tuple[Optional[Binding], Optional[str]]:
+        """``bind`` against the registry record of ``source_id`` with that guide's vocabulary (D-114)."""
+        record = self.record(source_id)
+        return bind(clause, record, self.vocabulary(source_id) if record is not None else None)
+
     def structure(self, key: str) -> Any:
         return self.structure_by_key.get(key)
 
@@ -783,16 +935,52 @@ class GuideIndex:
         return None
 
     def conflict_problem(self, chunk_id: int, quote: str) -> Optional[str]:
-        """A registered source conflict on the chunk (PF-2 stamp) or in the quoted text (the registry's phrases)."""
+        """A registered source conflict in the quoted text (the registry's phrases), or a unit of a conflict-stamped chunk
+        (PF-2 stamp). Post-freeze PF-5B (D-114), claim-level isolation for a VALUE conflict (a phrase of the conflict states a
+        number: "maximum 30"): a stamped chunk's unit is blocked when it states a phrase of the conflict, a count or limit
+        word (``CLAIM_WORDS``), or a number with one of the conflict topic's words; any other unit of that chunk (an upload
+        step on the same page as the disputed quota) is not the disputed claim. Any other conflict (a recommendation whose
+        note covers the text around it) and a stamp not registered for the chunk's own source keep blocking the whole
+        chunk."""
         meta = self.metadata[chunk_id] if 0 <= chunk_id < len(self.metadata) else {}
-        topic = meta.get("source_conflict")
-        if isinstance(topic, str) and topic:
-            return "source conflict %r on the evidence chunk" % topic
         record = self.records.get(str(meta.get("source_id")))
-        for conflict in getattr(record, "conflicts", ()) or ():
+        conflicts = tuple(getattr(record, "conflicts", ()) or ())
+        for conflict in conflicts:
             if conflict.matches(quote):
                 return "source conflict %r in the quoted text" % conflict.topic
+        topic = meta.get("source_conflict")
+        if isinstance(topic, str) and topic:
+            own = next((c for c in conflicts if c.topic == topic), None)
+            if own is None or not value_conflict(own):
+                return "source conflict %r on the evidence chunk" % topic
+            if disputed_claim(own, quote):
+                return "source conflict %r: the unit states the disputed claim" % topic
         return None
+
+
+#: Post-freeze PF-5B (D-114): words that make a unit of a conflict-stamped chunk a claim about a count or a limit.
+CLAIM_WORDS = re.compile(r"\b(?:quotas?|count(?:s|ed|ing)?|limit(?:s|ed|ation)?|allowances?|yearly|annual(?:ly)?|per\s+(?:year|month|semester|term))\b",
+                         re.I)
+_NUMBER = re.compile(r"(?<![\w.])\d[\d,.]*")
+
+
+def value_conflict(conflict: Any) -> bool:
+    """True when a registered conflict disputes a value (one of its phrases states a number); only such a conflict is
+    isolated at claim level (D-114)."""
+    return any(re.search(r"\d", str(p)) for p in (getattr(conflict, "phrases", ()) or ()))
+
+
+def disputed_claim(conflict: Any, quote: str) -> bool:
+    """True when ``quote`` states the claim a registered value conflict disputes (D-114): one of its phrases, a count or limit
+    word, or a number (a list label is not one) together with a content word of one of its registered phrases."""
+    if conflict.matches(quote) or CLAIM_WORDS.search(quote or ""):
+        return True
+    body = _LEADING_LABEL.sub("", quote or "", count=1)
+    if not _NUMBER.search(body):
+        return False
+    phrase_words = {stem(w) for p in (getattr(conflict, "phrases", ()) or ()) for w in _TOKEN.findall(str(p))
+                    if not w[:1].isdigit() and w.lower() not in _STOP}
+    return bool(phrase_words & stems(body))
 
 
 #: Action verbs (stems) a procedure heading or a "how do I" clause may open with.
@@ -826,6 +1014,39 @@ def dangling_lead_in(text: Optional[str]) -> Optional[str]:
     text = (text or "").rstrip()
     if text.endswith(":") and not _FIGURE_LEAD.search(text):
         return "the last step announces content that does not follow it, so a step is missing"
+    return None
+
+
+#: Post-freeze PF-5B (D-114): words a printed unit ends with only when the extraction cut its sentence ("... and how much",
+#: "... before they are"). Verb particles ("log in", "sign out", "set up") are not among them.
+_DANGLING = frozenset("""
+a an the and or but nor of to for with by at from as than that which who whose whom how much many when where if whether
+is are was were be been being will can could should would may might must not their your its our his her this these those
+such very more less into onto about because while unless
+""".split())
+_TERMINAL_END = (".", "!", "?", ";", ":", ")", "]", "\"", "”", "'", "’")
+_PRINTED_LABEL = re.compile(r"^\s*(?:\d{1,2}|[A-Za-z])\s*[.)-]\s+")
+
+
+def cut_unit_problem(texts: Sequence[str]) -> Optional[str]:
+    """Post-freeze PF-5B (D-114): why a sequence of printed units (steps, items, prose) contains a unit the extraction cut,
+    or None: a unit that ends on a function word with no closing punctuation ("... and how much"), or a unit opening in
+    lower case after a unit with no closing punctuation (the rest of the previous unit read as a new item). A printed number
+    or letter label proves a new item ("3. view the gradebook categories"), so a labelled unit is never read as a
+    continuation."""
+    previous: Optional[str] = None
+    for raw in texts:
+        text = (raw or "").strip()
+        if not text:
+            continue
+        body = _LEADING_LABEL.sub("", text, count=1)
+        labelled = bool(_PRINTED_LABEL.match(text))
+        if previous is not None and not labelled and body[:1].islower() and not previous.endswith(_TERMINAL_END):
+            return "a unit opens in the middle of the previous unit's sentence, so the text is cut"
+        words = re.findall(r"[A-Za-z’']+", text)
+        if not text.endswith(_TERMINAL_END) and words and words[-1].lower() in _DANGLING:
+            return "a unit ends in the middle of a sentence, so the text is cut"
+        previous = text
     return None
 
 
@@ -918,6 +1139,9 @@ def structure_problem(structure: Any, binding: Binding, index: GuideIndex) -> Op
     problem = dangling_lead_in(structure.parts[-1].quote)
     if problem:
         return problem
+    problem = cut_unit_problem([b.text for b in structure.blocks if b.kind in ("item", "prose")])    # D-114
+    if problem:
+        return problem
     for part in structure.parts:
         conflict = index.conflict_problem(part.chunk_id, part.quote)
         if conflict:
@@ -937,13 +1161,17 @@ def structure_problem(structure: Any, binding: Binding, index: GuideIndex) -> Op
     named_context = context
     for name in sorted(SYSTEM_NAMES.get(structure.source_id, ()), key=len, reverse=True):
         named_context = _name_pattern(name).sub(" ", named_context)
-    if not asked & stems(named_context):
+    if not stated_terms(binding, asked, named_context):
         return "the structure's heading names neither the asked action nor its object"
     head = (binding.info or {}).get("object_head")
     if intent is GuideIntent.ENUMERATION and isinstance(head, str) and head and stem(head) not in stems(named_context):
         return "the list's heading does not name the asked set"
     for run in _labelled_runs(structure.blocks):
         problem = label_problem([_normal_label(b.label) for b in run])
+        if problem:
+            return problem
+    if structure.list_type == MIXED_PROCEDURE:                      # post-freeze PF-5B (D-114)
+        problem = mixed_problem(structure)
         if problem:
             return problem
     if intent is GuideIntent.PROCEDURE:
@@ -978,6 +1206,32 @@ def structure_problem(structure: Any, binding: Binding, index: GuideIndex) -> Op
     return "a %s ask is not answered by a recovered structure" % intent.value
 
 
+#: Post-freeze PF-5B (D-114): the list type of a lettered section whose parts are numbered sub-sections (``guide_structure``).
+MIXED_PROCEDURE = "mixed_procedure"
+
+
+def mixed_problem(structure: Any) -> Optional[str]:
+    """Why a recovered lettered section with numbered sub-sections ("A. Create New Scheduled Sessions:" over "1. Session
+    Details:", "2. Session Settings:" ...) is not one complete procedure, or None (D-114). The sub-sections are numbered
+    1..n in order (n >= 2), each has at least one unit, and the section ends at the next letter or at the end of the
+    document; the cut-unit, conflict, term and heading rules apply as to any structure."""
+    subs = [b for b in structure.blocks if b.kind == "heading"]
+    if len(subs) < 2:
+        return "a lettered section with fewer than two numbered sub-sections is not a mixed procedure"
+    if any(b.marker != "numbered" for b in subs):
+        return "a lettered section's sub-sections are not all numbered"
+    problem = label_problem([_normal_label(b.label) for b in subs])
+    if problem:
+        return problem
+    blocks = list(structure.blocks)
+    for i, block in enumerate(blocks):
+        if block.kind == "heading" and (i + 1 == len(blocks) or blocks[i + 1].kind == "heading"):
+            return "a numbered sub-section of the lettered section has no content"
+    if not structure.end.startswith(("next letter", "end of document")):
+        return "the lettered section's end is not proven (%s)" % structure.end
+    return None
+
+
 def procedure_problem(proc: Procedure, binding: Binding, index: GuideIndex) -> Optional[str]:
     """Why ``proc`` is not a provably complete answer to the procedure (or list) ask of ``binding``, or None."""
     if proc.source_id != binding.source_id:
@@ -985,6 +1239,9 @@ def procedure_problem(proc: Procedure, binding: Binding, index: GuideIndex) -> O
     if proc.problems:
         return proc.problems[0]
     problem = label_problem(proc.labels) or dangling_lead_in(proc.steps[-1].quote if proc.steps else None)
+    if problem:
+        return problem
+    problem = cut_unit_problem([s.quote for s in proc.steps])        # post-freeze PF-5B (D-114)
     if problem:
         return problem
     if proc.provenance not in RELIABLE_HEADINGS or not proc.heading:
@@ -1007,7 +1264,7 @@ def procedure_problem(proc: Procedure, binding: Binding, index: GuideIndex) -> O
     if missing_entities(binding, text):
         return "a named entity of the clause is not in the procedure"
     asked = set(binding.core) if binding.intent is GuideIntent.PROCEDURE and binding.core else set(binding.terms)
-    if not asked & stems(proc.heading or ""):
+    if not stated_terms(binding, asked, proc.heading or ""):
         return "the procedure heading names neither the asked action nor its object"
     return None
 
@@ -1083,6 +1340,17 @@ def structure_answer(structure: Any, binding: Binding) -> GuideAnswer:
                        structure.list_type)
 
 
+def cut_step_problem(index: GuideIndex, chunk_id: int) -> Optional[str]:
+    """Post-freeze PF-5B (D-114): why a statement taken from a procedure step chunk is cut, or None: the step is the last step
+    of a procedure the index records as continuing on a row read as a heading (its text stops mid-sentence)."""
+    proc = index.procedure_of_chunk(chunk_id) if isinstance(chunk_id, int) else None
+    if proc is None or not proc.steps or proc.steps[-1].chunk_id != chunk_id:
+        return None
+    if any("continues" in str(p) for p in proc.problems):
+        return "the statement is the last step of a procedure that continues on a row read as a heading, so it is cut"
+    return None
+
+
 def select_answer(binding: Binding, units: Sequence[Unit], index: GuideIndex, procedure_ranks: Mapping[str, int],
                   structure_ranks: Optional[Mapping[str, int]] = None) -> Tuple[Optional[GuideAnswer], List[Dict[str, Any]]]:
     """The evidence for the clause of ``binding`` from its guide, or None, with the candidates considered (ids, kinds
@@ -1098,7 +1366,7 @@ def select_answer(binding: Binding, units: Sequence[Unit], index: GuideIndex, pr
         asked = set(binding.core) if intent is GuideIntent.PROCEDURE and binding.core else set(binding.terms)
 
         def order(proc: Procedure) -> Tuple[int, int, int]:
-            return (-len(asked & stems(proc.heading or "")), procedure_ranks.get(proc.key, 10 ** 6), len(proc.steps))
+            return (-len(stated_terms(binding, asked, proc.heading or "")), procedure_ranks.get(proc.key, 10 ** 6), len(proc.steps))
 
         for proc in sorted(procs, key=order):
             problem = procedure_problem(proc, binding, index)
@@ -1117,7 +1385,7 @@ def select_answer(binding: Binding, units: Sequence[Unit], index: GuideIndex, pr
 
         def structure_order(s: Any) -> Tuple[int, int, int, int]:
             context = " ".join(filter(None, [s.heading, s.section_title]))
-            return (-len(asked & stems(context)), ranks.get(s.key, 10 ** 6), 0 if s.kind == "list" else 1, len(s.parts))
+            return (-len(stated_terms(binding, asked, context)), ranks.get(s.key, 10 ** 6), 0 if s.kind == "list" else 1, len(s.parts))
 
         for structure in sorted(candidates, key=structure_order):
             problem = structure_problem(structure, binding, index)
@@ -1137,7 +1405,7 @@ def select_answer(binding: Binding, units: Sequence[Unit], index: GuideIndex, pr
         if conflict:
             considered.append({"chunk_id": unit.chunk_id, "kind": unit.kind, "accepted": False, "reason": "source conflict"})
             continue
-        problem = statement_problem(binding, unit.quote)
+        problem = cut_step_problem(index, unit.chunk_id) or statement_problem(binding, unit.quote)
         considered.append({"chunk_id": unit.chunk_id, "kind": unit.kind, "accepted": problem is None, "reason": problem})
         if problem is None:
             return GuideAnswer(binding, FORM_STATEMENT, (Part(unit.chunk_id, unit.source_id, unit.page, unit.quote),)), considered
@@ -1198,13 +1466,13 @@ def verify_answer(clause: str, form: str, parts: Sequence[Tuple[int, str, Option
     record = index.record(str(source_id))
     if record is None:
         return "source %s is not in the registry" % source_id
-    binding, problem = bind(clause, record)
+    binding, problem = index.bind(clause, str(source_id))            # D-114: the same vocabulary the specialist bound with
     if binding is None:
         return problem
     if form == FORM_STATEMENT:
         if len(parts) != 1:
             return "a statement answer has exactly one quote"
-        return statement_problem(binding, parts[0][1])
+        return cut_step_problem(index, parts[0][0]) or statement_problem(binding, parts[0][1])
     if form == FORM_SECTION:                                   # post-freeze PF-3D (D-112)
         structure = index.structure(procedure_key or "")
         if structure is None or structure.source_id != source_id:
@@ -1312,4 +1580,7 @@ __all__ = [
     "has_guide_record", "is_authority_problem", "is_generic_introduction", "label_problem", "missing_entities", "missing_terms", "render_part",
     "procedure_problem", "read_intent", "select_answer", "statement_problem", "statement_units", "stem", "stems", "verify_answer",
     "verify_guide_findings",
+    # post-freeze PF-5B (D-114)
+    "CLAIM_WORDS", "MIXED_PROCEDURE", "ORGANIZATIONAL", "cut_step_problem", "cut_unit_problem", "disputed_claim", "mixed_problem", "stated_terms",
+    "value_conflict",
 ]

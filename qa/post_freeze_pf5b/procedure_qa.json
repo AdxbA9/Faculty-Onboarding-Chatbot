@@ -1,0 +1,81 @@
+{
+ "method": "Every served P1, held-out or fresh procedure, section or list: complete start and end, no missing middle step, printed order and hierarchy (numbered sub-sections, bullets), sub-step labels, cross-page continuity, no screenshot-only action, no cut unit (hand review in the verdict note).",
+ "answers": [
+  {
+   "id": "B10",
+   "forms": [
+    "procedure"
+   ],
+   "pages": [
+    4
+   ],
+   "parts": 3,
+   "all_quotes_verbatim_in_their_chunk": true,
+   "first_unit": "D- Checking Session Attendance: - From the Details & Actions panel, Click on attendance tool.",
+   "last_unit": " If you want to export the attendance sheet, click on export icon, and an excel sheet will be downloaded to your device.",
+   "verdict": "CORRECT",
+   "note": "Collaborate guide p4 'D- Checking Session Attendance', all three bullets in order: open the attendance tool from Details & Actions, select overview, export icon downloads an Excel sheet"
+  },
+  {
+   "id": "M01",
+   "forms": [
+    "section"
+   ],
+   "pages": [
+    1
+   ],
+   "parts": 3,
+   "all_quotes_verbatim_in_their_chunk": true,
+   "first_unit": "You can create discussions in two locations within your course:",
+   "last_unit": "low students to create discussions that appear in the list with the label Created by student. You can turn this setting ",
+   "verdict": "ACCEPTABLE BUT LIMITED",
+   "note": "communication guide p1: the two places to create a discussion and the plus sign/settings; the New Discussion page fields (p2: title, guidelines, show/hide) are not included"
+  },
+  {
+   "id": "M08",
+   "forms": [
+    "procedure"
+   ],
+   "pages": [
+    4
+   ],
+   "parts": 2,
+   "all_quotes_verbatim_in_their_chunk": true,
+   "first_unit": "Conversations: - Enable conversations: Select the item's Settings icon to open the panel with the item's details and inf",
+   "last_unit": "pper-right corner of an item's page or submissions page. A purple circle appears with the icon to indicate new activity.",
+   "verdict": "CORRECT",
+   "note": "communication guide p4 'Conversations': enable (item Settings icon > Allow class conversations) and access"
+  },
+  {
+   "id": "X03",
+   "forms": [
+    "section"
+   ],
+   "pages": [
+    9,
+    1
+   ],
+   "parts": 12,
+   "all_quotes_verbatim_in_their_chunk": true,
+   "first_unit": "Send an Announcement:",
+   "last_unit": "low students to create discussions that appear in the list with the label Created by student. You can turn this setting ",
+   "verdict": "ACCEPTABLE BUT LIMITED",
+   "note": "two clauses, each verified on its own: the complete short-guide announcement section (p9, correct) and the two discussion locations (p1, limited as in M01); no bridge text"
+  },
+  {
+   "id": "H03",
+   "forms": [
+    "procedure"
+   ],
+   "pages": [
+    2
+   ],
+   "parts": 4,
+   "all_quotes_verbatim_in_their_chunk": true,
+   "first_unit": "How to Send Grades to Banner as instructor?: 1. Search for the course by using the search bar at the top of the dashboar",
+   "last_unit": "can click again in View Detail to see the grade under the Banner Column after the approval from Chair and Dean as below:",
+   "verdict": "CORRECT",
+   "note": "grade transfer guide p2 'How to Send Grades to Banner as instructor?', all four printed steps verbatim and in order (step 4 points at a screenshot); the guide never distinguishes final from midterm grades and its registry record declares final grades (D-114 default modifier)"
+  }
+ ]
+}

@@ -1,0 +1,932 @@
+{
+ "method": "Per fresh held-out question: what the ACTIVE runtime did (guide scopes on), with the label's answerability and Plan F expectation, the hand verdict of a served answer and, for a fallback, the layer that stopped it (metrics.json rows).",
+ "questions": [
+  {
+   "id": "F01",
+   "question": "My course still shows as Private and a few students emailed saying they can't see it. How do I open it up to them?",
+   "category": "fresh_configuration",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    4
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F02",
+   "question": "how do I hide a module from students until week 5? already uploaded everything for the whole semester",
+   "category": "fresh_configuration",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F03",
+   "question": "where's the option to view the course as a student? want to double check what they actually see before the 1st lecture",
+   "category": "fresh_navigation",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_HANDOFF",
+   "guide_served": false,
+   "pages": [
+    5
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F04",
+   "question": "Is it possible to have a folder show up automatically on a set date, or does it have to be made visible manually each week?",
+   "category": "fresh_yes_no",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F05",
+   "question": "how do i schedule an anouncement for sunday 8am instead of posting it right away",
+   "category": "fresh_workflow",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F06",
+   "question": "Can an announcement also go to students' university email, or does it only show inside BB?",
+   "category": "fresh_yes_no",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    9,
+    139
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F07",
+   "question": "fastest way to message just 6 students who missed the midterm, not the whole section?",
+   "category": "fresh_workflow",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F08",
+   "question": "Where do I find messages students sent me through the course? Pretty sure I've missed a few.",
+   "category": "fresh_navigation",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "guide_served": false,
+   "pages": [
+    4
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F09",
+   "question": "Taking attendance in Blackboard for a section of 120 - how does that work? Do I really have to click every name each lecture?",
+   "category": "fresh_multi_part",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    1,
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F10",
+   "question": "ok and how do I mark someone late or excused instead of absent?",
+   "category": "fresh_follow_up",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    2,
+    4
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F11",
+   "question": "Does attendance taken in BB automatically count toward the grade? I don't want it affecting their totals.",
+   "category": "fresh_yes_no",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F12",
+   "question": "what should I do if I recorded attendance under the wrong date",
+   "category": "fresh_workflow",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F13",
+   "question": "How do I set up a Collaborate room for my Thursday lecture so students can join straight from the course page?",
+   "category": "fresh_workflow",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F14",
+   "question": "where do collab recordings go after the session ends? students keep asking me for the link",
+   "category": "fresh_navigation",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "guide_served": false,
+   "pages": [
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F15",
+   "question": "Can students download the session recordings or only stream them?",
+   "category": "fresh_yes_no",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "guide_served": false,
+   "pages": [
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F16",
+   "question": "students cant hear me in the virtual class, my mic shows on. what do i do??",
+   "category": "fresh_workflow",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F17",
+   "question": "How do I split students into breakout groups during a live session, and then pull everyone back to the main room?",
+   "category": "fresh_multi_part",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "guide_served": false,
+   "pages": [
+    2,
+    3
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F18",
+   "question": "I'd like a weekly discussion where students post short reading responses, graded out of 5. What's the best way to set that up?",
+   "category": "fresh_workflow",
+   "expected_source": "uos_blackboard_communication_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "guide_served": false,
+   "pages": [
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F19",
+   "question": "Is there a setting so students can't see classmates' posts until they've posted their own?",
+   "category": "fresh_configuration",
+   "expected_source": "uos_blackboard_communication_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "guide_served": false,
+   "pages": [
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F20",
+   "question": "and how can I see who hasn't posted in the discussion yet?",
+   "category": "fresh_follow_up",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F21",
+   "question": "how do I switch the BB gradebook to the grid view? the list-by-submission layout is driving me nuts",
+   "category": "fresh_navigation",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F22",
+   "question": "Where do I add a column in the gradebook for an in-class paper quiz that wasnt submitted online?",
+   "category": "fresh_workflow",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    6,
+    9
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F23",
+   "question": "Need the final exam to count 40% and coursework 60% in the overall grade. How do I set up the weighting?",
+   "category": "fresh_configuration",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    227,
+    223
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F24",
+   "question": "can I keep a grade column hidden from students until I'm done marking all my sections?",
+   "category": "fresh_yes_no",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    6,
+    10
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F25",
+   "question": "Posted the midterm grades too early by mistake. Can students already see them, and can I pull them back?",
+   "category": "fresh_what_happens",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F26",
+   "question": "how do i post grades",
+   "category": "fresh_ambiguous",
+   "expected_source": "uos_blackboard_gradebook_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    6
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F27",
+   "question": "BB lets me drop the lowest quiz score automatically - am I actually allowed to do that under the uni's assessment rules, or do I need the department to OK it first?",
+   "category": "fresh_policy_vs_system_trap",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F28",
+   "question": "Final grades are all done in Blackboard. What are the steps to get them into Banner?",
+   "category": "fresh_workflow",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F29",
+   "question": "Does the grade transfer thing pull the overall grade column automatically or do I pick which column goes to Banner? My total column has a custom name",
+   "category": "fresh_configuration",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    1,
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F30",
+   "question": "who approves the final grades after I submit them in the transfer dashboard - chair, dean, or registration?",
+   "category": "fresh_approval_authority",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    2,
+    3
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F31",
+   "question": "ok and if the chair rejects them, do I get notified? can I fix and resubmit or does it go back to square one",
+   "category": "fresh_follow_up",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F32",
+   "question": "what should I do if a few students show up with no grde in the grade transfer screen? they definitely have grades in BB",
+   "category": "fresh_workflow",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F33",
+   "question": "Since grades go straight into Banner the second I hit submit on the dashboard, how do I correct one I entered wrong?",
+   "category": "fresh_false_premise",
+   "expected_source": "uos_grade_transfer_dashboard_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F34",
+   "question": "Who do I contact to get an iThenticate account? Never had one and I need to check a paper before I submit it asap",
+   "category": "fresh_support_contact",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F35",
+   "question": "uploading to ithenticate - does it take word docs or only pdf? and is there a file size limit",
+   "category": "fresh_multi_part",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F36",
+   "question": "How do I exclude the bibliography and quoted text from the similarity report? My score is way inflated by the references",
+   "category": "fresh_configuration",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F37",
+   "question": "Can I run my PhD students' thesis chapters through iThenticate, or are we supposed to use Turnitin for student work?",
+   "category": "fresh_wrong_source_collision",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": "partial",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F38",
+   "question": "What's the normal teaching load for an associate prof here, and does it go down if I'm running a funded research project?",
+   "category": "fresh_multi_part",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "yes",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    96
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F39",
+   "question": "do office hours have to be in person on campus or can some be done online thru Collaborate?",
+   "category": "fresh_yes_no",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F40",
+   "question": "The handbook says associate profs need 2 Q1 papers a year to stay in good standing, right? Does a conference paper count toward that?",
+   "category": "fresh_false_premise",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F41",
+   "question": "if a student goes over the absence limit does blackboard auto-drop them or send the warning letter, or is that on me? and whats the limit again, 15%?",
+   "category": "fresh_policy_vs_system_trap",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1,
+    228
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F42",
+   "question": "How do I set up a journal so my research group can log weekly progress on the manuscript we're writing?",
+   "category": "fresh_wrong_source_collision",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    5
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F43",
+   "question": "is there any rule about collaborating with faculty at other universities on a project, like do I need approval first, or can I just start using collaborate with them",
+   "category": "fresh_wrong_source_collision",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    89,
+    259
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F44",
+   "question": "What's the policy on giving a student an Incomplete, and how do I actually enter an I in the gradebook without it messing up the overall total?",
+   "category": "fresh_multi_part",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F45",
+   "question": "Since iThenticate now scans student papers automatically when they submit in BB, where do I see the similarity reports for my class?",
+   "category": "fresh_false_premise",
+   "expected_source": "uos_ithenticate_guidelines",
+   "answerable": "partial",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F46",
+   "question": "A colleague told me we can drop physical office hours as long as we post a Collaborate link on the course page. Is that actually allowed?",
+   "category": "fresh_false_premise",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F47",
+   "question": "turnitin option missing from assignment settings, how to turn it on",
+   "category": "fresh_unsupported",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F48",
+   "question": "how do i record my collab session and then share the recording with my TA on Teams?",
+   "category": "fresh_multi_part",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "guide_served": false,
+   "pages": [
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F49",
+   "question": "grade deadline?",
+   "category": "fresh_ambiguous",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "yes",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    8,
+    223
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F50",
+   "question": "How many days of annual leave am I entitled to per year, and is there a way to schedule BB announcements so they still go out while I'm away?",
+   "category": "fresh_multi_part",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F51",
+   "question": "whats the max similarity % the uni accepts before I can send a paper to a journal? or does ithenticate just decide that for me",
+   "category": "fresh_policy_vs_system_trap",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F52",
+   "question": "ok and if the chair rejects my grades in the dashboard, do students see that in banner self service or not",
+   "category": "fresh_follow_up",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    2,
+    3
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F53",
+   "question": "Who can reopen attendance in Blackboard after the semester has already closed - registrar, IT, or the department?",
+   "category": "fresh_approval_authority",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F54",
+   "question": "Need to book flights for a conference in December. Where do I submit the travel request, and is there a yearly cap on conference funding for faculty?",
+   "category": "fresh_multi_part",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": "partial",
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    117,
+    118,
+    119
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F55",
+   "question": "my students say they cant see anything in the course. what did i do wrong",
+   "category": "fresh_ambiguous",
+   "expected_source": "uos_blackboard_faculty_short_guide",
+   "answerable": "yes",
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    2,
+    5,
+    10
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "F56",
+   "question": "how do I get a salary certificate from the HR portal? it keeps timing out on me",
+   "category": "fresh_unsupported",
+   "expected_source": null,
+   "answerable": "no",
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  }
+ ]
+}

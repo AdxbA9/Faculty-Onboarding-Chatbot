@@ -1,0 +1,606 @@
+{
+ "method": "Compact PF-5B metrics (four sets reported separately; full rows in the evaluation output, not committed).",
+ "kb": {
+  "primary_pages": 272,
+  "chunks": 15000,
+  "build_s": 23.79112670000177,
+  "corpus_key": "c8987b6079b11f39",
+  "groq_client_configured": false
+ },
+ "sets": {
+  "p0": 100,
+  "p1": 41,
+  "held_out": 50,
+  "fresh": 56
+ },
+ "p0": {
+  "core_guide": {
+   "questions": 37,
+   "plan_f_served": 21,
+   "fallback": 16,
+   "coverage_pct": 56.8,
+   "correct": 19,
+   "limited": 2,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": 100.0,
+   "served_ids": [
+    "G01",
+    "G03",
+    "G05",
+    "G08",
+    "G09",
+    "G10",
+    "G11",
+    "G12",
+    "G14",
+    "G15",
+    "G17",
+    "G18",
+    "G19",
+    "G22",
+    "G23",
+    "G24",
+    "G25",
+    "G28",
+    "G29",
+    "G30",
+    "G35"
+   ]
+  },
+  "all_guide_answers": {
+   "questions": 100,
+   "plan_f_served": 35,
+   "fallback": 65,
+   "coverage_pct": 35.0,
+   "correct": 32,
+   "limited": 3,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": 100.0,
+   "served_ids": [
+    "G01",
+    "G03",
+    "G05",
+    "G08",
+    "G09",
+    "G10",
+    "G11",
+    "G12",
+    "G14",
+    "G15",
+    "G17",
+    "G18",
+    "G19",
+    "G22",
+    "G23",
+    "G24",
+    "G25",
+    "G28",
+    "G29",
+    "G30",
+    "G35",
+    "P11",
+    "P14",
+    "P16",
+    "C01",
+    "C04",
+    "C05",
+    "C06",
+    "C07",
+    "C09",
+    "C11",
+    "C15",
+    "C16",
+    "C17",
+    "C29"
+   ]
+  },
+  "per_source": {
+   "uos_blackboard_faculty_short_guide": "8 of 13",
+   "uos_blackboard_gradebook_guide": "7 of 10",
+   "uos_grade_transfer_dashboard_guide": "3 of 6",
+   "uos_ithenticate_guidelines": "3 of 8"
+  }
+ },
+ "p1": {
+  "all": {
+   "questions": 41,
+   "plan_f_served": 7,
+   "fallback": 34,
+   "coverage_pct": 17.1,
+   "correct": 5,
+   "limited": 2,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": 100.0,
+   "served_ids": [
+    "A09",
+    "B05",
+    "B10",
+    "M01",
+    "M06",
+    "M08",
+    "X03"
+   ]
+  },
+  "p1_guide_questions": {
+   "questions": 28,
+   "plan_f_served": 6,
+   "fallback": 22,
+   "coverage_pct": 21.4,
+   "correct": 5,
+   "limited": 1,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": 100.0,
+   "served_ids": [
+    "A09",
+    "B05",
+    "B10",
+    "M01",
+    "M06",
+    "M08"
+   ]
+  }
+ },
+ "old_held_out": {
+  "all": {
+   "questions": 50,
+   "plan_f_served": 1,
+   "fallback": 49,
+   "coverage_pct": 2.0,
+   "correct": 1,
+   "limited": 0,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": 100.0,
+   "served_ids": [
+    "H03"
+   ]
+  },
+  "answerable": {
+   "questions": 15,
+   "plan_f_served": 1,
+   "fallback": 14,
+   "coverage_pct": 6.7,
+   "correct": 1,
+   "limited": 0,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": 100.0,
+   "served_ids": [
+    "H03"
+   ]
+  },
+  "coverage_all_pct": 2.0,
+  "coverage_answerable_pct": 6.7,
+  "before_after": {
+   "served_before": [],
+   "served_after": [
+    "H03"
+   ],
+   "answerable_served_before": 0,
+   "answerable_served_after": 1,
+   "changed": [
+    "H03"
+   ]
+  }
+ },
+ "fresh": {
+  "counts": {
+   "questions": 56,
+   "yes": 20,
+   "partial": 23,
+   "no": 13
+  },
+  "all": {
+   "questions": 56,
+   "plan_f_served": 0,
+   "fallback": 56,
+   "coverage_pct": 0.0,
+   "correct": 0,
+   "limited": 0,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": null,
+   "served_ids": []
+  },
+  "answerable": {
+   "questions": 20,
+   "plan_f_served": 0,
+   "fallback": 20,
+   "coverage_pct": 0.0,
+   "correct": 0,
+   "limited": 0,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": null,
+   "served_ids": []
+  },
+  "partial": {
+   "questions": 23,
+   "plan_f_served": 0,
+   "fallback": 23,
+   "coverage_pct": 0.0,
+   "correct": 0,
+   "limited": 0,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": null,
+   "served_ids": []
+  },
+  "not_answerable": {
+   "questions": 13,
+   "plan_f_served": 0,
+   "fallback": 13,
+   "coverage_pct": 0.0,
+   "correct": 0,
+   "limited": 0,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": null,
+   "served_ids": []
+  },
+  "coverage_all_pct": 0.0,
+  "coverage_answerable_pct": 0.0,
+  "should_serve_false_but_served": [],
+  "false_fallbacks_answerable": {
+   "F01": "aggregation (a clause unsupported)",
+   "F02": "routing (no specialist selected)",
+   "F04": "routing (no specialist selected)",
+   "F05": "routing (no specialist selected)",
+   "F06": "no guide system named (handbook path decided)",
+   "F10": "aggregation (a clause unsupported)",
+   "F13": "structure recovery / completeness",
+   "F15": "routing (no specialist selected)",
+   "F18": "routing (no specialist selected)",
+   "F19": "routing (no specialist selected)",
+   "F21": "aggregation (a clause unsupported)",
+   "F22": "grounding (an asked word the evidence does not print)",
+   "F26": "no guide system named (handbook path decided)",
+   "F28": "aggregation (a clause unsupported)",
+   "F30": "no guide system named (handbook path decided)",
+   "F34": "routing ambiguity",
+   "F35": "aggregation (a clause unsupported)",
+   "F38": "aggregation (a clause unsupported)",
+   "F49": "no guide system named (handbook path decided)",
+   "F55": "aggregation (a clause unsupported)"
+  }
+ },
+ "safety_groups": {
+  "conflict": {
+   "questions": 8,
+   "served": [],
+   "guide_served": []
+  },
+  "guide_contamination": {
+   "questions": 3,
+   "served": [
+    "P11"
+   ],
+   "guide_served": [
+    "P11"
+   ]
+  },
+  "handbook_contamination": {
+   "questions": 6,
+   "served": [],
+   "guide_served": []
+  },
+  "wrong_source": {
+   "questions": 22,
+   "served": [],
+   "guide_served": []
+  },
+  "appraisal": {
+   "questions": 1,
+   "served": [],
+   "guide_served": []
+  },
+  "known_hr": {
+   "questions": 1,
+   "served": [],
+   "guide_served": []
+  },
+  "annual_leave": {
+   "questions": 1,
+   "served": [],
+   "guide_served": []
+  },
+  "authority": {
+   "questions": 1,
+   "served": [],
+   "guide_served": []
+  },
+  "incomplete_procedure": {
+   "questions": 2,
+   "served": [
+    "C29"
+   ],
+   "guide_served": [
+    "C29"
+   ]
+  },
+  "policy_boundary": {
+   "questions": 2,
+   "served": [],
+   "guide_served": []
+  },
+  "unsupported": {
+   "questions": 2,
+   "served": [],
+   "guide_served": []
+  }
+ },
+ "held_out_traps": {
+  "held_out_policy_vs_system_trap": {
+   "served": [],
+   "guide_served": []
+  },
+  "held_out_wrong_source_collision": {
+   "served": [],
+   "guide_served": []
+  },
+  "held_out_unsupported": {
+   "served": [],
+   "guide_served": []
+  },
+  "held_out_yes_no_false_premise": {
+   "served": [],
+   "guide_served": []
+  }
+ },
+ "wrong_source": {
+  "cases": 60,
+  "pf2_cases": 16,
+  "pf4_cases": 20,
+  "pf5b_cases": 24,
+  "plan_f_served": 10,
+  "wrong_source_acceptances": [],
+  "violations": []
+ },
+ "frozen_192": {
+  "served": 55,
+  "served_ids_equal_to_i9": true,
+  "questions_changed": [
+   "T07"
+  ],
+  "shadow_identical": 192,
+  "false_acceptances": []
+ },
+ "shadow": {
+  "questions": 247,
+  "identical_to_direct_legacy": 247,
+  "visible_mismatches": 0,
+  "per_set_mismatches": {
+   "p0": 0,
+   "p1": 0,
+   "held_out": 0,
+   "fresh": 0
+  }
+ },
+ "control_scopes_off_vs_on": {
+  "changed": 47,
+  "unexplained": [
+   "H09",
+   "H11",
+   "H12",
+   "H27"
+  ]
+ },
+ "control_explained": {
+  "H09": "D-114 B: kept by Teaching, not found (was handed to Institutional); same legacy answer",
+  "H11": "D-114 B: kept by Teaching, not found (was handed to Institutional); same legacy answer",
+  "H12": "D-114 B: kept by Research, not found (was handed to Institutional); same legacy answer",
+  "H27": "D-114 C: 'ithentcate' routed to the iThenticate guide, not found; same legacy answer"
+ },
+ "determinism": {
+  "repeat_records": 480,
+  "differences": []
+ },
+ "llm": {
+  "plan_f_llm_calls_max": 0,
+  "direct_llm_calls_max": 0
+ },
+ "exceptions": 0,
+ "legacy": {
+  "minimal": true,
+  "cache_untouched": true,
+  "fresh_process": {
+   "mode": "legacy",
+   "questions": 16,
+   "minimal_diagnostics": 16,
+   "exceptions": 0,
+   "watched_modules_imported": [],
+   "runtime_cache_created": false
+  }
+ },
+ "adversarial_review": {
+  "lenses": [
+   "false acceptance",
+   "overfitting and genericity",
+   "typo correction and routing",
+   "code correctness and determinism"
+  ],
+  "findings": 31,
+  "verified_real": 17,
+  "verified_severity": {
+   "low": 5,
+   "medium": 6,
+   "high": 6
+  },
+  "not_reproduced": 14,
+  "finding_titles": [
+   "'collab'/'colab'/misspelled 'colaborate' used as a verb is turned into the product name, and the Collaborate guide then serves a wrong verified answer",
+   "A physical 'collab room' is corrected to 'Collaborate room' and a non-system question gets a verified Collaborate guide answer",
+   "Distance-2 correction turns another real product (Blackbaud) into Blackboard and serves the Blackboard access procedure",
+   "The D-114 organizational guard covers only 'where' asks with a fixed place-noun list, so office, team and role asks are treated as software and lose their Institutional handoff",
+   "The corrected question text, not the typed text, is stored in served result items and sub-questions",
+   "Contrast-modifier tolerance drops the predicate of yes/no questions ('required', 'available', 'optional'), so obligation and availability questions get unrelated 'can' sentences, including policy-type questions",
+   "Contrast tolerance drops a marked modifier the guide states itself or never mentions ('group', 'midterm'), flipping the guide's own exception",
+   "The -ment/-tion/-sion derivation root conflates LMS object nouns with unrelated verbs (discussion and discuss, assignment and assign)",
+   "The container rule binds 'course' when it owns the asked object ('the title of my Blackboard course'), so a gradebook-item limit answers a course question",
+   "The synonym groups plus the extended SAME_ACTION let 'remove (image)' answer 'delete (course)'",
+   "_NON_CRITICAL removes scope restrictors ('specific', 'particular', 'certain', 'exact') and 'once' became a stop word, so per-student questions get whole-class answers",
+   "D-114 promises a cut unit is never served, but statement units that start or end mid-sentence are still served",
+   "Contrast-modifier tolerance ignores the word's role: 'required'/'available'/'group' dropped when they ARE the asked predicate or object, serving wrong answers",
+   "A silent guide is treated as general: 'midterm' (and 'final') tolerated when the guide names neither side, so a midterm ask gets the final-grade procedure",
+   "Container rule treats destination/source prepositions ('to/into/for/from my Blackboard course') as a locator and drops 'course', serving answers for a different action target",
+   "Synonym groups widen term coverage, but 'modify'/'pick'/'display'/'begin' are not in ACTION_VERBS, so the heading-action mismatch guard is skipped for them",
+   "'once'/'until' made stop words but not mapped into the before/after polarity guard, so a 'once' ask is answered by a 'before' statement",
+   "Physical/organizational guard applies only to LOCATION intent: physical asks phrased as procedure, yes/no or selection bind to a guide and lose their Institutional handoff",
+   "Mixed-procedure end detection misses dash-lettered next sections ('B- ...'), so section A is served with section B's steps",
+   "System-name corrector rewrites real English words and physical 'collab rooms' into product names",
+   "Non-critical list drops meaning-bearing qualifiers such as 'current' (grade) and 'specific' (students)",
+   "Claim-level conflict isolation now serves units of the journal-stamped chunks, which the registry record says must not be served",
+   "Contrast-modifier tolerance drops BOTH sides when a guide names neither, so the grade-transfer procedure is served for \"midterm\", \"group\" and \"optional\" grades",
+   "\"until\"/\"once\" were made stop words but the new polarity guard only knows before/after, so opposite-condition statements are now served for \"until\" asks",
+   "-ment/-tion derivation root lets any \"assign/assigned\" state \"assignment\" (and depart/department, except/exception, select/selection), so irrelevant units are served",
+   "No measured generalisation: PF-5B changes zero served outcomes on the fresh set while it gained only on the PF-4 diagnostic wording",
+   "Several list entries appear only in fresh-set wording, and the lists were written after the fresh set was frozen in the same session",
+   "_NON_CRITICAL removes meaning-bearing restrictors unconditionally (specific, particular, certain, whole, entire, already, quick)",
+   "Claim-level conflict isolation is fitted to the one count-type conflict and reads topic words from an internal identifier",
+   "Case-specific carve-out in the physical-place regex for \"Grade Center\", a page name no enabled guide prints",
+   "NOT_TYPOS is hand-curated: most entries can never be reached"
+  ],
+  "resolution": "every reproduced issue fixed by refusing more (rules removed or narrowed); no rule widened in response",
+  "worst_case_differential": {
+   "method": "PF-4 (HEAD) versus final PF-5B select_answer with every chunk of each named guide retrieved, over the P0, P1, PF-4 held-out, wrong-source and reviewer probe questions (fresh set excluded)",
+   "questions": 1943,
+   "newly_accepted": 12,
+   "lost": 25,
+   "changed_quote": 12,
+   "newly_accepted_hand_review": {
+    "correct": 11,
+    "acceptable_but_limited": 1,
+    "wrong": 0,
+    "note": "limited: 'hi, how do I create a discussion in Blackboard? thanks' gets the two creation entry points (the PF-4 M01 answer)"
+   },
+   "lost_are_refusals": "cut sections (a page-break item), statements that continue an unstated step ('You will be redirected ...', several of them PF-4 false acceptances such as 'Where is the Blackboard administrator?'), the cut last step of a flagged procedure, polarity (an 'after' statement for a 'before' ask), cut headings and trailing list labels",
+   "newly_accepted_questions": [
+    "How do I send my final course grades to Banner through the grade transfer dashboard?",
+    "how do I upload a document to ithentcate",
+    "how do I send grades to baner",
+    "How do I send final grades to Banner?",
+    "How do I send an announcement to my students in Blackbord?",
+    "Can learners see private courses in Blackboard?",
+    "Are virtual classes weekly in Blackboard Collaborate?",
+    "How do I transfer final grades to Banner?",
+    "ok so how do I send an announcement in Blackboard?",
+    "hi, how do I create a discussion in Blackboard? thanks",
+    "How do I access Blackbord?",
+    "Where is the baner in Blackboard?"
+   ],
+   "changed_note": "worst-case yes/no probes with generic terms pick another unit; weak at PF-4 and now, never served by the evaluation sets"
+  },
+  "later_findings": [
+   "application smoke: a software 'where' question routed by the Coordinator straight to Institutional Navigation escaped the ownership rule -> routing complement (guide registry only)",
+   "after the routing complement: the routing record still named Institutional Navigation in the chip -> record updated",
+   "after the routing complement: two statements reached by it were not self-contained (a cut last step, a 'You will be redirected' consequence) -> two statement refusals"
+  ]
+ },
+ "latency_in_evaluation_run_contended": {
+  "active": {
+   "all": {
+    "n": 247,
+    "p50_ms": 1489.8,
+    "p95_ms": 2983.4,
+    "max_ms": 3948.0
+   },
+   "guide_served": {
+    "n": 43,
+    "p50_ms": 576.4,
+    "p95_ms": 1899.2,
+    "max_ms": 2328.9
+   },
+   "guide_scope_fallback": {
+    "n": 126,
+    "p50_ms": 1943.4,
+    "p95_ms": 3194.6,
+    "max_ms": 3948.0
+   },
+   "p1_served": {
+    "n": 7,
+    "p50_ms": 563.8,
+    "p95_ms": 1115.8,
+    "max_ms": 1115.8
+   }
+  },
+  "guide_retrieval_ms_per_clause": {
+   "n": 123,
+   "p50_ms": 567.2,
+   "p95_ms": 1112.7,
+   "max_ms": 1160.7
+  },
+  "guide_selection_ms_per_clause": {
+   "n": 123,
+   "p50_ms": 2.3,
+   "p95_ms": 10.4,
+   "max_ms": 16.9
+  }
+ },
+ "performance_idle_before_after": {
+  "pf4": {
+   "code": "head",
+   "questions": 191,
+   "cached_kb_startup_s": 23.6,
+   "guide_index_build_ms": {
+    "n": 5,
+    "p50_ms": 19.5,
+    "p95_ms": 37.4
+   },
+   "guide_retrieval_ms_per_clause": {
+    "n": 113,
+    "p50_ms": 575.3,
+    "p95_ms": 1133.8
+   },
+   "guide_selection_ms_per_clause": {
+    "n": 113,
+    "p50_ms": 1.3,
+    "p95_ms": 7.0
+   },
+   "served_guide_answer_wall_ms": {
+    "n": 40,
+    "p50_ms": 590.5,
+    "p95_ms": 2296.1
+   },
+   "guide_scope_fallback_wall_ms": {
+    "n": 110,
+    "p50_ms": 1978.2,
+    "p95_ms": 3223.3
+   }
+  },
+  "pf5b": {
+   "code": "new",
+   "questions": 191,
+   "cached_kb_startup_s": 23.4,
+   "guide_index_build_ms": {
+    "n": 5,
+    "p50_ms": 20.1,
+    "p95_ms": 30.5
+   },
+   "guide_retrieval_ms_per_clause": {
+    "n": 115,
+    "p50_ms": 564.4,
+    "p95_ms": 1124.4
+   },
+   "guide_selection_ms_per_clause": {
+    "n": 115,
+    "p50_ms": 2.4,
+    "p95_ms": 9.7
+   },
+   "served_guide_answer_wall_ms": {
+    "n": 43,
+    "p50_ms": 581.9,
+    "p95_ms": 1929.3
+   },
+   "guide_scope_fallback_wall_ms": {
+    "n": 109,
+    "p50_ms": 1916.2,
+    "p95_ms": 3214.1
+   }
+  }
+ },
+ "total_script_s": 2581.4691887999943
+}
