@@ -524,7 +524,8 @@ def guide_evidence_problem(clause: str, quote: str, finding: Any, chunks: Sequen
     from .source_scopes import is_guide_meta, procedure_problem, source_authority_problem
     if not is_guide_meta(cmeta):
         return None
-    problem = source_authority_problem(clause, cmeta)
+    from .guide_inference import inferred_sources                 # post-freeze PF-5C (D-115): recomputed from the clause
+    problem = source_authority_problem(clause, cmeta, inferred_sources(clause))
     if problem is None and not _guides.has_guide_record(finding):
         problem = procedure_problem(clause, quote or "", chunks[cid] if cid < len(chunks) else "", cmeta)
         if problem is None:
@@ -797,15 +798,25 @@ class PlanFRuntime:
 
     def select_registry(self, text: str) -> Tuple[SpecialistRegistry, Dict[str, Any]]:
         """The registry a question runs on (post-freeze PF-3B): the guide-enabled one only when the question names the
-        system an approved guide documents; every other question runs on the I-9 specialists, so no guide chunk can
-        reach a handbook-only question. Deterministic; the record holds source ids only."""
+        system an approved guide documents, or (PF-5C, D-115) guide inference accepts a candidate guide for it; every other
+        question runs on the I-9 specialists, so no guide chunk can reach a handbook-only question. Deterministic; the
+        record holds source ids, signal keys and scores only."""
         if self.guide_registry is None:
             return self.registry, {"enabled": False, "selected": False, "named": []}
-        from .source_scopes import guide_sources_named
+        from .source_scopes import guide_sources_named, usable_record
         named = guide_sources_named(text, self.guide_records)
-        if not named:
-            return self.registry, {"enabled": True, "selected": False, "named": []}
-        return self.guide_registry, {"enabled": True, "selected": True, "named": named}
+        if named:
+            return self.guide_registry, {"enabled": True, "selected": True, "named": named}
+        # post-freeze PF-5C (D-115): a question that names no system runs on the guide registry only when guide inference
+        # accepts a candidate guide for the question or one of its clauses (as the Coordinator splits it); the record holds
+        # signal keys, scores and source ids only
+        from .agents.coordinator import analyze
+        from .guide_inference import infer_question
+        inference = infer_question(text, analyze(text).clauses if text else ())
+        usable = {r.source_id for r in self.guide_records if usable_record(r)}
+        inferred = [s for s in inference.candidates if s in usable]
+        record = {"enabled": True, "selected": bool(inferred), "named": [], "inferred": inferred, "inference": inference.to_dict()}
+        return (self.guide_registry if inferred else self.registry), record
 
     @property
     def missing_specialists(self) -> List[str]:
@@ -841,7 +852,12 @@ class PlanFRuntime:
                                                                          "kinds": [r["kind"] for r in spelling]})
         state.registry, state.guide = self.select_registry(state.routing_text)
         if state.guide.get("enabled"):
-            state.add("source_scope", "guides" if state.guide["selected"] else "handbook", detail=dict(state.guide))
+            state.add("source_scope", "guides" if state.guide["selected"] else "handbook",
+                      detail={k: v for k, v in state.guide.items() if k != "inference"})
+            inference = state.guide.get("inference")
+            if inference:                                         # post-freeze PF-5C (D-115): candidates, signals, scores, margin
+                state.add("guide_inference", "accepted" if inference["accepted"] else "refused:%s" % inference["lead"]["reason"],
+                          detail=dict(inference["lead"], clauses=len(inference["parts"])))
         if not state.text:
             state.add("coordinator", "skipped:empty")
             return state.finish(PlanFOutcome.NOT_APPLICABLE, "empty question")
@@ -868,6 +884,7 @@ class PlanFRuntime:
         })
         from . import plan_f_aggregation as _aggregation          # imported here: that module builds on this one's guards
         from . import plan_f_routing as _routing                  # phase I-6: one owner per request clause before any specialist runs
+        decision = self._inferred_owner(state, decision)          # post-freeze PF-5C (D-115)
         t = time.perf_counter()
         decision, routing = _routing.refine(decision)
         state.timings["routing_ms"] = (time.perf_counter() - t) * 1000.0
@@ -908,7 +925,12 @@ class PlanFRuntime:
         from .source_scopes import guide_sources_named
         policy = self.guide_index.policy
         owners: set = set()
-        for source_id in guide_sources_named(clause, self.guide_records):
+        sources = guide_sources_named(clause, self.guide_records)
+        inferred = False
+        if not sources:                                           # post-freeze PF-5C (D-115): an inferred system
+            from .guide_inference import inferred_sources
+            sources, inferred = list(inferred_sources(clause)), True
+        for source_id in sources:
             if source_id in policy.get(SpecialistId.INSTITUTIONAL.value, frozenset()):
                 continue
             binding, _problem = self.guide_index.bind(clause, source_id)
@@ -924,7 +946,56 @@ class PlanFRuntime:
             # the routing record names the specialist that now owns the clause (the chip and the diagnostics read it)
             state.routing = dataclasses.replace(state.routing, final_specialists=(owner.value,),
                                                 owners_after=tuple((owner.value,) for _ in state.routing.owners_after))
-        state.add("software_navigation", "reassigned", detail={"from": SpecialistId.INSTITUTIONAL.value, "to": owner.value})
+        state.inferred_owner = inferred                           # D-115: then only a verified guide answer may be served
+        detail = {"from": SpecialistId.INSTITUTIONAL.value, "to": owner.value}
+        if inferred:
+            detail["inferred"] = True
+        state.add("software_navigation", "reassigned", detail=detail)
+        return moved
+
+    # ---- post-freeze PF-5C (D-115): a system question the Coordinator gives to no specialist --------------------------
+    def _inferred_owner(self, state: "_Attempt", decision: CoordinatorDecision) -> CoordinatorDecision:
+        """A one-clause decision with no specialist (no domain cue matched) is given to the specialist that owns the guide
+        inferred for the question: the Coordinator's own system-owner rule ("system access question: blackboard guides are
+        owned by teaching") applied to an inferred system. Guide inference must accept candidate guides, one of them must
+        bind the clause with a non-contact ask, and they must be approved for exactly one specialist other than
+        Institutional Navigation. Only a verified guide answer may then be served (``_single_clause``); otherwise Plan F
+        declines exactly as before. Any other decision is returned unchanged; the trace records the specialist id only."""
+        guide = state.guide or {}
+        md = decision.metadata or {}
+        if not guide.get("inferred") or self.guide_index is None or decision.selected_specialists or decision.subtasks:
+            return decision
+        if md.get("complexity") != "unknown" or md.get("journey"):
+            return decision
+        from .agents import coordinator as _coordinator
+        analysis = _coordinator.analyze(state.routing_text)
+        if analysis.greeting or analysis.journey or len(analysis.clauses) != 1:
+            return decision
+        from .guide_inference import inferred_sources
+        clause = analysis.question
+        policy = self.guide_index.policy
+        owners: set = set()
+        for source_id in inferred_sources(clause):
+            binding, _problem = self.guide_index.bind(clause, source_id)
+            if binding is None or binding.intent is _guides.GuideIntent.CONTACT:
+                continue
+            owners |= {sid for sid, ids in policy.items() if source_id in ids and sid != SpecialistId.INSTITUTIONAL.value}
+        if len(owners) != 1:
+            return decision
+        owner = owners.pop()
+        limits = md.get("limits") or {}
+        specialist_limit, task_limit = int(limits.get("specialists", 3)), int(limits.get("subtasks", 3))
+        tasks, uncovered = _coordinator._decompose(analysis, [owner], min(specialist_limit, task_limit))
+        if len(tasks) != 1 or (tasks[0].context or {}).get("focus_clauses") != [clause]:
+            return decision
+        complexity = _coordinator._complexity(analysis, [owner])
+        moved = dataclasses.replace(
+            decision, selected_specialists=[SpecialistId.parse(owner)], subtasks=tasks,
+            requires_synthesis=bool(analysis.is_multipart), confidence=_coordinator._confidence(analysis, [owner], True),
+            reason="inferred system question: the inferred guide is owned by %s (D-115)" % owner,
+            metadata=_coordinator._metadata(analysis, complexity, [], uncovered, specialist_limit, task_limit))
+        state.inferred_owner = True
+        state.add("guide_inference", "owner_assigned", detail={"to": owner})
         return moved
 
     # ---- the pass-through path (phases I-1 to I-4): one specialist, one request clause ---------------------------
@@ -966,6 +1037,11 @@ class PlanFRuntime:
             "missing": len(findings.missing), "limitations": len(findings.limitations), "specialist_ms": findings.ms,
             "summary": (findings.summary or "")[:160],
         })
+        if state.inferred_owner and not ((findings.metadata or {}).get("guide_path") or {}).get("answered"):
+            # post-freeze PF-5C (D-115): a decision guide inference changed serves only a verified guide answer
+            state.add("guide_inference", "declined", detail={"specialist": sid.value})
+            return state.finish(PlanFOutcome.NOT_APPLICABLE, "D-115: the decision was changed by guide inference and the guide path did not "
+                                "answer; Plan F declines as before", specialist=sid.value, status=status, dispatched=dispatched)
         if findings.handoff_requests:                             # phase I-6: one bounded handoff round, then the aggregator decides
             from . import plan_f_aggregation as _aggregation
             return self._handoff_round(state, decision, md, _aggregation.request_clauses(decision), dispatched, specialist=sid.value, status=status)
@@ -1274,6 +1350,7 @@ class _Attempt:
         self.handoff_outcome: Optional[str] = None
         self.registry: Any = None                                 # post-freeze PF-3B: the registry this question runs on
         self.guide: Optional[Dict[str, Any]] = None              # post-freeze PF-3B: the source selection record
+        self.inferred_owner = False                               # post-freeze PF-5C (D-115): the owner was chosen by guide inference
 
     def ms(self) -> float:
         return (time.perf_counter() - self.started) * 1000.0

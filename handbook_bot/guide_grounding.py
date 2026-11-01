@@ -283,12 +283,14 @@ class Binding:
     alternatives: Tuple[Tuple[str, Tuple[str, ...]], ...] = ()   # term -> the compound stems it forms with a neighbour
     tolerated: Tuple[str, ...] = ()       # contrast modifiers the guide never contrasts (not terms)
     polarity: Tuple[str, ...] = ()        # "before" / "after" as asked
+    # post-freeze PF-5C (D-115)
+    inferred: bool = False                # the clause names no system; guide_inference made this guide a candidate
 
     def to_dict(self) -> Dict[str, Any]:
         """JSON-serialisable; the registry's system names and counts only (no question text, no word of it)."""
         return {"source_id": self.source_id, "intent": self.intent.value, "names_bound": list(self.names_bound), "actor_bound": self.actor_bound,
                 "terms": len(self.terms), "core": len(self.core), "entities": len(self.entities), "minimum": self.minimum, "maximum": self.maximum,
-                "tolerated": len(self.tolerated)}
+                "tolerated": len(self.tolerated), "inferred": self.inferred}
 
     def equivalents(self, term: str) -> FrozenSet[str]:
         """The stems that state ``term`` (D-114): itself, its synonym group and the compounds it forms in the clause."""
@@ -296,14 +298,78 @@ class Binding:
         return frozenset((term,) + tuple(alts)) | _SYNONYMS.get(term, frozenset())
 
 
+#: Post-freeze PF-5C (D-115): a faculty group named after a recipient preposition is a recipient, not the asker.
+_GROUP_ACTOR = re.compile(r"^(?:faculty|instructors?|teachers?|professors?|lecturers?)", re.I)
+_RECIPIENT = re.compile(r"\b(?:to|for|with|among|between)\s+(?:(?:all|other|the|my|our|fellow|every|each)\s+)*$", re.I)
+#: Post-freeze PF-5C (D-115): a procedure ask that asks to SEE something ("How do I see my report?", "So, how can I find ...").
+_PERCEPTION_WORDS = frozenset({"see", "find", "look", "read"})
+_SEE_ASK = re.compile(r"\b(?:how|where)\b[^?]*?\b(?:do|does|can|could|would|should|will|to)\s+(?:i\s+|we\s+|you\s+|one\s+)?(see|find|look|read)\b",
+                      re.I)
+#: ... and the heading actions that answer it (access, view, check, open, find, navigate, search).
+_ACCESS_ACTIONS = frozenset(stem(w) for w in "access view check open find navigate search see review".split())
+#: Post-freeze PF-5C (D-115): a negated ask ("if I do not want automatic zeros") and the negation its evidence must state.
+_NEGATION = re.compile(r"\bnot\b|n['’]t\b|\bnever\b|\bno\s+longer\b|\bcannot\b", re.I)
+_NEGATION_EVIDENCE = re.compile(r"\bnot\b|n['’]t\b|\bnever\b|\bno\s+longer\b|\bcannot\b|\bdisabl\w*|\bprevent\w*|\bhid(?:e|den|ing)\b|"
+                                r"\bexclud\w*|\boff\b|\bclear\b|\bremov\w*|\bdelet\w*|\bonly\b", re.I)
+#: Post-freeze PF-5C (D-115): the roles a clause names, and a procedure printed for one role ("... as Chair/Dean?").
+_ROLE_WORD = re.compile(r"\b(chairs?|chairperson|deans?|heads?|instructors?|faculty)\b", re.I)
+_HEADING_ROLE = re.compile(r"\bas\s+(?:an?\s+|the\s+)?((?:chair\w*|deans?|heads?|instructors?|faculty)(?:\s*/\s*\w+)*)", re.I)
+#: Post-freeze PF-5C (D-115): a statement about what students do, and one about what the asker (you, an instructor) may do.
+_STUDENT_CLAIM = re.compile(r"\b(?:students?|learners?|participants?)\s+(?:\w+\s+)?(?:can|cannot|can't|can’t|may|must|should|will|see|view|are|"
+                            r"have|do|does|need)\b", re.I)
+_ASKER_CLAIM = re.compile(r"\b(?:you|instructors?|faculty|teachers?|the\s+instructor|moderators?)\s+(?:\w+\s+)?(?:can|cannot|can't|can’t|may|"
+                          r"must|will\s+be\s+able|are\s+able|are\s+not\s+able)\b", re.I)
+#: Post-freeze PF-5C (D-115): the sentences and bullets of a quote (a bullet glyph the extraction kept inside a unit splits it).
+_SEGMENT = re.compile(r"(?<=[.!?])\s+|[•▪■●‣⁃]")
+#: ... and the heading actions that CHANGE something; a procedure of one never answers the other.
+_MODIFYING = frozenset(stem(w) for w in """
+set create add delete edit send change assign upload post transfer approve remove reset submit publish schedule allow enable hide mark
+import copy move
+""".split())
+#: ... of which these remove or hide something.
+_DESTRUCTIVE = frozenset(stem(w) for w in "delete remove hide clear reset disable".split())
+#: ... and the heading nouns that name no object of their own ("Download Workflow", "Steps").
+_GENERIC_HEADING_NOUNS = frozenset("workflow workflows process procedure procedures step steps instruction instructions guide overview tips".split())
+#: Post-freeze PF-5C (D-115): a yes/no ask about what students do, and a statement about what students can do.
+_STUDENT_SUBJECT = re.compile(r"\b(?:do|does|can|could|will|would|should|may|might|must|are|is)\s+(?:the\s+|my\s+|our\s+|a\s+|all\s+)?"
+                              r"(?:students?|learners?|participants?)\b", re.I)
+_STUDENT_STATEMENT = re.compile(r"^\s*(?:[^:]{1,120}:\s+)?(?:\d{1,2}[.)]\s+|[-–•]\s+)?(?:the\s+)?(?:students?|learners?|participants?)\s+"
+                                r"(?:can|cannot|can't|can’t|may|must|should|will|are|do|does|need)\b", re.I)
+#: Post-freeze PF-5C (D-115): the noun phrase a "where" ask asks about ("Where is the student grid in ...?", "Where can I
+#: find the similarity report for ...?"); its last word before a preposition is the object the evidence must place.
+_WHERE_OBJECT = re.compile(r"\bwhere\b.*?\b(?:is|are|was|were|find|see|locate|access|view|open|check)\b\s+(?P<object>[^?.!]*)", re.I)
+#: ... also "Where do due dates appear?" (the subject of appear/show/display is the object)
+_WHERE_APPEARS = re.compile(r"\bwhere\s+(?:do|does|did|will|would|can|could)\s+(?P<object>[^?.!]*?)\s+(?:appear|show\s+up|show|display|go)\b", re.I)
+
+
+def _location_head(blanked: str) -> Optional[str]:
+    """The stem of the object a location clause asks about, or None when the clause does not read as "where is/find X"."""
+    m = _WHERE_APPEARS.search(blanked or "") or _WHERE_OBJECT.search(blanked or "")
+    if not m:
+        return None
+    words: List[str] = []
+    for tok in _TOKEN.findall(m.group("object")):
+        if tok.lower() in _CORE_END:
+            if words:
+                break
+            continue
+        if tok.lower() not in _STOP and tok.lower() not in _FRAME:
+            words.append(tok)
+    return stem(words[-1]) if words else None
+
+
 _MIN_WORDS = re.compile(r"\b(?:minimum|min|least|smallest|shortest)\b", re.I)
 _MAX_WORDS = re.compile(r"\b(?:maximum|max|most|largest|longest|biggest|limit|limits|limited)\b", re.I)
 
 
-def bind(clause: str, record: Any, vocabulary: Optional[FrozenSet[str]] = None) -> Tuple[Optional[Binding], Optional[str]]:
+def bind(clause: str, record: Any, vocabulary: Optional[FrozenSet[str]] = None,
+         inferred: bool = False) -> Tuple[Optional[Binding], Optional[str]]:
     """``(binding, None)`` when ``record`` may answer ``clause`` under D-111, else ``(None, reason)``. Never raises for
     ordinary input; the reason is a fixed phrase plus ids (no question text). ``vocabulary`` (post-freeze PF-5B, D-114) is
-    the stem set of the whole guide (``GuideIndex.vocabulary``): without it every contrast modifier is a term (strict)."""
+    the stem set of the whole guide (``GuideIndex.vocabulary``): without it every contrast modifier is a term (strict).
+    ``inferred`` (post-freeze PF-5C, D-115) is passed only by ``GuideIndex.bind`` after ``guide_inference`` made the guide a
+    candidate for a clause that names no system: it skips the system-name check and nothing else (every word the clause
+    asks is still a term the evidence must state)."""
     text = (clause or "").strip()
     if not text:
         return None, "empty clause"
@@ -316,7 +382,7 @@ def bind(clause: str, record: Any, vocabulary: Optional[FrozenSet[str]] = None) 
         # every Plan F question comes from a faculty member: a student-only, staff-only or unknown-audience guide never answers
         return None, "%s is not registered for a faculty or instructor audience" % source_id
     pattern = SYSTEM_TERMS.get(source_id)
-    if pattern is None or not pattern.search(text):
+    if pattern is None or not (inferred or pattern.search(text)):
         return None, "the clause does not name the system documented by %s" % source_id
     intent, info = read_intent(text)
     if intent not in ANSWERABLE_INTENTS:
@@ -329,7 +395,10 @@ def bind(clause: str, record: Any, vocabulary: Optional[FrozenSet[str]] = None) 
                 continue
             spans.append((m.start(), m.end()))
             names.append(name)
-    actors = [(m.start(), m.end()) for m in _ACTOR.finditer(text) if not any(not (m.end() <= a or m.start() >= b) for a, b in spans)]
+    # post-freeze PF-5C (D-115): a faculty group named as the RECIPIENT ("an announcement to all faculty") is not the asker
+    # and stays a term the evidence must state
+    actors = [(m.start(), m.end()) for m in _ACTOR.finditer(text) if not any(not (m.end() <= a or m.start() >= b) for a, b in spans)
+              and not (_GROUP_ACTOR.match(m.group(0)) and _RECIPIENT.search(text[:m.start()]))]
     blanked = _blank(text, spans + actors)                         # the faculty actor is bound by the audience checked above
     if _PHYSICAL_PLACE.search(blanked) and (intent is not GuideIntent.PROCEDURE or _PHYSICAL_PLACE.search(_core_text(blanked))):
         return None, "a physical or organizational place is not answered from a system guide"
@@ -386,11 +455,21 @@ def bind(clause: str, record: Any, vocabulary: Optional[FrozenSet[str]] = None) 
     if not terms and not entities:
         return None, "the clause asks nothing of %s beyond its system name" % source_id
     polarity = tuple(w for w in ("before", "after") if re.search(r"\b%s\b" % w, blanked, re.I))
+    if intent is GuideIntent.LOCATION:                             # post-freeze PF-5C (D-115): the object a "where" ask places
+        info = dict(info, location_head=_location_head(blanked))
+    if intent is GuideIntent.PROCEDURE:                            # D-115: "How do I see/find ..." asks to see, not to change
+        seen = _SEE_ASK.search(blanked)
+        if seen:
+            info = dict(info, frame_verb=stem(seen.group(1)))
+    if intent is GuideIntent.YES_NO:                               # D-115: whose ability the yes/no ask is about
+        info = dict(info, student_subject=bool(_STUDENT_SUBJECT.search(text)))
+    # post-freeze PF-5C (D-115): a negated ask, and the roles the clause names (for a procedure headed "as Chair/Dean")
+    info = dict(info, negated=bool(_NEGATION.search(text)), roles=sorted({m.group(1).lower()[:4] for m in _ROLE_WORD.finditer(text)}))
     binding = Binding(source_id, intent, tuple(names), bool(actors), terms, core, entities,
                       minimum=intent is GuideIntent.VALUE and bool(_MIN_WORDS.search(blanked)),
                       maximum=intent is GuideIntent.VALUE and bool(_MAX_WORDS.search(blanked)) and not _MIN_WORDS.search(blanked),
                       info=dict(info), alternatives=tuple((k, tuple(v)) for k, v in alternatives.items() if k in terms),
-                      tolerated=tuple(tolerated), polarity=polarity)
+                      tolerated=tuple(tolerated), polarity=polarity, inferred=inferred)
     return binding, None
 
 
@@ -428,10 +507,13 @@ _YES_NO_EVIDENCE = re.compile(r"\b(?:can|cannot|can't|can’t|could|may|must|not
 _DEFINITION_EVIDENCE = re.compile(r"\b(?:is|are|means|refers\s+to|lets|allows|enables|displays|shows|contains|provides|helps)\b", re.I)
 _SELECTION_ACTION = re.compile(r"\b(?:select|click|choose|use|press|tap|open)\b", re.I)
 _SELECTION_TARGET = re.compile(r"\b(?:option|button|icon|link|menu|tab|check\s?box|field|panel)\b|[“\"][^”\"]{2,60}[”\"]", re.I)
+_PLACE_PHRASE = (r"\b(?:on|in|under|from|at|inside|within|via|through)\s+(?:the\s+)?(?:[\w&’'-]+\s+){0,4}(?:bar|menu|page|tab|panel|pane|"
+                 r"corner|section|announcement|list|header|icon|screen|view|area|toolbar|home\s+screen)\b")
 _LOCATION_EVIDENCE = re.compile(
-    r"\b(?:on|in|under|from|at|inside|within|via|through)\s+(?:the\s+)?(?:[\w&’'-]+\s+){0,4}(?:bar|menu|page|tab|panel|pane|corner|section|"
-    r"announcement|list|header|icon|screen|view|area|toolbar|home\s+screen)\b|https?://\S+|\bwww\.\S+|"
+    _PLACE_PHRASE + r"|https?://\S+|\bwww\.\S+|"
     r"\b(?:under|in|on|from)\s+(?:the\s+)?[“\"][^”\"]{2,60}[”\"]", re.I)
+#: Post-freeze PF-5C (D-115): a prepositional place phrase ("in the student grid view"); a quoted control name is not one.
+_PLACE = re.compile(_PLACE_PHRASE, re.I)
 _EMAIL = re.compile(r"[\w.+-]+@[\w-]+\.[\w.]+")
 _TRAILING_LABEL = re.compile(r"(?:^|[\s:])\d{1,2}[.)]\s*$")
 #: Post-freeze PF-5B (D-114): a statement that opens as the consequence or continuation of an earlier step ("You will be
@@ -442,6 +524,8 @@ _DEPENDENT = re.compile(r"^\s*(?:[^:.!?]{1,120}:\s+)?(?:\d{1,2}[.)]\s+|[-–•]
 _PHONE = re.compile(r"\+?\d[\d\s()-]{6,}\d")
 _URL = re.compile(r"https?://\S+|\bwww\.\S+", re.I)
 _INLINE_LIST = re.compile(r"(?:\binclude[sd]?\b|\bincluding\b|\bare\b|:)\s+[^.;]*,[^.;]*,[^.;]*", re.I)
+#: Post-freeze PF-5C (D-115): a step quoted with its printed heading ("<heading>: 3. <step>").
+_HEADED_STEP = re.compile(r"^(?P<heading>[^\n:]{2,160}):\s+(?P<step>(?:\d{1,2}[.)]|[A-Za-z][.)]|[-–•])\s.*)$", re.S)
 
 
 def statement_problem(binding: Binding, quote: str) -> Optional[str]:
@@ -449,6 +533,10 @@ def statement_problem(binding: Binding, quote: str) -> Optional[str]:
     intent = binding.intent
     if intent is GuideIntent.PROCEDURE:
         return "a procedure ask is answered by a complete procedure or one item of an unordered list, never by a single statement"
+    if binding.inferred:                                           # post-freeze PF-5C (D-115): the strict profile of inference
+        return "an inferred clause is answered only by a complete procedure or list headed by the asked task, never by a statement"
+    if (binding.info or {}).get("negated") and not _NEGATION_EVIDENCE.search(quote or ""):
+        return "the clause is negated; the evidence states no negation"                    # post-freeze PF-5C (D-115)
     missing = missing_terms(binding, quote)
     if missing:
         return "the evidence does not state %d asked term(s)" % len(missing)
@@ -470,9 +558,23 @@ def statement_problem(binding: Binding, quote: str) -> Optional[str]:
             return "a minimum is asked; the evidence states no lower bound"
         if binding.maximum and not _MAX_EVIDENCE.search(quote):
             return "a maximum is asked; the evidence states no upper bound"
+        unit = (binding.info or {}).get("unit")
+        if (binding.minimum or binding.maximum) and isinstance(unit, str) and unit.strip():
+            # post-freeze PF-5C (D-115): the bound must govern a quantity in the asked unit ("at least 1200 x 240 pixels"),
+            # not one in another unit ("can't be larger than 25 KB" for a maximum in pixels)
+            bound = _MIN_EVIDENCE if binding.minimum else _MAX_EVIDENCE
+            word = re.escape(unit.strip().lower().rstrip("s"))
+            governed = re.compile(r"(?:%s)\W+(?:\w+\W+){0,4}?\d[\d,.]*\s*(?:x\s*\d[\d,.]*\s*)?%s" % (bound.pattern, word), re.I)
+            if not governed.search(quote):
+                return "the stated bound governs a quantity in another unit"
     elif intent is GuideIntent.YES_NO:
         if not _YES_NO_EVIDENCE.search(quote):
             return "a yes/no ask needs a stated permission, prohibition or behaviour"
+        if (_STUDENT_STATEMENT.match(quote or "") or (_STUDENT_CLAIM.search(quote or "") and not _ASKER_CLAIM.search(quote or ""))) \
+                and not (binding.info or {}).get("student_subject"):
+            # post-freeze PF-5C (D-115): "Students see private courses ... but they cannot access them" does not answer what
+            # the asker may do
+            return "the statement is about what students can do, not about the asker"
     elif intent is GuideIntent.DEFINITION:
         if not _DEFINITION_EVIDENCE.search(quote):
             return "a definition ask needs a defining statement"
@@ -497,6 +599,23 @@ def statement_problem(binding: Binding, quote: str) -> Optional[str]:
     elif intent is GuideIntent.ENUMERATION:
         if not _INLINE_LIST.search(quote):
             return "an enumeration ask is answered by a complete list; one statement must itself list the set"
+    if intent in (GuideIntent.LOCATION, GuideIntent.SELECTION):
+        # post-freeze PF-5C (D-115): under a printed heading ("3) Student Grid: 3. ... select View in the menu ...") the place
+        # or control a step states belongs to the step's own object, and a place phrase ("In the student grid view, select
+        # Filter ...") locates something else inside the asked object: the asked object must be named by the step itself,
+        # outside its place phrases
+        headed = _HEADED_STEP.match(quote or "")
+        body = headed.group("step") if headed else (quote or "")
+        head = (binding.info or {}).get("location_head") if intent is GuideIntent.LOCATION else None
+        if head:
+            if not binding.equivalents(head) & stems(_PLACE.sub(" ", body)):
+                return "the statement does not place the asked object (it is named only by a heading or as the place of something else)"
+            # the place must be stated in the sentence (or bullet) that names the asked object
+            if not any(binding.equivalents(head) & stems(_PLACE.sub(" ", seg)) and _LOCATION_EVIDENCE.search(seg)
+                       for seg in _SEGMENT.split(body) if seg and seg.strip()):
+                return "the place is stated in another sentence than the asked object"
+        elif headed and missing_terms(binding, body):
+            return "the asked object is named only by the heading; the step places or selects something else"
     return None
 
 
@@ -866,9 +985,18 @@ class GuideIndex:
         return cache[source_id]
 
     def bind(self, clause: str, source_id: str) -> Tuple[Optional[Binding], Optional[str]]:
-        """``bind`` against the registry record of ``source_id`` with that guide's vocabulary (D-114)."""
+        """``bind`` against the registry record of ``source_id`` with that guide's vocabulary (D-114). Post-freeze PF-5C
+        (D-115): a clause that names no system is bound to a guide only when ``guide_inference.infer`` accepts that guide
+        for it; the inference is recomputed here from the clause, so the adapter's re-verification never trusts a
+        specialist's claim that a guide was inferred."""
         record = self.record(source_id)
-        return bind(clause, record, self.vocabulary(source_id) if record is not None else None)
+        vocabulary = self.vocabulary(source_id) if record is not None else None
+        binding, problem = bind(clause, record, vocabulary)
+        if binding is None and problem and problem.startswith("the clause does not name the system"):
+            from .guide_inference import inferred_sources          # imported here: the guide path only (LEGACY never reaches it)
+            if source_id in inferred_sources(clause):
+                binding, problem = bind(clause, record, vocabulary, inferred=True)
+        return binding, problem
 
     def structure(self, key: str) -> Any:
         return self.structure_by_key.get(key)
@@ -1062,6 +1190,115 @@ def heading_verb(heading: Optional[str]) -> Optional[str]:
     return stem(word) if word.lower() in _HEADING_ACTION_WORDS else None
 
 
+_HEADING_LABEL = re.compile(r"^\s*(?:\d{1,2}|[A-Za-z])\s*[.)-]\s+")
+_HEADING_PURPOSE = re.compile(r"\b(?:steps?|follow\w*)\b[^.:?]{0,40}?\bto\s+(?P<word>[A-Za-z]+)", re.I)
+
+
+def purpose_verb(heading: Optional[str]) -> Optional[str]:
+    """Post-freeze PF-5C (D-115): the action a procedure heading names, also behind a printed label ("D- Checking Session
+    Attendance" -> check) or as the purpose of a lead-in ("Follow these steps to set your attendance reports" -> set).
+    Used only to REFUSE a procedure whose heading names another action than the one asked."""
+    verb = heading_verb(heading)
+    if verb is not None:
+        return verb
+    text = _HEADING_LABEL.sub("", heading or "", count=1)
+    verb = heading_verb(text)
+    if verb is not None:
+        return verb
+    m = _HEADING_PURPOSE.search(text)
+    return stem(m.group("word")) if m and stem(m.group("word")) in ACTION_VERBS else None
+
+
+def _heading_names(binding: Binding, term: str, heading: Optional[str], context: Optional[str] = None) -> bool:
+    """Whether a heading (or its context) names ``term``: the term, an equivalent, or a compound containing it ("grades" in
+    "gradebook")."""
+    printed = stems(context or "") | stems(heading or "")
+    return bool(binding.equivalents(term) & printed) or (len(term) >= 4 and any(len(p) >= 4 and (p.startswith(term) or term.startswith(p))
+                                                                                 for p in printed))
+
+
+def task_problem(binding: Binding, titles: Sequence[Optional[str]], text: str) -> Optional[str]:
+    """Post-freeze PF-5C (D-115): why a procedure or section with these printed titles (heading, section title) and this text
+    does not answer the asked task, or None. Each rule only refuses: a see/find ask under a heading that names no way to
+    see, open or check it; a procedure printed for another role ("as Chair/Dean") than the clause names; a negated ask whose
+    evidence states no negation."""
+    info = binding.info or {}
+    named = [purpose_verb(t) for t in titles if t]
+    if info.get("frame_verb") and not any(v in _ACCESS_ACTIONS for v in named if v):
+        return "the clause asks to see or find something; the heading names no way to see, open or check it"
+    roles = {m.group(1).lower()[:4] for t in titles if t for h in _HEADING_ROLE.finditer(t) for m in _ROLE_WORD.finditer(h.group(1))}
+    asked = set(info.get("roles") or ())
+    if roles and not roles & asked:
+        if roles <= {"chai", "dean", "head"}:
+            return "the procedure is printed for another role (%s) than the clause names" % "/".join(sorted(roles))
+        if asked & {"chai", "dean", "head"}:
+            return "the procedure is printed for another role than the clause names"
+    if info.get("negated") and not _NEGATION_EVIDENCE.search(text or ""):
+        return "the clause is negated; the evidence states no negation"
+    return None
+
+
+def inferred_problem(binding: Binding, titles: Sequence[Optional[str]], context: Optional[str] = None) -> Optional[str]:
+    """Post-freeze PF-5C (D-115): the strict evidence profile of an INFERRED binding (the clause names no system). Only a
+    procedure or list ask is answered, only by a complete procedure, section or labelled list item whose printed title names
+    the asked action (a procedure ask) and every asked object, persons included ("add students to a learning module" is not
+    answered under "Add a Learning Module or Folder"). None for a binding to a named system."""
+    if not binding.inferred:
+        return None
+    if binding.intent not in (GuideIntent.PROCEDURE, GuideIntent.ENUMERATION):
+        return "an inferred %s ask is not answered from a guide" % binding.intent.value
+    titles = [t for t in titles if t]
+    if not titles:
+        return "an inferred clause is answered only under a printed title"
+    if binding.intent is GuideIntent.PROCEDURE:
+        verb = clause_verb(binding)
+        if not verb:
+            return "an inferred procedure ask names no action a heading can be checked against"
+        if not any(same_action(verb, purpose_verb(t)) for t in titles):
+            return "an inferred clause is answered only under a heading that names the asked action"
+        objects = [t for t in binding.core if t != verb]
+    else:
+        objects = list(binding.terms)
+    head = " ".join(titles)
+    if not objects or any(not _heading_names(binding, o, head, context) for o in objects):
+        return "an inferred clause is answered only under a heading that names every asked object"
+    return None
+
+
+def item_label(quote: str) -> str:
+    """The printed label of a list item ("Enable conversations: Select ..." -> "Enable conversations"), or ""."""
+    body = _LEADING_LABEL.sub("", (quote or "").strip(), count=1)
+    head, sep, _rest = body.partition(":")
+    return head.strip() if sep and 1 <= len(head.split()) <= 8 else ""
+
+
+def heading_mismatch(binding: Binding, heading: Optional[str], context: Optional[str] = None) -> Optional[str]:
+    """Post-freeze PF-5C (D-115): why a procedure or section heading does not head the asked procedure, or None. Two
+    refusals, each only refusing: (1) the clause asks to see or find something ("How do I see my attendance report?") and
+    the heading names an action that changes something ("Follow these steps to set your attendance reports"); (2) the
+    heading names the asked action on another object ("Create an Assignment" for "How do I create content?"): the heading
+    states none of the clause's objects and names an object of its own. ``context`` is the heading text with its section
+    title, system names removed."""
+    named = purpose_verb(heading)
+    if named is None:
+        return None
+    seen = (binding.info or {}).get("frame_verb")
+    if seen and named in _MODIFYING:
+        return "the clause asks to see or find something; the heading names an action that changes it"
+    verb = clause_verb(binding)
+    objects = [t for t in binding.core if t != verb and t not in _ROLE_STEMS]
+    if not verb or not objects or not same_action(verb, named):
+        return None
+    if any(_heading_names(binding, o, heading, context) for o in objects):
+        return None
+    title = _HEADING_LABEL.sub("", heading or "", count=1)
+    own = [stem(t) for t in _TOKEN.findall(title) if t.lower() not in _STOP and t.lower() not in _FRAME and stem(t) != named
+           and stem(t) not in ACTION_VERBS and len(t) > 1 and t.lower() not in _GENERIC_HEADING_NOUNS]
+    if own:
+        return "the heading names the asked action on another object"
+    return None
+
+
 def clause_verb(binding: Binding) -> Optional[str]:
     """The asked action of a procedure clause: its first core term that is an action verb (a role such as "Dean" is not)."""
     for term in binding.core:
@@ -1184,11 +1421,23 @@ def structure_problem(structure: Any, binding: Binding, index: GuideIndex) -> Op
             asked_verb, named_verb = clause_verb(binding), heading_verb(structure.heading)
             if named_verb is None or (asked_verb and not same_action(asked_verb, named_verb)):
                 return "a labelled sub-section that does not name the asked action is one part of a larger procedure"
-        verb, named = clause_verb(binding), heading_verb(re.sub(r"^\s*(?:\d{1,2}|[A-Za-z])\s*[.)]\s+", "", structure.section_title or ""))
+        # post-freeze PF-5C (D-115): also a hyphen label ("D- Checking Session Attendance") or a lead-in purpose
+        verb, named = clause_verb(binding), purpose_verb(re.sub(r"^\s*(?:\d{1,2}|[A-Za-z])\s*[.)]\s+", "", structure.section_title or ""))
         if verb and named and not same_action(verb, named):
             objects = [t for t in binding.core if t != verb and t not in _ROLE_STEMS]
-            if not _states_action(verb, objects, " ".join(b.text for b in structure.blocks)):
+            # post-freeze PF-5C (D-115): a heading that names a DESTRUCTIVE action ("Delete discussion topics ...") is never
+            # overridden by the text mentioning a constructive asked action in passing ("... after they create discussions")
+            destructive = named in _DESTRUCTIVE and verb not in _DESTRUCTIVE
+            if destructive or not _states_action(verb, objects, " ".join(b.text for b in structure.blocks)):
                 return "the structure's heading names another action than the one asked"
+        for title in (structure.heading, structure.section_title):               # post-freeze PF-5C (D-115)
+            mismatch = heading_mismatch(binding, title, named_context) if title else None
+            if mismatch:
+                return mismatch
+        problem = task_problem(binding, [structure.heading, structure.section_title], text) or inferred_problem(
+            binding, [structure.heading, structure.section_title], named_context)                       # post-freeze PF-5C (D-115)
+        if problem:
+            return problem
         if structure.kind == "list":
             if structure.list_type != "ordered_procedure":
                 return "a %s list is not an ordered procedure" % structure.list_type.replace("_", " ")
@@ -1202,7 +1451,8 @@ def structure_problem(structure: Any, binding: Binding, index: GuideIndex) -> Op
     if intent is GuideIntent.ENUMERATION:
         if structure.kind != "list":
             return "an enumeration is answered by a complete list"
-        return None
+        return task_problem(binding, [structure.heading, structure.section_title], text) or inferred_problem(
+            binding, [structure.heading, structure.section_title], named_context)                       # post-freeze PF-5C (D-115)
     return "a %s ask is not answered by a recovered structure" % intent.value
 
 
@@ -1251,9 +1501,12 @@ def procedure_problem(proc: Procedure, binding: Binding, index: GuideIndex) -> O
     if binding.intent is GuideIntent.PROCEDURE:
         if _CAPABILITY_HEADING.search(proc.heading):
             return "a list of what can be done is not a procedure"
-        asked, named = clause_verb(binding), heading_verb(proc.heading)
+        asked, named = clause_verb(binding), purpose_verb(proc.heading)       # D-115: also a labelled or lead-in heading
         if asked and named and not same_action(asked, named):
             return "the procedure heading names another action than the one asked"
+        mismatch = heading_mismatch(binding, proc.heading) or task_problem(binding, [proc.heading], proc.text())   # PF-5C (D-115)
+        if mismatch:
+            return mismatch
     for step in proc.steps:
         conflict = index.conflict_problem(step.chunk_id, step.quote)
         if conflict:
@@ -1374,8 +1627,13 @@ def select_answer(binding: Binding, units: Sequence[Unit], index: GuideIndex, pr
                 single = [s for s in proc.steps if not missing_terms(binding, s.quote) and not missing_entities(binding, s.quote)]
                 if len(single) == 1:
                     step = single[0]
-                    considered.append({"procedure": proc.key, "form": FORM_LIST_ITEM, "chunk_id": step.chunk_id, "accepted": True})
-                    return GuideAnswer(binding, FORM_LIST_ITEM, (Part(step.chunk_id, proc.source_id, step.page, step.quote),), proc.key, proc.heading), considered
+                    item = inferred_problem(binding, [item_label(step.quote)])      # post-freeze PF-5C (D-115): None unless inferred
+                    if item is None:
+                        considered.append({"procedure": proc.key, "form": FORM_LIST_ITEM, "chunk_id": step.chunk_id, "accepted": True})
+                        return GuideAnswer(binding, FORM_LIST_ITEM, (Part(step.chunk_id, proc.source_id, step.page, step.quote),), proc.key, proc.heading), considered
+                    problem = item
+            if problem is None:
+                problem = inferred_problem(binding, [proc.heading])                  # post-freeze PF-5C (D-115)
             considered.append({"procedure": proc.key, "form": FORM_PROCEDURE, "accepted": problem is None, "reason": problem})
             if problem is None:
                 return GuideAnswer(binding, FORM_PROCEDURE, _procedure_parts(proc, index), proc.key, proc.heading), considered
@@ -1501,14 +1759,14 @@ def verify_answer(clause: str, form: str, parts: Sequence[Tuple[int, str, Option
         others = [s for s in proc.steps if s.chunk_id != chunk_id and not missing_terms(binding, s.quote) and not missing_entities(binding, s.quote)]
         if others:
             return "several items of the list answer the clause"
-        return None
+        return inferred_problem(binding, [item_label(quote)])                     # post-freeze PF-5C (D-115)
     if binding.intent not in (GuideIntent.PROCEDURE, GuideIntent.ENUMERATION):
         return "a %s ask is not answered with a procedure" % binding.intent.value
     expected = _procedure_parts(proc, index)
     got = tuple((p[0], p[1]) for p in parts)
     if got != tuple((p.chunk_id, p.quote) for p in expected):
         return "the steps are not exactly the claimed procedure's steps in source order"
-    return None
+    return inferred_problem(binding, [proc.heading])                              # post-freeze PF-5C (D-115)
 
 
 #: Reasons of ``verify_answer`` / ``bind`` that concern the source's authority rather than the evidence's content.

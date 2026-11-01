@@ -1,0 +1,21 @@
+{
+ "method": "Every procedure, section or list newly served in PF-5C (any set): complete start and end, no missing middle step, printed order and hierarchy, no screenshot-only action, no cut unit (hand review in the verdict note).",
+ "answers": [
+  {
+   "id": "B10",
+   "set": "p1",
+   "forms": [
+    "section"
+   ],
+   "pages": [
+    4
+   ],
+   "parts": 5,
+   "all_quotes_verbatim_in_their_chunk": true,
+   "first_unit": "D- Checking Session Attendance",
+   "last_unit": "If you want to export the attendance sheet, click on export icon, and an excel sheet will be downloaded to your device.",
+   "verdict": "CORRECT",
+   "note": "Collaborate guide p4 'D- Checking Session Attendance', verbatim: the four printed bullets in order (attendance tool from Details & Actions, overview, automatic marks the instructor can change, export icon downloads an excel sheet). Same words as the PF-4/PF-5B answer; the D-111 procedure is now refused because its labelled heading names another action (check), and the D-112 section, whose text states the asked action on its object (export the attendance sheet), renders each printed bullet on its own line"
+  }
+ ]
+}

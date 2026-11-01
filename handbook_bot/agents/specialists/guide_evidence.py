@@ -82,11 +82,18 @@ class GuideEvidence:
 
     # ---- which guides may answer a clause -------------------------------------------------------------------------
     def bindings(self, clause: str, approved: Iterable[str]) -> Tuple[List[Binding], List[Dict[str, Any]]]:
-        """The D-111 bindings of ``clause`` to every approved guide whose system it names, and the refusals."""
+        """The D-111 bindings of ``clause`` to every approved guide whose system it names, and the refusals. Post-freeze
+        PF-5C (D-115): a clause that names no system is tried against the candidate guides ``guide_inference`` accepts for
+        it (``GuideIndex.bind`` recomputes the inference and binds with ``inferred=True``)."""
         allowed = set(approved) - {HANDBOOK_SOURCE_ID}
         ok: List[Binding] = []
         refused: List[Dict[str, Any]] = []
-        for source_id in guide_sources_named(clause, self.records):
+        sources = guide_sources_named(clause, self.records)
+        if not sources:
+            from ...guide_inference import inferred_sources
+            known = {r.source_id for r in self.records}
+            sources = [s for s in inferred_sources(clause) if s in known]
+        for source_id in sources:
             if source_id not in allowed:
                 refused.append({"source_id": source_id, "reason": "not approved for this specialist (D-110)"})
                 continue
@@ -166,6 +173,9 @@ class GuideEvidence:
         """Measurement view (``qa/post_freeze_pf3c/evidence_selection.py``): the D-111 choice for ``question`` from every
         usable guide it names, regardless of which specialist would own it, with the evidence in selection order."""
         approved = guide_sources_named(question, self.records)
+        if not approved:                                          # post-freeze PF-5C (D-115)
+            from ...guide_inference import inferred_sources
+            approved = list(inferred_sources(question))
         chosen, diag = self.answer(question, route, approved)
         evidence: List[Dict[str, Any]] = []
         if chosen is not None:
@@ -252,7 +262,9 @@ class GuideCapableSpecialist(Specialist):
         done = set(answered)
         owned = set()
         for key, diag in diags.items():
-            intents = {b.get("intent") for b in (diag.get("bindings") or []) if isinstance(b, dict)}
+            # post-freeze PF-5C (D-115): only a clause that NAMES the guide's system is kept from Institutional Navigation; an
+            # inferred binding never removes a handoff (inference decides candidates, not ownership of an unanswered clause)
+            intents = {b.get("intent") for b in (diag.get("bindings") or []) if isinstance(b, dict) and not b.get("inferred")}
             if not (intents and GuideIntent.CONTACT.value not in intents and str(key).isdigit() and int(key) not in done):
                 continue
             clause = clauses[int(key)] if int(key) < len(clauses) else ""

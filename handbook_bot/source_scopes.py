@@ -200,15 +200,17 @@ def is_guide_meta(meta: Optional[Mapping[str, Any]]) -> bool:
 # ---------------------------------------------------------------------------
 # The checks on findings that rest on a guide
 # ---------------------------------------------------------------------------
-def source_authority_problem(clause: str, meta: Optional[Mapping[str, Any]]) -> Optional[str]:
-    """Why a finding resting on ``meta`` must not answer ``clause``, or None. Handbook evidence is never refused here."""
+def source_authority_problem(clause: str, meta: Optional[Mapping[str, Any]], inferred: Iterable[str] = ()) -> Optional[str]:
+    """Why a finding resting on ``meta`` must not answer ``clause``, or None. Handbook evidence is never refused here.
+    ``inferred`` (post-freeze PF-5C, D-115) are the guides ``guide_inference`` accepts for a clause that names no system:
+    for those the system-name check is met; the policy check is not relaxed."""
     if not is_guide_meta(meta):
         return None
     source_id = meta.get("source_id")
     pattern = SYSTEM_TERMS.get(source_id)
     if pattern is None:
         return "source %s has no registered system vocabulary; a guide answers only for its own system" % source_id
-    if not pattern.search(clause or ""):
+    if not pattern.search(clause or "") and source_id not in set(inferred):
         return "the clause does not name the system documented by %s; a system guide does not answer outside its system" % source_id
     if _POLICY_ASK.search(clause or ""):
         return "a policy, entitlement or obligation ask: the handbook is authoritative, a system guide is not"

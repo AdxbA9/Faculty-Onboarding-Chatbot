@@ -149,9 +149,14 @@ def test_a_labelled_sub_section_named_after_its_object_never_answers_alone(index
 def test_an_action_headed_bulleted_list_is_one_ordered_procedure(index, parts):
     check = index.procedure("%s:4:0" % COLLABORATE)
     assert check.heading == "D- Checking Session Attendance" and set(check.labels) == {"-"} and check.sequential
-    answer, _ = _worst_case(index, parts, "How do I export the attendance sheet for my Blackboard Collaborate sessions?", COLLABORATE)
-    assert answer is not None and answer.form == GG.FORM_PROCEDURE and len(answer.parts) == 3 and answer.pages == (4,)
-    assert answer.parts[0].quote.endswith("Click on attendance tool.") and "export icon" in answer.parts[-1].quote
+    answer, tried = _worst_case(index, parts, "How do I export the attendance sheet for my Blackboard Collaborate sessions?", COLLABORATE)
+    # post-freeze PF-5C (D-115): the D-111 procedure is refused because its labelled heading names another action ("Checking"),
+    # and the D-112 section that states the asked action on its object ("export the attendance sheet") serves the same words,
+    # each printed bullet on its own line
+    assert any(t.get("procedure") == "%s:4:0" % COLLABORATE and t.get("reason") == "the procedure heading names another action than the one asked"
+               for t in tried)
+    assert answer is not None and answer.form == GG.FORM_SECTION and answer.pages == (4,)
+    assert answer.parts[1].quote.endswith("Click on attendance tool.") and "export icon" in answer.parts[-1].quote
     assert GG.citation_heading(answer.record(0), index) == "D- Checking Session Attendance"
 
 

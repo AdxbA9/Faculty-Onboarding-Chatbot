@@ -1,0 +1,910 @@
+{
+ "method": "P1 regression: the PF-4 P1 evaluation rerun with D-115. A served answer keeps its PF-4 verdict only when it is byte-identical; every other served answer is reviewed by hand (verdict basis 'PF-5C review').",
+ "served": 7,
+ "changed_or_new": [
+  "B10"
+ ],
+ "lost": [],
+ "questions": [
+  {
+   "id": "A01",
+   "question": "How do I open the attendance tool in a Blackboard Ultra course?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "A02",
+   "question": "How do I add attendance to my Blackboard Ultra course?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "A03",
+   "question": "Can I change the grade percentage given for Late in the Blackboard attendance grade schema?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1,
+    7
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "A04",
+   "question": "How can attendance grades be displayed in Blackboard Ultra?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "A05",
+   "question": "Where does the attendance column appear after I save the Blackboard attendance settings?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "A06",
+   "question": "How do I set up attendance reports for my Blackboard Collaborate sessions?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "A07",
+   "question": "When are students marked late in Blackboard Collaborate attendance?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1,
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "A08",
+   "question": "What should I do with Blackboard attendance if a Collaborate session was cancelled?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "A09",
+   "question": "Can I change a student's attendance record to excused in Blackboard?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "plan_f",
+   "outcome": "PLAN_F_ACCEPTED",
+   "guide_served": true,
+   "pages": [
+    2
+   ],
+   "sources": [
+    "uos_blackboard_attendance_guide"
+   ],
+   "forms": [
+    "statement"
+   ],
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "A10",
+   "question": "Should I take attendance for office hours sessions in Blackboard Collaborate?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_attendance_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "B01",
+   "question": "How do I create a scheduled session in Blackboard Collaborate?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1,
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "B02",
+   "question": "Where do I find Collaborate sessions in my Blackboard Ultra course?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "B03",
+   "question": "How do I make a Blackboard Collaborate session repeat every week?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "B04",
+   "question": "How do I let students download the recordings of a Blackboard Collaborate session?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "B05",
+   "question": "What is the default attendee role for students in Blackboard Collaborate?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "plan_f",
+   "outcome": "PLAN_F_ACCEPTED",
+   "guide_served": true,
+   "pages": [
+    2
+   ],
+   "sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "forms": [
+    "statement"
+   ],
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "B06",
+   "question": "How do I record a Blackboard Collaborate session?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1,
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "B07",
+   "question": "How do I join a session I created in Blackboard Collaborate?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1,
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "B08",
+   "question": "How do I make a participant a moderator in Blackboard Collaborate?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1,
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "B09",
+   "question": "What types of content can I share in a Blackboard Collaborate session?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    2,
+    4
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "B10",
+   "question": "How do I export the attendance sheet for my Blackboard Collaborate sessions?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_collaborate_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "plan_f",
+   "outcome": "PLAN_F_ACCEPTED",
+   "guide_served": true,
+   "pages": [
+    4
+   ],
+   "sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "M01",
+   "question": "How do I create a discussion in Blackboard Ultra?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_communication_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "plan_f",
+   "outcome": "PLAN_F_ACCEPTED",
+   "guide_served": true,
+   "pages": [
+    1
+   ],
+   "sources": [
+    "uos_blackboard_communication_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "verdict": "ACCEPTABLE BUT LIMITED"
+  },
+  {
+   "id": "M02",
+   "question": "Are new discussions visible to students right away in Blackboard Ultra?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_communication_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1,
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "M03",
+   "question": "How do I allow students to create their own discussions in Blackboard?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_communication_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "M04",
+   "question": "What happens in the gradebook when I enable grading for a Blackboard discussion?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_communication_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "M05",
+   "question": "What does the Post first option do in a Blackboard discussion?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_communication_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "M06",
+   "question": "Can students edit their discussion titles in Blackboard Ultra?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_communication_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "plan_f",
+   "outcome": "PLAN_F_ACCEPTED",
+   "guide_served": true,
+   "pages": [
+    3
+   ],
+   "sources": [
+    "uos_blackboard_communication_guide"
+   ],
+   "forms": [
+    "statement"
+   ],
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "M07",
+   "question": "What happens to the replies if I delete an initial response in a Blackboard discussion?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_communication_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    3
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "M08",
+   "question": "How do I enable class conversations on a Blackboard content item?",
+   "category": "p1_guide",
+   "expected_source": "uos_blackboard_communication_guide",
+   "answerable": null,
+   "plan_f_should_serve": true,
+   "served": "plan_f",
+   "outcome": "PLAN_F_ACCEPTED",
+   "guide_served": true,
+   "pages": [
+    4
+   ],
+   "sources": [
+    "uos_blackboard_communication_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "verdict": "CORRECT"
+  },
+  {
+   "id": "M09",
+   "question": "How do I create a journal in Blackboard Ultra?",
+   "category": "conflict",
+   "expected_source": "uos_blackboard_communication_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "guide_served": false,
+   "pages": [
+    1,
+    5
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "M10",
+   "question": "Should I use journals for grading in Blackboard Ultra?",
+   "category": "conflict",
+   "expected_source": "uos_blackboard_communication_guide",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "guide_served": false,
+   "pages": [
+    5
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "N01",
+   "question": "How many absences can a student have before failing a course?",
+   "category": "policy_boundary",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": null,
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    225,
+    228
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "N02",
+   "question": "According to the Blackboard attendance tool, how many absences are allowed before a student fails?",
+   "category": "policy_boundary",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    1
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "N03",
+   "question": "How do I take attendance in Microsoft Teams?",
+   "category": "unsupported",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    2,
+    4
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "N04",
+   "question": "How do I upload a lecture video to Panopto?",
+   "category": "unsupported",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "N05",
+   "question": "How do I send a private message to one student in Blackboard Ultra?",
+   "category": "wrong_source",
+   "expected_source": null,
+   "answerable": null,
+   "plan_f_should_serve": false,
+   "served": "legacy",
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "guide_served": false,
+   "pages": [
+    1,
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "N06",
+   "question": "How do I collaborate with industry partners on a research project?",
+   "category": "wrong_source",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": null,
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "guide_served": false,
+   "pages": [
+    82,
+    163
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "N07",
+   "question": "Which journals count for my promotion?",
+   "category": "wrong_source",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": null,
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "guide_served": false,
+   "pages": [
+    147,
+    148
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "N08",
+   "question": "How many conferences can I attend each year?",
+   "category": "wrong_source",
+   "expected_source": "uos_faculty_handbook_2025_26",
+   "answerable": null,
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_SUBJECT_GUARD",
+   "guide_served": false,
+   "pages": [
+    117
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "X01",
+   "question": "What is the student attendance policy, and how do I add attendance in Blackboard Ultra?",
+   "category": "cross_document",
+   "expected_source": "uos_faculty_handbook_2025_26+uos_blackboard_attendance_guide",
+   "answerable": null,
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    1,
+    2
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "X02",
+   "question": "How many office hours must faculty hold, and how do I create a scheduled session in Blackboard Collaborate?",
+   "category": "cross_document",
+   "expected_source": "uos_faculty_handbook_2025_26+uos_blackboard_collaborate_guide",
+   "answerable": null,
+   "plan_f_should_serve": null,
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "guide_served": false,
+   "pages": [
+    1,
+    2,
+    80
+   ],
+   "sources": [],
+   "forms": [],
+   "verdict": null
+  },
+  {
+   "id": "X03",
+   "question": "How do I send an announcement in Blackboard, and how do I create a discussion in Blackboard Ultra?",
+   "category": "cross_document",
+   "expected_source": "uos_blackboard_faculty_short_guide+uos_blackboard_communication_guide",
+   "answerable": null,
+   "plan_f_should_serve": null,
+   "served": "plan_f",
+   "outcome": "PLAN_F_ACCEPTED",
+   "guide_served": true,
+   "pages": [
+    9,
+    1
+   ],
+   "sources": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_communication_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "verdict": "ACCEPTABLE BUT LIMITED"
+  }
+ ],
+ "answers": {
+  "A09": {
+   "set": "p1",
+   "question": "Can I change a student's attendance record to excused in Blackboard?",
+   "category": "p1_guide",
+   "answer_sha": "9cd8ef8e7b0be133",
+   "pages": [
+    2
+   ],
+   "sources": [
+    "uos_blackboard_attendance_guide"
+   ],
+   "forms": [
+    "statement"
+   ],
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "attendance guide p2 tip, verbatim: an absent student with an acceptable excuse may be marked excused (whether an excuse is acceptable stays handbook policy)",
+   "basis": "PF-4 review (answer unchanged)",
+   "answer": "If a student was absent with an acceptable excuse, you may change their attendance record to excused."
+  },
+  "B05": {
+   "set": "p1",
+   "question": "What is the default attendee role for students in Blackboard Collaborate?",
+   "category": "p1_guide",
+   "answer_sha": "93c077a32be84440",
+   "pages": [
+    2
+   ],
+   "sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "forms": [
+    "statement"
+   ],
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "Collaborate guide p2: the default attendee role for students is participants",
+   "basis": "PF-4 review (answer unchanged)",
+   "answer": "The default attendee role for students is participants."
+  },
+  "B10": {
+   "set": "p1",
+   "question": "How do I export the attendance sheet for my Blackboard Collaborate sessions?",
+   "category": "p1_guide",
+   "answer_sha": "daa5591b86fd4854",
+   "pages": [
+    4
+   ],
+   "sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "Collaborate guide p4 'D- Checking Session Attendance', verbatim: the four printed bullets in order (attendance tool from Details & Actions, overview, automatic marks the instructor can change, export icon downloads an excel sheet). Same words as the PF-4/PF-5B answer; the D-111 procedure is now refused because its labelled heading names another action (check), and the D-112 section, whose text states the asked action on its object (export the attendance sheet), renders each printed bullet on its own line",
+   "basis": "PF-5C review",
+   "answer": "D- Checking Session Attendance\n\n- From the Details & Actions panel, Click on attendance tool.\n\n- On the attendance panel, select overview at the top right.\n\n- You will have an overview for all sessions conducted, the students will be marked automatically, and the instructor will be able to change the marks as absent, excused, late and present.\n\n- If you want to export the attendance sheet, click on export icon, and an excel sheet will be downloaded to your device."
+  },
+  "M01": {
+   "set": "p1",
+   "question": "How do I create a discussion in Blackboard Ultra?",
+   "category": "p1_guide",
+   "answer_sha": "48d740b3eea979b2",
+   "pages": [
+    1
+   ],
+   "sources": [
+    "uos_blackboard_communication_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "ACCEPTABLE BUT LIMITED",
+   "note": "communication guide p1: the two places to create a discussion and the plus sign/settings; the New Discussion page fields (p2: title, guidelines, show/hide) are not included",
+   "basis": "PF-4 review (answer unchanged)",
+   "answer": "You can create discussions in two locations within your course:\n\n1. Create a discussion directly on the Course Content page, so students can view it in context with other materials.\n\n2. Select the Discussions tab on the navigation bar to open the course discussions page. Select the plus sign in the upper-right corner to open the menu. You can add discussions and organize them with folders. Select the gear icon to open the Discussion Settings panel. You can allow students to create discussions that appear in the list with the label Created by student. You can turn this setting on and off at any time."
+  },
+  "M06": {
+   "set": "p1",
+   "question": "Can students edit their discussion titles in Blackboard Ultra?",
+   "category": "p1_guide",
+   "answer_sha": "f026f953b9cd26c0",
+   "pages": [
+    3
+   ],
+   "sources": [
+    "uos_blackboard_communication_guide"
+   ],
+   "forms": [
+    "statement"
+   ],
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "communication guide p3: students cannot edit their discussion titles after they create discussions",
+   "basis": "PF-4 review (answer unchanged)",
+   "answer": "Students cannot edit their discussion titles after they create discussions."
+  },
+  "M08": {
+   "set": "p1",
+   "question": "How do I enable class conversations on a Blackboard content item?",
+   "category": "p1_guide",
+   "answer_sha": "f9c1cc39bc3d72b7",
+   "pages": [
+    4
+   ],
+   "sources": [
+    "uos_blackboard_communication_guide"
+   ],
+   "forms": [
+    "procedure"
+   ],
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "CORRECT",
+   "note": "communication guide p4 'Conversations': enable (item Settings icon > Allow class conversations) and access",
+   "basis": "PF-4 review (answer unchanged)",
+   "answer": "Conversations:\n\n- Enable conversations: Select the item's Settings icon to open the panel with the item's details and information. Select Allow class conversations.\n\n- Access conversations: When someone contributes to a conversation, an icon appears next to the item's title on the Course Content page. Open the item's menu and select Conversation to open the conversation in a new layer, or select the Open class conversation icon in the upper-right corner of an item's page or submissions page. A purple circle appears with the icon to indicate new activity."
+  },
+  "X03": {
+   "set": "p1",
+   "question": "How do I send an announcement in Blackboard, and how do I create a discussion in Blackboard Ultra?",
+   "category": "cross_document",
+   "answer_sha": "b90280713536d790",
+   "pages": [
+    9,
+    1
+   ],
+   "sources": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_communication_guide"
+   ],
+   "forms": [
+    "section"
+   ],
+   "specialist": [
+    "teaching"
+   ],
+   "verdict": "ACCEPTABLE BUT LIMITED",
+   "note": "two clauses, each verified on its own: the complete short-guide announcement section (p9, correct) and the two discussion locations (p1, limited as in M01); no bridge text",
+   "basis": "PF-4 review (answer unchanged)",
+   "answer": "Send an Announcement:\n\n- From details and actions click on create Announcements.\n\n- Click on the Plus sign in the top right of the page.\n\n- Add the Title, recipients and message of the announcement.\n\n- If you want to send a copy of this announcement via Email, check “Send an email copy to recipients” option.\n\n- If you want to schedule the announce and control the visibility, check “schedule announcement” option and choose the start and end dates and time.\n\n- Click on save – a draft of the announcement will be saved.\n\n- Click on Post so the announcement will reach students.\n\n- You can edit copy or delete announcement by going to the announcement page, then click on the “Three dots” icon, then you will find Edit, Copy and delete.\n\nYou can create discussions in two locations within your course:\n\n1. Create a discussion directly on the Course Content page, so students can view it in context with other materials.\n\n2. Select the Discussions tab on the navigation bar to open the course discussions page. Select the plus sign in the upper-right corner to open the menu. You can add discussions and organize them with folders. Select the gear icon to open the Discussion Settings panel. You can allow students to create discussions that appear in the list with the label Created by student. You can turn this setting on and off at any time."
+  }
+ }
+}

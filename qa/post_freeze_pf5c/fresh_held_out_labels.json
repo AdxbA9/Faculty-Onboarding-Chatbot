@@ -1,0 +1,1772 @@
+{
+ "method": "Labelled AFTER the questions were frozen (frozen.sha256), from the official text of the eight enabled sources only, by two independent labeler agents per batch of 15 (workflow pf5c-fresh-labels, run wf_7dfd9dd6-043); neither saw the chatbot, its code, its tests, any evaluation output or the other labeler's work, and the implementing session did not read the questions or the labels before the final evaluation run. Disagreements on answerability, Plan F expectation, sources, specialist, conflict or system naming were adjudicated by a third agent reading the source text (field 'adjudication'). answerable: yes = an enabled source states a complete answer to every part; partial = part of the ask, a premise correction or an authority/policy case; no = no enabled source. system_named_in_question: explicit = the question names the product whose guide answers it; implicit = the answer is in a guide the question never names; not_applicable = not a guide answer. system_inference_required = the answer is in a guide and the system is implicit. plan_f_should_serve: true = a verified Plan F answer is expected; false = Plan F must not serve; null = either a verified answer or a fallback is acceptable. fallback_acceptable is true for every question (a fallback is always safe).",
+ "frozen": {
+  "frozen_at": "2026-10-31T22:18:30Z",
+  "sha256": "3c8325a7e306b4d300d09d581185160e02db655d579317c6136033d95bcde4ad",
+  "questions": 60,
+  "method": "Four independent blind writer agents (workflow pf5c-blind-held-out, run wf_71998de2-fb4, 15 questions each), given only general background on the university's systems, task families, a persona mix and a required composition (24 implicit-system, 8 explicit-system, 4 each policy-versus-tool trap, organizational, unsupported, ambiguous, multi-part, false premise, typo or very short); no project file, no guide wording, no earlier question, no failure reason. Near-duplicates (token Jaccard > 0.7) removed deterministically: 0 dropped. A separate agent wrote and hashed the file; the implementing session saw only the hash and the counts."
+ },
+ "labelling": {
+  "labelers_per_question": 2,
+  "agreed": 53,
+  "adjudicated": 7,
+  "disputed_field_counts": {
+   "conflict": 4,
+   "answerable": 1,
+   "sources": 2,
+   "sir": 1,
+   "named": 1,
+   "plan_f_should_serve": 1
+  }
+ },
+ "summary": {
+  "yes": 31,
+  "partial": 23,
+  "no": 6,
+  "plan_f_should_serve": {
+   "true": 28,
+   "false": 9,
+   "null": 23
+  },
+  "system_named_in_question": {
+   "implicit": 36,
+   "explicit": 9,
+   "not_applicable": 15
+  },
+  "system_inference_required": 36,
+  "implicit_system_answerable": 25,
+  "explicit_system_answerable": 3,
+  "fallback_preferred": 11
+ },
+ "labels": {
+  "C01": {
+   "id": "C01",
+   "question": "Hi, sorry if this is a basic question. I just started as an assistant professor in mechanical engineering this fall and I'm still finding my way around. I need a live online class meeting for my thermodynamics section that repeats every Tuesday and Thursday at 10am for the whole semester. Right now I'm creating a new one by hand every week, and I'm worried I'll forget one and students won't be able to get in. How do I set it up so it repeats automatically?",
+   "category": "implicit_system",
+   "family": "creating or managing a live online teaching session (recurring weekly sessions)",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_collaborate_guide": [
+     1
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Name the session and set the start and End date (These dates for the first session) then if these sessions are scheduled for the next weeks, you choose the repeat session option, and then select the repetition method. The online classes in UOS are weekly. Select the days of the repetitions and set the date of the last session.",
+   "notes": "Collaborate guide p1 gives the full path (Details & Actions > View All Sessions > Create Session) plus the repeat-session option, the weekly days and the last-session date, which covers a Tue/Thu recurring session. The question says only 'live online class meeting' and never names Collaborate."
+  },
+  "C02": {
+   "id": "C02",
+   "question": "students say they cant see my course, how do i make it visible",
+   "category": "implicit_system",
+   "family": "making a course site visible or hidden to students",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_faculty_short_guide": [
+     4
+    ]
+   },
+   "expected_answer_type": "location",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Course Availability: o Open: Open a course when you are ready for students to participate. o Private: Make a course private while you add or experiment with content, and then open it to students when you are ready. Students see private courses in their course lists, but they cannot access them.",
+   "notes": "Faculty short guide p4 puts Course Availability (Open/Private) under Details & Actions, so the answer is to set the course to Open. Content-item visibility (p7-8) is a nearby but separate reading. Blackboard is never named."
+  },
+  "C03": {
+   "id": "C03",
+   "question": "how do i mark a student late instead of absent for last weeks lab",
+   "category": "implicit_system",
+   "family": "taking and managing student attendance records (statuses)",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide",
+    "uos_blackboard_attendance_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_collaborate_guide": [
+     4
+    ],
+    "uos_blackboard_attendance_guide": [
+     1
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "On the attendance panel, select overview at the top right. You will have an overview for all sessions conducted, the students will be marked automatically, and the instructor will be able to change the marks as absent, excused, late and present.",
+   "notes": "Collaborate guide p4 says to open the attendance tool from Details & Actions, choose Overview and change a mark to late. Attendance guide p1 adds that the tool can be used manually to edit statuses. Both guides plausibly answer, and no product is named."
+  },
+  "C04": {
+   "id": "C04",
+   "question": "Quick question, I hope. The room for my Circuits I midterm changed this morning and I need to tell the whole class right away. Can I post a notice in the course that also goes to their email, so nobody misses it? I really don't want 60 students showing up at the wrong building because of me.",
+   "category": "implicit_system",
+   "family": "communicating with the whole class (posting news)",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_faculty_short_guide": [
+     9
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Add the Title, recipients and message of the announcement.  If you want to send a copy of this announcement via Email, check “Send an email copy to recipients” option.",
+   "notes": "Faculty short guide p9 gives the full announcement procedure: Details & Actions > Announcements > plus sign, add title, recipients and message, tick 'Send an email copy to recipients', save, then Post. The communication guide covers discussions, conversations and journals, not announcements."
+  },
+  "C05": {
+   "id": "C05",
+   "question": "is there a way to make missing lab reports count as zero automatically after the due date",
+   "category": "implicit_system",
+   "family": "grading inside the online course (automatic zeros for missing work)",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_gradebook_guide": [
+     7,
+     8
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "In the Gradebook, select the Settings icon to access the Gradebook Settings panel. Select the Assign automatic zeros for past due work check box. This setting is enabled by default in new courses. Next, select Assign Zeros. All past due work will receive automatic zeros.",
+   "notes": "Gradebook guide p7-8 describes the 'Assign automatic zeros for past due work' setting step by step. The question names neither Blackboard nor the Gradebook."
+  },
+  "C06": {
+   "id": "C06",
+   "question": "I ran the similarity check on my journal manuscript before submitting it, and the overall score came back at 34%, which honestly panicked me. Looking closer, a lot of the matches seem to be my own reference list and some standard method descriptions in quotes. Is there a way to leave out the bibliography and quoted material so the percentage shows the real overlap? I want to be sure before I send it to the editor.",
+   "category": "implicit_system",
+   "family": "checking a research manuscript for similarity before journal submission (reading the report, filters)",
+   "answerable": "partial",
+   "expected_domain": "research",
+   "expected_specialist": "research",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": {
+    "uos_ithenticate_guidelines": [
+     1
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "You can discard some resources by clicking on “Exclude resource” ... The user has a multiple settings and filtering options to deal with documents",
+   "notes": "iThenticate guide p1 says only that individual matched sources can be removed with 'Exclude resource' and that 'multiple settings and filtering options' exist. It never says how to exclude the bibliography or quoted material. 'Similarity check' implies iThenticate without naming it."
+  },
+  "C07": {
+   "id": "C07",
+   "question": "Hello! I held my first Blackboard Collaborate Ultra session yesterday and recorded it, but two students were sick and missed it. How do I find that recording and make it available to them (or the whole class) in the course? I'm also not sure whether recordings get deleted after a while, so I'd like to know that too.",
+   "category": "explicit_system",
+   "family": "creating or managing a live online teaching session (recordings)",
+   "answerable": "partial",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_collaborate_guide": [
+     2
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "explicit",
+   "system_inference_required": false,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": true,
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "To allow downloading the recordings select “Allow recording downloads” option.",
+   "notes": "Collaborate guide p2 covers only starting and stopping a recording and the 'Allow recording downloads' session setting. Where to find a recording, how to share it in the course, and how long recordings are kept are not stated. Handbook p194 (courses available for five years) is about course retention, not recordings, and a reader could mistake it for an answer."
+  },
+  "C08": {
+   "id": "C08",
+   "question": "grade transfer dashboard says pending chair approval. how long until grades show in banner",
+   "category": "explicit_system",
+   "family": "submitting final course grades to the student information system and approval steps",
+   "answerable": "partial",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "expected_pages": {
+    "uos_grade_transfer_dashboard_guide": [
+     2,
+     3
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "explicit",
+   "system_inference_required": false,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": false,
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "4. You can click again in View Detail to see the grade under the Banner Column after the approval from Chair and Dean as below:",
+   "notes": "Grade Transfer guide p2-3 says grades appear in the Banner column only after the Chair and the Dean approve them (they approve by selecting Transfer). No source gives a time, so the duration is unsupported. Handbook p224 says Blackboard forwards grades 'automatically' to Banner but states no timing, so there is no differing value for the duration asked.",
+   "adjudication": {
+    "disputed_fields": [
+     "conflict"
+    ],
+    "reason": "Grade Transfer guide p2 step 4 says grades show 'under the Banner Column after the approval from Chair and Dean', and p3 gives the approvers' steps, but neither the guide nor handbook p224 gives a duration. So no source states a value for the asked fact and conflict_status is none."
+   }
+  },
+  "C09": {
+   "id": "C09",
+   "question": "While I was taking attendance online this week I noticed one of my students has already missed 5 lectures in my 3-credit statics course, and we're only in week 6. What is the official absence limit, and at what point am I supposed to warn them or stop them from sitting the final exam? I don't want to be unfair, but I also don't want to break the rules by accident.",
+   "category": "policy_tool_trap",
+   "family": "university policy matters mixed with tool tasks (absence limits while taking attendance)",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     228
+    ]
+   },
+   "expected_answer_type": "policy",
+   "system_named_in_question": "not_applicable",
+   "system_inference_required": false,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "If a student's absences exceed 10% of the total designated hours for one or more courses without an acceptable excuse, the instructor will issue a warning. Absences reaching 15% without an acceptable excuse shall result in a final warning. 3. Absences reaching 20% will prohibit the student from sitting for the final examination(s).",
+   "notes": "Handbook section 12.15 (p228) gives the thresholds: warning above 10%, final warning at 15%, barred from the final at 20%. Excused cases receive a W and are reported to the Registrar. Converting 5 lectures to a percentage is not asked and not stated. The attendance software guides contain no limits."
+  },
+  "C10": {
+   "id": "C10",
+   "question": "who do i call if the course site goes down during my lab? is there an it help desk on campus and where is it",
+   "category": "organizational",
+   "family": "organizational help (who supports the learning platform, where the IT office is)",
+   "answerable": "partial",
+   "expected_domain": "institutional",
+   "expected_specialist": "institutional",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     54,
+     183
+    ]
+   },
+   "expected_answer_type": "contact",
+   "system_named_in_question": "not_applicable",
+   "system_inference_required": false,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": false,
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "5. Service Help Desk: The ITC delivers prompt and quality Service Support & Delivery to the University community, ensuring all technical support requirements are met for desktop, printing, and classroom technologies. ... Information Technology Center +971 6 5050000",
+   "notes": "Handbook p183 says the ITC runs Blackboard and a Service Help Desk, and p54 lists the ITC phone (+971 6 5050000). No source gives the help desk's physical location. The iThenticate guide's servicedesk@sharjah.ac.ae is for iThenticate access only but could plausibly be offered."
+  },
+  "C11": {
+   "id": "C11",
+   "question": "how do i link a microsoft teams meeting into my course so students join from there instead of the built in one",
+   "category": "unsupported",
+   "family": "creating or managing a live online teaching session (another meeting product)",
+   "answerable": "no",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_answer_type": "none",
+   "system_named_in_question": "not_applicable",
+   "system_inference_required": false,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": true,
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "",
+   "notes": "No source mentions Microsoft Teams or replacing Collaborate with an external meeting link. Handbook p194 says only that third-party integrations can be requested from the LMS administrator, which is not a how-to. Faculty short guide p6 'external sources' content is generic."
+  },
+  "C12": {
+   "id": "C12",
+   "question": "where do i see the reports",
+   "category": "ambiguous",
+   "family": "ambiguous (attendance reports, similarity reports, or grade reports)",
+   "answerable": "partial",
+   "expected_domain": "none",
+   "expected_specialist": "none",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide",
+    "uos_ithenticate_guidelines",
+    "uos_blackboard_attendance_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_collaborate_guide": [
+     4
+    ],
+    "uos_ithenticate_guidelines": [
+     1
+    ],
+    "uos_blackboard_attendance_guide": [
+     2
+    ]
+   },
+   "expected_answer_type": "location",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": true,
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "The similarity index and originality report can be found under the “Documents”",
+   "notes": "The question names neither a system nor a report type. Candidate answers sit in software guides across two domains: the iThenticate similarity report under Documents (p1, research), the Collaborate attendance overview and export (p4, teaching) and attendance reporting settings (attendance guide p2). Serving any one would be a guess, so a clarifying fallback is best.",
+   "adjudication": {
+    "disputed_fields": [
+     "answerable",
+     "sources",
+     "sir",
+     "named"
+    ],
+    "reason": "The enabled sources do state where specific reports are found: the iThenticate guide p1 says the similarity report 'can be found under the Documents', and Collaborate guide p4 gives the attendance overview and export. But the question names no system or report type, so it is answerable only for whichever reading is guessed. That makes it partial with a fallback, and it matches the agreed labelling of the near-identical C57."
+   }
+  },
+  "C13": {
+   "id": "C13",
+   "question": "Two things, sorry for bundling them! First, in my live online lecture students keep drawing on the whiteboard and sharing their screens while I'm presenting. How do I make sure only I can present? Second, unrelated: when exactly is the deadline to submit final grades this semester? I've heard different dates from different colleagues and it's stressing me out.",
+   "category": "multi_part",
+   "family": "live session settings (who can present) + university policy (grade deadlines)",
+   "answerable": "partial",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     224
+    ]
+   },
+   "expected_answer_type": "policy",
+   "system_named_in_question": "not_applicable",
+   "system_inference_required": false,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": false,
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Instructors must correct final examination answer sheets or booklets and submit the results, documented in letter grades and percentages, to the Department Chair within forty-eight hours of the examination date.",
+   "notes": "Part 2 is answered by handbook p224 as a relative rule (within 48 hours of the exam). The calendar (p49-50) lists exam dates but no grade-submission date. Part 1 is unsupported: Collaborate guide p2-3 mentions only participant permissions for audio, video and chat and changing roles, nothing about the whiteboard or screen sharing."
+  },
+  "C14": {
+   "id": "C14",
+   "question": "Since final grades go straight into the student record as soon as I click submit, how do I go back and fix a grade I entered wrong yesterday? I typed a B instead of a B+ for one student and I'd like to correct it myself before anyone notices.",
+   "category": "false_premise",
+   "family": "submitting final course grades to the student information system (false assumption of no approval step)",
+   "answerable": "partial",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide",
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_grade_transfer_dashboard_guide": [
+     2,
+     3
+    ],
+    "uos_faculty_handbook_2025_26": [
+     224
+    ]
+   },
+   "expected_answer_type": "mixed",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": false,
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "You can click again in View Detail to see the grade under the Banner Column after the approval from Chair and Dean as below:",
+   "notes": "Grade Transfer guide p2-3 corrects the false premise: transferred grades reach Banner only after Chair and Dean approval, and the Chair/Dean can revise grades (p3). Handbook p224's 'forward it automatically' wording is a mechanism statement and does not say grades post on submission, because the same page routes results through the Chair and College Council. No source describes how an instructor corrects a grade already submitted, so the main ask is unsupported.",
+   "adjudication": {
+    "disputed_fields": [
+     "conflict"
+    ],
+    "reason": "Grade Transfer guide p2 step 4 says grades show under the Banner column only 'after the approval from Chair and Dean', and p3 has the Chair/Dean 'revise grades, and approve'. This corrects the premise. Handbook p224 adds Chair-to-College Council approval and says the Registration Department announces results, so neither source says grades post as soon as they are submitted, and no source gives a procedure for an instructor to correct a grade alone."
+   }
+  },
+  "C15": {
+   "id": "C15",
+   "question": "how to exprot attendnce reprot",
+   "category": "typo_or_short",
+   "family": "taking and managing student attendance records (reports)",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_collaborate_guide": [
+     4
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "If you want to export the attendance sheet, click on export icon, and an excel sheet will be downloaded to your device.",
+   "notes": "Collaborate guide p4 gives the path (Details & Actions > attendance tool > Overview > export icon, which downloads an Excel sheet). The attendance guide p2 ('Attendance Reporting' settings) and gradebook download (p10) are plausible alternatives. Despite the typos, no product is named."
+  },
+  "C16": {
+   "id": "C16",
+   "question": "I conduct a graduate seminar online every Tuesday evening throughout the semester. Rather than arranging the virtual class anew each week, is it possible to set it up once so that it recurs weekly, and will the students find the link in the same place each time?",
+   "category": "implicit_system",
+   "family": "live online sessions - recurring scheduling",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_collaborate_guide": [
+     1,
+     2
+    ]
+   },
+   "expected_answer_type": "mixed",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Name the session and set the start and End date (These dates for the first session) then if these sessions are scheduled for the next weeks, you choose the repeat session option, and then select the repetition method. • The online classes in UOS are weekly. Select the days of the repetitions and set the date of the last session.",
+   "notes": "Collaborate guide p1 covers creating one session with the repeat option (weekly, choose days and last-session date). On p2 it says scheduled sessions appear under Join Session in the Collaborate area, and that you should disable the course room so students do not see two links. The question never names Collaborate or Blackboard."
+  },
+  "C17": {
+   "id": "C17",
+   "question": "I have received the similarity report for a manuscript I intend to submit to a journal, and the overall percentage seems alarmingly high because it appears to count my bibliography and quoted passages. How may I exclude those from the match?",
+   "category": "implicit_system",
+   "family": "manuscript similarity checking - reading the report",
+   "answerable": "partial",
+   "expected_domain": "research",
+   "expected_specialist": "research",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": {
+    "uos_ithenticate_guidelines": [
+     1
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "You can discard some resources by clicking on “Exclude resource”  The user has a multiple settings and filtering options to deal with documents",
+   "notes": "The iThenticate guide (p1) says you can exclude individual matched resources and that settings and filtering options exist. It never says how to exclude the bibliography or quoted material, so the specific ask is unsupported. The question says 'similarity report' but never names iThenticate."
+  },
+  "C18": {
+   "id": "C18",
+   "question": "grades are all entered in my course, how do i actually send the finals over to the registrar? does it go to my chair first or straight through",
+   "category": "implicit_system",
+   "family": "final grade submission and approval",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide",
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_grade_transfer_dashboard_guide": [
+     1,
+     2
+    ],
+    "uos_faculty_handbook_2025_26": [
+     224
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": false,
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": "process conflict: handbook p224 says grades entered in Blackboard are forwarded automatically to Banner; Grade Transfer guide p2 requires the instructor to click Transfer, then Chair and Dean approval",
+   "evidence_quote": "2. Click on View Details on the dashboard 3. Click on Transfer: 4. You can click again in View Detail to see the grade under the Banner Column after the approval from Chair and Dean as below:",
+   "notes": "Grade Transfer guide p1 shows how to reach the dashboard, and p2 gives the steps: search course, View Details, Transfer. Grades reach Banner after Chair and Dean approval, so they do not go straight through. Handbook p224 also routes results to the Department Chair within 48 hours, but says Blackboard forwards grades automatically to Banner, which conflicts with the guide's manual Transfer step."
+  },
+  "C19": {
+   "id": "C19",
+   "question": "student had a doctors note for last thurs, how do i change her from absent to excused in attendance",
+   "category": "implicit_system",
+   "family": "attendance records - statuses",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide",
+    "uos_blackboard_attendance_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_collaborate_guide": [
+     4
+    ],
+    "uos_blackboard_attendance_guide": [
+     1,
+     2
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "From the Details & Actions panel, Click on attendance tool. • On the attendance panel, select overview at the top right. • You will have an overview for all sessions conducted, the students will be marked automatically, and the instructor will be able to change the marks as absent, excused, late and present.",
+   "notes": "Collaborate guide p4 gives the path: Details & Actions, attendance tool, Overview, then change the mark to excused. Attendance guide p2 says a student absent with an acceptable excuse can be changed to excused, and p1 says statuses can be edited manually. 'attendance' is a task word, not a listed product name."
+  },
+  "C20": {
+   "id": "C20",
+   "question": "term started monday and students say they cant see my course page at all. how do i open it up to them",
+   "category": "implicit_system",
+   "family": "course visibility",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_faculty_short_guide": [
+     4
+    ]
+   },
+   "expected_answer_type": "location",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Course Availability: o Open: Open a course when you are ready for students to participate. o Private: Make a course private while you add or experiment with content, and then open it to students when you are ready. Students see private courses in their course lists, but they cannot access them.",
+   "notes": "Short guide p4 lists Course Availability under Details & Actions; setting it to Open lets students access a private course. One nuance: the guide says students can still see a private course in their list but cannot open it. Pages 7-8 add that content items are hidden by default."
+  },
+  "C21": {
+   "id": "C21",
+   "question": "Is there a provision whereby any assignment not submitted by its deadline is automatically recorded as a zero, so that I need not enter each one by hand?",
+   "category": "implicit_system",
+   "family": "online grading - automatic zeros for missing work",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_gradebook_guide": [
+     7,
+     8
+    ]
+   },
+   "expected_answer_type": "yes_no",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "In the Gradebook, select the Settings icon to access the Gradebook Settings panel. Select the Assign automatic zeros for past due work check box. This setting is enabled by default in new courses. Next, select Assign Zeros. All past due work will receive automatic zeros.",
+   "notes": "Gradebook guide p7-8: yes, Gradebook Settings has an option to automatically assign zeros to past-due work, with the steps given. Students can still submit afterwards. The question names no product."
+  },
+  "C22": {
+   "id": "C22",
+   "question": "In Blackboard Collaborate Ultra, how can I restrict students so that they cannot share their screens or present during my lecture, leaving that ability to me alone?",
+   "category": "explicit_system",
+   "family": "live online sessions - presenter and sharing permissions",
+   "answerable": "partial",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_collaborate_guide": [
+     2,
+     3
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "explicit",
+   "system_inference_required": false,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "• The default attendee role for students is participants. • To allow downloading the recordings select “Allow recording downloads” option. • For participant permissions allow the participants to share audio, video and post chat messages.",
+   "notes": "Collaborate guide p2 says students join as participants by default and that participant permissions cover audio, video and chat. P3 says participants can be promoted to moderator. The text never mentions a screen-sharing or presenting permission or how to restrict it, so the core ask is only partly covered."
+  },
+  "C23": {
+   "id": "C23",
+   "question": "my chair sent back my grades in the Grade Transfer Dashboard, how do i fix one grade and resubmit so it gets to Banner",
+   "category": "explicit_system",
+   "family": "final grade submission and approval",
+   "answerable": "partial",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "expected_pages": {
+    "uos_grade_transfer_dashboard_guide": [
+     2,
+     3
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "explicit",
+   "system_inference_required": false,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": true,
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "1. Search for the course by using the search bar at the top of the dashboard to locate the specific course you wish to transfer. You can search by Course ID and Term. 2. Click on View Details on the dashboard 3. Click on Transfer:",
+   "notes": "Grade Transfer guide p2 covers only the first transfer (search, View Details, Transfer). P3 says the Chair or Dean revises and approves. Nothing covers grades sent back by the chair, correcting a single grade, or resubmitting. The Gradebook guide's grade editing could seem relevant, but it is not tied to the transfer."
+  },
+  "C24": {
+   "id": "C24",
+   "question": "marking attendance right now and one student has already missed 6 classes. whats the max absences allowed before they fail or get withdrawn?",
+   "category": "policy_tool_trap",
+   "family": "attendance policy mixed with taking attendance",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     228
+    ]
+   },
+   "expected_answer_type": "policy",
+   "system_named_in_question": "not_applicable",
+   "system_inference_required": false,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "2. If a student's absences exceed 10% of the total designated hours for one or more courses without an acceptable excuse, the instructor will issue a warning. Absences reaching 15% without an acceptable excuse shall result in a final warning. 3. Absences reaching 20% will prohibit the student from sitting for the final examination(s).",
+   "notes": "Handbook p228 sets the limits as percentages of total hours: warning above 10%, final warning at 15%, barred from the final exam at 20%, or a W if the absence is excused. Whether 6 classes crosses a limit depends on total course hours. The Attendance guide covers recording attendance but not the policy, so it may look like a candidate."
+  },
+  "C25": {
+   "id": "C25",
+   "question": "Whom ought I to contact when the course website will not let me upload my reading materials? I would much prefer to speak with someone in person. Is there an office on campus for this sort of thing?",
+   "category": "organizational",
+   "family": "learning platform support contact and location",
+   "answerable": "partial",
+   "expected_domain": "institutional",
+   "expected_specialist": "institutional",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     54,
+     183,
+     192,
+     194
+    ]
+   },
+   "expected_answer_type": "contact",
+   "system_named_in_question": "not_applicable",
+   "system_inference_required": false,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": false,
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Faculty benefit from a range of specialized services offered by the ITC, including: 1. Online Learning System (Blackboard): A web-enabled e-learning platform that facilitates course management and student-centric learning for both faculty and students.",
+   "notes": "Handbook p183 and p192 say the ITC (IT department) runs Blackboard/LMS and offers a Service Help Desk; p54 lists the ITC phone +971 6 5050000. No source gives an on-campus office location or in-person Blackboard support, so that part is unsupported. P194 notes LMS uploads must not exceed 100 MB, which may explain the failed upload."
+  },
+  "C26": {
+   "id": "C26",
+   "question": "can i run my live class through zoom instead and have it auto post the recording to the course page?",
+   "category": "unsupported",
+   "family": "live online sessions - third-party meeting tool",
+   "answerable": "no",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_answer_type": "none",
+   "system_named_in_question": "not_applicable",
+   "system_inference_required": false,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": true,
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "",
+   "notes": "No source mentions Zoom or posting third-party recordings to the course automatically. The Collaborate guide (p2) covers only Collaborate recordings. Handbook p194 says only that third-party integrations can be requested from the LMS administrator, which does not answer the question."
+  },
+  "C27": {
+   "id": "C27",
+   "question": "I was told I must check the report before the deadline. Where is it?",
+   "category": "ambiguous",
+   "family": "unclear - could be similarity, attendance, or grade reports",
+   "answerable": "no",
+   "expected_domain": "none",
+   "expected_specialist": "none",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_answer_type": "none",
+   "system_named_in_question": "not_applicable",
+   "system_inference_required": false,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": true,
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "",
+   "notes": "The question names no report and no system. It could mean the iThenticate similarity report (under 'Documents', p1), Collaborate or attendance reports (attendance guide p2, Collaborate p4), or exam results reports (handbook p224). A clarifying question or fallback is the right response."
+  },
+  "C28": {
+   "id": "C28",
+   "question": "2 things - how do i post an announcement that the midterm moved to next week, and when is the deadline for submitting final grades this term?",
+   "category": "multi_part",
+   "family": "class communication plus grading deadline policy",
+   "answerable": "partial",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_blackboard_faculty_short_guide": [
+     9
+    ],
+    "uos_faculty_handbook_2025_26": [
+     224
+    ]
+   },
+   "expected_answer_type": "mixed",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": false,
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Instructors must correct final examination answer sheets or booklets and submit the results, documented in letter grades and percentages, to the Department Chair within forty-eight hours of the examination date.",
+   "notes": "Short guide p9 answers the announcement part completely: Details & Actions, create Announcements, plus sign, title/recipients/message, save, Post. For the deadline, handbook p224 gives only a relative 48-hour rule, and the calendar (p49-50) has no grade-submission date, so 'this term' cannot be answered as a date. Handbook p223's 'reported to the Department's Chair a week later' applies to exam sheets returned to students, which is a within-source difference and not a conflict between two sources.",
+   "adjudication": {
+    "disputed_fields": [
+     "conflict"
+    ],
+    "reason": "Short guide p9 fully gives the announcement steps, and handbook p224 gives only a relative deadline ('to the Department Chair within forty-eight hours of the examination date') with no date for this term. The p223 'a week later' line is in the same source and concerns exam sheets returned to students, so it is not a conflict between two enabled sources."
+   }
+  },
+  "C29": {
+   "id": "C29",
+   "question": "As I understand it, once I enter marks in the online gradebook they are transmitted automatically to the registrar at the end of term, so no further action is required of me. Is that correct?",
+   "category": "false_premise",
+   "family": "final grade submission and approval",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide",
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_grade_transfer_dashboard_guide": [
+     1,
+     2
+    ],
+    "uos_faculty_handbook_2025_26": [
+     224
+    ]
+   },
+   "expected_answer_type": "yes_no",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": false,
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": "process conflict: handbook p224 says Blackboard forwards grades automatically to Banner; Grade Transfer guide p2 requires the instructor to click Transfer, then Chair and Dean approval",
+   "evidence_quote": "2. Click on View Details on the dashboard 3. Click on Transfer: 4. You can click again in View Detail to see the grade under the Banner Column after the approval from Chair and Dean as below:",
+   "notes": "Grade Transfer guide p1-2 contradicts the premise: the instructor must transfer grades through the dashboard, and they reach Banner only after Chair and Dean approval. Handbook p224 says Blackboard forwards grades automatically, but it also requires submitting results to the Chair within 48 hours, so 'no further action' is false under both sources. 'Gradebook' is named, but the answer is in the Grade Transfer guide."
+  },
+  "C30": {
+   "id": "C30",
+   "question": "itenticate file size limt?",
+   "category": "typo_or_short",
+   "family": "manuscript similarity checking - file limits",
+   "answerable": "yes",
+   "expected_domain": "research",
+   "expected_specialist": "research",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": {
+    "uos_ithenticate_guidelines": [
+     1
+    ]
+   },
+   "expected_answer_type": "value",
+   "system_named_in_question": "explicit",
+   "system_inference_required": false,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Files must be less than 100MB.  The maximum document length is 400 pages.  Files must contain at least 20 words of text.  Files must not exceed 2MB of raw text.  Zip files may contain up to 200MB or 1,000 files.",
+   "notes": "'itenticate' is a misspelling of iThenticate, so the product is explicitly named. iThenticate guide p1 under File Requirements: files under 100MB, at most 2MB of raw text, at most 400 pages, zip files up to 200MB or 1,000 files."
+  },
+  "C31": {
+   "id": "C31",
+   "question": "I teach my graduate seminar online every Wednesday from 6 to 8 pm for the whole semester. Is there a way to set up the virtual class session once so it repeats every week, instead of creating a new one each Wednesday?",
+   "category": "implicit_system",
+   "family": "creating or managing a live online teaching session (recurring weekly sessions)",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_collaborate_guide": [
+     1
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Name the session and set the start and End date (These dates for the first session) then if these sessions are scheduled for the next weeks, you choose the repeat session option, and then select the repetition method. The online classes in UOS are weekly. Select the days of the repetitions and set the date of the last session.",
+   "notes": "Collaborate guide p1 says to create the session via View All Sessions > Create Session, then choose the repeat session option, pick the repeat days and set the date of the last session. The question says only 'virtual class session' and never names Collaborate, so the system has to be inferred. No other guide or handbook text covers recurring sessions."
+  },
+  "C32": {
+   "id": "C32",
+   "question": "My PhD student's journal draft came back at 41% similarity, but most of the matches are the reference list and some quoted definitions. When I open the similarity report, how do I exclude the bibliography and quotes so I only see the real overlap?",
+   "category": "implicit_system",
+   "family": "checking a research manuscript for similarity before journal submission (reading the report)",
+   "answerable": "partial",
+   "expected_domain": "research",
+   "expected_specialist": "research",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": {
+    "uos_ithenticate_guidelines": [
+     1
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "You need to click on report percentage shown to be able to view the similarity report ... You can discard some resources by clicking on “Exclude resource” ... The user has a multiple settings and filtering options to deal with documents",
+   "notes": "iThenticate guide p1 covers opening the similarity report, excluding individual sources with 'Exclude resource', and says only that 'multiple settings and filtering options' exist. It never says how to exclude the bibliography or quoted material, so the core ask is unsupported and only part of the question is answered. The handbook does not mention iThenticate."
+  },
+  "C33": {
+   "id": "C33",
+   "question": "I finished entering the final grades for both of my sections. How do I send them to the official student records system so my chair and then the dean can approve them?",
+   "category": "implicit_system",
+   "family": "submitting final course grades to the student information system and approval steps",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "expected_pages": {
+    "uos_grade_transfer_dashboard_guide": [
+     1,
+     2,
+     3
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": "process discrepancy: handbook p224 says grades entered in Blackboard are forwarded automatically to Banner, while Grade Transfer guide p2-3 has the instructor click Transfer on the dashboard and grades reach Banner after Chair and Dean approval",
+   "evidence_quote": "2. Click on View Details on the dashboard 3. Click on Transfer: 4. You can click again in View Detail to see the grade under the Banner Column after the approval from Chair and Dean",
+   "notes": "Grade Transfer guide p1 covers access (Institution Page announcement link or op.sharjah.ac.ae/GradeTransfer). P2 covers search by Course ID and Term, View Details and Transfer, and p3 covers Chair/Dean approval, which matches the chair-then-dean flow the question assumes. The question names neither Grade Transfer nor Banner, so the system is implicit. Handbook p224's automatic-forwarding statement differs on whether a sending step exists, but the guide is the specific operational procedure.",
+   "adjudication": {
+    "disputed_fields": [
+     "conflict"
+    ],
+    "reason": "The Grade Transfer guide answers it in full: access on p1, then on p2 '2. Click on View Details ... 3. Click on Transfer ... after the approval from Chair and Dean', and the approvers' steps on p3. Handbook p224 says instead that grades entered in Blackboard are forwarded 'automatically' to Banner, which is a different procedure for the asked sending step, so the discrepancy is recorded."
+   }
+  },
+  "C34": {
+   "id": "C34",
+   "question": "I marked one student absent in today lecture by mistake, he was only 10 minutes late. How I can change his status to late after I already saved the attendance?",
+   "category": "implicit_system",
+   "family": "taking and managing student attendance records (statuses)",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide",
+    "uos_blackboard_attendance_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_collaborate_guide": [
+     4
+    ],
+    "uos_blackboard_attendance_guide": [
+     1
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "From the Details & Actions panel, Click on attendance tool. • On the attendance panel, select overview at the top right. • You will have an overview for all sessions conducted, the students will be marked automatically, and the instructor will be able to change the marks as absent, excused, late and present.",
+   "notes": "Collaborate guide p4 gives the path to the attendance overview and states that the instructor can change marks to absent, excused, late or present. Attendance guide p1 confirms the tool can be used manually to insert or edit attendance statuses. Only task words are used, so the system must be inferred."
+  },
+  "C35": {
+   "id": "C35",
+   "question": "Is there a setting so students who never submitted the homework automatically get a zero once the due date passes? I have 120 students and I don't want to type 0 into every empty cell.",
+   "category": "implicit_system",
+   "family": "grading inside the online course (automatic zeros for missing work)",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_gradebook_guide": [
+     7,
+     8
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "In the Gradebook, select the Settings icon to access the Gradebook Settings panel. Select the Assign automatic zeros for past due work check box. This setting is enabled by default in new courses. Next, select Assign Zeros. All past due work will receive automatic zeros.",
+   "notes": "Gradebook guide p7 lists 'Automatically assign zeros to missing work past the due date' among the Gradebook Settings, and p8 gives the exact steps. The question never names Blackboard or the Gradebook."
+  },
+  "C36": {
+   "id": "C36",
+   "question": "Classes start on Sunday and a few students emailed me saying they can't see my course page at all. How do I make the course available to them?",
+   "category": "implicit_system",
+   "family": "making a course site visible or hidden to students",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_faculty_short_guide": [
+     4
+    ]
+   },
+   "expected_answer_type": "location",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Course Availability: o Open: Open a course when you are ready for students to participate. o Private: Make a course private while you add or experiment with content, and then open it to students when you are ready. Students see private courses in their course lists, but they cannot access them.",
+   "notes": "Short guide p4 places Course Availability under Details & Actions and says to set it to Open for students to participate. The question uses only 'course page', so the system must be inferred. The guide does not cover enrollment problems (handbook p193 says LMS courses are generated from SIS schedules), but the asked action is answered."
+  },
+  "C37": {
+   "id": "C37",
+   "question": "In Blackboard Ultra, how do I download the gradebook to Excel, fix some marks offline, and upload the file back without overwriting the other grade columns?",
+   "category": "explicit_system",
+   "family": "grading inside the online course (downloading and uploading grades)",
+   "answerable": "partial",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_gradebook_guide": [
+     2,
+     10
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "explicit",
+   "system_inference_required": false,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "In the gradebook list or grid view, select the icon with the down arrow to open the Download Gradebook panel. Make your selections: ... Download the full gradebook or select columns. ... You can upload a grade file you worked on offline and update your gradebook. To upload a correctly formatted file, download the gradebook.",
+   "notes": "Gradebook guide p10 gives complete download steps (full gradebook or selected columns, CSV or XLS). For upload it says only that you can upload an edited file, with no click-steps. It never says whether an upload overwrites or preserves other grade columns, so that part is unsupported."
+  },
+  "C38": {
+   "id": "C38",
+   "question": "What is the maximum file size and page count that iThenticate accepts? My manuscript with high-resolution figures is a 70 MB PDF and the upload keeps failing.",
+   "category": "explicit_system",
+   "family": "checking a research manuscript for similarity (file limits)",
+   "answerable": "yes",
+   "expected_domain": "research",
+   "expected_specialist": "research",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": {
+    "uos_ithenticate_guidelines": [
+     1
+    ]
+   },
+   "expected_answer_type": "value",
+   "system_named_in_question": "explicit",
+   "system_inference_required": false,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Files must be less than 100MB. ... The maximum document length is 400 pages. ... Files must contain at least 20 words of text. ... Files must not exceed 2MB of raw text.",
+   "notes": "iThenticate guide p1 File Requirements gives under 100MB and a maximum of 400 pages, which answers both asked values. The 70 MB PDF is under the size limit, and the guide does not diagnose upload failures beyond listing the other limits, such as 2MB of raw text. Handbook p194's 100 MB limit applies to LMS content, not iThenticate."
+  },
+  "C39": {
+   "id": "C39",
+   "question": "I'm taking attendance for my Monday/Wednesday section right now. How many absences can a student have before they are withdrawn or get a failing grade, and is the limit different for a class that meets three times a week?",
+   "category": "policy_tool_trap",
+   "family": "university policy matters (absence limits) mixed with attendance taking",
+   "answerable": "partial",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     228,
+     225
+    ]
+   },
+   "expected_answer_type": "policy",
+   "system_named_in_question": "not_applicable",
+   "system_inference_required": false,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": false,
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "If a student's absences exceed 10% of the total designated hours for one or more courses without an acceptable excuse, the instructor will issue a warning. Absences reaching 15% without an acceptable excuse shall result in a final warning. 3. Absences reaching 20% will prohibit the student from sitting for the final examination(s).",
+   "notes": "Handbook p228 sets the limits as percentages of total designated hours: 10% warning, 15% final warning, 20% barred from the final exam, and W for acceptable reasons. P225 adds that missing the final without excuse may result in a failing grade. No absence count is given, and nothing explicitly addresses a three-times-a-week class. The attendance guides give no limits."
+  },
+  "C40": {
+   "id": "C40",
+   "question": "Who is responsible for support of the online course platform? My course copy from last term did not work and I need someone to fix it. Where is their office and is there a phone number?",
+   "category": "organizational",
+   "family": "organizational help (who supports the learning platform, office location)",
+   "answerable": "partial",
+   "expected_domain": "institutional",
+   "expected_specialist": "institutional",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     183,
+     192,
+     54
+    ]
+   },
+   "expected_answer_type": "contact",
+   "system_named_in_question": "not_applicable",
+   "system_inference_required": false,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": false,
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "The IT department administers the LMS to provide enhanced access to education by offering courses in various virtual methods to students ... Information Technology Center +971 6 5050000 +971 6 5585101",
+   "notes": "Handbook p192 says the IT department administers the LMS, p183 lists Blackboard and a Service Help Desk among ITC services, and p54 gives the ITC phone (+971 6 5050000). No source gives the ITC office location or a course-copy repair channel. The servicedesk email in the iThenticate guide is for iThenticate only."
+  },
+  "C41": {
+   "id": "C41",
+   "question": "Does the university provide faculty with a Turnitin account? I'd like to run my PhD students' thesis chapters through Turnitin before their defense.",
+   "category": "unsupported",
+   "family": "checking manuscripts for plagiarism with a different product",
+   "answerable": "no",
+   "expected_domain": "research",
+   "expected_specialist": "research",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_answer_type": "none",
+   "system_named_in_question": "not_applicable",
+   "system_inference_required": false,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": true,
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "",
+   "notes": "No enabled source mentions Turnitin, so whether the university provides it is unsupported. The iThenticate guide p1 describes iThenticate as the tool university researchers use to check plagiarism and could be mentioned as an alternative, but it does not answer the Turnitin question."
+  },
+  "C42": {
+   "id": "C42",
+   "question": "How do I check the status of my submissions?",
+   "category": "ambiguous",
+   "family": "unclear: assignment submissions, grade submission, or manuscript submission",
+   "answerable": "partial",
+   "expected_domain": "none",
+   "expected_specialist": "none",
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide",
+    "uos_grade_transfer_dashboard_guide",
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": {
+    "uos_blackboard_gradebook_guide": [
+     2,
+     4
+    ],
+    "uos_grade_transfer_dashboard_guide": [
+     2
+    ],
+    "uos_ithenticate_guidelines": [
+     1
+    ]
+   },
+   "expected_answer_type": "mixed",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": true,
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "In the Status column, you can see completed work, items that need grading, and grades you need to post.",
+   "notes": "The question is ambiguous and could mean student assignment submissions (Gradebook p2 progress, p4 Status column), the instructor's grade submission (Grade Transfer p2, View Details), or a manuscript submission (iThenticate p1, Documents). Each guide answers a different reading, so a clarifying fallback is better than picking one."
+  },
+  "C43": {
+   "id": "C43",
+   "question": "Two quick things: how do I hide a folder with the exam answer keys from students until after the midterm, and how do I let my TA share their screen during the live online class?",
+   "category": "multi_part",
+   "family": "organizing course content plus live online session roles",
+   "answerable": "partial",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_faculty_short_guide": [
+     7,
+     8
+    ],
+    "uos_blackboard_collaborate_guide": [
+     2,
+     3
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": false,
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "You can also create rules to release content based on date, time, or how a student performs on other items in your course. ... you can check the participants in the session by clicking on the second option in the panel and change any participant to moderator if needed.",
+   "notes": "Part 1 is answered: short guide p7-8 says folders and modules are hidden by default and can be released with date/time visibility conditions. Part 2 is only partly supported: Collaborate p3 lets you promote a participant to moderator and lists 'Show applications from your computer' as shareable content. No text says a moderator or TA can share their screen, and p2 participant permissions cover only audio, video and chat."
+  },
+  "C44": {
+   "id": "C44",
+   "question": "I read that once I upload my manuscript to the university's similarity checker, it gets forwarded automatically to the journal I select. How do I stop that until my co-authors approve the final version?",
+   "category": "false_premise",
+   "family": "checking a research manuscript for similarity before journal submission",
+   "answerable": "no",
+   "expected_domain": "research",
+   "expected_specialist": "research",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_answer_type": "none",
+   "system_named_in_question": "not_applicable",
+   "system_inference_required": false,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": true,
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "",
+   "notes": "The premise (that the similarity checker forwards manuscripts to a journal) is neither confirmed nor explicitly corrected. iThenticate guide p1 describes only upload, analysis and the similarity report under Documents, and never mentions journals or forwarding. Handbook p162 says co-authors should approve the final manuscript before submission, which is tangential and does not address how to stop forwarding."
+  },
+  "C45": {
+   "id": "C45",
+   "question": "how downlod atendence reprot",
+   "category": "typo_or_short",
+   "family": "taking and managing student attendance records (reports)",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_collaborate_guide": [
+     4
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "From the Details & Actions panel, Click on attendance tool. • On the attendance panel, select overview at the top right. ... If you want to export the attendance sheet, click on export icon, and an excel sheet will be downloaded to your device.",
+   "notes": "Collaborate guide p4 gives the steps: attendance tool in Details & Actions, Overview, then the export icon, which downloads an Excel sheet. 'Attendance' is a task word, not a product name, so the system must be inferred. The Attendance guide p2 'Attendance Reporting' section, which covers report settings only, and the Gradebook download could plausibly be mistaken for the answer."
+  },
+  "C46": {
+   "id": "C46",
+   "question": "I teach two sections of intro biology with about 150 students each, and every Tuesday at 10am we meet online. Is there a way to set up that live class once so it repeats every week for the whole semester, instead of me creating a new session every Monday night?",
+   "category": "implicit_system",
+   "family": "creating or managing a live online teaching session (recurring weekly sessions)",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_collaborate_guide": [
+     1
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Name the session and set the start and End date (These dates for the first session) then if these sessions are scheduled for the next weeks, you choose the repeat session option, and then select the repetition method. • The online classes in UOS are weekly. Select the days of the repetitions and set the date of the last session.",
+   "notes": "Collaborate guide p1 gives the recurring-session steps (View All Sessions > Create Session > repeat session option, repetition days, last session date). The question never names Collaborate, so the system must be inferred from 'live class'/'meet online'."
+  },
+  "C47": {
+   "id": "C47",
+   "question": "I ran my journal manuscript through the similarity check and got 34%, but most of the matches look like my own reference list and quoted passages. How do I read the report properly and exclude the bibliography and quotes from the score?",
+   "category": "implicit_system",
+   "family": "checking a research manuscript for similarity before journal submission (reading the report)",
+   "answerable": "partial",
+   "expected_domain": "research",
+   "expected_specialist": "research",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": {
+    "uos_ithenticate_guidelines": [
+     1
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "You can discard some resources by clicking on “Exclude resource”",
+   "notes": "iThenticate guide p1 says the report is under Documents, opened by clicking the percentage, and individual sources can be removed with 'Exclude resource'; it only mentions 'multiple settings and filtering options' and never states how to exclude the bibliography or quotes. Reading the report is partly covered, excluding bibliography/quotes is not."
+  },
+  "C48": {
+   "id": "C48",
+   "question": "My course gradebook is finished for the term. What are the actual steps to send the final letter grades to the registrar's records system, and who has to approve them after I hit submit?",
+   "category": "implicit_system",
+   "family": "submitting final course grades to the student information system and approval steps",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide",
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_grade_transfer_dashboard_guide": [
+     1,
+     2,
+     3
+    ],
+    "uos_faculty_handbook_2025_26": [
+     224
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": false,
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": "process conflict: Grade Transfer guide p2-3 has the instructor click Transfer, then Chair and Dean approve before grades appear in Banner; handbook p224 says Blackboard forwards grades to Banner automatically and the Department Chair submits results to the College Council for approval",
+   "evidence_quote": "2. Click on View Details on the dashboard 3. Click on Transfer: 4. You can click again in View Detail to see the grade under the Banner Column after the approval from Chair and Dean",
+   "notes": "Grade Transfer guide p1-3 gives the full instructor procedure (access, search by Course ID and Term, View Details, Transfer) and Chair and Dean approval. Handbook p224 names a different approval body (College Council via the Chair) and describes forwarding as automatic, so the approver answer differs between sources. 'Gradebook' is named, but the Grade Transfer guide answers the question, and Grade Transfer and Banner are not named, so the system is implicit.",
+   "adjudication": {
+    "disputed_fields": [
+     "plan_f_should_serve"
+    ],
+    "reason": "The guide gives the steps (p1-2) and names the approvers as 'Chair and Dean' (p2-3). Handbook p224 says Blackboard forwards grades automatically and that 'The Department Chair shall then submit the results to the College Council for approval'. Because the two sources name different approvers for the asked 'who has to approve', a guide-only verbatim answer is acceptable but not clearly complete, so plan_f is 'either'."
+   }
+  },
+  "C49": {
+   "id": "C49",
+   "question": "I accidentally marked a student absent for last Thursday's lecture when she had a medical note. How do I go back and change that day's record to excused?",
+   "category": "implicit_system",
+   "family": "taking and managing student attendance records (editing statuses)",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide",
+    "uos_blackboard_attendance_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_collaborate_guide": [
+     4
+    ],
+    "uos_blackboard_attendance_guide": [
+     1,
+     2
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "From the Details & Actions panel, Click on attendance tool. • On the attendance panel, select overview at the top right. • You will have an overview for all sessions conducted, the students will be marked automatically, and the instructor will be able to change the marks as absent, excused, late and present.",
+   "notes": "Collaborate guide p4 gives the path (Details & Actions > attendance tool > Overview) and says the instructor can change marks to excused; attendance guide p1-2 confirms statuses can be edited manually and an excused absence may be changed to excused. No product is named."
+  },
+  "C50": {
+   "id": "C50",
+   "question": "With 180 students someone always forgets the weekly quiz. Can I make the course automatically put a zero in for anyone who didn't submit by the deadline, so the running totals aren't inflated?",
+   "category": "implicit_system",
+   "family": "grading inside the online course (automatic zeros for missing work)",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_gradebook_guide": [
+     7,
+     8
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "In the Gradebook, select the Settings icon to access the Gradebook Settings panel. Select the Assign automatic zeros for past due work check box. This setting is enabled by default in new courses. Next, select Assign Zeros. All past due work will receive automatic zeros. Affected students’ point totals will update.",
+   "notes": "Gradebook guide p8 (and p7 settings list) gives the complete automatic-zeros procedure and states point totals update. The question names no product ('the course')."
+  },
+  "C51": {
+   "id": "C51",
+   "question": "I just finished building my course page for spring but students say they can't see it yet. How do I open it up to them, and is there a way to check what it looks like from a student's side before I do?",
+   "category": "implicit_system",
+   "family": "making a course site visible to students and previewing the student view",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_faculty_short_guide": [
+     4,
+     5
+    ]
+   },
+   "expected_answer_type": "mixed",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Course Availability: o Open: Open a course when you are ready for students to participate. o Private: Make a course private while you add or experiment with content, and then open it to students when you are ready. Students see private courses in their course lists, but they cannot access them.",
+   "notes": "Short guide p4 (Details & Actions > Course Availability: Open vs Private) answers how to open the course; p5 confirms student preview lets you review content from a student's perspective. The text does not give the click path for student preview, but the question only asks whether a way exists."
+  },
+  "C52": {
+   "id": "C52",
+   "question": "In Blackboard Collaborate Ultra, how do I stop students from sharing their screens or drawing on the whiteboard during my lecture? I want to be the only presenter unless I promote someone.",
+   "category": "explicit_system",
+   "family": "creating or managing a live online teaching session (presenter and sharing permissions)",
+   "answerable": "partial",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_collaborate_guide": [
+     2,
+     3
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "explicit",
+   "system_inference_required": false,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "The default attendee role for students is participants. • To allow downloading the recordings select “Allow recording downloads” option. • For participant permissions allow the participants to share audio, video and post chat messages.",
+   "notes": "Collaborate guide p2 states students join as participants and that participant permissions (audio, video, chat) are set in Session Settings; p3 says any participant can be changed to moderator. Nothing in the text covers disabling screen sharing or whiteboard drawing, or a presenter role."
+  },
+  "C53": {
+   "id": "C53",
+   "question": "Is it possible to download my whole Blackboard Ultra gradebook to Excel, fix a batch of midterm marks offline, and then upload the file back without messing up the columns?",
+   "category": "explicit_system",
+   "family": "grading inside the online course (downloading and uploading grades)",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_gradebook_guide": [
+     2,
+     10
+    ]
+   },
+   "expected_answer_type": "mixed",
+   "system_named_in_question": "explicit",
+   "system_inference_required": false,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "You can upload a grade file you worked on offline and update your gradebook. To upload a correctly formatted file, download the gradebook. Then, edit the file with the data you want to upload.",
+   "notes": "Gradebook guide p2 and p10 confirm the gradebook can be downloaded (full or selected columns, CSV or XLS), edited offline and uploaded again, and that downloading first gives a correctly formatted file. Blackboard Ultra gradebook is named."
+  },
+  "C54": {
+   "id": "C54",
+   "question": "I'm recording attendance for my first-year section and one student has already missed seven classes this semester. What is the university's actual absence limit, and what am I supposed to do once a student goes over it?",
+   "category": "policy_tool_trap",
+   "family": "university policy (absence limits) mixed with attendance taking",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     228
+    ]
+   },
+   "expected_answer_type": "policy",
+   "system_named_in_question": "not_applicable",
+   "system_inference_required": false,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "If a student's absences exceed 10% of the total designated hours for one or more courses without an acceptable excuse, the instructor will issue a warning. Absences reaching 15% without an acceptable excuse shall result in a final warning. 3. Absences reaching 20% will prohibit the student from sitting for the final examination(s).",
+   "notes": "Handbook section 12.15 (p228) gives the limits as percentages of designated hours (10% warning by instructor, 15% final warning, 20% barred from final, W for acceptable reasons, cases reported to the Registrar's Office). Whether seven classes crosses a threshold depends on total hours, which the source cannot settle; the attendance guide covers recording only, not policy."
+  },
+  "C55": {
+   "id": "C55",
+   "question": "I'm back after several years at another institution. If my course site isn't showing up or something breaks during a live class, who actually supports the learning platform here, and where is that office on campus?",
+   "category": "organizational",
+   "family": "organizational help (who supports the learning platform, where the support office is)",
+   "answerable": "partial",
+   "expected_domain": "institutional",
+   "expected_specialist": "institutional",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_faculty_handbook_2025_26": [
+     54,
+     183,
+     192
+    ]
+   },
+   "expected_answer_type": "contact",
+   "system_named_in_question": "not_applicable",
+   "system_inference_required": false,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Faculty benefit from a range of specialized services offered by the ITC, including: 1. Online Learning System (Blackboard): A web-enabled e-learning platform that facilitates course management and student-centric learning for both faculty and students.",
+   "notes": "Handbook p183 names the ITC as provider of Blackboard and its Service Help Desk, p192 says the IT department administers the LMS, and p54 lists the ITC phone number. No source gives the ITC office's physical location on campus."
+  },
+  "C56": {
+   "id": "C56",
+   "question": "At my previous university we ran everything through Zoom with breakout rooms linked into Canvas. How do I connect my Zoom account to my course here so the meeting link and recordings show up for students automatically?",
+   "category": "unsupported",
+   "family": "live online sessions using a different platform",
+   "answerable": "no",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [],
+   "expected_pages": {},
+   "expected_answer_type": "none",
+   "system_named_in_question": "not_applicable",
+   "system_inference_required": false,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": true,
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "",
+   "notes": "No source mentions Zoom or Canvas or any Zoom-to-course integration; the documented live-session tool is Blackboard Collaborate (Collaborate guide p1-2). Handbook p194 only says third-party integration requests go to the LMS administrator, which does not answer how to connect Zoom."
+  },
+  "C57": {
+   "id": "C57",
+   "question": "where do i find the reports for my class?",
+   "category": "ambiguous",
+   "family": "ambiguous across attendance, grading, and similarity reports",
+   "answerable": "partial",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide",
+    "uos_blackboard_attendance_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_collaborate_guide": [
+     4
+    ],
+    "uos_blackboard_attendance_guide": [
+     2
+    ]
+   },
+   "expected_answer_type": "location",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": true,
+   "plan_f_should_serve": false,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "From the Details & Actions panel, Click on attendance tool. • On the attendance panel, select overview at the top right.",
+   "notes": "'Reports for my class' does not say which report. The class-level reports the sources describe are attendance reports (Collaborate p4 overview/export, attendance guide p2 reporting settings), while gradebook progress (gradebook p2) and the handbook's exam-results report (p224) are other readings. The iThenticate similarity report (p1) belongs to a researcher-oriented tool, not a class, so it is a weak reading; a clarifying fallback beats picking one.",
+   "adjudication": {
+    "disputed_fields": [
+     "sources"
+    ],
+    "reason": "The only course-level 'reports' the source text describes are attendance reports: Collaborate guide p4 ('On the attendance panel, select overview at the top right', plus export) and attendance guide p2 ('set your attendance reports'). The iThenticate guide p1 frames that tool for 'university researchers' and authors' own documents, not a class, so it is left out for 'reports for my class'. The report type is still unstated, so a fallback is preferred."
+   }
+  },
+  "C58": {
+   "id": "C58",
+   "question": "Two quick things: how do I post a news item to all my students that the midterm room has changed, and separately, how do I hide the old syllabus file so they only see the updated version?",
+   "category": "multi_part",
+   "family": "communicating with the whole class plus organizing course content",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_faculty_short_guide": [
+     7,
+     8,
+     9
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "From details and actions click on create Announcements.",
+   "notes": "Short guide p9 gives the full announcement procedure (create, title/recipients/message, optional email copy, Post), and p7-8 say an item's visibility can be changed to hide it from students. Both parts are answered; the communication guide (discussions) is a plausible but wrong alternative."
+  },
+  "C59": {
+   "id": "C59",
+   "question": "Since the online gradebook pushes final grades straight into the student records system automatically at the end of term, I don't need to do anything else after entering the final exam marks, right?",
+   "category": "false_premise",
+   "family": "submitting final course grades (assumes automatic transfer without submission or approval)",
+   "answerable": "partial",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide",
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": {
+    "uos_grade_transfer_dashboard_guide": [
+     2,
+     3
+    ],
+    "uos_faculty_handbook_2025_26": [
+     224
+    ]
+   },
+   "expected_answer_type": "yes_no",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": true,
+   "fallback_preferred": false,
+   "plan_f_should_serve": null,
+   "fallback_acceptable": true,
+   "conflict_status": "process conflict: handbook p224 says Blackboard forwards grades automatically to Banner, while Grade Transfer guide p2 requires the instructor to click Transfer and grades reach Banner only after Chair and Dean approval",
+   "evidence_quote": "3. Click on Transfer: 4. You can click again in View Detail to see the grade under the Banner Column after the approval from Chair and Dean",
+   "notes": "Grade Transfer guide p2-3 corrects the premise: the instructor must transfer via the dashboard and Chair and Dean approve; handbook p224 also requires submitting results and documents to the Department Chair within 48 hours. But the same handbook page says Blackboard forwards grades automatically to Banner, which partly supports the premise."
+  },
+  "C60": {
+   "id": "C60",
+   "question": "how to recrod live clas sesion",
+   "category": "typo_or_short",
+   "family": "creating or managing a live online teaching session (recordings)",
+   "answerable": "yes",
+   "expected_domain": "teaching",
+   "expected_specialist": "teaching",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": {
+    "uos_blackboard_collaborate_guide": [
+     2
+    ]
+   },
+   "expected_answer_type": "procedure",
+   "system_named_in_question": "implicit",
+   "system_inference_required": true,
+   "multiple_guides_plausible": false,
+   "fallback_preferred": false,
+   "plan_f_should_serve": true,
+   "fallback_acceptable": true,
+   "conflict_status": null,
+   "evidence_quote": "Once accessing collaborate and the session loads, instructor can start recording the session by clicking on “Start recording on the top left tab. Once the session ends, you must click on stop recording to end recording of the session.",
+   "notes": "Collaborate guide p2 (Collaborate panel, item 1) gives start/stop recording; p2 also mentions the 'Allow recording downloads' setting. The typo-laden question names no product, so Collaborate must be inferred."
+  }
+ }
+}

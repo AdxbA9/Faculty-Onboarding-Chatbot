@@ -9,6 +9,82 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-11-01 - Safe guide-intent inference and blind fresh held-out validation (post-freeze phase PF-5C)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/post-freeze-knowledge-expansion` |
+| Starting commit | `a394887` (PF-5B) |
+| Ending state | COMPLETE. D-115 deterministic guide-intent inference (candidates only, never evidence) with a strict evidence profile for inferred clauses and refusal-only grounding fixes; 0 wrong Plan F answers in every set; P0, P1, the diagnostic sets and the frozen 192 unchanged; blind fresh held-out measured honestly (0 of 60 served, 0 of 25 implicit-system answerable); one local commit for the project owner to push; `PLAN_F_GUIDE_SCOPES` stays off by default |
+| Freeze status | I-9 (`runtime-freeze-i9`, D-108) remains the frozen baseline and comparison control; the frozen specialists and the Coordinator are not changed; with guide scopes off nothing of D-115 runs |
+| Elapsed | 4h23m24s (start 2026-10-31T22:15:37Z, end 2026-11-01T02:39:01Z; includes the background evaluation runs) |
+
+### Before and after
+
+| | PF-5B | PF-5C |
+|---|---|---|
+| P0 core guide questions served (correct / limited / wrong) | 21 of 37 (19 / 2 / 0) | 21 of 37 (19 / 2 / 0); every guide answer byte-identical |
+| P1 questions served (correct / limited / wrong) | 7 of 41 (5 / 2 / 0) | 7 of 41 (5 / 2 / 0); B10 the same words in another layout |
+| PF-4 held-out served (diagnostic) | 1 of 50 | 1 of 50 (unchanged) |
+| PF-5B fresh served (diagnostic) | 0 of 56 | 0 of 56 (unchanged) |
+| PF-5C fresh served (answerable; implicit-system answerable) | - | 0 of 60 (0 of 31; 0 of 25), 0 wrong |
+| frozen 192-question set | 55 served, 0 wrong | 55 served (same set), 0 wrong, 0 false acceptances, guide registry never selected |
+| wrong-source check | 60 cases, 0 acceptances | 88 cases, 0 acceptances, 0 violations |
+
+### Completed
+
+- A new blind fresh held-out set (60 questions) written by four independent writer agents before any PF-5C code, frozen with its
+  hash pinned by a test, labelled afterwards by two independent labelers per question plus an adjudicator (31 answerable, 23
+  partially, 6 not at all; 36 need system inference); never read by the implementing session before the final run.
+- D-115: new module `guide_inference` (79 printed signals, threshold 2.0, margin 1.5, a distinctive object; refusals before
+  scoring for named systems, other platforms, organizational, support, policy, permission, other actors, own attendance or
+  accommodation, delegated or scoped tasks, and every ask but a procedure; collision blocks); `bind(inferred=True)` lifts only
+  the system-name check; strict evidence profile for inferred clauses; recomputation in the adapter; registry selection, owner
+  assignment with a decline rule, no handoff dropping; Developer-mode diagnostics.
+- Two adversarial rounds (3,069 probes, 58 findings, 53 confirmed, all fixed by refusing more) and a HEAD-versus-final
+  worst-case differential over 2,368 probe questions (8 newly accepted, all correct).
+
+### Tests performed
+
+- PF-5C evaluation (307 questions: P0 100, P1 41, PF-4 held-out 50, PF-5B fresh 56, PF-5C fresh 60; ACTIVE, DIRECT, SHADOW, scopes
+  off, LEGACY, two repeats): results above; SHADOW 307 of 307 identical; scopes off versus on 48 differences, all reviewed guide
+  answers or the same visible legacy fallback; 600 repeat records, 0 differences; 0 exceptions; 0 model calls. Every served
+  answer reviewed (one new verdict: B10, correct).
+- Frozen 192-question set with guide scopes on: the same 55 answers as I-9, 0 wrong, 0 false acceptances, SHADOW 192 of 192;
+  T07 legacy citation as in PF-4.
+- Wrong-source 88 cases (28 new inference collisions): 0 wrong-source acceptances, 0 violations, 11 served, all correct.
+  Inference adversarial 30 of 30 refused. LEGACY fresh process 20 of 20 minimal, no D-115 module imported.
+- Application smoke (ACTIVE, 19 turns): 9 served, all correct, 10 fallbacks, 0 wrong, 0 model calls.
+- Performance (idle, same 191 questions, PF-5B versus PF-5C code): no regression; inference 0.4 ms p50 per question.
+- Targeted gate (33 modules): 2,827 passed. Full suite: 7,279 passed, 0 failed, 0 skipped, 0 xfail (7,082 at the start; 197
+  new). `pip check`: no broken requirements. Security scan: 0 problems in the 37 changed and new files.
+
+### Known limitations
+
+- Fresh generalization is not achieved: 0 of 60 served. Inference fires on 4 of 36 implicit questions (all to the right guide),
+  but 19 of the 31 answerable fresh questions are conversational (a context sentence plus the ask) and stop at the I-5
+  all-or-nothing multi-part contract; others are refused by the shared organizational vocabulary or carry typos in task words.
+- Worst-case location, selection and yes/no statements for named-system questions can still pick a statement about another
+  object (PF-5B-era grounding; not reached by any evaluated set).
+
+### Next task
+
+PF-6 Final English Technical Freeze (guide scopes stay off by default).
+
+### Blockers
+
+None.
+
+### Files changed
+
+`handbook_bot/guide_inference.py` (new), `handbook_bot/guide_grounding.py`, `handbook_bot/plan_f_runtime.py`,
+`handbook_bot/source_scopes.py`, `handbook_bot/agents/specialists/guide_evidence.py`, `ui/pipeline.py`, `ui/presentation.py`,
+`tests/test_pf5c_inference.py` (new), `tests/test_multi_source.py`, `tests/test_p1_guides.py`, `qa/post_freeze_pf5c/` (new),
+`docs/DECISIONS.md` (D-115), `docs/STATUS.md`.
+
+---
+
 ## 2026-10-31 - Natural-language guide generalization and fresh held-out validation (post-freeze phase PF-5B)
 
 | Field | Value |

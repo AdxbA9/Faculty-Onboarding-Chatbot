@@ -1,0 +1,758 @@
+{
+ "method": "PF-5C inference adversarial check (D-115) with the REAL models on the eight-source knowledge base.\n\nQuestions that must NOT be inferred into a software guide: the six the project owner listed (single ambiguous words and\npronoun asks), and more of the same kinds (weak single words, policy and authority asks, organizational and contact asks,\nother platforms, collisions). For each question the guide-enabled runtime (``build_runtime(kb, guide_scopes=True)``)\nattempts it; the check passes when guide inference refuses it (question and every clause) AND no guide answer is served.\nWrites ``inference_adversarial.json``.\n\n    python -X utf8 qa/post_freeze_pf5c/inference_adversarial.py <repo> <out json>",
+ "summary": {
+  "cases": 30,
+  "passed": 30,
+  "failed": [],
+  "inference_accepted": [],
+  "guide_served": [],
+  "plan_f_served_handbook": [],
+  "seconds": 41.6
+ },
+ "cases": [
+  {
+   "id": "X01",
+   "kind": "owner_listed",
+   "question": "I need help with grades.",
+   "inference_refused": true,
+   "inference_reason": "support",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "support",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X02",
+   "kind": "owner_listed",
+   "question": "How do I use the system?",
+   "inference_refused": true,
+   "inference_reason": "no_signal",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X03",
+   "kind": "owner_listed",
+   "question": "Where is the report?",
+   "inference_refused": true,
+   "inference_reason": "intent:location",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "intent:location",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "intent:location",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X04",
+   "kind": "owner_listed",
+   "question": "How do I submit it?",
+   "inference_refused": true,
+   "inference_reason": "no_signal",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X05",
+   "kind": "owner_listed",
+   "question": "Can I collaborate with someone?",
+   "inference_refused": true,
+   "inference_reason": "intent:yes_no",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "intent:yes_no",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "intent:yes_no",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X06",
+   "kind": "owner_listed",
+   "question": "Where do I record this?",
+   "inference_refused": true,
+   "inference_reason": "intent:location",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "intent:location",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "intent:location",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X07",
+   "kind": "weak_word",
+   "question": "How do I submit grades?",
+   "inference_refused": true,
+   "inference_reason": "weak",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "weak",
+     "family": "grade_transfer",
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "weak",
+     "family": "grade_transfer",
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X08",
+   "kind": "weak_word",
+   "question": "Where are my submissions?",
+   "inference_refused": true,
+   "inference_reason": "intent:location",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "intent:location",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "intent:location",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X09",
+   "kind": "weak_word",
+   "question": "How do I check my messages?",
+   "inference_refused": true,
+   "inference_reason": "no_signal",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X10",
+   "kind": "weak_word",
+   "question": "How do I create a session?",
+   "inference_refused": true,
+   "inference_reason": "weak",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "weak",
+     "family": "blackboard",
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "weak",
+     "family": "blackboard",
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X11",
+   "kind": "weak_word",
+   "question": "How do I teach online?",
+   "inference_refused": true,
+   "inference_reason": "no_signal",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X12",
+   "kind": "weak_word",
+   "question": "Where can I find the reports?",
+   "inference_refused": true,
+   "inference_reason": "intent:location",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "intent:location",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "intent:location",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X13",
+   "kind": "weak_word",
+   "question": "How do I upload a document?",
+   "inference_refused": true,
+   "inference_reason": "weak",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "weak",
+     "family": "blackboard",
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "weak",
+     "family": "blackboard",
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X14",
+   "kind": "weak_word",
+   "question": "Is attendance shown to students?",
+   "inference_refused": true,
+   "inference_reason": "intent:yes_no",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "intent:yes_no",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "intent:yes_no",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X15",
+   "kind": "policy",
+   "question": "What is the attendance policy?",
+   "inference_refused": true,
+   "inference_reason": "policy",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "policy",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "policy",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X16",
+   "kind": "policy",
+   "question": "Do I have to take attendance in every lecture?",
+   "inference_refused": true,
+   "inference_reason": "policy",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "policy",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "policy",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X17",
+   "kind": "policy",
+   "question": "What is the deadline to submit final grades?",
+   "inference_refused": true,
+   "inference_reason": "policy",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "policy",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "policy",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X18",
+   "kind": "policy",
+   "question": "What is the penalty for plagiarism?",
+   "inference_refused": true,
+   "inference_reason": "policy",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "policy",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "policy",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X19",
+   "kind": "policy",
+   "question": "Am I required to use the discussion board in my course?",
+   "inference_refused": true,
+   "inference_reason": "policy",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "policy",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "policy",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X20",
+   "kind": "authority",
+   "question": "Who approves final grades?",
+   "inference_refused": true,
+   "inference_reason": "organizational",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "organizational",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "organizational",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X21",
+   "kind": "organizational",
+   "question": "Where is the e-learning support office?",
+   "inference_refused": true,
+   "inference_reason": "organizational",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "organizational",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "organizational",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X22",
+   "kind": "organizational",
+   "question": "Which team helps faculty with online classes?",
+   "inference_refused": true,
+   "inference_reason": "organizational",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "organizational",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "organizational",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X23",
+   "kind": "organizational",
+   "question": "Who do I contact about the similarity report?",
+   "inference_refused": true,
+   "inference_reason": "organizational",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "organizational",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "organizational",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X24",
+   "kind": "organizational",
+   "question": "How do I approve final grades as chair?",
+   "inference_refused": true,
+   "inference_reason": "organizational",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "organizational",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "organizational",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X25",
+   "kind": "other_platform",
+   "question": "How do I schedule a Zoom meeting for my online class?",
+   "inference_refused": true,
+   "inference_reason": "other_platform",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "other_platform",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "other_platform",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X26",
+   "kind": "other_platform",
+   "question": "How do I check the similarity report in Turnitin?",
+   "inference_refused": true,
+   "inference_reason": "other_platform",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "other_platform",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "other_platform",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X27",
+   "kind": "collision",
+   "question": "How do I check my students' assignments for plagiarism?",
+   "inference_refused": true,
+   "inference_reason": "weak",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "weak",
+     "family": "blackboard",
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "weak",
+     "family": "blackboard",
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X28",
+   "kind": "collision",
+   "question": "How do I add a journal to my research publications?",
+   "inference_refused": true,
+   "inference_reason": "no_signal",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X29",
+   "kind": "collision",
+   "question": "How do I send final grades to my students?",
+   "inference_refused": true,
+   "inference_reason": "no_signal",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X30",
+   "kind": "collision",
+   "question": "How do I upload final grades?",
+   "inference_refused": true,
+   "inference_reason": "ambiguous",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "ambiguous",
+     "family": "blackboard",
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "ambiguous",
+     "family": "blackboard",
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  }
+ ]
+}

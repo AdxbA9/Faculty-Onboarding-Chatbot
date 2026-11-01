@@ -1,0 +1,1720 @@
+{
+ "method": "PF-5C derived QA records from the evaluation results, the review table and the PF-5B results (answer text at most 160\ncharacters; the inference records hold signal keys, families and scores only):\n\n* ``inference_analysis.json``: per set, how often guide inference was accepted and why it refused; for every PF-5C fresh\n  question its label (answerable, system named or implicit) and what inference and Plan F did;\n* ``pf4_diagnostic_comparison.json`` / ``pf5b_diagnostic_comparison.json``: the PF-4 held-out and PF-5B fresh sets before (PF-5B\n  final code) and after (PF-5C), served or not and the answer hash, with every change listed;\n* ``procedure_qa.json``: every served procedure, section or list whose verdict was given in the PF-5C review: pages, part count,\n  first and last unit, verbatim check and the hand verdict.\n\n    python -X utf8 qa/post_freeze_pf5c/derive.py <results.json> <review table> <PF-5B results.json> <labels.json> <qa dir>",
+ "summary": {
+  "per_set": {
+   "p0": {
+    "questions": 100,
+    "inference_accepted": 2,
+    "accepted_ids": [
+     "G38",
+     "C13"
+    ],
+    "served_after_inference": [],
+    "reasons": {
+     "explicit": 86,
+     "accepted": 2,
+     "other_platform": 1,
+     "organizational": 5,
+     "policy": 3,
+     "intent:value": 2,
+     "no_signal": 1
+    }
+   },
+   "p1": {
+    "questions": 41,
+    "inference_accepted": 0,
+    "accepted_ids": [],
+    "served_after_inference": [],
+    "reasons": {
+     "explicit": 35,
+     "policy": 1,
+     "other_platform": 2,
+     "no_signal": 1,
+     "intent:unrecognised": 1,
+     "intent:value": 1
+    }
+   },
+   "held_out": {
+    "questions": 50,
+    "inference_accepted": 0,
+    "accepted_ids": [],
+    "served_after_inference": [],
+    "reasons": {
+     "explicit": 31,
+     "role_object": 1,
+     "organizational": 7,
+     "weak": 1,
+     "policy": 1,
+     "no_signal": 3,
+     "intent:yes_no": 1,
+     "intent:unrecognised": 3,
+     "intent:location": 1,
+     "other_platform": 1
+    }
+   },
+   "fresh5b": {
+    "questions": 56,
+    "inference_accepted": 2,
+    "accepted_ids": [
+     "F26",
+     "F36"
+    ],
+    "served_after_inference": [],
+    "reasons": {
+     "weak": 2,
+     "no_signal": 4,
+     "intent:location": 3,
+     "policy": 7,
+     "organizational": 11,
+     "explicit": 17,
+     "intent:yes_no": 3,
+     "other_actor": 2,
+     "intent:unrecognised": 4,
+     "accepted": 2,
+     "other_platform": 1
+    }
+   },
+   "fresh5c": {
+    "questions": 60,
+    "inference_accepted": 4,
+    "accepted_ids": [
+     "F5C_C02",
+     "F5C_C19",
+     "F5C_C28",
+     "F5C_C43"
+    ],
+    "served_after_inference": [],
+    "reasons": {
+     "no_signal": 6,
+     "accepted": 4,
+     "organizational": 13,
+     "intent:unrecognised": 5,
+     "explicit": 12,
+     "policy": 7,
+     "other_platform": 4,
+     "intent:location": 2,
+     "role_object": 2,
+     "other_actor": 1,
+     "weak": 4
+    }
+   }
+  },
+  "fresh5c_implicit": {
+   "questions": 36,
+   "inference_accepted": 4,
+   "inferred_matches_label": 4,
+   "inferred_wrong_guide": [],
+   "refusal_reasons": {
+    "no_signal": 6,
+    "organizational": 9,
+    "intent:unrecognised": 5,
+    "intent:location": 2,
+    "role_object": 2,
+    "other_actor": 1,
+    "weak": 3,
+    "policy": 1,
+    "n/a": 3
+   }
+  },
+  "fresh5c_not_implicit_inferred": []
+ },
+ "fresh5c": [
+  {
+   "id": "F5C_C01",
+   "category": "fresh5c_implicit_system",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "no_signal",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C02",
+   "category": "fresh5c_implicit_system",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "named": [],
+   "inferred": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_communication_guide"
+   ],
+   "inference": {
+    "accepted": true,
+    "reason": "accepted",
+    "family": "blackboard",
+    "candidates": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_communication_guide"
+    ],
+    "score": 2.5,
+    "runner_up": null,
+    "margin": 2.5,
+    "signals": [
+     "blackboard.visible",
+     "blackboard.course"
+    ]
+   },
+   "inferred_family_matches_label": true,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C03",
+   "category": "fresh5c_implicit_system",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide",
+    "uos_blackboard_attendance_guide"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "organizational",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C04",
+   "category": "fresh5c_implicit_system",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "organizational",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C05",
+   "category": "fresh5c_implicit_system",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "organizational",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C06",
+   "category": "fresh5c_implicit_system",
+   "answerable": "partial",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "intent:unrecognised",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C07",
+   "category": "fresh5c_explicit_system",
+   "answerable": "partial",
+   "system": "explicit",
+   "system_inference_required": false,
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide",
+    "uos_blackboard_attendance_guide",
+    "uos_blackboard_collaborate_guide",
+    "uos_blackboard_communication_guide"
+   ],
+   "inferred": [],
+   "inference": null,
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_HANDOFF",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C08",
+   "category": "fresh5c_explicit_system",
+   "answerable": "partial",
+   "system": "explicit",
+   "system_inference_required": false,
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "named": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "inferred": [],
+   "inference": null,
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C09",
+   "category": "fresh5c_policy_tool_trap",
+   "answerable": "yes",
+   "system": "not_applicable",
+   "system_inference_required": false,
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "policy",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C10",
+   "category": "fresh5c_organizational",
+   "answerable": "partial",
+   "system": "not_applicable",
+   "system_inference_required": false,
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "organizational",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_HANDOFF",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C11",
+   "category": "fresh5c_unsupported",
+   "answerable": "no",
+   "system": "not_applicable",
+   "system_inference_required": false,
+   "expected_sources": [],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "other_platform",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C12",
+   "category": "fresh5c_ambiguous",
+   "answerable": "partial",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide",
+    "uos_ithenticate_guidelines",
+    "uos_blackboard_attendance_guide"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "intent:location",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C13",
+   "category": "fresh5c_multi_part",
+   "answerable": "partial",
+   "system": "not_applicable",
+   "system_inference_required": false,
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "policy",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C14",
+   "category": "fresh5c_false_premise",
+   "answerable": "partial",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide",
+    "uos_faculty_handbook_2025_26"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "role_object",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C15",
+   "category": "fresh5c_typo_or_short",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "no_signal",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C16",
+   "category": "fresh5c_implicit_system",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "other_actor",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C17",
+   "category": "fresh5c_implicit_system",
+   "answerable": "partial",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "intent:unrecognised",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C18",
+   "category": "fresh5c_implicit_system",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide",
+    "uos_faculty_handbook_2025_26"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "organizational",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C19",
+   "category": "fresh5c_implicit_system",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide",
+    "uos_blackboard_attendance_guide"
+   ],
+   "named": [],
+   "inferred": [
+    "uos_blackboard_attendance_guide",
+    "uos_blackboard_collaborate_guide"
+   ],
+   "inference": {
+    "accepted": true,
+    "reason": "accepted",
+    "family": "blackboard",
+    "candidates": [
+     "uos_blackboard_attendance_guide",
+     "uos_blackboard_collaborate_guide"
+    ],
+    "score": 2.0,
+    "runner_up": null,
+    "margin": 2.0,
+    "signals": [
+     "blackboard.attendance"
+    ]
+   },
+   "inferred_family_matches_label": true,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C20",
+   "category": "fresh5c_implicit_system",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "weak",
+    "family": "blackboard",
+    "candidates": [],
+    "score": 0.5,
+    "runner_up": null,
+    "margin": 0.5,
+    "signals": [
+     "blackboard.course"
+    ]
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C21",
+   "category": "fresh5c_implicit_system",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "policy",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C22",
+   "category": "fresh5c_explicit_system",
+   "answerable": "partial",
+   "system": "explicit",
+   "system_inference_required": false,
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide",
+    "uos_blackboard_attendance_guide",
+    "uos_blackboard_collaborate_guide",
+    "uos_blackboard_communication_guide"
+   ],
+   "inferred": [],
+   "inference": null,
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C23",
+   "category": "fresh5c_explicit_system",
+   "answerable": "partial",
+   "system": "explicit",
+   "system_inference_required": false,
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "named": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "inferred": [],
+   "inference": null,
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C24",
+   "category": "fresh5c_policy_tool_trap",
+   "answerable": "yes",
+   "system": "not_applicable",
+   "system_inference_required": false,
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "policy",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C25",
+   "category": "fresh5c_organizational",
+   "answerable": "partial",
+   "system": "not_applicable",
+   "system_inference_required": false,
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "organizational",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C26",
+   "category": "fresh5c_unsupported",
+   "answerable": "no",
+   "system": "not_applicable",
+   "system_inference_required": false,
+   "expected_sources": [],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "other_platform",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C27",
+   "category": "fresh5c_ambiguous",
+   "answerable": "no",
+   "system": "not_applicable",
+   "system_inference_required": false,
+   "expected_sources": [],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "policy",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C28",
+   "category": "fresh5c_multi_part",
+   "answerable": "partial",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_faculty_handbook_2025_26"
+   ],
+   "named": [],
+   "inferred": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "inference": {
+    "accepted": true,
+    "reason": "accepted",
+    "family": "blackboard",
+    "candidates": [
+     "uos_blackboard_faculty_short_guide"
+    ],
+    "score": 2.0,
+    "runner_up": null,
+    "margin": 2.0,
+    "signals": [
+     "blackboard.announcement"
+    ]
+   },
+   "inferred_family_matches_label": true,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C29",
+   "category": "fresh5c_false_premise",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide",
+    "uos_faculty_handbook_2025_26"
+   ],
+   "named": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "inferred": [],
+   "inference": null,
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C30",
+   "category": "fresh5c_typo_or_short",
+   "answerable": "yes",
+   "system": "explicit",
+   "system_inference_required": false,
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "inferred": [],
+   "inference": null,
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C31",
+   "category": "fresh5c_implicit_system",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "intent:unrecognised",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C32",
+   "category": "fresh5c_implicit_system",
+   "answerable": "partial",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "no_signal",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C33",
+   "category": "fresh5c_implicit_system",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "organizational",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C34",
+   "category": "fresh5c_implicit_system",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide",
+    "uos_blackboard_attendance_guide"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "role_object",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C35",
+   "category": "fresh5c_implicit_system",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "organizational",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C36",
+   "category": "fresh5c_implicit_system",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "weak",
+    "family": "blackboard",
+    "candidates": [],
+    "score": 0.5,
+    "runner_up": null,
+    "margin": 0.5,
+    "signals": [
+     "blackboard.course"
+    ]
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C37",
+   "category": "fresh5c_explicit_system",
+   "answerable": "partial",
+   "system": "explicit",
+   "system_inference_required": false,
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide",
+    "uos_blackboard_attendance_guide",
+    "uos_blackboard_collaborate_guide",
+    "uos_blackboard_communication_guide"
+   ],
+   "inferred": [],
+   "inference": null,
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C38",
+   "category": "fresh5c_explicit_system",
+   "answerable": "yes",
+   "system": "explicit",
+   "system_inference_required": false,
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "named": [
+    "uos_ithenticate_guidelines"
+   ],
+   "inferred": [],
+   "inference": null,
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C39",
+   "category": "fresh5c_policy_tool_trap",
+   "answerable": "partial",
+   "system": "not_applicable",
+   "system_inference_required": false,
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "policy",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C40",
+   "category": "fresh5c_organizational",
+   "answerable": "partial",
+   "system": "not_applicable",
+   "system_inference_required": false,
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "organizational",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C41",
+   "category": "fresh5c_unsupported",
+   "answerable": "no",
+   "system": "not_applicable",
+   "system_inference_required": false,
+   "expected_sources": [],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "other_platform",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C42",
+   "category": "fresh5c_ambiguous",
+   "answerable": "partial",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide",
+    "uos_grade_transfer_dashboard_guide",
+    "uos_ithenticate_guidelines"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "no_signal",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C43",
+   "category": "fresh5c_multi_part",
+   "answerable": "partial",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_collaborate_guide"
+   ],
+   "named": [],
+   "inferred": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "inference": {
+    "accepted": true,
+    "reason": "accepted",
+    "family": "blackboard",
+    "candidates": [
+     "uos_blackboard_collaborate_guide"
+    ],
+    "score": 2.0,
+    "runner_up": null,
+    "margin": 2.0,
+    "signals": [
+     "blackboard.online_class"
+    ]
+   },
+   "inferred_family_matches_label": true,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C44",
+   "category": "fresh5c_false_premise",
+   "answerable": "no",
+   "system": "not_applicable",
+   "system_inference_required": false,
+   "expected_sources": [],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "weak",
+    "family": "ithenticate",
+    "candidates": [],
+    "score": 1.0,
+    "runner_up": null,
+    "margin": 1.0,
+    "signals": [
+     "ithenticate.similarity"
+    ]
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C45",
+   "category": "fresh5c_typo_or_short",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "intent:unrecognised",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C46",
+   "category": "fresh5c_implicit_system",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "intent:unrecognised",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C47",
+   "category": "fresh5c_implicit_system",
+   "answerable": "partial",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "weak",
+    "family": "ithenticate",
+    "candidates": [],
+    "score": 1.0,
+    "runner_up": null,
+    "margin": 1.0,
+    "signals": [
+     "ithenticate.similarity"
+    ]
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C48",
+   "category": "fresh5c_implicit_system",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide",
+    "uos_faculty_handbook_2025_26"
+   ],
+   "named": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "inferred": [],
+   "inference": null,
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C49",
+   "category": "fresh5c_implicit_system",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide",
+    "uos_blackboard_attendance_guide"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "no_signal",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C50",
+   "category": "fresh5c_implicit_system",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "organizational",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C51",
+   "category": "fresh5c_implicit_system",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "organizational",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C52",
+   "category": "fresh5c_explicit_system",
+   "answerable": "partial",
+   "system": "explicit",
+   "system_inference_required": false,
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide",
+    "uos_blackboard_attendance_guide",
+    "uos_blackboard_collaborate_guide",
+    "uos_blackboard_communication_guide"
+   ],
+   "inferred": [],
+   "inference": null,
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C53",
+   "category": "fresh5c_explicit_system",
+   "answerable": "yes",
+   "system": "explicit",
+   "system_inference_required": false,
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "named": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide",
+    "uos_blackboard_attendance_guide",
+    "uos_blackboard_collaborate_guide",
+    "uos_blackboard_communication_guide"
+   ],
+   "inferred": [],
+   "inference": null,
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C54",
+   "category": "fresh5c_policy_tool_trap",
+   "answerable": "yes",
+   "system": "not_applicable",
+   "system_inference_required": false,
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "policy",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C55",
+   "category": "fresh5c_organizational",
+   "answerable": "partial",
+   "system": "not_applicable",
+   "system_inference_required": false,
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "organizational",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C56",
+   "category": "fresh5c_unsupported",
+   "answerable": "no",
+   "system": "not_applicable",
+   "system_inference_required": false,
+   "expected_sources": [],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "other_platform",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C57",
+   "category": "fresh5c_ambiguous",
+   "answerable": "partial",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide",
+    "uos_blackboard_attendance_guide"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "intent:location",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_UNSAFE_RESULT",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C58",
+   "category": "fresh5c_multi_part",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "organizational",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C59",
+   "category": "fresh5c_false_premise",
+   "answerable": "partial",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide",
+    "uos_faculty_handbook_2025_26"
+   ],
+   "named": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "inferred": [],
+   "inference": null,
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "verdict": null
+  },
+  {
+   "id": "F5C_C60",
+   "category": "fresh5c_typo_or_short",
+   "answerable": "yes",
+   "system": "implicit",
+   "system_inference_required": true,
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "named": [],
+   "inferred": [],
+   "inference": {
+    "accepted": false,
+    "reason": "no_signal",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "runner_up": null,
+    "margin": null,
+    "signals": []
+   },
+   "inferred_family_matches_label": null,
+   "served": "legacy",
+   "guide_served": false,
+   "outcome": "PLAN_F_NOT_APPLICABLE",
+   "verdict": null
+  }
+ ]
+}

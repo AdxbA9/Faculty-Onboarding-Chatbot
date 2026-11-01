@@ -345,7 +345,22 @@ def _source_scope_label(d: Mapping[str, Any]) -> str:
         return "handbook only (guide scopes off)"
     if not d.get("guide_scope_selected"):
         return "handbook only (no guide system named)"
+    if not d.get("guide_sources_named") and d.get("guide_sources_inferred"):     # post-freeze PF-5C (D-115)
+        return "handbook + inferred guides: " + ", ".join(str(s) for s in d["guide_sources_inferred"])
     return "handbook + guides: " + ", ".join(str(s) for s in (d.get("guide_sources_named") or []))
+
+
+def _inference_label(d: Mapping[str, Any]) -> str:
+    """Post-freeze PF-5C (D-115): the guide-intent inference of a question that names no system (Developer mode only)."""
+    inf = d.get("guide_inference")
+    if not isinstance(inf, Mapping):
+        return NA
+    if inf.get("accepted"):
+        return "accepted: %s %.1f, runner-up %s %.1f, margin %.1f (%s)" % (
+            inf.get("family"), inf.get("score") or 0.0, inf.get("runner_up") or "none", inf.get("runner_up_score") or 0.0,
+            inf.get("margin") or 0.0, ", ".join(str(s) for s in inf.get("signals") or []))
+    detail = (" (%s %.1f)" % (inf.get("family"), inf.get("score") or 0.0)) if inf.get("family") else ""
+    return "refused: %s%s" % (inf.get("reason"), detail)
 
 
 def dev_sections(result: Any, diagnostics: Optional[Mapping[str, Any]], kb_stats: Optional[Mapping[str, Any]] = None,
@@ -376,6 +391,8 @@ def dev_sections(result: Any, diagnostics: Optional[Mapping[str, Any]], kb_stats
                    ("Specialist calls", str(d["specialist_calls"]) if _present(d, "specialist_calls") else NA)]
         if d.get("guide_scope_enabled") is not None:              # post-freeze PF-3B: only when the runtime recorded it
             routing.append(("Source scope", _source_scope_label(d)))
+        if d.get("guide_inference"):                               # post-freeze PF-5C (D-115): only when a system was not named
+            routing.append(("Guide inference", _inference_label(d)))
         if d.get("guide_answer_forms"):                            # post-freeze PF-3C (D-111): how the guide answer was assembled
             routing.append(("Guide answer", "%s (%d part%s)" % (", ".join(str(f).replace("_", " ") for f in d["guide_answer_forms"]),
                                                                 int(d.get("guide_answer_parts") or 0),

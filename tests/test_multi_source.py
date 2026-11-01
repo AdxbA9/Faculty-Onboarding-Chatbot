@@ -516,14 +516,22 @@ def test_the_guide_registry_is_used_only_for_a_question_that_names_a_guide_syste
         ("How do I transfer grades to Banner?", [GRADE_TRANSFER]),
         ("How do I access iThenticate?", [ITHENTICATE]),
         ("What is the minimum size of a Blackboard course banner image?", [SHORT_GUIDE, GRADEBOOK, *P1_GUIDES]),   # not Banner
-        ("Can I upload a banner image for my course?", []),
         ("How many credit hours is a full teaching load?", []),
         ("How do I start the Phase 2 progress review in the HR Portal?", []),          # the held appraisal guide has no scope
         ("What is the grading policy for final examinations?", []),
     ]:
         registry, record = runtime.select_registry(question)
-        assert record == {"enabled": True, "selected": bool(named), "named": named}, question
+        if named:
+            assert record == {"enabled": True, "selected": True, "named": named}, question
+        else:                                               # post-freeze PF-5C (D-115): the inference record, nothing inferred
+            assert {k: record[k] for k in ("enabled", "selected", "named", "inferred")} == {
+                "enabled": True, "selected": False, "named": [], "inferred": []}, question
+            assert record["inference"]["accepted"] is False, question
         assert registry is (runtime.guide_registry if named else runtime.registry), question
+    # post-freeze PF-5C (D-115): a question that names no system but prints a guide's object is inferred to be about it
+    registry, record = runtime.select_registry("How do I upload a banner image for my course?")
+    assert record["named"] == [] and record["inferred"] == [SHORT_GUIDE] and record["selected"] is True
+    assert registry is runtime.guide_registry
     plain, _ = PF.build_runtime(kb, guide_scopes=False)
     assert plain.select_registry("How do I access iThenticate?") == (plain.registry, {"enabled": False, "selected": False, "named": []})
 

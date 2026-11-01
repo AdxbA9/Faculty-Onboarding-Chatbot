@@ -1,0 +1,890 @@
+{
+ "phase": "PF-5C",
+ "decision": "D-115 Safe guide-intent inference",
+ "date": "2026-11-01",
+ "corpus": {
+  "enabled_sources": 8,
+  "pages": 309,
+  "chunks": 15000,
+  "guide_scopes_default": "OFF"
+ },
+ "fresh5c": {
+  "frozen": {
+   "sha256": "3c8325a7e306b4d300d09d581185160e02db655d579317c6136033d95bcde4ad",
+   "frozen_at": "2026-10-31T22:18:30Z",
+   "questions": 60
+  },
+  "counts": {
+   "questions": 60,
+   "yes": 31,
+   "partial": 23,
+   "no": 6
+  },
+  "implicit_system_answerable": 25,
+  "explicit_system_answerable": 3,
+  "handbook_answerable": 3,
+  "all": {
+   "questions": 60,
+   "plan_f_served": 0,
+   "guide_served": 0,
+   "fallback": 60,
+   "correct": 0,
+   "limited": 0,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": null,
+   "coverage_pct": 0.0,
+   "served_ids": [],
+   "stop_layers": {
+    "aggregation (a clause unsupported)": 36,
+    "no guide system named or inferred (inference organizational)": 1,
+    "routing ambiguity": 7,
+    "routing (no specialist selected)": 9,
+    "handoff": 2,
+    "no guide system named or inferred (inference other_platform)": 1,
+    "no guide system named or inferred (inference policy)": 1,
+    "no approved guide for the owning specialist": 1,
+    "grounding (an asked word the evidence does not print)": 1,
+    "no guide system named or inferred (inference intent:location)": 1
+   }
+  },
+  "answerable_yes": {
+   "questions": 31,
+   "plan_f_served": 0,
+   "guide_served": 0,
+   "fallback": 31,
+   "correct": 0,
+   "limited": 0,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": null,
+   "coverage_pct": 0.0,
+   "served_ids": [],
+   "stop_layers": {
+    "aggregation (a clause unsupported)": 19,
+    "no guide system named or inferred (inference organizational)": 1,
+    "routing ambiguity": 3,
+    "routing (no specialist selected)": 5,
+    "no guide system named or inferred (inference policy)": 1,
+    "no approved guide for the owning specialist": 1,
+    "grounding (an asked word the evidence does not print)": 1
+   }
+  },
+  "partial": {
+   "questions": 23,
+   "plan_f_served": 0,
+   "guide_served": 0,
+   "fallback": 23,
+   "correct": 0,
+   "limited": 0,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": null,
+   "coverage_pct": 0.0,
+   "served_ids": [],
+   "stop_layers": {
+    "routing ambiguity": 3,
+    "handoff": 2,
+    "aggregation (a clause unsupported)": 15,
+    "routing (no specialist selected)": 2,
+    "no guide system named or inferred (inference intent:location)": 1
+   }
+  },
+  "not_answerable": {
+   "questions": 6,
+   "plan_f_served": 0,
+   "guide_served": 0,
+   "fallback": 6,
+   "correct": 0,
+   "limited": 0,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": null,
+   "coverage_pct": 0.0,
+   "served_ids": [],
+   "stop_layers": {
+    "no guide system named or inferred (inference other_platform)": 1,
+    "aggregation (a clause unsupported)": 2,
+    "routing (no specialist selected)": 2,
+    "routing ambiguity": 1
+   }
+  },
+  "implicit": {
+   "questions": 25,
+   "plan_f_served": 0,
+   "guide_served": 0,
+   "fallback": 25,
+   "correct": 0,
+   "limited": 0,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": null,
+   "coverage_pct": 0.0,
+   "served_ids": [],
+   "stop_layers": {
+    "aggregation (a clause unsupported)": 16,
+    "no guide system named or inferred (inference organizational)": 1,
+    "routing ambiguity": 2,
+    "routing (no specialist selected)": 5,
+    "no guide system named or inferred (inference policy)": 1
+   }
+  },
+  "coverage_all_pct": 0.0,
+  "coverage_answerable_pct": 0.0,
+  "implicit_system_coverage_pct": 0.0,
+  "should_serve_false_but_served": [],
+  "false_fallbacks_answerable": {
+   "F5C_C01": "aggregation (a clause unsupported)",
+   "F5C_C02": "aggregation (a clause unsupported)",
+   "F5C_C03": "no guide system named or inferred (inference organizational)",
+   "F5C_C04": "routing ambiguity",
+   "F5C_C05": "routing (no specialist selected)",
+   "F5C_C09": "aggregation (a clause unsupported)",
+   "F5C_C15": "routing (no specialist selected)",
+   "F5C_C16": "aggregation (a clause unsupported)",
+   "F5C_C18": "routing ambiguity",
+   "F5C_C19": "aggregation (a clause unsupported)",
+   "F5C_C20": "aggregation (a clause unsupported)",
+   "F5C_C21": "no guide system named or inferred (inference policy)",
+   "F5C_C24": "aggregation (a clause unsupported)",
+   "F5C_C29": "aggregation (a clause unsupported)",
+   "F5C_C30": "no approved guide for the owning specialist",
+   "F5C_C31": "aggregation (a clause unsupported)",
+   "F5C_C33": "aggregation (a clause unsupported)",
+   "F5C_C34": "aggregation (a clause unsupported)",
+   "F5C_C35": "routing (no specialist selected)",
+   "F5C_C36": "aggregation (a clause unsupported)",
+   "F5C_C38": "aggregation (a clause unsupported)",
+   "F5C_C45": "routing (no specialist selected)",
+   "F5C_C46": "aggregation (a clause unsupported)",
+   "F5C_C48": "aggregation (a clause unsupported)",
+   "F5C_C49": "aggregation (a clause unsupported)",
+   "F5C_C50": "aggregation (a clause unsupported)",
+   "F5C_C51": "aggregation (a clause unsupported)",
+   "F5C_C53": "grounding (an asked word the evidence does not print)",
+   "F5C_C54": "routing ambiguity",
+   "F5C_C58": "aggregation (a clause unsupported)",
+   "F5C_C60": "routing (no specialist selected)"
+  }
+ },
+ "inference": {
+  "per_set": {
+   "p0": {
+    "questions": 100,
+    "inference_accepted": 2,
+    "accepted_ids": [
+     "G38",
+     "C13"
+    ],
+    "served_after_inference": [],
+    "reasons": {
+     "explicit": 86,
+     "accepted": 2,
+     "other_platform": 1,
+     "organizational": 5,
+     "policy": 3,
+     "intent:value": 2,
+     "no_signal": 1
+    }
+   },
+   "p1": {
+    "questions": 41,
+    "inference_accepted": 0,
+    "accepted_ids": [],
+    "served_after_inference": [],
+    "reasons": {
+     "explicit": 35,
+     "policy": 1,
+     "other_platform": 2,
+     "no_signal": 1,
+     "intent:unrecognised": 1,
+     "intent:value": 1
+    }
+   },
+   "held_out": {
+    "questions": 50,
+    "inference_accepted": 0,
+    "accepted_ids": [],
+    "served_after_inference": [],
+    "reasons": {
+     "explicit": 31,
+     "role_object": 1,
+     "organizational": 7,
+     "weak": 1,
+     "policy": 1,
+     "no_signal": 3,
+     "intent:yes_no": 1,
+     "intent:unrecognised": 3,
+     "intent:location": 1,
+     "other_platform": 1
+    }
+   },
+   "fresh5b": {
+    "questions": 56,
+    "inference_accepted": 2,
+    "accepted_ids": [
+     "F26",
+     "F36"
+    ],
+    "served_after_inference": [],
+    "reasons": {
+     "weak": 2,
+     "no_signal": 4,
+     "intent:location": 3,
+     "policy": 7,
+     "organizational": 11,
+     "explicit": 17,
+     "intent:yes_no": 3,
+     "other_actor": 2,
+     "intent:unrecognised": 4,
+     "accepted": 2,
+     "other_platform": 1
+    }
+   },
+   "fresh5c": {
+    "questions": 60,
+    "inference_accepted": 4,
+    "accepted_ids": [
+     "F5C_C02",
+     "F5C_C19",
+     "F5C_C28",
+     "F5C_C43"
+    ],
+    "served_after_inference": [],
+    "reasons": {
+     "no_signal": 6,
+     "accepted": 4,
+     "organizational": 13,
+     "intent:unrecognised": 5,
+     "explicit": 12,
+     "policy": 7,
+     "other_platform": 4,
+     "intent:location": 2,
+     "role_object": 2,
+     "other_actor": 1,
+     "weak": 4
+    }
+   }
+  },
+  "fresh5c_implicit": {
+   "questions": 36,
+   "inference_accepted": 4,
+   "inferred_matches_label": 4,
+   "inferred_wrong_guide": [],
+   "refusal_reasons": {
+    "no_signal": 6,
+    "organizational": 9,
+    "intent:unrecognised": 5,
+    "intent:location": 2,
+    "role_object": 2,
+    "other_actor": 1,
+    "weak": 3,
+    "policy": 1,
+    "n/a": 3
+   }
+  },
+  "fresh5c_not_implicit_inferred": []
+ },
+ "p0": {
+  "core_guide": {
+   "questions": 37,
+   "plan_f_served": 21,
+   "guide_served": 21,
+   "fallback": 16,
+   "correct": 19,
+   "limited": 2,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": 100.0,
+   "coverage_pct": 56.8,
+   "served_ids": [
+    "G01",
+    "G03",
+    "G05",
+    "G08",
+    "G09",
+    "G10",
+    "G11",
+    "G12",
+    "G14",
+    "G15",
+    "G17",
+    "G18",
+    "G19",
+    "G22",
+    "G23",
+    "G24",
+    "G25",
+    "G28",
+    "G29",
+    "G30",
+    "G35"
+   ],
+   "stop_layers": {
+    "relation (heading names another action or object)": 1,
+    "structure recovery / completeness": 5,
+    "grounding (an asked word the evidence does not print)": 1,
+    "evidence selection (generic introduction)": 3,
+    "no approved guide for the owning specialist": 2,
+    "routing ambiguity": 1,
+    "evidence selection (the heading names the asked action on another object)": 1,
+    "aggregation (a clause unsupported)": 2
+   }
+  },
+  "all_guide": {
+   "questions": 100,
+   "plan_f_served": 35,
+   "guide_served": 35,
+   "fallback": 65,
+   "correct": 32,
+   "limited": 3,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": 100.0,
+   "coverage_pct": 35.0,
+   "served_ids": [
+    "G01",
+    "G03",
+    "G05",
+    "G08",
+    "G09",
+    "G10",
+    "G11",
+    "G12",
+    "G14",
+    "G15",
+    "G17",
+    "G18",
+    "G19",
+    "G22",
+    "G23",
+    "G24",
+    "G25",
+    "G28",
+    "G29",
+    "G30",
+    "G35",
+    "P11",
+    "P14",
+    "P16",
+    "C01",
+    "C04",
+    "C05",
+    "C06",
+    "C07",
+    "C09",
+    "C11",
+    "C15",
+    "C16",
+    "C17",
+    "C29"
+   ],
+   "stop_layers": {
+    "relation (heading names another action or object)": 9,
+    "structure recovery / completeness": 8,
+    "grounding (an asked word the evidence does not print)": 3,
+    "evidence selection (generic introduction)": 7,
+    "no approved guide for the owning specialist": 10,
+    "routing ambiguity": 4,
+    "evidence selection (the heading names the asked action on another object)": 1,
+    "aggregation (a clause unsupported)": 7,
+    "retrieval / selection (no guide candidate reached the selection)": 2,
+    "routing (no specialist selected)": 1,
+    "no guide system named or inferred (inference organizational)": 3,
+    "served": 4,
+    "no guide system named or inferred (inference policy)": 1,
+    "no guide system named or inferred (inference no_signal)": 1,
+    "handoff": 2,
+    "conflict": 1,
+    "verification": 1
+   }
+  },
+  "per_source": {
+   "uos_blackboard_faculty_short_guide": "8 of 13",
+   "uos_blackboard_gradebook_guide": "7 of 10",
+   "uos_grade_transfer_dashboard_guide": "3 of 6",
+   "uos_ithenticate_guidelines": "3 of 8"
+  },
+  "changed_guide_answers": [],
+  "carried_verdicts": 35
+ },
+ "p1": {
+  "all": {
+   "questions": 41,
+   "plan_f_served": 7,
+   "guide_served": 7,
+   "fallback": 34,
+   "correct": 5,
+   "limited": 2,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": 100.0,
+   "coverage_pct": 17.1,
+   "served_ids": [
+    "A09",
+    "B05",
+    "B10",
+    "M01",
+    "M06",
+    "M08",
+    "X03"
+   ],
+   "stop_layers": {
+    "structure recovery / completeness": 12,
+    "grounding (an asked word the evidence does not print)": 4,
+    "no approved guide for the owning specialist": 6,
+    "evidence selection (generic introduction)": 1,
+    "routing ambiguity": 4,
+    "no guide system named or inferred (inference policy)": 1,
+    "aggregation (a clause unsupported)": 3,
+    "no guide system named or inferred (inference other_platform)": 2,
+    "grounding (subject / D-111 guard)": 1
+   }
+  },
+  "changed_or_new": [
+   "B10"
+  ],
+  "lost": []
+ },
+ "pf4_held_out_diagnostic": {
+  "questions": 50,
+  "served_before": 1,
+  "served_after": 1,
+  "answerable": 15,
+  "answerable_served_before": 1,
+  "answerable_served_after": 1,
+  "changed": [],
+  "wrong_after": []
+ },
+ "pf5b_fresh_diagnostic": {
+  "questions": 56,
+  "served_before": 0,
+  "served_after": 0,
+  "answerable": 20,
+  "answerable_served_before": 0,
+  "answerable_served_after": 0,
+  "changed": [],
+  "wrong_after": []
+ },
+ "safety_groups": {
+  "conflict": {
+   "questions": 8,
+   "served": [],
+   "guide_served": []
+  },
+  "guide_contamination": {
+   "questions": 3,
+   "served": [
+    "P11"
+   ],
+   "guide_served": [
+    "P11"
+   ]
+  },
+  "handbook_contamination": {
+   "questions": 6,
+   "served": [],
+   "guide_served": []
+  },
+  "wrong_source": {
+   "questions": 22,
+   "served": [],
+   "guide_served": []
+  },
+  "appraisal": {
+   "questions": 1,
+   "served": [],
+   "guide_served": []
+  },
+  "known_hr": {
+   "questions": 1,
+   "served": [],
+   "guide_served": []
+  },
+  "annual_leave": {
+   "questions": 1,
+   "served": [],
+   "guide_served": []
+  },
+  "authority": {
+   "questions": 1,
+   "served": [],
+   "guide_served": []
+  },
+  "incomplete_procedure": {
+   "questions": 2,
+   "served": [
+    "C29"
+   ],
+   "guide_served": [
+    "C29"
+   ]
+  },
+  "policy_boundary": {
+   "questions": 2,
+   "served": [],
+   "guide_served": []
+  },
+  "unsupported": {
+   "questions": 2,
+   "served": [],
+   "guide_served": []
+  }
+ },
+ "held_out_traps": {
+  "held_out_policy_vs_system_trap": {
+   "served": [],
+   "guide_served": []
+  },
+  "held_out_wrong_source_collision": {
+   "served": [],
+   "guide_served": []
+  },
+  "held_out_unsupported": {
+   "served": [],
+   "guide_served": []
+  },
+  "held_out_yes_no_false_premise": {
+   "served": [],
+   "guide_served": []
+  }
+ },
+ "frozen_192": {
+  "served_frozen": 55,
+  "served_rerun": 55,
+  "served_ids_equal": true,
+  "questions_changed": [
+   "T07 (legacy-path citation, as in PF-4/PF-5B)"
+  ],
+  "wrong": 0,
+  "false_acceptances": [],
+  "shadow_mismatches": 0,
+  "plan_f_llm_calls": 0,
+  "guide_registry_selected": 0,
+  "inference_accepted": 0
+ },
+ "wrong_source": {
+  "cases": 88,
+  "pf2_cases": 16,
+  "pf4_cases": 20,
+  "pf5b_cases": 24,
+  "pf5c_cases": 28,
+  "pf5c_inference_accepted": [
+   "W07",
+   "I02",
+   "I04",
+   "I05",
+   "I09",
+   "I10",
+   "I12",
+   "I20"
+  ],
+  "top1_expected_source": 75,
+  "expected_page_in_top5": 85,
+  "plan_f_served": 11,
+  "wrong_source_acceptances": [],
+  "violations": [],
+  "retrieval_wrong_source_first": [
+   "P14",
+   "T01",
+   "T05",
+   "T08",
+   "S03",
+   "A01",
+   "G02",
+   "J02",
+   "I04",
+   "I06",
+   "I18",
+   "I20",
+   "I23"
+  ],
+  "seconds": 184.6
+ },
+ "inference_adversarial": {
+  "cases": 30,
+  "passed": 30,
+  "failed": [],
+  "inference_accepted": [],
+  "guide_served": [],
+  "plan_f_served_handbook": [],
+  "seconds": 41.6
+ },
+ "shadow": {
+  "questions": 307,
+  "identical_to_direct_legacy": 307,
+  "visible_mismatches": 0,
+  "per_set_mismatches": {
+   "p0": 0,
+   "p1": 0,
+   "held_out": 0,
+   "fresh5b": 0,
+   "fresh5c": 0
+  }
+ },
+ "control_scopes_off_vs_on": {
+  "changed": 48,
+  "unexplained": [
+   "H09",
+   "H11",
+   "H12",
+   "H27",
+   "F5C_C30"
+  ],
+  "explanation": "H09, H11, H12 kept by their specialist (D-114), H27 and F5C_C30 routed by the corrected system name; in all five the visible answer is the same legacy fallback with guide scopes on and off; every other difference is a reviewed guide answer"
+ },
+ "determinism": {
+  "repeat_records": 600,
+  "differences": []
+ },
+ "llm": {
+  "plan_f_llm_calls_max": 0,
+  "direct_llm_calls_max": 0
+ },
+ "exceptions": 0,
+ "legacy_isolation": {
+  "mode": "legacy",
+  "questions": 20,
+  "minimal_diagnostics": 20,
+  "exceptions": 0,
+  "watched_modules_imported": [],
+  "runtime_cache_created": false
+ },
+ "app_smoke": {
+  "items_required": 18,
+  "turns": 19,
+  "plan_f_served": 9,
+  "served_correct": 9,
+  "fallbacks": 10,
+  "wrong": 0,
+  "model_calls": 0,
+  "internal_ids_in_visible_answer": 0,
+  "inference_row_developer_mode_only": true,
+  "typed_text_displayed": true
+ },
+ "adversarial_review": {
+  "round_1": {
+   "lenses": [
+    "false_acceptance",
+    "boundaries",
+    "scoring",
+    "code"
+   ],
+   "probes": 1185,
+   "findings": 22,
+   "confirmed": 19,
+   "refuted": 3
+  },
+  "round_2": {
+   "lenses": [
+    "natural_phrasing",
+    "traps",
+    "grounding"
+   ],
+   "probes": 1884,
+   "findings": 36,
+   "confirmed": 34,
+   "refuted": 2
+  },
+  "fixes": "every confirmed finding was fixed by refusing more: inference refusals (role-modified and delegated asks, other actors, permission/obligation/advice/misconduct/appeal frames, help/support/information asks, more platforms, event, course-administration, research-journal, housing and recipient contexts), printed-word phrase matching, procedure-only inference with a strict evidence profile, and named-path refusals (destructive headings, see/find asks, role-specific procedures, negated asks, students-only statements, unit-bound values, same-sentence locations, recipient faculty groups)",
+  "remaining_known": "worst-case (every chunk retrieved) location, selection and yes/no statements for NAMED-system questions can still pick a statement about another object (e.g. the Start recording button for 'Where are the Collaborate recordings?'); PF-5B-era grounding, not reached by any evaluated set; guide scopes stay off"
+ },
+ "differential_worst_case": {
+  "probe_questions": 2368,
+  "fresh_sets_excluded": true,
+  "head_accepted": 343,
+  "new_accepted": 295,
+  "newly_accepted": 8,
+  "newly_accepted_verdicts": "8 correct",
+  "refused": 56,
+  "refused_note": "wrong or weak HEAD worst-case answers; two conservative losses (a limited yes/no on hiding an assignment, a limited 'edit a discussion' section)",
+  "changed": 10,
+  "changed_note": "6 identical words in another layout, 2 better answers, 2 equally weak"
+ },
+ "performance_idle_before_after": {
+  "head": {
+   "code": "head",
+   "questions": 191,
+   "cached_kb_startup_s": 25.0,
+   "guide_index_build_ms": {
+    "n": 5,
+    "p50_ms": 20.3,
+    "p95_ms": 29.8
+   },
+   "guide_retrieval_ms_per_clause": {
+    "n": 115,
+    "p50_ms": 606.3,
+    "p95_ms": 1240.2
+   },
+   "guide_selection_ms_per_clause": {
+    "n": 115,
+    "p50_ms": 2.7,
+    "p95_ms": 13.6
+   },
+   "served_guide_answer_wall_ms": {
+    "n": 43,
+    "p50_ms": 620.6,
+    "p95_ms": 2196.1
+   },
+   "guide_scope_fallback_wall_ms": {
+    "n": 109,
+    "p50_ms": 2137.4,
+    "p95_ms": 3607.5
+   },
+   "inference_ms_per_question": null
+  },
+  "new": {
+   "code": "new",
+   "questions": 191,
+   "cached_kb_startup_s": 23.9,
+   "guide_index_build_ms": {
+    "n": 5,
+    "p50_ms": 20.4,
+    "p95_ms": 28.4
+   },
+   "guide_retrieval_ms_per_clause": {
+    "n": 117,
+    "p50_ms": 607.3,
+    "p95_ms": 1223.7
+   },
+   "guide_selection_ms_per_clause": {
+    "n": 117,
+    "p50_ms": 2.7,
+    "p95_ms": 13.6
+   },
+   "served_guide_answer_wall_ms": {
+    "n": 43,
+    "p50_ms": 618.3,
+    "p95_ms": 2190.5
+   },
+   "guide_scope_fallback_wall_ms": {
+    "n": 111,
+    "p50_ms": 2155.7,
+    "p95_ms": 3593.3
+   },
+   "inference_ms_per_question": {
+    "n": 191,
+    "p50_ms": 0.4,
+    "p95_ms": 1.5
+   }
+  }
+ },
+ "latency_eval": {
+  "active": {
+   "all": {
+    "n": 307,
+    "p50_ms": 1920.4,
+    "p95_ms": 3691.5,
+    "max_ms": 4795.5
+   },
+   "guide_served": {
+    "n": 43,
+    "p50_ms": 717.2,
+    "p95_ms": 2340.2,
+    "max_ms": 2842.8
+   },
+   "guide_scope_fallback": {
+    "n": 146,
+    "p50_ms": 2481.1,
+    "p95_ms": 3937.3,
+    "max_ms": 4795.5
+   },
+   "p1_served": {
+    "n": 7,
+    "p50_ms": 664.8,
+    "p95_ms": 1418.1,
+    "max_ms": 1418.1
+   }
+  },
+  "shadow": {
+   "all": {
+    "n": 307,
+    "p50_ms": 1661.4,
+    "p95_ms": 3096.9,
+    "max_ms": 4038.0
+   },
+   "guide_served": {
+    "n": 43,
+    "p50_ms": 1369.8,
+    "p95_ms": 2749.5,
+    "max_ms": 3983.8
+   },
+   "guide_scope_fallback": {
+    "n": 146,
+    "p50_ms": 1956.6,
+    "p95_ms": 3274.1,
+    "max_ms": 4038.0
+   },
+   "p1_served": {
+    "n": 7,
+    "p50_ms": 1316.7,
+    "p95_ms": 1991.8,
+    "max_ms": 1991.8
+   }
+  },
+  "active_off": {
+   "all": {
+    "n": 307,
+    "p50_ms": 1458.0,
+    "p95_ms": 2561.9,
+    "max_ms": 3354.4
+   },
+   "guide_served": null,
+   "guide_scope_fallback": null,
+   "p1_served": null
+  },
+  "legacy": {
+   "all": {
+    "n": 307,
+    "p50_ms": 964.8,
+    "p95_ms": 2002.4,
+    "max_ms": 2102.0
+   },
+   "guide_served": null,
+   "guide_scope_fallback": null,
+   "p1_served": null
+  },
+  "guide_retrieval_ms_per_clause": {
+   "n": 136,
+   "p50_ms": 639.1,
+   "p95_ms": 1353.9,
+   "max_ms": 1429.1
+  },
+  "guide_selection_ms_per_clause": {
+   "n": 136,
+   "p50_ms": 2.6,
+   "p95_ms": 11.0,
+   "max_ms": 20.5
+  },
+  "direct_verification_ms": {
+   "guards_ms": {
+    "n": 37,
+    "p50_ms": 1.3,
+    "p95_ms": 2.2,
+    "max_ms": 3.1
+   },
+   "findings_verify_ms": {
+    "n": 37,
+    "p50_ms": 1.7,
+    "p95_ms": 2.9,
+    "max_ms": 3.3
+   },
+   "verify_ms": {
+    "n": 43,
+    "p50_ms": 0.5,
+    "p95_ms": 1.5,
+    "max_ms": 5.1
+   }
+  }
+ },
+ "tests": {
+  "targeted_gate_modules": 33,
+  "targeted_gate_passed": 2827,
+  "full_suite_passed": 7279,
+  "full_suite_failed": 0,
+  "skipped": 0,
+  "xfail": 0,
+  "new_tests": 197,
+  "pip_check": "No broken requirements found."
+ }
+}
