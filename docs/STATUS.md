@@ -9,6 +9,68 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-11-01 - Post-acceptance English safety fixes (post-freeze phase PF-7)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/post-freeze-knowledge-expansion` |
+| Starting commit | `962976e` (`ENGLISH_CORE_FREEZE_PF6`) |
+| Ending state | COMPLETE. D-117: the legacy answer path (every mode's fallback) now enforces registered source conflicts, cites only the evidence its claims rest on, and handles a reasoning model's hidden tokens; Plan F, retrieval, thresholds, the corpus, the registry and the guide-scope default are unchanged; one local commit for the project owner to push; ready for the post-fix manual retest |
+| Freeze status | `ENGLISH_CORE_FREEZE_PF6` plus D-117 (a post-acceptance safety amendment under the D-116 rules); the 60-question acceptance results remain the owner's frozen evidence |
+| Elapsed | 2h27m27s (from the first PF-7 reproduction run, 2026-11-01T08:08:29Z, to the local commit, 2026-11-01T10:35:56Z; includes the background regression runs) |
+
+### Root causes (reproduced with the real model)
+
+- A, the iThenticate quota was served: registered conflicts were enforced only inside Plan F; the legacy fallback path never
+  read the conflict stamp, and the legacy Verifier accepted the disputed value because it is printed in the evidence. PF-6
+  could not see it (no model key).
+- B, false "I do not have this information.": the 512-token answer cap was sized for a non-reasoning model; the acceptance
+  model spends hidden reasoning inside it, so long answers came back empty and became the refusal sentence. Other refusals
+  are kept safety behaviour (reranker gate, Verifier, missing evidence; Plan F's documented limits).
+- C, extra citations: legacy citations were bare page numbers; the Verifier cited every weakly supporting page and the UI
+  attached each cited page number to every document with that page; refusals showed a section chip; inline citation marks.
+
+### Completed
+
+- `handbook_bot/conflict_guard.py` (new), `orchestrator.py`, `agents/verifier.py` (`citing_items`; a number with a data-size unit),
+  `qa.py`, `config.py` (`LLM_REASONING_TOKENS`, default 0), `agents/router.py`, `ui/presentation.py`; `tests/test_pf7_legacy_safety.py` (43 tests).
+- Live validation with fresh wording (`qa/post_freeze_pf7/`) and the PF-6 verification rerun without a model key.
+
+### Tests performed
+
+- Reproduction (PF-6 code, real model): the quota served once, one broad question empty at the cap, extra citations (`reproduction_before.json`).
+- Live validation (D-117 code, real model, fresh wording): conflicts 13 questions, 0 disputed values served, 5 ordinary iThenticate
+  requests answered, journal recommendation blocked; natural language 14 of 14 broad or conversational questions answered, 0 drafts cut
+  at the cap, unsupported, held, policy-trap and vague questions refused; citations: unsupported documents 1 to 0, document chips 11 to 8.
+- PF-6 verification rerun without a model key: frozen 192 (scopes off and on) identical to PF-6; P0, P1 and diagnostic answers
+  byte-identical; 16 legacy-fallback records of 4 conflict-related questions changed as intended; SHADOW 307 of 307; 900 repeat records,
+  0 differences; wrong source, inference adversarial, conflicts, boundary, held sources and LEGACY isolation as PF-6.
+- Targeted gate (33 modules + `test_pf7_legacy_safety.py`): 2,870 passed. Full suite: 7,322 passed, 0 failed, 0 skipped, 0 xfail
+  (7,279 at the start; 43 new). `pip check`: no broken requirements. Security scan of every added line: clean.
+
+### Known limitations
+
+- The reranker confidence gate still refuses some meta phrasings; the legacy Verifier rejects some correct drafts ("100 MB"
+  against "100MB"); model answers vary between runs; Plan F keeps its D-114/D-115 limits; a conflict is reported with the
+  refusal sentence; the acceptance model is set by environment (`openai/gpt-oss-120b`, `LLM_REASONING_TOKENS=2048`).
+
+### Next task
+
+Post-fix manual acceptance retest by the project owner (`qa/post_freeze_pf7/launch_acceptance.py`).
+
+### Blockers
+
+None.
+
+### Files changed
+
+`handbook_bot/conflict_guard.py` (new), `handbook_bot/orchestrator.py`, `handbook_bot/agents/verifier.py`, `handbook_bot/qa.py`,
+`handbook_bot/config.py`, `handbook_bot/agents/router.py`, `ui/presentation.py`, `tests/test_pf7_legacy_safety.py` (new),
+`qa/post_freeze_pf7/` (new), `docs/DECISIONS.md` (D-117), `docs/STATUS.md`.
+
+---
+
 ## 2026-11-01 - Final English technical freeze (post-freeze phase PF-6)
 
 | Field | Value |

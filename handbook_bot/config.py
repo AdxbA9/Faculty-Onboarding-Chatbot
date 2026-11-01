@@ -198,6 +198,11 @@ ROW_ARABIC_SHARE_MAX: float = 0.50
 # ---------------------------------------------------------------------------
 LLM_TEMPERATURE: float = 0.0
 LLM_MAX_TOKENS: int = 512
+# Post-freeze PF-7 (D-117): extra completion tokens for a reasoning model, whose hidden reasoning counts against the
+# completion cap: with 512 alone such a model can spend the whole cap reasoning and return no answer. Added to the
+# answer cap and to the router's cap. 0 (the default) leaves every request exactly as before; set it only for a model
+# that reasons before it answers (for example LLM_REASONING_TOKENS=2048 with openai/gpt-oss-120b).
+LLM_REASONING_TOKENS: int = max(0, _env_int("LLM_REASONING_TOKENS", 0))
 
 # How many characters of evidence to show under the answer in the UI.
 EVIDENCE_PREVIEW_CHARS: int = 520

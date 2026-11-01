@@ -257,7 +257,8 @@ def source_chips(result: Any) -> List[Tuple[str, str]]:
         for page in pages:                                 # a cited page no document claims: shown without a document
             if page not in shown:
                 chips.extend(page_chip_rows(sections.get(page) or [], page))
-    if not pages:
+    # Post-freeze PF-7 (D-117): a refusal names no source, so it gets no section chip either.
+    if not pages and (getattr(result, "answer", None) or "").strip() != REFUSAL:
         best = getattr(result, "best_section", None)
         if isinstance(best, str) and best.strip() and best.strip() not in _PLACEHOLDER_SECTIONS and not _PAGE_PLACEHOLDER.match(best):
             chips.append(("section", _shorten(best.strip(), 48)))

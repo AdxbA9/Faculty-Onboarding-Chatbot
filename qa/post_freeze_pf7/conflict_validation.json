@@ -1,0 +1,506 @@
+{
+ "method": "D-117 code, acceptance configuration plus LLM_REASONING_TOKENS=2048 (validate_live.py, questions_conflict.txt).",
+ "summary": {
+  "questions": 13,
+  "disputed_claim_served": [],
+  "answered": [
+   "How do I upload a document to iThenticate?",
+   "How do I log in to iThenticate?",
+   "What file types can I submit to iThenticate?",
+   "How big can a file be when I submit it to iThenticate?",
+   "Who do I email if I cannot access iThenticate?"
+  ],
+  "refused": [
+   "How many documents can I submit to iThenticate per year?",
+   "What's the maximum number of papers I can run through iThenticate in a year?",
+   "Is there an annual quota for iThenticate document submissions?",
+   "how many docs per yr can faculty upload to ithenticate",
+   "Does each instructor have a submission cap in iThenticate?",
+   "If I upload a new revision of my paper, does it count against my iThenticate allowance?",
+   "How do I create a journal in Blackboard Ultra?",
+   "Should I use journals for grading in my Blackboard course?"
+  ],
+  "answer_check_fired": [
+   "If I upload a new revision of my paper, does it count against my iThenticate allowance?"
+  ]
+ },
+ "questions": [
+  {
+   "question": "How many documents can I submit to iThenticate per year?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "answer": "I do not have this information.",
+   "refused": true,
+   "states_disputed_claim": [],
+   "chips": [],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 154,
+     "reasoning": 134,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "count"
+    ],
+    [
+     "conflict_guard",
+     "screened"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "What's the maximum number of papers I can run through iThenticate in a year?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "answer": "I do not have this information.",
+   "refused": true,
+   "states_disputed_claim": [],
+   "chips": [],
+   "llm_calls": [],
+   "trace": [
+    [
+     "router",
+     "count"
+    ],
+    [
+     "conflict_guard",
+     "screened"
+    ],
+    [
+     "evidence",
+     "insufficient:rerank_score_below_threshold"
+    ]
+   ]
+  },
+  {
+   "question": "Is there an annual quota for iThenticate document submissions?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "answer": "I do not have this information.",
+   "refused": true,
+   "states_disputed_claim": [],
+   "chips": [],
+   "llm_calls": [],
+   "trace": [
+    [
+     "router",
+     "policy_yesno"
+    ],
+    [
+     "conflict_guard",
+     "screened"
+    ],
+    [
+     "evidence",
+     "insufficient:rerank_score_below_threshold"
+    ]
+   ]
+  },
+  {
+   "question": "how many docs per yr can faculty upload to ithenticate",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "answer": "I do not have this information.",
+   "refused": true,
+   "states_disputed_claim": [],
+   "chips": [],
+   "llm_calls": [],
+   "trace": [
+    [
+     "router",
+     "count"
+    ],
+    [
+     "conflict_guard",
+     "screened"
+    ],
+    [
+     "evidence",
+     "insufficient:rerank_score_below_threshold"
+    ]
+   ]
+  },
+  {
+   "question": "Does each instructor have a submission cap in iThenticate?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "answer": "I do not have this information.",
+   "refused": true,
+   "states_disputed_claim": [],
+   "chips": [],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 167,
+     "reasoning": 146,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "policy_yesno"
+    ],
+    [
+     "conflict_guard",
+     "screened"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "If I upload a new revision of my paper, does it count against my iThenticate allowance?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "answer": "I do not have this information.",
+   "refused": true,
+   "states_disputed_claim": [],
+   "chips": [],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 174,
+     "reasoning": 135,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "policy_yesno"
+    ],
+    [
+     "conflict_guard",
+     "screened"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ],
+    [
+     "conflict_guard",
+     "answer_refused"
+    ]
+   ]
+  },
+  {
+   "question": "How do I upload a document to iThenticate?",
+   "served": "plan_f",
+   "plan_f_outcome": "PLAN_F_ACCEPTED",
+   "answer": "How to upload a document:\n\n1. Select the “Upload a File” link under the “Submit a Document” section on the home screen\n\n2. Enter in the author’s name and the document title, then click the “Choose a File” button in order to open your file\n\n3. Once you have opened your file, click “Upload” to upload your file\n\n4. If you will upload the same document but with an updated version use the following but",
+   "refused": false,
+   "states_disputed_claim": [],
+   "chips": [
+    [
+     "doc",
+     "iThenticate Guidelines"
+    ],
+    [
+     "page",
+     "Page 1 · How to upload a document"
+    ]
+   ],
+   "llm_calls": [],
+   "trace": [
+    [
+     "verifier",
+     "accepted"
+    ],
+    [
+     "plan_f_outcome",
+     "PLAN_F_ACCEPTED"
+    ]
+   ]
+  },
+  {
+   "question": "How do I log in to iThenticate?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "answer": "To log in to iThenticate, open www.ithenticate.com, click the Login button, and then enter your university email address and password (the activation password is sent to you via iThenticate).",
+   "refused": false,
+   "states_disputed_claim": [],
+   "chips": [
+    [
+     "doc",
+     "iThenticate Guidelines"
+    ],
+    [
+     "page",
+     "Page 1"
+    ]
+   ],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 171,
+     "reasoning": 112,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "policy"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "What file types can I submit to iThenticate?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "answer": "You can submit Word, Text, PostScript, PDF, HTML, Excel, PowerPoint, Word Perfect (WPD), OpenOffice (ODT), RTF, and Hangul (HWP) files.",
+   "refused": false,
+   "states_disputed_claim": [],
+   "chips": [
+    [
+     "doc",
+     "iThenticate Guidelines"
+    ],
+    [
+     "page",
+     "Page 1"
+    ]
+   ],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 203,
+     "reasoning": 146,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "policy"
+    ],
+    [
+     "conflict_guard",
+     "screened"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "How big can a file be when I submit it to iThenticate?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "answer": "A file submitted to iThenticate must be less than 100 MB in size.",
+   "refused": false,
+   "states_disputed_claim": [],
+   "chips": [
+    [
+     "doc",
+     "iThenticate Guidelines"
+    ],
+    [
+     "page",
+     "Page 1"
+    ]
+   ],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 166,
+     "reasoning": 134,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "policy"
+    ],
+    [
+     "conflict_guard",
+     "screened"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "Who do I email if I cannot access iThenticate?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "answer": "The email address is servicedesk@sharjah.ac.ae.",
+   "refused": false,
+   "states_disputed_claim": [],
+   "chips": [
+    [
+     "doc",
+     "iThenticate Guidelines"
+    ],
+    [
+     "page",
+     "Page 1"
+    ]
+   ],
+   "llm_calls": [],
+   "trace": [
+    [
+     "router",
+     "contact"
+    ],
+    [
+     "evidence",
+     "extractor:contact"
+    ],
+    [
+     "synthesis",
+     "extractor"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "How do I create a journal in Blackboard Ultra?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "answer": "I do not have this information.",
+   "refused": true,
+   "states_disputed_claim": [],
+   "chips": [],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 123,
+     "reasoning": 104,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "policy"
+    ],
+    [
+     "conflict_guard",
+     "screened"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "Should I use journals for grading in my Blackboard course?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "answer": "I do not have this information.",
+   "refused": true,
+   "states_disputed_claim": [],
+   "chips": [],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 261,
+     "reasoning": 243,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "policy_yesno"
+    ],
+    [
+     "conflict_guard",
+     "screened"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  }
+ ]
+}

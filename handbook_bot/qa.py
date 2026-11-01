@@ -32,6 +32,7 @@ from .agents.types import SubQuestion, TraceEntry
 from .config import (
     GROQ_MODEL,
     LLM_MAX_TOKENS,
+    LLM_REASONING_TOKENS,
     LLM_TEMPERATURE,
     LLM_TRANSPORT_RETRIES,
 )
@@ -174,6 +175,10 @@ Answer:""".strip()
 # ---------------------------------------------------------------------------
 # LLM call + parsing
 # ---------------------------------------------------------------------------
+class LLMOutputTruncated(RuntimeError):
+    """The model spent its whole completion budget before writing any answer (post-freeze PF-7, D-117)."""
+
+
 def ask_groq(client, prompt: str) -> str:
     """Call the Groq chat completion endpoint and return the raw text.
 
@@ -181,6 +186,12 @@ def ask_groq(client, prompt: str) -> str:
     counts. The Groq SDK may repeat the HTTP request on 429, 5xx and timeouts,
     with back-off; ``LLM_TRANSPORT_RETRIES`` sets how often and is applied
     explicitly so that it is a documented setting and not a hidden SDK default.
+
+    Post-freeze PF-7 (D-117): the cap is ``LLM_MAX_TOKENS`` plus the reasoning
+    allowance ``LLM_REASONING_TOKENS`` (0 by default). A reply that stopped at
+    the cap with no text at all raises :class:`LLMOutputTruncated`: the model
+    wrote no answer, which is a generation failure, not evidence that the
+    sources lack the answer, so it must not become the refusal sentence.
     """
     caller = client
     if hasattr(client, "with_options"):
@@ -188,7 +199,7 @@ def ask_groq(client, prompt: str) -> str:
     resp = caller.chat.completions.create(
         model=GROQ_MODEL,
         temperature=LLM_TEMPERATURE,
-        max_tokens=LLM_MAX_TOKENS,
+        max_tokens=LLM_MAX_TOKENS + LLM_REASONING_TOKENS,
         messages=[
             {
                 "role": "system",
@@ -200,7 +211,12 @@ def ask_groq(client, prompt: str) -> str:
             {"role": "user", "content": prompt},
         ],
     )
-    return (resp.choices[0].message.content or "").strip()
+    choice = resp.choices[0]
+    text = (choice.message.content or "").strip()
+    if not text and getattr(choice, "finish_reason", None) == "length":
+        raise LLMOutputTruncated("the model used its whole completion budget (%d tokens) before answering"
+                                 % (LLM_MAX_TOKENS + LLM_REASONING_TOKENS))
+    return text
 
 
 # En and em dashes as code points, so this source file stays pure ASCII.
@@ -216,6 +232,11 @@ _PAGES_LINE = re.compile(r"^[ \t]*pages?\s*:\s*(" + _PAGE_SPEC + r")\s*[.)\]]*[ 
 # it must still be stripped or the refusal sentence is no longer recognised.
 _EMPTY_PAGES_LINE = re.compile(r"\n?[ \t]*pages?\s*:\s*(?:none|n/?a|not applicable|[-,\s])*[ \t.]*$", re.I)
 _PAGE_RANGE = re.compile(r"(\d+)(?:\s*(?:\bto\b|[" + _DASHES + r"])\s*(?:pages?\s*)?(\d+))?", re.I)
+#: Post-freeze PF-7 (D-117): an inline citation that echoes the context labels,
+#: e.g. "[Source 3 | Page 109]" in full-width or square brackets.
+_INLINE_SOURCE_MARK = re.compile("[ \\t]?(?:\u3010[^\u3011\\n]{0,80}?(?:source|page)[^\u3011\\n]{0,80}\u3011"
+                                 "|\\[\\s*source\\s*\\d+[^\\]\\n]{0,60}\\])", re.I)
+_MARK_PAGE = re.compile(r"\bpages?\s*(\d+)", re.I)
 #: "Pages: 12-14" means 12, 13 and 14. A span wider than this is read as two
 #: separate numbers, so a stray "1-272" cannot cite the whole handbook.
 _MAX_RANGE_SPAN = 10
@@ -250,18 +271,30 @@ def split_answer_and_claimed_pages(raw: str, items: List[Dict]) -> Tuple[str, Li
     raw = raw or ""
     allowed = sorted({int(item["meta"]["page"]) for item in items})
 
+    # Post-freeze PF-7 (D-117): a citation written INTO the answer by echoing the
+    # context labels is not answer text; it is removed and its pages are claimed.
+    mark_pages: List[int] = []
+    for mark in _INLINE_SOURCE_MARK.finditer(raw):
+        for page in _pages_from_spec(" ".join(_MARK_PAGE.findall(mark.group(0))), allowed):
+            if page not in mark_pages:
+                mark_pages.append(page)
+    raw = _INLINE_SOURCE_MARK.sub("", raw)
+
+    def _with_marks(pages: List[int]) -> List[int]:
+        return pages + [p for p in mark_pages if p not in pages]
+
     m = _TRAILING_PAGES.search(raw)
     if m:
         body = raw[:m.start("kw")].rstrip(" \t\r\n([").strip()
-        return body, _pages_from_spec(m.group("spec"), allowed)
+        return body, _with_marks(_pages_from_spec(m.group("spec"), allowed))
 
     lines = list(_PAGES_LINE.finditer(raw))
     if lines:
         last = lines[-1]
         body = (raw[:last.start()] + raw[last.end():]).strip()
-        return body, _pages_from_spec(last.group(1), allowed)
+        return body, _with_marks(_pages_from_spec(last.group(1), allowed))
 
-    return _EMPTY_PAGES_LINE.sub("", raw).strip(), []
+    return _EMPTY_PAGES_LINE.sub("", raw).strip(), list(mark_pages)
 
 
 def legacy_fallback_pages(items: List[Dict]) -> List[int]:

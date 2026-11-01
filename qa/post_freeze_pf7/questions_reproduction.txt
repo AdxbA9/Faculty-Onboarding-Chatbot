@@ -1,0 +1,35 @@
+# A conflict (quota) and a normal iThenticate procedure
+How many documents can I submit to iThenticate per year?
+How do I upload a document to iThenticate?
+# B natural-language fallbacks (representative wording from the acceptance report)
+Where do I go in Blackboard if I want to manage my course tools?
+What official source should I use for general faculty policies and responsibilities?
+where is gradebook and how i use it?
+# C citation selection
+How do I take attendance in Blackboard?
+# fresh paraphrases written for PF-7 (not from the 60-question acceptance set)
+# broad / conversational software asks
+Can you explain how the Blackboard gradebook works for instructors?
+How do I use Blackboard Collaborate to run my online lectures?
+What can I do with the attendance tool in Blackboard Ultra?
+hey i need to post an announcement for my class on blackboard, how?
+I'm new here and want to check my paper for similarity in iThenticate, what are the steps?
+how do grades get from blackboard into banner at the end of term
+# broad handbook asks
+What does the UOS Faculty Handbook cover?
+What are the main responsibilities of a faculty member at UOS?
+Which document explains the policies and procedures for faculty members?
+# conflict paraphrases and neighbours
+What is the annual cap on iThenticate submissions?
+Is there a yearly limit on how many papers I can check with iThenticate?
+How do I log in to iThenticate?
+# safety
+What is the weather in Sharjah today?
+How do I set up grade categories with weights in the Blackboard gradebook?
+How do I complete my Phase 2 performance appraisal in the HR portal?
+# fresh broad questions that need a long answer
+What are a faculty member's responsibilities for teaching, research, community service and professional development?
+Give me an overview of the leave types available to faculty and how long each one is.
+Summarize the Blackboard Ultra features a new instructor should know about.
+What should I know about office hours, teaching load and student advising as a new faculty member?
+Explain the main steps for using iThenticate, from logging in to reading the similarity report.

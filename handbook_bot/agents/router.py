@@ -46,6 +46,7 @@ from typing import Callable, Dict, List, Optional, Tuple
 
 from ..config import (
     GROQ_MODEL,
+    LLM_REASONING_TOKENS,
     ROUTER_AMBIGUITY_MARGIN,
     ROUTER_LLM_FALLBACK,
     ROUTER_LLM_MAX_TOKENS,
@@ -449,7 +450,7 @@ def _ask_llm(client, question: str, allowed: List[str]) -> Tuple[str, float, boo
     response = caller.chat.completions.create(
         model=GROQ_MODEL,
         temperature=0.0,
-        max_tokens=ROUTER_LLM_MAX_TOKENS,
+        max_tokens=ROUTER_LLM_MAX_TOKENS + LLM_REASONING_TOKENS,     # post-freeze PF-7 (D-117): 0 unless set
         response_format={"type": "json_object"},
         messages=[
             {"role": "system", "content": _LLM_SYSTEM},

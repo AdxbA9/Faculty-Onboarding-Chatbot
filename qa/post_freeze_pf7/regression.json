@@ -1,0 +1,667 @@
+{
+ "method": "PF-7 (D-117) regression against the PF-6 freeze: the PF-6 verification rerun on the D-117 code without a model key\n(deterministic), compared record by record with the PF-6 runs (kept outside the repository).\n\n    python -X utf8 qa/post_freeze_pf7/regression.py <PF-7 run dir> <PF-6 run dir> <out json>\n\n<PF-7 run dir>: ``frozen_default/`` and ``frozen_on/`` (``qa/plan_f_i8/master_eval.py`` with guide scopes off and on, analysed\nby ``qa/plan_f_i8/analyze.py`` and ``qa/post_freeze_pf2/baseline_compare.py``), ``derived/`` (``qa/post_freeze_pf6/derive.py``\nrun on the five-set evaluation with the PF-6 results as the baseline), ``checks/`` (wrong source, inference adversarial,\nconflict, boundary and held sources, LEGACY isolation) and ``tests/`` (gate and full-suite logs).\n<PF-6 run dir>: ``frozen_default/i8_results.json``, ``frozen_on/i8_results.json`` and ``eval/results.json``.",
+ "frozen_192_scopes_off": {
+  "served": 55,
+  "correct": 55,
+  "limited": 0,
+  "wrong": 0,
+  "unreviewed": 0,
+  "false_acceptances": [],
+  "exceptions": 0,
+  "shadow_mismatches": 0,
+  "determinism_unstable": 0,
+  "plan_f_llm_calls": 0,
+  "same_served_as_i9": true,
+  "changes_vs_i9": {
+   "active": [
+    {
+     "id": "T07",
+     "question": "Is attendance mandatory for students?",
+     "fields": [
+      "pages"
+     ],
+     "frozen": {
+      "pages": [
+       193,
+       228
+      ]
+     },
+     "rerun": {
+      "pages": [
+       2,
+       193,
+       228
+      ]
+     }
+    }
+   ],
+   "shadow": [
+    {
+     "id": "T07",
+     "question": "Is attendance mandatory for students?",
+     "fields": [
+      "pages"
+     ],
+     "frozen": {
+      "pages": [
+       193,
+       228
+      ]
+     },
+     "rerun": {
+      "pages": [
+       2,
+       193,
+       228
+      ]
+     }
+    }
+   ]
+  },
+  "records_differing_from_pf6": []
+ },
+ "frozen_192_scopes_on": {
+  "served": 55,
+  "correct": 55,
+  "limited": 0,
+  "wrong": 0,
+  "unreviewed": 0,
+  "false_acceptances": [],
+  "exceptions": 0,
+  "shadow_mismatches": 0,
+  "determinism_unstable": 0,
+  "plan_f_llm_calls": 0,
+  "same_served_as_i9": true,
+  "changes_vs_i9": {
+   "active": [
+    {
+     "id": "T07",
+     "question": "Is attendance mandatory for students?",
+     "fields": [
+      "pages"
+     ],
+     "frozen": {
+      "pages": [
+       193,
+       228
+      ]
+     },
+     "rerun": {
+      "pages": [
+       2,
+       193,
+       228
+      ]
+     }
+    }
+   ],
+   "shadow": [
+    {
+     "id": "T07",
+     "question": "Is attendance mandatory for students?",
+     "fields": [
+      "pages"
+     ],
+     "frozen": {
+      "pages": [
+       193,
+       228
+      ]
+     },
+     "rerun": {
+      "pages": [
+       2,
+       193,
+       228
+      ]
+     }
+    }
+   ]
+  },
+  "records_differing_from_pf6": []
+ },
+ "five_sets": {
+  "p0_core": {
+   "questions": 37,
+   "plan_f_served": 21,
+   "guide_served": 21,
+   "fallback": 16,
+   "correct": 19,
+   "limited": 2,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": 100.0,
+   "coverage_pct": 56.8
+  },
+  "p0_all": {
+   "questions": 100,
+   "plan_f_served": 35,
+   "guide_served": 35,
+   "fallback": 65,
+   "correct": 32,
+   "limited": 3,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": 100.0,
+   "coverage_pct": 35.0
+  },
+  "p0_changed_vs_pf6": [
+   "P02"
+  ],
+  "p1": {
+   "questions": 41,
+   "plan_f_served": 7,
+   "guide_served": 7,
+   "fallback": 34,
+   "correct": 5,
+   "limited": 2,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": 100.0,
+   "coverage_pct": 17.1
+  },
+  "p1_changed_vs_pf6": [
+   "M09",
+   "M10"
+  ],
+  "held_out_diagnostics": {
+   "held_out": {
+    "served": 1,
+    "wrong": 0,
+    "changed_vs_pf5c": []
+   },
+   "fresh5b": {
+    "served": 0,
+    "wrong": 0,
+    "changed_vs_pf5c": [
+     "F42"
+    ]
+   },
+   "fresh5c": {
+    "served": 0,
+    "wrong": 0,
+    "changed_vs_pf5c": []
+   }
+  },
+  "cross_document": {
+   "questions": 14,
+   "served": [
+    "P14",
+    "P16",
+    "C15",
+    "C16",
+    "C17",
+    "X03"
+   ],
+   "wrong": [],
+   "ungrounded": [],
+   "changed_vs_pf5c": []
+  },
+  "shadow": {
+   "questions": 307,
+   "identical_to_direct_legacy": 307,
+   "visible_mismatches": 0,
+   "per_set_mismatches": {
+    "p0": 0,
+    "p1": 0,
+    "held_out": 0,
+    "fresh5b": 0,
+    "fresh5c": 0
+   }
+  },
+  "determinism": {
+   "repeats": 3,
+   "repeat_records": 900,
+   "answer_or_outcome_differences": [],
+   "routing_differences": [],
+   "direct_vs_active_outcome_differences": [],
+   "active_vs_pf5c_changed": [
+    "F42"
+   ],
+   "exceptions": 0
+  },
+  "active_scopes_off": {
+   "questions": 307,
+   "served": {
+    "legacy": 303,
+    "plan_f": 4
+   },
+   "guide_answers_served": [],
+   "guide_registry_selected": [],
+   "exceptions": [],
+   "llm_calls": 0,
+   "changed_vs_pf5c": [
+    "F42"
+   ]
+  },
+  "active_scopes_on": {
+   "questions": 307,
+   "plan_f_served": 47,
+   "guide_served": 43,
+   "exceptions": [],
+   "llm_calls": 0
+  },
+  "records_differing_from_pf6": [
+   {
+    "id": "P02",
+    "mode": "active",
+    "question": "What is the yearly iThenticate submission quota for each instructor?",
+    "pf6": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      1
+     ],
+     "served": "legacy",
+     "outcome": "PLAN_F_REJECTED_BY_ROUTING"
+    },
+    "pf7": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      1,
+      96
+     ],
+     "served": "legacy",
+     "outcome": "PLAN_F_REJECTED_BY_ROUTING"
+    }
+   },
+   {
+    "id": "M09",
+    "mode": "active",
+    "question": "How do I create a journal in Blackboard Ultra?",
+    "pf6": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      1,
+      5
+     ],
+     "served": "legacy",
+     "outcome": "PLAN_F_REJECTED_BY_ROUTING"
+    },
+    "pf7": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      1
+     ],
+     "served": "legacy",
+     "outcome": "PLAN_F_REJECTED_BY_ROUTING"
+    }
+   },
+   {
+    "id": "M10",
+    "mode": "active",
+    "question": "Should I use journals for grading in Blackboard Ultra?",
+    "pf6": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      5
+     ],
+     "served": "legacy",
+     "outcome": "PLAN_F_REJECTED_BY_ROUTING"
+    },
+    "pf7": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      1
+     ],
+     "served": "legacy",
+     "outcome": "PLAN_F_REJECTED_BY_ROUTING"
+    }
+   },
+   {
+    "id": "F42",
+    "mode": "active",
+    "question": "How do I set up a journal so my research group can log weekly progress on the manuscript we're writing?",
+    "pf6": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      5
+     ],
+     "served": "legacy",
+     "outcome": "PLAN_F_UNSAFE_RESULT"
+    },
+    "pf7": {
+     "answer": "I do not have this information.",
+     "pages": [],
+     "served": "legacy",
+     "outcome": "PLAN_F_UNSAFE_RESULT"
+    }
+   },
+   {
+    "id": "P02",
+    "mode": "shadow",
+    "question": "What is the yearly iThenticate submission quota for each instructor?",
+    "pf6": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      1
+     ],
+     "served": "legacy",
+     "outcome": "PLAN_F_REJECTED_BY_ROUTING"
+    },
+    "pf7": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      1,
+      96
+     ],
+     "served": "legacy",
+     "outcome": "PLAN_F_REJECTED_BY_ROUTING"
+    }
+   },
+   {
+    "id": "M09",
+    "mode": "shadow",
+    "question": "How do I create a journal in Blackboard Ultra?",
+    "pf6": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      1,
+      5
+     ],
+     "served": "legacy",
+     "outcome": "PLAN_F_REJECTED_BY_ROUTING"
+    },
+    "pf7": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      1
+     ],
+     "served": "legacy",
+     "outcome": "PLAN_F_REJECTED_BY_ROUTING"
+    }
+   },
+   {
+    "id": "M10",
+    "mode": "shadow",
+    "question": "Should I use journals for grading in Blackboard Ultra?",
+    "pf6": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      5
+     ],
+     "served": "legacy",
+     "outcome": "PLAN_F_REJECTED_BY_ROUTING"
+    },
+    "pf7": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      1
+     ],
+     "served": "legacy",
+     "outcome": "PLAN_F_REJECTED_BY_ROUTING"
+    }
+   },
+   {
+    "id": "F42",
+    "mode": "shadow",
+    "question": "How do I set up a journal so my research group can log weekly progress on the manuscript we're writing?",
+    "pf6": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      5
+     ],
+     "served": "legacy",
+     "outcome": "PLAN_F_UNSAFE_RESULT"
+    },
+    "pf7": {
+     "answer": "I do not have this information.",
+     "pages": [],
+     "served": "legacy",
+     "outcome": "PLAN_F_UNSAFE_RESULT"
+    }
+   },
+   {
+    "id": "P02",
+    "mode": "active_off",
+    "question": "What is the yearly iThenticate submission quota for each instructor?",
+    "pf6": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      1
+     ],
+     "served": "legacy",
+     "outcome": "PLAN_F_REJECTED_BY_ROUTING"
+    },
+    "pf7": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      1,
+      96
+     ],
+     "served": "legacy",
+     "outcome": "PLAN_F_REJECTED_BY_ROUTING"
+    }
+   },
+   {
+    "id": "M09",
+    "mode": "active_off",
+    "question": "How do I create a journal in Blackboard Ultra?",
+    "pf6": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      1,
+      5
+     ],
+     "served": "legacy",
+     "outcome": "PLAN_F_REJECTED_BY_ROUTING"
+    },
+    "pf7": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      1
+     ],
+     "served": "legacy",
+     "outcome": "PLAN_F_REJECTED_BY_ROUTING"
+    }
+   },
+   {
+    "id": "M10",
+    "mode": "active_off",
+    "question": "Should I use journals for grading in Blackboard Ultra?",
+    "pf6": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      5
+     ],
+     "served": "legacy",
+     "outcome": "PLAN_F_REJECTED_BY_ROUTING"
+    },
+    "pf7": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      1
+     ],
+     "served": "legacy",
+     "outcome": "PLAN_F_REJECTED_BY_ROUTING"
+    }
+   },
+   {
+    "id": "F42",
+    "mode": "active_off",
+    "question": "How do I set up a journal so my research group can log weekly progress on the manuscript we're writing?",
+    "pf6": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      5
+     ],
+     "served": "legacy",
+     "outcome": "PLAN_F_UNSAFE_RESULT"
+    },
+    "pf7": {
+     "answer": "I do not have this information.",
+     "pages": [],
+     "served": "legacy",
+     "outcome": "PLAN_F_UNSAFE_RESULT"
+    }
+   },
+   {
+    "id": "P02",
+    "mode": "legacy",
+    "question": "What is the yearly iThenticate submission quota for each instructor?",
+    "pf6": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      1
+     ],
+     "served": "legacy",
+     "outcome": null
+    },
+    "pf7": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      1,
+      96
+     ],
+     "served": "legacy",
+     "outcome": null
+    }
+   },
+   {
+    "id": "M09",
+    "mode": "legacy",
+    "question": "How do I create a journal in Blackboard Ultra?",
+    "pf6": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      1,
+      5
+     ],
+     "served": "legacy",
+     "outcome": null
+    },
+    "pf7": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      1
+     ],
+     "served": "legacy",
+     "outcome": null
+    }
+   },
+   {
+    "id": "M10",
+    "mode": "legacy",
+    "question": "Should I use journals for grading in Blackboard Ultra?",
+    "pf6": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      5
+     ],
+     "served": "legacy",
+     "outcome": null
+    },
+    "pf7": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      1
+     ],
+     "served": "legacy",
+     "outcome": null
+    }
+   },
+   {
+    "id": "F42",
+    "mode": "legacy",
+    "question": "How do I set up a journal so my research group can log weekly progress on the manuscript we're writing?",
+    "pf6": {
+     "answer": "GROQ_API_KEY is not set. Please set it, then reload the app.",
+     "pages": [
+      5
+     ],
+     "served": "legacy",
+     "outcome": null
+    },
+    "pf7": {
+     "answer": "I do not have this information.",
+     "pages": [],
+     "served": "legacy",
+     "outcome": null
+    }
+   }
+  ],
+  "note": "'changed_vs_pf5c' fields of the derive step compare with the baseline given to it, here the PF-6 results."
+ },
+ "wrong_source": {
+  "cases": 88,
+  "pf2_cases": 16,
+  "pf4_cases": 20,
+  "pf5b_cases": 24,
+  "pf5c_cases": 28,
+  "pf5c_inference_accepted": [
+   "W07",
+   "I02",
+   "I04",
+   "I05",
+   "I09",
+   "I10",
+   "I12",
+   "I20"
+  ],
+  "top1_expected_source": 75,
+  "expected_page_in_top5": 85,
+  "plan_f_served": 11,
+  "wrong_source_acceptances": [],
+  "violations": [],
+  "retrieval_wrong_source_first": [
+   "P14",
+   "T01",
+   "T05",
+   "T08",
+   "S03",
+   "A01",
+   "G02",
+   "J02",
+   "I04",
+   "I06",
+   "I18",
+   "I20",
+   "I23"
+  ],
+  "seconds": 367.1
+ },
+ "inference_adversarial": {
+  "cases": 30,
+  "passed": 30,
+  "failed": [],
+  "inference_accepted": [],
+  "guide_served": [],
+  "plan_f_served_handbook": [],
+  "seconds": 59.7
+ },
+ "conflict": {
+  "cases": 15,
+  "passed": 14,
+  "failed": [
+   "Q09"
+  ],
+  "quota_leaks": [],
+  "journal_leaks": [],
+  "not_overblocked_served": [
+   "Q08",
+   "J05",
+   "J06"
+  ],
+  "llm_calls": 0
+ },
+ "boundary_and_held_sources": {
+  "boundary_cases": 16,
+  "boundary_passed": 16,
+  "policy_asks_served_from_a_guide": [],
+  "held_cases": 6,
+  "held_passed": 6,
+  "held_failures": [],
+  "llm_calls": 0
+ },
+ "legacy_isolation": {
+  "mode": "legacy",
+  "questions": 20,
+  "minimal_diagnostics": 20,
+  "exceptions": 0,
+  "watched_modules_imported": [],
+  "runtime_cache_created": false
+ },
+ "tests": {
+  "targeted_gate": "2870 passed in 183.31s (0:03:03)",
+  "full_suite": "7322 passed in 437.40s (0:07:17)"
+ }
+}

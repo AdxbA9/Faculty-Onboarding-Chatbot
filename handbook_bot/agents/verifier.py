@@ -88,7 +88,9 @@ _SENTENCE_SPLIT = re.compile(r"(?<=[.!?])\s+|\s*[;]\s+")
 _ABBREVIATIONS = {"no", "nos", "dr", "prof", "mr", "mrs", "ms", "e.g", "i.e", "vs",
                   "art", "sec", "para", "p", "pp", "fig", "vol", "ext", "tel", "st"}
 _LIST_MARKER = re.compile(r"^\s*(?:[-*•]|\(?\d{1,2}[.)]|[a-z][.)])\s+", re.I)
-_NUMBER = re.compile(r"(?<![\w.])\d{1,4}(?:,\d{3})?(?![\w,])")
+# Post-freeze PF-7 (D-117): a data-size unit written against the number ("100MB") does not hide it, so "100MB" in the
+# evidence and "100 MB" in an answer are the same number; any other letter after the digits still does.
+_NUMBER = re.compile(r"(?<![\w.])\d{1,4}(?:,\d{3})?(?:(?![\w,])|(?=(?:[KMGT]i?B|[kmgt]b)\b))")
 _YEAR = re.compile(r"^(?:19|20)\d{2}$")
 _DIGITS = re.compile(r"\D+")
 #: "page 65", "pp. 3-4", "pages 3, 4 and 12": a page reference is a citation,
@@ -459,3 +461,28 @@ def verify(
         uncovered_subquestions=uncovered,
         retry_feedback=feedback,
     )
+
+
+def citing_items(answer: str, raw_items: Sequence[Dict], claimed_pages: Sequence[int] = ()) -> List[int]:
+    """Post-freeze PF-7 (D-117): indices of the evidence items an accepted answer rests on, in evidence order.
+
+    For each checkable claim the ONE best supporting item is kept: an item on a page the answer cited first, then the
+    highest coverage, then the strongest rerank score. A claim that only several items support together keeps every
+    contributing item. :func:`verify` counts support per page number; this picks items, because several documents
+    share page numbers and a page number alone does not say which document supports a claim."""
+    items = [_Item(i, item) for i, item in enumerate(raw_items)]
+    claimed = {int(p) for p in (claimed_pages or ())}
+    keep: Set[int] = set()
+    for claim in (c for c in (_Claim(text) for text in split_claims(answer or "")) if c.checkable):
+        best = None
+        for item in items:
+            ok, coverage = _support(claim, item, items)
+            if ok:
+                key = (item.page in claimed, coverage, item.score)
+                if best is None or key > best[0]:
+                    best = (key, item)
+        if best is not None:
+            keep.add(best[1].index)
+        else:
+            keep.update(item.index for item in _union_support(claim, items))
+    return sorted(keep)

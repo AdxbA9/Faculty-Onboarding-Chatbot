@@ -59,8 +59,10 @@ from typing import Callable, Dict, List, Optional, Tuple
 
 import numpy as np
 
+from . import conflict_guard
 from .agents import router as router_agent
 from .agents import synthesis as synthesis_agent
+from .agents.verifier import citing_items
 from .agents.types import (
     EXTRACTOR_ROUTES,
     EvidenceResult,
@@ -249,8 +251,13 @@ def _gather_evidence(
     metadata: List[Dict],
     pages: List[Dict],
     timings: Dict[str, float],
-) -> Tuple[EvidenceResult, int, Optional[Tuple[List[int], str]]]:
-    """Returns (evidence, number of candidates, extractor (pages, snippet) or None)."""
+) -> Tuple[EvidenceResult, int, Optional[Tuple[List[int], str]], Dict]:
+    """Returns (evidence, number of candidates, extractor (pages, snippet) or None, conflict screening).
+
+    Post-freeze PF-7 (D-117): retrieved chunks that carry a registered source conflict are screened before they become
+    evidence (``conflict_guard.screen_items``); the screening returns the conflict stamps of the top evidence as it was
+    retrieved (``stamped``, read by the answer check) and what was removed (``report``)."""
+    conflicts: Dict = {"stamped": [], "report": []}
     # ---- Dense retrieval + lexical fusion ---------------------------------
     started = time.perf_counter()
     query_embedding = embedder.encode(
@@ -263,7 +270,7 @@ def _gather_evidence(
 
     if not candidates:
         return (EvidenceResult(question, route, [], None, False, "no_candidates", False, None),
-                0, None)
+                0, None, conflicts)
 
     # ---- Cross-encoder rerank ---------------------------------------------
     started = time.perf_counter()
@@ -282,6 +289,9 @@ def _gather_evidence(
         ),
         reverse=True,
     )
+    if conflict_guard.stamped_topics(reranked):
+        conflicts["stamped"] = conflict_guard.stamped_topics(deduplicate_by_text(reranked)[:FINAL_K])
+        reranked, conflicts["report"] = conflict_guard.screen_items(reranked)
     final_items = deduplicate_by_text(reranked)[:FINAL_K]
     timings["rerank_ms"] = _ms(started)
 
@@ -289,7 +299,7 @@ def _gather_evidence(
     if not final_items or best_score < MIN_RERANK_SCORE:
         return (EvidenceResult(question, route, final_items, best_score, False,
                                "rerank_score_below_threshold", False, None),
-                len(candidates), None)
+                len(candidates), None, conflicts)
 
     # ---- Deterministic extractor fast path (tools, zero LLM calls) ---------
     extracted = None
@@ -314,7 +324,7 @@ def _gather_evidence(
     if extracted:
         answer, source_pages, snippet = extracted
         return (EvidenceResult(question, route, final_items, best_score, True, None, True, answer),
-                len(candidates), ([int(p) for p in source_pages], snippet))
+                len(candidates), ([int(p) for p in source_pages], snippet), conflicts)
 
     reason = None
     if route in EXTRACTOR_ROUTES:
@@ -324,7 +334,7 @@ def _gather_evidence(
         elif blocked_by_part1_gate:
             reason = "extractor_blocked_by_part1_gate"
     return (EvidenceResult(question, route, final_items, best_score, True, reason, False, None),
-            len(candidates), None)
+            len(candidates), None, conflicts)
 
 
 # ---------------------------------------------------------------------------
@@ -538,10 +548,15 @@ def run(
 
     # ---- 2. Evidence ---------------------------------------------------------
     started = time.perf_counter()
-    evidence, num_candidates, extractor_extra = _gather_evidence(
+    evidence, num_candidates, extractor_extra, conflicts = _gather_evidence(
         question, route, embedder=embedder, reranker=reranker, index=index,
         chunks=chunks, metadata=metadata, pages=pages, timings=timings)
     items = evidence.items
+    if conflicts["report"]:
+        trace.append(TraceEntry("conflict_guard", "screened", False, 0.0, {
+            "topics": sorted({entry["topic"] for entry in conflicts["report"]}),
+            "chunks_removed": sum(1 for entry in conflicts["report"] if entry["action"] == "chunk_removed"),
+            "chunks_screened": sum(1 for entry in conflicts["report"] if entry["action"] == "units_removed")}))
     trace.append(TraceEntry(
         "evidence",
         ("extractor:" + route) if evidence.used_extractor
@@ -622,9 +637,27 @@ def run(
             cited = list(verdict.pages)
     timings["verify_ms"] = sum(entry.ms for entry in trace if entry.agent == "verifier")
 
+    # ---- 4b. Registered conflicts and citations (post-freeze PF-7, D-117) --------
+    # An answer that still states the disputed claim of a value conflict stamped on the retrieved evidence is refused,
+    # whichever path wrote it. An accepted model answer cites only the items its claims rest on (one best item per
+    # claim), so a page number shared by several documents cannot pull in a document that supports nothing.
+    if conflicts["stamped"] and answer not in (REFUSAL, LLM_UNAVAILABLE_REPLY):
+        problem = conflict_guard.answer_problem(answer, conflicts["stamped"])
+        if problem:
+            trace.append(TraceEntry("conflict_guard", "answer_refused", False, 0.0, {"reason": problem}))
+            answer, cited = REFUSAL, []
+    if used_llm and cited and answer not in (REFUSAL, LLM_UNAVAILABLE_REPLY):
+        chosen = [items[i] for i in citing_items(answer, items, draft.claimed_pages) if int(items[i]["meta"]["page"]) in cited]
+        if chosen:
+            chosen_pages = {int(item["meta"]["page"]) for item in chosen}
+            cited = [p for p in cited if p in chosen_pages]
+            common["items"] = chosen
+            display_evidence = chosen[0]["chunk"]
+
     # ---- 5. Result -------------------------------------------------------------
     if display_evidence and len(display_evidence) > EVIDENCE_PREVIEW_CHARS:
         display_evidence = display_evidence[:EVIDENCE_PREVIEW_CHARS].rstrip() + "..."
-    best_section = items[0]["meta"].get("section") or f"Page {items[0]['meta']['page']}"
+    first = common["items"][0]
+    best_section = first["meta"].get("section") or f"Page {first['meta']['page']}"
     return _finish(QAResult(answer=answer, pages=cited, best_section=best_section,
                             evidence=display_evidence, used_llm=used_llm, retried=retried, **common))

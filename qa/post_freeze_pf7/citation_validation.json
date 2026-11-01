@@ -1,0 +1,388 @@
+{
+ "method": "The same model answer and evidence give the PF-6 chips (every evidence item, the Verifier's page-number citation) and the D-117 chips (one best supporting item per claim); a displayed document is supported when one of its items on a displayed page supports at least one answer claim (the Verifier's item-level test). citation_live.py, questions_citation.txt.",
+ "summary": {
+  "questions": 10,
+  "legacy_model_answers": 8,
+  "documents_shown_before": 11,
+  "documents_shown_after": 8,
+  "page_chips_before": 15,
+  "page_chips_after": 9,
+  "unsupported_documents_before": 1,
+  "unsupported_documents_after": 0,
+  "every_displayed_document_supports_a_claim": true
+ },
+ "questions": [
+  {
+   "question": "How do I take attendance in Blackboard?",
+   "served": "legacy",
+   "answer": "To take attendance in Blackboard Ultra, go to the Course Content page, select **Mark attendance** in the Details & Actions panel, then click **Add Attendance**; set your grade schema (present, late, absent) and grade display option (points, percentage, letters), and save. The attendance column will ",
+   "before_chips": [
+    [
+     "doc",
+     "Attendance Tool in Blackboard Ultra"
+    ],
+    [
+     "page",
+     "Page 1 · Access Attendance:"
+    ],
+    [
+     "doc",
+     "Blackboard Collaborate Ultra Guide"
+    ],
+    [
+     "page",
+     "Page 2 · 2. Session Settings [1]:"
+    ]
+   ],
+   "after_chips": [
+    [
+     "doc",
+     "Attendance Tool in Blackboard Ultra"
+    ],
+    [
+     "page",
+     "Page 1 · Access Attendance:"
+    ]
+   ],
+   "before_pages": [
+    1,
+    2
+   ],
+   "after_pages": [
+    1
+   ],
+   "unsupported_doc_chips_before": [],
+   "unsupported_doc_chips_after": [],
+   "every_displayed_doc_supports_a_claim": true
+  },
+  {
+   "question": "How do I record attendance for my class in Blackboard Ultra?",
+   "served": "legacy",
+   "answer": "To record attendance, go to the Course Content page in your Blackboard Ultra course, select **Mark attendance** in the Details & Actions panel, then click **Add Attendance** and set the desired grade schema, grading format, and save; you can then manually insert or edit attendance statuses, or let t",
+   "before_chips": [
+    [
+     "doc",
+     "Attendance Tool in Blackboard Ultra"
+    ],
+    [
+     "page",
+     "Page 1 · Access Attendance:"
+    ]
+   ],
+   "after_chips": [
+    [
+     "doc",
+     "Attendance Tool in Blackboard Ultra"
+    ],
+    [
+     "page",
+     "Page 1 · Access Attendance:"
+    ]
+   ],
+   "before_pages": [
+    1
+   ],
+   "after_pages": [
+    1
+   ],
+   "unsupported_doc_chips_before": [],
+   "unsupported_doc_chips_after": [],
+   "every_displayed_doc_supports_a_claim": true
+  },
+  {
+   "question": "How do I view my students' grades in the Blackboard gradebook?",
+   "served": "legacy",
+   "answer": "Open the gradebook, click the **Students** tab, and then select a student’s name to open their individual Student Grades page where you can see their grades and feedback.",
+   "before_chips": [
+    [
+     "doc",
+     "Blackboard Ultra Guide: Gradebook"
+    ],
+    [
+     "page",
+     "Page 4 · The Item View:"
+    ],
+    [
+     "page",
+     "Page 1 · Blackboard Ultra Guide: Gradebook"
+    ]
+   ],
+   "after_chips": [
+    [
+     "doc",
+     "Blackboard Ultra Guide: Gradebook"
+    ],
+    [
+     "page",
+     "Page 4 · The Item View:"
+    ]
+   ],
+   "before_pages": [
+    4,
+    1
+   ],
+   "after_pages": [
+    4
+   ],
+   "unsupported_doc_chips_before": [],
+   "unsupported_doc_chips_after": [],
+   "every_displayed_doc_supports_a_claim": true
+  },
+  {
+   "question": "How do students' grades get approved by the chair and dean before going to Banner?",
+   "served": "legacy",
+   "answer": "The chair or dean logs into the Grade Transfer Portal (https://op.sharjah.ac.ae/GradeTransfer), selects the option for their role and follows the on‑screen instructions; then they go to the course search, choose the relevant course, revise any grades if needed, and approve the grades by selecting th",
+   "before_chips": [
+    [
+     "doc",
+     "Grade Transfer Dashboard Guide"
+    ],
+    [
+     "page",
+     "Page 3 · Grade Transfer Dashboard Guide"
+    ]
+   ],
+   "after_chips": [
+    [
+     "doc",
+     "Grade Transfer Dashboard Guide"
+    ],
+    [
+     "page",
+     "Page 3 · Grade Transfer Dashboard Guide"
+    ]
+   ],
+   "before_pages": [
+    3
+   ],
+   "after_pages": [
+    3
+   ],
+   "unsupported_doc_chips_before": [],
+   "unsupported_doc_chips_after": [],
+   "every_displayed_doc_supports_a_claim": true
+  },
+  {
+   "question": "How do I schedule a recurring Collaborate session for my course?",
+   "served": "legacy",
+   "answer": "To schedule a recurring Collaborate session, go to the course Details & Actions menu and select **View All Sessions**. Click **Create Session**, give the session a name, and set the start and end dates for the first meeting. Then enable the **repeat session** option, choose the repetition method (e.",
+   "before_chips": [
+    [
+     "doc",
+     "Blackboard Collaborate Ultra Guide"
+    ],
+    [
+     "page",
+     "Page 1 · Blackboard Collaborate Ultra Guide"
+    ],
+    [
+     "page",
+     "Page 2 · 2. Session Settings [1]:"
+    ]
+   ],
+   "after_chips": [
+    [
+     "doc",
+     "Blackboard Collaborate Ultra Guide"
+    ],
+    [
+     "page",
+     "Page 1 · Blackboard Collaborate Ultra Guide"
+    ]
+   ],
+   "before_pages": [
+    1,
+    2
+   ],
+   "after_pages": [
+    1
+   ],
+   "unsupported_doc_chips_before": [],
+   "unsupported_doc_chips_after": [],
+   "every_displayed_doc_supports_a_claim": true
+  },
+  {
+   "question": "When are final exam results due and how do I transfer the grades to Banner?",
+   "served": "plan_f",
+   "answer": "Sat - Tue 02 - 12 May 15 -25 Dhi Al- Final exams\n\nSat -Tue 06-16 Dec 15 -25 Jumada II Final Exams\n\nHow to Send Grades to Banner as instructor?:\n\n1. Search for the course by using the search bar at the top of the dashboard to locate the specific course you wish to transfer. You can search by Course I",
+   "after_chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 50 · Academic Calendar"
+    ],
+    [
+     "page",
+     "Page 49 · Academic Calendar"
+    ],
+    [
+     "doc",
+     "Grade Transfer Dashboard Guide"
+    ],
+    [
+     "page",
+     "Page 2 · How to Send Grades to Banner as instructor?"
+    ]
+   ],
+   "note": "not a legacy model answer (Plan F, extractor or refusal)"
+  },
+  {
+   "question": "How do I send a message to all students in my Blackboard course?",
+   "served": "legacy",
+   "answer": "Use the Roster tool in the Course View: open the Roster, where you can select the class list and use the “send message” option to message all students in the course.",
+   "before_chips": [
+    [
+     "doc",
+     "Blackboard Learn Ultra: Communication..."
+    ],
+    [
+     "page",
+     "Page 1 · Blackboard Learn Ultra: Communication Tools"
+    ],
+    [
+     "doc",
+     "Blackboard Ultra Faculty Short Guide"
+    ],
+    [
+     "page",
+     "Page 4 ·  Course View:"
+    ],
+    [
+     "page",
+     "Page 1 · BLACKBOARD ULTRA FACULTY SHORT GUIDE"
+    ]
+   ],
+   "after_chips": [
+    [
+     "doc",
+     "Blackboard Ultra Faculty Short Guide"
+    ],
+    [
+     "page",
+     "Page 4 ·  Course View:"
+    ]
+   ],
+   "before_pages": [
+    4,
+    1
+   ],
+   "after_pages": [
+    4
+   ],
+   "unsupported_doc_chips_before": [],
+   "unsupported_doc_chips_after": [],
+   "every_displayed_doc_supports_a_claim": true
+  },
+  {
+   "question": "How many office hours must full-time faculty hold, and what is the teaching load per semester?",
+   "served": "plan_f",
+   "answer": "1. Full-Time Faculty: Full-time faculty members in academic and career/technical programs are required to schedule a minimum of five office hours per week, spread over a minimum of two days. These office hours provide dedicated time for students to discuss course- related matters, seek clarification",
+   "after_chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 79 · Responsibility to Office Hours"
+    ],
+    [
+     "page",
+     "Page 96 · Workload Allocation Model (WLAM)"
+    ]
+   ],
+   "note": "not a legacy model answer (Plan F, extractor or refusal)"
+  },
+  {
+   "question": "What tools does Blackboard Ultra offer for communicating with students?",
+   "served": "legacy",
+   "answer": "Blackboard Ultra provides discussion tools—including standard online discussion boards and, for smaller groups, group‑only discussions—to enable communication with students.",
+   "before_chips": [
+    [
+     "doc",
+     "Blackboard Learn Ultra: Communication..."
+    ],
+    [
+     "page",
+     "Page 1 · Blackboard Learn Ultra: Communication Tools"
+    ],
+    [
+     "doc",
+     "Attendance Tool in Blackboard Ultra"
+    ],
+    [
+     "page",
+     "Page 1 · Access Attendance:"
+    ]
+   ],
+   "after_chips": [
+    [
+     "doc",
+     "Blackboard Learn Ultra: Communication..."
+    ],
+    [
+     "page",
+     "Page 1 · Blackboard Learn Ultra: Communication Tools"
+    ]
+   ],
+   "before_pages": [
+    1
+   ],
+   "after_pages": [
+    1
+   ],
+   "unsupported_doc_chips_before": [
+    "Attendance Tool in Blackboard Ultra"
+   ],
+   "unsupported_doc_chips_after": [],
+   "every_displayed_doc_supports_a_claim": true
+  },
+  {
+   "question": "how can i see who showed up to my collaborate class",
+   "served": "legacy",
+   "answer": "You can identify who is present by looking for the purple Collaborate camera icon, which turns purple for each participant who is active in the room; students who remain in the session are automatically marked as attending.",
+   "before_chips": [
+    [
+     "doc",
+     "Blackboard Collaborate Ultra Guide"
+    ],
+    [
+     "page",
+     "Page 1 · Blackboard Collaborate Ultra Guide"
+    ],
+    [
+     "page",
+     "Page 2 · 2. Session Settings [1]:"
+    ]
+   ],
+   "after_chips": [
+    [
+     "doc",
+     "Blackboard Collaborate Ultra Guide"
+    ],
+    [
+     "page",
+     "Page 1 · Blackboard Collaborate Ultra Guide"
+    ],
+    [
+     "page",
+     "Page 2 · 2. Session Settings [1]:"
+    ]
+   ],
+   "before_pages": [
+    1,
+    2
+   ],
+   "after_pages": [
+    1,
+    2
+   ],
+   "unsupported_doc_chips_before": [],
+   "unsupported_doc_chips_after": [],
+   "every_displayed_doc_supports_a_claim": true
+  }
+ ]
+}

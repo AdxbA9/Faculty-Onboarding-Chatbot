@@ -1,0 +1,871 @@
+{
+ "method": "D-117 code, acceptance configuration plus LLM_REASONING_TOKENS=2048 (validate_live.py, questions_natural_language.txt: fresh paraphrases written for PF-7, none from the 60-question acceptance set).",
+ "summary": {
+  "questions": 20,
+  "answered": [
+   "Can you explain how the Blackboard gradebook works for instructors?",
+   "How do I use Blackboard Collaborate to run my online lectures?",
+   "hey i need to post an announcement for my class on blackboard, how?",
+   "I'm new here and want to check my paper for similarity in iThenticate, what are the steps?",
+   "how do grades get from blackboard into banner at the end of term",
+   "What does the UOS Faculty Handbook cover?",
+   "Which document explains the policies and procedures for faculty members?",
+   "What are a faculty member's responsibilities for teaching, research, community service and professional development?",
+   "What should I know about office hours, teaching load and student advising as a new faculty member?",
+   "Explain the main steps for using iThenticate, from logging in to reading the similarity report.",
+   "Summarize the Blackboard Ultra features a new instructor should know about.",
+   "how can i see who showed up to my collaborate class",
+   "Could you walk me through approving and sending final grades with the grade transfer dashboard?",
+   "I'm a new faculty member - what kinds of leave am I entitled to?",
+   "How do I build a test from a question pool in Blackboard Ultra?"
+  ],
+  "refused": [
+   "What is the weather in Sharjah today?",
+   "How do I set up grade categories with weights in the Blackboard gradebook?",
+   "How do I complete my Phase 2 performance appraisal in the HR portal?",
+   "According to the Blackboard attendance tool, how many absences make a student fail?",
+   "I need help."
+  ],
+  "empty_drafts_cut_at_the_cap": [],
+  "drafts_over_the_old_512_cap": [
+   "What should I know about office hours, teaching load and student advising as a new faculty member?"
+  ],
+  "disputed_claim_served": []
+ },
+ "questions": [
+  {
+   "question": "Can you explain how the Blackboard gradebook works for instructors?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "answer": "In Blackboard Ultra, instructors can view all of their grading tasks on the Global Grades page, where each item can be opened in a layer to select a submission and start grading, eliminating the need to enter each course individually. Within a specific course, instructors access the course gradebook via the Gradebook icon on the top‑right navigation bar, where the gradebook is populated with enrol",
+   "refused": false,
+   "states_disputed_claim": [],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Guide: Gradebook"
+    ],
+    [
+     "page",
+     "Page 1 · Blackboard Ultra Guide: Gradebook"
+    ]
+   ],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 255,
+     "reasoning": 149,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "policy_yesno"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "How do I use Blackboard Collaborate to run my online lectures?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "answer": "To run online lectures with Blackboard Collaborate, locate the Collaborate sessions under the course Details & Actions menu and click “View All Sessions” to open the Collaborate administrator panel. In that panel, click “Create Session,” give the session a name, and set the start and end dates for the first meeting. Choose the repeat‑session option, select the weekly repetition method, pick the da",
+   "refused": false,
+   "states_disputed_claim": [],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Collaborate Ultra Guide"
+    ],
+    [
+     "page",
+     "Page 1 · Blackboard Collaborate Ultra Guide"
+    ]
+   ],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 318,
+     "reasoning": 196,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "policy"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "hey i need to post an announcement for my class on blackboard, how?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "answer": "To post an announcement, go to **Details and Actions → Create Announcements**, click the **plus sign** in the top‑right, enter the title, select recipients, and write the message; optionally check “Send an email copy to recipients” or “schedule announcement” and set dates/times. Click **Save** to keep a draft, then click **Post** to make the announcement visible to students.",
+   "refused": false,
+   "states_disputed_claim": [],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Faculty Short Guide"
+    ],
+    [
+     "page",
+     "Page 9 · B. Content Visibility:"
+    ]
+   ],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 269,
+     "reasoning": 172,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "policy"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "I'm new here and want to check my paper for similarity in iThenticate, what are the steps?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "answer": "To check your paper in iThenticate:\n\n1. Open www.ithenticate.com and click **Login**.  \n2. Enter your university email and password (the activation password is emailed to you).  \n3. If you cannot access the software, email servicedesk@sharjah.ac.ae.  \n4. On the home screen, click **Upload a File** under “Submit a Document”.  \n5. Fill in the author’s name and document title, then click **Choose a F",
+   "refused": false,
+   "states_disputed_claim": [],
+   "chips": [
+    [
+     "doc",
+     "iThenticate Guidelines"
+    ],
+    [
+     "page",
+     "Page 1"
+    ]
+   ],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 293,
+     "reasoning": 105,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "list"
+    ],
+    [
+     "conflict_guard",
+     "screened"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "how do grades get from blackboard into banner at the end of term",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "answer": "Faculty members enter grades electronically into Blackboard, which then forwards the grades to the registration system (Banner) via the Grade Transfer Dashboard after the required approvals from the Chair and Dean.",
+   "refused": false,
+   "states_disputed_claim": [],
+   "chips": [
+    [
+     "doc",
+     "Grade Transfer Dashboard Guide"
+    ],
+    [
+     "page",
+     "Page 1 · Grade Transfer Dashboard Guide"
+    ]
+   ],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 200,
+     "reasoning": 148,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "policy"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "What does the UOS Faculty Handbook cover?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "answer": "The handbook provides faculty‑related policies, procedures and essential information to support members throughout their careers at UoS. It also describes the university’s academic, technological and personal facilities—including research labs, lecture halls, library resources, recreational and wellness amenities, dining options, and professional‑development programs.",
+   "refused": false,
+   "states_disputed_claim": [],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 2 · Preface"
+    ],
+    [
+     "page",
+     "Page 250 · Central Laboratories"
+    ]
+   ],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 236,
+     "reasoning": 160,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "policy"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "Which document explains the policies and procedures for faculty members?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "answer": "The University of Sharjah Faculty Handbook explains the policies and procedures for faculty members.",
+   "refused": false,
+   "states_disputed_claim": [],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 2 · Preface"
+    ]
+   ],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 100,
+     "reasoning": 70,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "policy"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "What are a faculty member's responsibilities for teaching, research, community service and professional development?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "answer": "Faculty members are responsible for **teaching and curriculum development**, ensuring effective instruction and course design. They must also engage in **research and scholarly activities**, contributing to the university’s knowledge base. In addition, they are expected to perform **university and community service**, which includes supporting social communities, applying their academic expertise ",
+   "refused": false,
+   "states_disputed_claim": [],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 109 · Annual Incentives for Distinguished Facul..."
+    ],
+    [
+     "page",
+     "Page 82 · Responsibility to Community Service"
+    ],
+    [
+     "page",
+     "Page 83 · Professional Development Responsibilities"
+    ]
+   ],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 423,
+     "reasoning": 301,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "policy"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "What should I know about office hours, teaching load and student advising as a new faculty member?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "answer": "- Full‑time faculty must schedule at least five office‑hour sessions each week, spread over a minimum of two days, and if you teach evening courses you should include at least one evening office hour.  \n- You must give your timetable (class times and office hours) to the departmental administrative assistant, post it outside your office, and communicate the hours in the syllabus, while also being ",
+   "refused": false,
+   "states_disputed_claim": [],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 79 · Responsibility to Office Hours"
+    ],
+    [
+     "page",
+     "Page 80 · Responsibility to Research"
+    ],
+    [
+     "page",
+     "Page 92 · Workload Allocation Model (WLAM)"
+    ]
+   ],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 803,
+     "reasoning": 496,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "policy"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "Explain the main steps for using iThenticate, from logging in to reading the similarity report.",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "answer": "To use iThenticate, first open www.ithenticate.com and click Login, then enter your university email and password (or request help at servicedesk@sharjah.ac.ae if you cannot access it). Next, select the “Upload a File” link under “Submit a Document,” enter the author’s name and document title, choose the file (ensuring it is under 100 MB), and click Upload (or use the update button for a revised v",
+   "refused": false,
+   "states_disputed_claim": [],
+   "chips": [
+    [
+     "doc",
+     "iThenticate Guidelines"
+    ],
+    [
+     "page",
+     "Page 1"
+    ]
+   ],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 420,
+     "reasoning": 248,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "policy"
+    ],
+    [
+     "conflict_guard",
+     "screened"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "Summarize the Blackboard Ultra features a new instructor should know about.",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "answer": "Blackboard Learn Ultra offers a range of communication tools built into the online course, such as discussion boards, to help instructors interact with students.  \nBlackboard Collaborate Ultra lets instructors schedule weekly online classes, choose the days of repetition, set the date of the last session, and decide whether to allow early entry to sessions.  \nInstructors can also create new schedu",
+   "refused": false,
+   "states_disputed_claim": [],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Collaborate Ultra Guide"
+    ],
+    [
+     "page",
+     "Page 1 · Blackboard Collaborate Ultra Guide"
+    ],
+    [
+     "doc",
+     "Blackboard Learn Ultra: Communication..."
+    ],
+    [
+     "page",
+     "Page 1 · Blackboard Learn Ultra: Communication Tools"
+    ]
+   ],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 405,
+     "reasoning": 292,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "policy"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "how can i see who showed up to my collaborate class",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "answer": "You can identify who is present by watching the purple Collaborate camera icon, which turns on for you and any course members who are active in the room; students who remain in the session are automatically marked as attending.",
+   "refused": false,
+   "states_disputed_claim": [],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Collaborate Ultra Guide"
+    ],
+    [
+     "page",
+     "Page 1 · Blackboard Collaborate Ultra Guide"
+    ],
+    [
+     "page",
+     "Page 2 · 2. Session Settings [1]:"
+    ]
+   ],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 318,
+     "reasoning": 259,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "policy"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "Could you walk me through approving and sending final grades with the grade transfer dashboard?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "answer": "First, log in to Blackboard with your credentials, select the Institution Page tab, and click the Grade Transfer link (or use https://op.sharjah.ac.ae/GradeTransfer).  \nNext, choose the option that matches your role and go to the Grade Transfer section of the dashboard.  \nSearch for the course you need to finalize by entering its Course ID and Term, then click **View Details**.  \nClick **Transfer*",
+   "refused": false,
+   "states_disputed_claim": [],
+   "chips": [
+    [
+     "doc",
+     "Grade Transfer Dashboard Guide"
+    ],
+    [
+     "page",
+     "Page 1 · Grade Transfer Dashboard Guide"
+    ],
+    [
+     "page",
+     "Page 2 · Grade Transfer Dashboard Guide"
+    ]
+   ],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 349,
+     "reasoning": 205,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "policy_yesno"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "I'm a new faculty member - what kinds of leave am I entitled to?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "answer": "You are entitled to sick leave — full pay for up to 15 working days and half‑pay for a further 15 working days each contract year; if all sick‑leave days are used you may then draw on annual vacation leave, although new faculty on probation are not granted annual leave.",
+   "refused": false,
+   "states_disputed_claim": [],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 107 · Leaves and Absences"
+    ]
+   ],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 415,
+     "reasoning": 338,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "policy"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "What is the weather in Sharjah today?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "answer": "I do not have this information.",
+   "refused": true,
+   "states_disputed_claim": [],
+   "chips": [],
+   "llm_calls": [],
+   "trace": [
+    [
+     "router",
+     "policy"
+    ],
+    [
+     "evidence",
+     "insufficient:rerank_score_below_threshold"
+    ]
+   ]
+  },
+  {
+   "question": "How do I set up grade categories with weights in the Blackboard gradebook?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "answer": "I do not have this information.",
+   "refused": true,
+   "states_disputed_claim": [],
+   "chips": [],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 233,
+     "reasoning": 212,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "list"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "How do I build a test from a question pool in Blackboard Ultra?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "answer": "To build a test, open the test editor, choose the desired question type, and then select **add a question pool** (or reuse questions from existing assessments) to include questions from that pool.",
+   "refused": false,
+   "states_disputed_claim": [],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Faculty Short Guide"
+    ],
+    [
+     "page",
+     "Page 10 · B. Content Visibility:"
+    ]
+   ],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 333,
+     "reasoning": 279,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "policy"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "How do I complete my Phase 2 performance appraisal in the HR portal?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "answer": "I do not have this information.",
+   "refused": true,
+   "states_disputed_claim": [],
+   "chips": [],
+   "llm_calls": [],
+   "trace": [
+    [
+     "router",
+     "policy"
+    ],
+    [
+     "evidence",
+     "insufficient:rerank_score_below_threshold"
+    ]
+   ]
+  },
+  {
+   "question": "According to the Blackboard attendance tool, how many absences make a student fail?",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "answer": "I do not have this information.",
+   "refused": true,
+   "states_disputed_claim": [],
+   "chips": [],
+   "llm_calls": [
+    {
+     "finish": "stop",
+     "tokens": 289,
+     "reasoning": 270,
+     "max_tokens": 2560
+    }
+   ],
+   "trace": [
+    [
+     "router",
+     "count"
+    ],
+    [
+     "evidence",
+     "sufficient"
+    ],
+    [
+     "synthesis",
+     "llm"
+    ],
+    [
+     "verifier",
+     "accepted"
+    ]
+   ]
+  },
+  {
+   "question": "I need help.",
+   "served": "legacy",
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "answer": "I do not have this information.",
+   "refused": true,
+   "states_disputed_claim": [],
+   "chips": [],
+   "llm_calls": [],
+   "trace": [
+    [
+     "router",
+     "policy"
+    ],
+    [
+     "evidence",
+     "insufficient:rerank_score_below_threshold"
+    ]
+   ]
+  }
+ ]
+}
