@@ -1,0 +1,369 @@
+{
+ "method": "PF-6 targeted final checks with the REAL models on the eight-source knowledge base: registered conflicts, the policy/system\nboundary and the held sources, each question attempted by the guide-enabled runtime (guide scopes ON, the strictest\nsetting) and by the production default runtime (guide scopes OFF), plus the unscoped legacy ranking (what LEGACY cites).\n\n    python -X utf8 qa/post_freeze_pf6/final_checks.py <repo> <out dir>\n\nWrites ``conflict_final.json`` and ``boundary_heldsource_final.json`` (no model call; Plan F is deterministic).",
+ "summary": {
+  "cases": 15,
+  "passed": 14,
+  "failed": [
+   "Q09"
+  ],
+  "quota_leaks": [],
+  "journal_leaks": [],
+  "not_overblocked_served": [
+   "Q08",
+   "J05",
+   "J06"
+  ],
+  "llm_calls": 0,
+  "coverage_expectation_missed": [
+   "Q09"
+  ],
+  "safety_failures": [],
+  "pass": true
+ },
+ "cases": [
+  {
+   "id": "Q01",
+   "group": "ithenticate_quota",
+   "question": "How many documents can I submit to iThenticate per year?",
+   "scopes_on": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "pass": true
+  },
+  {
+   "id": "Q02",
+   "group": "ithenticate_quota",
+   "question": "What is the yearly iThenticate submission limit?",
+   "scopes_on": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "pass": true
+  },
+  {
+   "id": "Q03",
+   "group": "ithenticate_quota",
+   "question": "Is the iThenticate quota 30 or 15 documents per year?",
+   "scopes_on": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "pass": true
+  },
+  {
+   "id": "Q04",
+   "group": "ithenticate_quota",
+   "question": "What is the maximum number of documents per year in iThenticate?",
+   "scopes_on": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "pass": true
+  },
+  {
+   "id": "Q05",
+   "group": "ithenticate_quota",
+   "question": "how many documents can I submit to ithentcate per year",
+   "scopes_on": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_NOT_APPLICABLE",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "pass": true
+  },
+  {
+   "id": "Q06",
+   "group": "ithenticate_quota",
+   "question": "How many documents can I check for similarity per year?",
+   "scopes_on": {
+    "outcome": "PLAN_F_NOT_APPLICABLE",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_NOT_APPLICABLE",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "pass": true
+  },
+  {
+   "id": "Q07",
+   "group": "ithenticate_quota",
+   "question": "Does a new revision count toward my iThenticate document limit?",
+   "scopes_on": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "pass": true
+  },
+  {
+   "id": "Q08",
+   "group": "ithenticate_not_overblocked",
+   "question": "How do I upload a document to iThenticate?",
+   "scopes_on": {
+    "outcome": "PLAN_F_ACCEPTED",
+    "served": true,
+    "sources": [
+     "uos_ithenticate_guidelines"
+    ],
+    "pages": [
+     1
+    ],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "pass": true
+  },
+  {
+   "id": "Q09",
+   "group": "ithenticate_not_overblocked",
+   "question": "How do I log in to iThenticate?",
+   "scopes_on": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "pass": false,
+   "annotation": "Conservative false fallback, not a conflict over-block: the printed procedure is titled 'How to access IThenticate' and the guide never states the asked words 'log in', so D-111 grounding refuses it (status not_found, no source_conflict guard involved; unchanged since PF-5B C10/W12). Q08 shows the steps on the conflict-stamped page are still served. Documented, not fixed (PF-6 critical-defect rule).",
+   "pass_safety": true
+  },
+  {
+   "id": "J01",
+   "group": "journal_2022",
+   "question": "How do I create a journal in Blackboard Ultra?",
+   "scopes_on": {
+    "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "pass": true
+  },
+  {
+   "id": "J02",
+   "group": "journal_2022",
+   "question": "Should I use journals in my Blackboard course?",
+   "scopes_on": {
+    "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "pass": true
+  },
+  {
+   "id": "J03",
+   "group": "journal_2022",
+   "question": "How do I grade a journal in Blackboard?",
+   "scopes_on": {
+    "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "pass": true
+  },
+  {
+   "id": "J04",
+   "group": "journal_2022",
+   "question": "Can students see each other's journal entries in Blackboard?",
+   "scopes_on": {
+    "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "pass": true
+  },
+  {
+   "id": "J05",
+   "group": "journal_not_overblocked",
+   "question": "How do I allow class conversations on an assignment in Blackboard?",
+   "scopes_on": {
+    "outcome": "PLAN_F_ACCEPTED",
+    "served": true,
+    "sources": [
+     "uos_blackboard_communication_guide"
+    ],
+    "pages": [
+     4
+    ],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "pass": true
+  },
+  {
+   "id": "J06",
+   "group": "journal_not_overblocked",
+   "question": "How do I delete a discussion topic in Blackboard?",
+   "scopes_on": {
+    "outcome": "PLAN_F_ACCEPTED",
+    "served": true,
+    "sources": [
+     "uos_blackboard_communication_guide"
+    ],
+    "pages": [
+     3
+    ],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0,
+    "leak": false
+   },
+   "pass": true
+  }
+ ]
+}

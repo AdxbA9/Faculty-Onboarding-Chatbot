@@ -1,0 +1,168 @@
+{
+ "method": "ACTIVE with the production defaults (guide scopes OFF) on the 307 questions, and ACTIVE with guide scopes ON (the evaluation configuration of P0/P1): served path, outcome, guide use, model calls, exceptions, compared with PF-5C.",
+ "production_default_scopes_off": {
+  "questions": 307,
+  "served": {
+   "legacy": 303,
+   "plan_f": 4
+  },
+  "guide_answers_served": [],
+  "guide_registry_selected": [],
+  "exceptions": [],
+  "llm_calls": 0,
+  "changed_vs_pf5c": []
+ },
+ "scopes_on": {
+  "questions": 307,
+  "plan_f_served": 47,
+  "guide_served": 43,
+  "exceptions": [],
+  "llm_calls": 0
+ },
+ "control_scopes_off_vs_on": {
+  "changed": 48,
+  "unexplained": [
+   "H09",
+   "H11",
+   "H12",
+   "H27",
+   "F5C_C30"
+  ],
+  "explanation": "H09, H11, H12 kept by their specialist (D-114), H27 and F5C_C30 routed by the corrected system name; in all five the visible answer is the same legacy fallback with guide scopes on and off; every other difference is a reviewed guide answer (PF-5C review; the same five in PF-6)",
+  "unexplained_after_review": []
+ },
+ "latency": {
+  "active": {
+   "all": {
+    "n": 307,
+    "p50_ms": 2254.6,
+    "p95_ms": 4186.2,
+    "max_ms": 6154.9
+   },
+   "guide_served": {
+    "n": 43,
+    "p50_ms": 897.5,
+    "p95_ms": 2845.4,
+    "max_ms": 3046.8
+   },
+   "guide_scope_fallback": {
+    "n": 146,
+    "p50_ms": 2777.8,
+    "p95_ms": 4700.4,
+    "max_ms": 6154.9
+   },
+   "p1_served": {
+    "n": 7,
+    "p50_ms": 850.2,
+    "p95_ms": 2198.9,
+    "max_ms": 2198.9
+   }
+  },
+  "shadow": {
+   "all": {
+    "n": 307,
+    "p50_ms": 2428.5,
+    "p95_ms": 4573.0,
+    "max_ms": 6486.7
+   },
+   "guide_served": {
+    "n": 43,
+    "p50_ms": 1859.9,
+    "p95_ms": 3763.9,
+    "max_ms": 5047.1
+   },
+   "guide_scope_fallback": {
+    "n": 146,
+    "p50_ms": 2674.8,
+    "p95_ms": 4925.0,
+    "max_ms": 6486.7
+   },
+   "p1_served": {
+    "n": 7,
+    "p50_ms": 2070.7,
+    "p95_ms": 2717.6,
+    "max_ms": 2717.6
+   }
+  },
+  "active_off": {
+   "all": {
+    "n": 307,
+    "p50_ms": 1941.8,
+    "p95_ms": 3252.3,
+    "max_ms": 4311.3
+   },
+   "guide_served": null,
+   "guide_scope_fallback": null,
+   "p1_served": null
+  },
+  "legacy": {
+   "all": {
+    "n": 307,
+    "p50_ms": 1006.4,
+    "p95_ms": 2020.3,
+    "max_ms": 2556.3
+   },
+   "guide_served": null,
+   "guide_scope_fallback": null,
+   "p1_served": null
+  },
+  "guide_retrieval_ms_per_clause": {
+   "n": 136,
+   "p50_ms": 716.4,
+   "p95_ms": 1457.6,
+   "max_ms": 2021.6
+  },
+  "guide_selection_ms_per_clause": {
+   "n": 136,
+   "p50_ms": 3.0,
+   "p95_ms": 13.3,
+   "max_ms": 20.8
+  },
+  "direct_verification_ms": {
+   "guards_ms": {
+    "n": 37,
+    "p50_ms": 1.5,
+    "p95_ms": 2.2,
+    "max_ms": 3.5
+   },
+   "findings_verify_ms": {
+    "n": 37,
+    "p50_ms": 1.9,
+    "p95_ms": 3.0,
+    "max_ms": 3.7
+   },
+   "verify_ms": {
+    "n": 43,
+    "p50_ms": 0.6,
+    "p95_ms": 2.1,
+    "max_ms": 5.3
+   }
+  }
+ },
+ "llm": {
+  "plan_f_llm_calls_max": 0,
+  "direct_llm_calls_max": 0
+ },
+ "exceptions": 0,
+ "legacy_pass_minimal": true,
+ "legacy_cache_untouched": true,
+ "production_default_served_review": {
+  "G43": [
+   "CORRECT",
+   "handbook p91: 12 credit hours per regular semester or 24 per academic year (WLAM)"
+  ],
+  "G44": [
+   "CORRECT",
+   "handbook p81: a maximum of four theses/dissertations simultaneously"
+  ],
+  "G45": [
+   "CORRECT",
+   "handbook p54 Contact Information: Human Resources +971 6 5050023 +971 6 5585200"
+  ],
+  "G48": [
+   "CORRECT",
+   "handbook p61: HR arranges travel and hotel accommodations for new faculty members"
+  ]
+ },
+ "production_default_served_review_note": "The four Plan F answers ACTIVE serves with guide scopes off are handbook answers, byte-identical to the scopes-on run and to PF-5C; each paragraph found word for word on the cited page."
+}

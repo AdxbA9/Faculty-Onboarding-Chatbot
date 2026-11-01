@@ -1,0 +1,372 @@
+{
+ "records": 9,
+ "enabled": 8,
+ "enabled_ids": [
+  "uos_faculty_handbook_2025_26",
+  "uos_blackboard_faculty_short_guide",
+  "uos_grade_transfer_dashboard_guide",
+  "uos_blackboard_gradebook_guide",
+  "uos_ithenticate_guidelines",
+  "uos_blackboard_attendance_guide",
+  "uos_blackboard_collaborate_guide",
+  "uos_blackboard_communication_guide"
+ ],
+ "disabled": [
+  "uos_performance_appraisal_phase2_guide"
+ ],
+ "internal_use_enabled": [],
+ "held_enabled": [],
+ "enabled_missing_file": [],
+ "enabled_hash_mismatch": [],
+ "enabled_without_recorded_hash": [],
+ "unregistered_files_in_data_guides": [],
+ "guide_allowlist": {
+  "teaching": [
+   "uos_blackboard_attendance_guide",
+   "uos_blackboard_collaborate_guide",
+   "uos_blackboard_communication_guide",
+   "uos_blackboard_faculty_short_guide",
+   "uos_blackboard_gradebook_guide",
+   "uos_grade_transfer_dashboard_guide"
+  ],
+  "research": [
+   "uos_ithenticate_guidelines"
+  ],
+  "faculty_services": [],
+  "institutional": [
+   "uos_blackboard_faculty_short_guide",
+   "uos_grade_transfer_dashboard_guide"
+  ]
+ },
+ "approved_sources_per_specialist": {
+  "teaching": [
+   "uos_blackboard_attendance_guide",
+   "uos_blackboard_collaborate_guide",
+   "uos_blackboard_communication_guide",
+   "uos_blackboard_faculty_short_guide",
+   "uos_blackboard_gradebook_guide",
+   "uos_faculty_handbook_2025_26",
+   "uos_grade_transfer_dashboard_guide"
+  ],
+  "research": [
+   "uos_faculty_handbook_2025_26",
+   "uos_ithenticate_guidelines"
+  ],
+  "faculty_services": [
+   "uos_faculty_handbook_2025_26"
+  ],
+  "institutional": [
+   "uos_blackboard_faculty_short_guide",
+   "uos_faculty_handbook_2025_26",
+   "uos_grade_transfer_dashboard_guide"
+  ]
+ },
+ "held_sources": {
+  "uos_performance_appraisal_phase2_guide": "registered, disabled, Internal Use (ingestion hold)",
+  "assignments_and_tests": "not registered: 25 pages collide with frozen page-keyed indexes (D-113)",
+  "grade_categories": "not registered: interleaved English/Arabic pages (D-113)"
+ },
+ "guide_scopes_default": false,
+ "plan_f_enabled_default": false,
+ "plan_f_shadow_default": false,
+ "cache_version": "v13",
+ "sources": [
+  {
+   "source_id": "uos_faculty_handbook_2025_26",
+   "title": "UOS Faculty Handbook 2025/26",
+   "citation_label": "UOS Faculty Handbook 2025/26",
+   "document_type": "handbook",
+   "source_type": "pdf",
+   "authority": "official_university_source",
+   "authority_level": "university_policy",
+   "verification_status": "verified_local_file",
+   "audience": [
+    "faculty"
+   ],
+   "enabled": true,
+   "access": "public",
+   "language": "en",
+   "page_filter": "",
+   "system": "",
+   "domains": [
+    "teaching",
+    "research",
+    "faculty_services",
+    "institutional"
+   ],
+   "approved_for_specialists": [
+    "faculty_services",
+    "institutional",
+    "research",
+    "teaching"
+   ],
+   "conflicts": [],
+   "file_present": true,
+   "sha256_recorded": "fc9bc650529c85363ce87b452b93e0e0bdf3caae15acf587ba232b0ca4ea7ea7",
+   "sha256_actual": "fc9bc650529c85363ce87b452b93e0e0bdf3caae15acf587ba232b0ca4ea7ea7",
+   "sha256_match": true
+  },
+  {
+   "source_id": "uos_blackboard_faculty_short_guide",
+   "title": "Blackboard Ultra Faculty Short Guide",
+   "citation_label": "Blackboard Ultra Faculty Short Guide",
+   "document_type": "system_guide",
+   "source_type": "pdf",
+   "authority": "official_university_source",
+   "authority_level": "system_guide",
+   "verification_status": "pf1_approved_p0",
+   "audience": [
+    "faculty",
+    "instructor"
+   ],
+   "enabled": true,
+   "access": "public",
+   "language": "en",
+   "page_filter": "english_only",
+   "system": "Blackboard Ultra",
+   "domains": [
+    "teaching",
+    "institutional"
+   ],
+   "approved_for_specialists": [
+    "institutional",
+    "teaching"
+   ],
+   "conflicts": [],
+   "file_present": true,
+   "sha256_recorded": "4a9072699167a917e69b436064f4e54fce1b297587c39bce25d950bbe1a2448b",
+   "sha256_actual": "4a9072699167a917e69b436064f4e54fce1b297587c39bce25d950bbe1a2448b",
+   "sha256_match": true
+  },
+  {
+   "source_id": "uos_grade_transfer_dashboard_guide",
+   "title": "Grade Transfer Dashboard Guide",
+   "citation_label": "Grade Transfer Dashboard Guide",
+   "document_type": "system_guide",
+   "source_type": "pdf",
+   "authority": "official_university_source",
+   "authority_level": "system_guide",
+   "verification_status": "pf1_approved_p0",
+   "audience": [
+    "faculty",
+    "instructor"
+   ],
+   "enabled": true,
+   "access": "public",
+   "language": "en",
+   "page_filter": "english_only",
+   "system": "Grade Transfer Dashboard (Blackboard to Banner)",
+   "domains": [
+    "teaching",
+    "institutional"
+   ],
+   "approved_for_specialists": [
+    "institutional",
+    "teaching"
+   ],
+   "conflicts": [],
+   "file_present": true,
+   "sha256_recorded": "06018cb153bc833831e651461eefe298ad7e8f4cf86b57c5c0b96b8dfc733892",
+   "sha256_actual": "06018cb153bc833831e651461eefe298ad7e8f4cf86b57c5c0b96b8dfc733892",
+   "sha256_match": true
+  },
+  {
+   "source_id": "uos_blackboard_gradebook_guide",
+   "title": "Blackboard Ultra Guide: Gradebook",
+   "citation_label": "Blackboard Ultra Guide: Gradebook",
+   "document_type": "system_guide",
+   "source_type": "pdf",
+   "authority": "official_university_source",
+   "authority_level": "system_guide",
+   "verification_status": "pf1_approved_p0",
+   "audience": [
+    "faculty",
+    "instructor"
+   ],
+   "enabled": true,
+   "access": "public",
+   "language": "en",
+   "page_filter": "english_only",
+   "system": "Blackboard Ultra",
+   "domains": [
+    "teaching"
+   ],
+   "approved_for_specialists": [
+    "teaching"
+   ],
+   "conflicts": [],
+   "file_present": true,
+   "sha256_recorded": "e1171901516f58cd80af50ce442816eb919725ba30a4b13cb4155f443e87a2dc",
+   "sha256_actual": "e1171901516f58cd80af50ce442816eb919725ba30a4b13cb4155f443e87a2dc",
+   "sha256_match": true
+  },
+  {
+   "source_id": "uos_ithenticate_guidelines",
+   "title": "iThenticate Guidelines",
+   "citation_label": "iThenticate Guidelines",
+   "document_type": "guideline",
+   "source_type": "pdf",
+   "authority": "official_university_source",
+   "authority_level": "system_guide",
+   "verification_status": "pf1_approved_p0_with_conflict",
+   "audience": [
+    "faculty",
+    "researcher"
+   ],
+   "enabled": true,
+   "access": "public",
+   "language": "en",
+   "page_filter": "english_only",
+   "system": "iThenticate",
+   "domains": [
+    "research"
+   ],
+   "approved_for_specialists": [
+    "research"
+   ],
+   "conflicts": [
+    {
+     "topic": "ithenticate_yearly_submission_limit",
+     "phrases": [
+      "maximum 30",
+      "documents per year",
+      "specific amount of submission"
+     ],
+     "status": "unresolved",
+     "note": "The English page states a maximum of 30 documents per year; the Arabic page of the same file states 15. Neither value is served as a direct answer until the owning unit confirms the limit."
+    }
+   ],
+   "file_present": true,
+   "sha256_recorded": "061c30a2688a15cdae59aa5fd543538b146e6d7bf76706bd9d63c692de82371d",
+   "sha256_actual": "061c30a2688a15cdae59aa5fd543538b146e6d7bf76706bd9d63c692de82371d",
+   "sha256_match": true
+  },
+  {
+   "source_id": "uos_blackboard_attendance_guide",
+   "title": "Attendance Tool in Blackboard Ultra",
+   "citation_label": "Attendance Tool in Blackboard Ultra",
+   "document_type": "system_guide",
+   "source_type": "pdf",
+   "authority": "official_university_source",
+   "authority_level": "system_guide",
+   "verification_status": "pf4_approved_p1",
+   "audience": [
+    "faculty",
+    "instructor"
+   ],
+   "enabled": true,
+   "access": "public",
+   "language": "en",
+   "page_filter": "english_only",
+   "system": "Blackboard Ultra",
+   "domains": [
+    "teaching"
+   ],
+   "approved_for_specialists": [
+    "teaching"
+   ],
+   "conflicts": [],
+   "file_present": true,
+   "sha256_recorded": "8959d5bb2d1f7e37183585b8039c27b68b7591d1843f48be0bc7f194cefd6864",
+   "sha256_actual": "8959d5bb2d1f7e37183585b8039c27b68b7591d1843f48be0bc7f194cefd6864",
+   "sha256_match": true
+  },
+  {
+   "source_id": "uos_blackboard_collaborate_guide",
+   "title": "Blackboard Collaborate Ultra Guide",
+   "citation_label": "Blackboard Collaborate Ultra Guide",
+   "document_type": "system_guide",
+   "source_type": "pdf",
+   "authority": "official_university_source",
+   "authority_level": "system_guide",
+   "verification_status": "pf4_approved_p1",
+   "audience": [
+    "faculty",
+    "instructor"
+   ],
+   "enabled": true,
+   "access": "public",
+   "language": "en",
+   "page_filter": "english_only",
+   "system": "Blackboard Collaborate Ultra",
+   "domains": [
+    "teaching"
+   ],
+   "approved_for_specialists": [
+    "teaching"
+   ],
+   "conflicts": [],
+   "file_present": true,
+   "sha256_recorded": "2ba9ecd552662828226301bf4bc86ddcbfbf841a6f66547569f195100ae5e122",
+   "sha256_actual": "2ba9ecd552662828226301bf4bc86ddcbfbf841a6f66547569f195100ae5e122",
+   "sha256_match": true
+  },
+  {
+   "source_id": "uos_blackboard_communication_guide",
+   "title": "Blackboard Learn Ultra: Communication Tools",
+   "citation_label": "Blackboard Learn Ultra: Communication Tools",
+   "document_type": "system_guide",
+   "source_type": "pdf",
+   "authority": "official_university_source",
+   "authority_level": "system_guide",
+   "verification_status": "pf4_approved_p1",
+   "audience": [
+    "faculty",
+    "instructor"
+   ],
+   "enabled": true,
+   "access": "public",
+   "language": "en",
+   "page_filter": "english_only",
+   "system": "Blackboard Learn Ultra",
+   "domains": [
+    "teaching"
+   ],
+   "approved_for_specialists": [
+    "teaching"
+   ],
+   "conflicts": [
+    {
+     "topic": "blackboard_journals_usage_recommendation_2022",
+     "phrases": [
+      "limit teaching and grading usage",
+      "additional improvements are completed",
+      "journal"
+     ],
+     "status": "unresolved",
+     "note": "Likely updated information: the 2022 guide recommends limiting the teaching and grading use of Ultra journals until the vendor completes improvements. Whether that still holds is unknown; neither the recommendation nor the text around it is served as a direct answer until ITC confirms it."
+    }
+   ],
+   "file_present": true,
+   "sha256_recorded": "2982032fa476e4b8ae7e0b1a51898de766a476627ee150f502ed9488d3ed6875",
+   "sha256_actual": "2982032fa476e4b8ae7e0b1a51898de766a476627ee150f502ed9488d3ed6875",
+   "sha256_match": true
+  },
+  {
+   "source_id": "uos_performance_appraisal_phase2_guide",
+   "title": "Performance Appraisal Phase 2 User Guide",
+   "citation_label": "Performance Appraisal Phase 2 User Guide",
+   "document_type": "system_guide",
+   "source_type": "pdf",
+   "authority": "official_university_source",
+   "authority_level": "system_guide",
+   "verification_status": "INGESTION HOLD - INTERNAL USE REVIEW REQUIRED",
+   "audience": [],
+   "enabled": false,
+   "access": "internal_use",
+   "language": "en",
+   "page_filter": "english_only",
+   "system": "HR Portal (Performance Appraisal)",
+   "domains": [
+    "faculty_services"
+   ],
+   "approved_for_specialists": [],
+   "conflicts": [],
+   "file_present": false,
+   "sha256_recorded": null,
+   "sha256_actual": null,
+   "sha256_match": null
+  }
+ ],
+ "pass": true
+}

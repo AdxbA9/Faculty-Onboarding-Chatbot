@@ -1,0 +1,653 @@
+{
+ "method": "Every cross-document question (P0 and P1 cross_document, PF-4 cross_source) and every answer resting on more than one source: each served clause with its own sources and pages (items carry their clause index), every quote verbatim in its chunk and page, the hand verdict.",
+ "summary": {
+  "questions": 14,
+  "served": [
+   "P14",
+   "P16",
+   "C15",
+   "C16",
+   "C17",
+   "X03"
+  ],
+  "wrong": [],
+  "ungrounded": [],
+  "changed_vs_pf5c": []
+ },
+ "questions": [
+  {
+   "id": "G36",
+   "set": "p0",
+   "category": "cross_document",
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "path": "multi_finding_aggregate",
+   "sources": [],
+   "pages": [
+    1,
+    2,
+    3
+   ],
+   "clauses": null,
+   "every_clause_grounded": true,
+   "verdict": null,
+   "identical_to_pf5c": true
+  },
+  {
+   "id": "G37",
+   "set": "p0",
+   "category": "cross_document",
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "path": "multi_finding_aggregate",
+   "sources": [],
+   "pages": [
+    1
+   ],
+   "clauses": null,
+   "every_clause_grounded": true,
+   "verdict": null,
+   "identical_to_pf5c": true
+  },
+  {
+   "id": "P14",
+   "set": "p0",
+   "category": "cross_document",
+   "served": "plan_f",
+   "outcome": "PLAN_F_ACCEPTED",
+   "path": "multi_finding_aggregate",
+   "sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "pages": [
+    79,
+    10,
+    11
+   ],
+   "clauses": {
+    "0": [
+     {
+      "source_id": "uos_faculty_handbook_2025_26",
+      "page": 79,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     }
+    ],
+    "1": [
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 10,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 10,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 10,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 10,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 10,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 10,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 10,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 10,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 10,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 10,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 10,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 10,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 11,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 11,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     }
+    ]
+   },
+   "every_clause_grounded": true,
+   "verdict": "CORRECT",
+   "identical_to_pf5c": true
+  },
+  {
+   "id": "P15",
+   "set": "p0",
+   "category": "cross_document",
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "path": "multi_finding_aggregate",
+   "sources": [],
+   "pages": [
+    224
+   ],
+   "clauses": null,
+   "every_clause_grounded": true,
+   "verdict": null,
+   "identical_to_pf5c": true
+  },
+  {
+   "id": "P16",
+   "set": "p0",
+   "category": "cross_document",
+   "served": "plan_f",
+   "outcome": "PLAN_F_ACCEPTED",
+   "path": "multi_finding_aggregate",
+   "sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_ithenticate_guidelines"
+   ],
+   "pages": [
+    81,
+    1
+   ],
+   "clauses": {
+    "0": [
+     {
+      "source_id": "uos_faculty_handbook_2025_26",
+      "page": 81,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     }
+    ],
+    "1": [
+     {
+      "source_id": "uos_ithenticate_guidelines",
+      "page": 1,
+      "chunk_type": "procedure_step",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": false
+     },
+     {
+      "source_id": "uos_ithenticate_guidelines",
+      "page": 1,
+      "chunk_type": "procedure_step",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": false
+     },
+     {
+      "source_id": "uos_ithenticate_guidelines",
+      "page": 1,
+      "chunk_type": "procedure_step",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": false
+     }
+    ]
+   },
+   "every_clause_grounded": true,
+   "verdict": "CORRECT",
+   "identical_to_pf5c": true
+  },
+  {
+   "id": "C15",
+   "set": "p0",
+   "category": "cross_document",
+   "served": "plan_f",
+   "outcome": "PLAN_F_ACCEPTED",
+   "path": "multi_finding_aggregate",
+   "sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "pages": [
+    79,
+    1
+   ],
+   "clauses": {
+    "0": [
+     {
+      "source_id": "uos_faculty_handbook_2025_26",
+      "page": 79,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     }
+    ],
+    "1": [
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 1,
+      "chunk_type": "procedure_step",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 1,
+      "chunk_type": "procedure_step",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 1,
+      "chunk_type": "procedure_step",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 1,
+      "chunk_type": "procedure_step",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 1,
+      "chunk_type": "procedure_step",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 1,
+      "chunk_type": "procedure_step",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 1,
+      "chunk_type": "procedure_step",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     }
+    ]
+   },
+   "every_clause_grounded": true,
+   "verdict": "CORRECT",
+   "identical_to_pf5c": true
+  },
+  {
+   "id": "C16",
+   "set": "p0",
+   "category": "cross_document",
+   "served": "plan_f",
+   "outcome": "PLAN_F_ACCEPTED",
+   "path": "multi_finding_aggregate",
+   "sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "pages": [
+    96,
+    91,
+    2
+   ],
+   "clauses": {
+    "0": [
+     {
+      "source_id": "uos_faculty_handbook_2025_26",
+      "page": 96,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_faculty_handbook_2025_26",
+      "page": 91,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     }
+    ],
+    "1": [
+     {
+      "source_id": "uos_grade_transfer_dashboard_guide",
+      "page": 2,
+      "chunk_type": "procedure_step",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": false
+     },
+     {
+      "source_id": "uos_grade_transfer_dashboard_guide",
+      "page": 2,
+      "chunk_type": "procedure_step",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_grade_transfer_dashboard_guide",
+      "page": 2,
+      "chunk_type": "procedure_step",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_grade_transfer_dashboard_guide",
+      "page": 2,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     }
+    ]
+   },
+   "every_clause_grounded": true,
+   "verdict": "CORRECT",
+   "identical_to_pf5c": true
+  },
+  {
+   "id": "C17",
+   "set": "p0",
+   "category": "cross_document",
+   "served": "plan_f",
+   "outcome": "PLAN_F_ACCEPTED",
+   "path": "multi_finding_aggregate",
+   "sources": [
+    "uos_faculty_handbook_2025_26",
+    "uos_ithenticate_guidelines"
+   ],
+   "pages": [
+    81,
+    1
+   ],
+   "clauses": {
+    "0": [
+     {
+      "source_id": "uos_faculty_handbook_2025_26",
+      "page": 81,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     }
+    ],
+    "1": [
+     {
+      "source_id": "uos_ithenticate_guidelines",
+      "page": 1,
+      "chunk_type": "procedure_step",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": false
+     },
+     {
+      "source_id": "uos_ithenticate_guidelines",
+      "page": 1,
+      "chunk_type": "procedure_step",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": false
+     },
+     {
+      "source_id": "uos_ithenticate_guidelines",
+      "page": 1,
+      "chunk_type": "procedure_step",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": false
+     },
+     {
+      "source_id": "uos_ithenticate_guidelines",
+      "page": 1,
+      "chunk_type": "procedure_step",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": false
+     }
+    ]
+   },
+   "every_clause_grounded": true,
+   "verdict": "CORRECT",
+   "identical_to_pf5c": true
+  },
+  {
+   "id": "X01",
+   "set": "p1",
+   "category": "cross_document",
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "path": "multi_finding_aggregate",
+   "sources": [],
+   "pages": [
+    1,
+    2
+   ],
+   "clauses": null,
+   "every_clause_grounded": true,
+   "verdict": null,
+   "identical_to_pf5c": true
+  },
+  {
+   "id": "X02",
+   "set": "p1",
+   "category": "cross_document",
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "path": "multi_finding_aggregate",
+   "sources": [],
+   "pages": [
+    1,
+    2,
+    80
+   ],
+   "clauses": null,
+   "every_clause_grounded": true,
+   "verdict": null,
+   "identical_to_pf5c": true
+  },
+  {
+   "id": "X03",
+   "set": "p1",
+   "category": "cross_document",
+   "served": "plan_f",
+   "outcome": "PLAN_F_ACCEPTED",
+   "path": "multi_finding_aggregate",
+   "sources": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_communication_guide"
+   ],
+   "pages": [
+    9,
+    1
+   ],
+   "clauses": {
+    "0": [
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 9,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 9,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 9,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 9,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 9,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 9,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 9,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 9,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_faculty_short_guide",
+      "page": 9,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     }
+    ],
+    "1": [
+     {
+      "source_id": "uos_blackboard_communication_guide",
+      "page": 1,
+      "chunk_type": "paragraph",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_communication_guide",
+      "page": 1,
+      "chunk_type": "procedure_step",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     },
+     {
+      "source_id": "uos_blackboard_communication_guide",
+      "page": 1,
+      "chunk_type": "procedure_step",
+      "quote_in_chunk": true,
+      "quote_on_page_strict": true
+     }
+    ]
+   },
+   "every_clause_grounded": true,
+   "verdict": "ACCEPTABLE BUT LIMITED",
+   "identical_to_pf5c": true
+  },
+  {
+   "id": "H39",
+   "set": "held_out",
+   "category": "held_out_cross_source",
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "path": "multi_finding_aggregate",
+   "sources": [],
+   "pages": [
+    79,
+    80
+   ],
+   "clauses": null,
+   "every_clause_grounded": true,
+   "verdict": null,
+   "identical_to_pf5c": true
+  },
+  {
+   "id": "H40",
+   "set": "held_out",
+   "category": "held_out_cross_source",
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "path": "multi_finding_aggregate",
+   "sources": [],
+   "pages": [],
+   "clauses": null,
+   "every_clause_grounded": true,
+   "verdict": null,
+   "identical_to_pf5c": true
+  },
+  {
+   "id": "H41",
+   "set": "held_out",
+   "category": "held_out_cross_source",
+   "served": "legacy",
+   "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "path": "multi_finding_aggregate",
+   "sources": [],
+   "pages": [
+    1
+   ],
+   "clauses": null,
+   "every_clause_grounded": true,
+   "verdict": null,
+   "identical_to_pf5c": true
+  }
+ ]
+}

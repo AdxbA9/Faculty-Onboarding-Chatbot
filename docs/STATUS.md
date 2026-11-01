@@ -9,6 +9,94 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-11-01 - Final English technical freeze (post-freeze phase PF-6)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/post-freeze-knowledge-expansion` |
+| Starting commit | `720e9aa` (PF-5C) |
+| Ending state | COMPLETE. ENGLISH CORE = FROZEN as `ENGLISH_CORE_FREEZE_PF6` (D-116, the commit that adds `qa/post_freeze_pf6/`). Independent verification of the frozen English system; no critical defect found, so no runtime, data, registry or test file changed; every set identical to PF-5C; one local commit for the project owner to push |
+| Freeze status | `ENGLISH_CORE_FREEZE_PF6` is the authoritative English baseline (runtime I-9 with D-109 to D-115; corpus `c8987b6079b11f39`); `PLAN_F_GUIDE_SCOPES` final default OFF; LEGACY remains the application default |
+| Elapsed | 1h54m46s (start 2026-11-01T03:25:09Z, end 2026-11-01T05:19:55Z at the freeze commit; includes the background evaluation runs) |
+
+### Final baseline
+
+| | PF-6 (frozen) |
+|---|---|
+| enabled sources / pages / chunks | 8 / 309 / 15,000 (corpus `c8987b6079b11f39`, `CACHE_VERSION` v13; cold rebuild bit-identical) |
+| frozen 192-question set (scopes off and on) | 55 served, the same 55 as I-9, 55 correct, 0 wrong, 0 false acceptances; SHADOW 192 of 192 |
+| P0 core guide questions (correct / limited / wrong) | 21 of 37 (19 / 2 / 0), precision 100%; 35 of 100 guide answers |
+| P1 questions (correct / limited / wrong) | 7 of 41 (5 / 2 / 0), precision 100% |
+| PF-4 / PF-5B / PF-5C held-out (diagnostic) | 1 of 50 / 0 of 56 / 0 of 60 served, 0 wrong |
+| wrong-source check | 88 cases, 0 wrong-source acceptances, 0 violations |
+| conflicts | iThenticate quota and 2022 journal blocked (0 leaks), no unrelated over-blocking |
+| holds | Appraisal, Assignments & Tests, Grade Categories enforced (0 chunks, 0 citations) |
+| Plan F model calls | 0 |
+
+### Completed
+
+- Source registry audit (9 records, 8 enabled, every enabled file's SHA-256 matching; appraisal disabled; no unregistered guide
+  file) and corpus integrity (deterministic assembly, 0 held-source chunks, 46 conflict-stamped chunks; a cold rebuild of all
+  15,000 embeddings in an empty scratch cache bit-identical to the production cache; cache reuse only on identical inputs).
+- Final regressions on the frozen code: the 192-question master set with guide scopes off and on, the five PF-5C sets (P0, P1,
+  three diagnostic held-out sets) in ACTIVE, DIRECT, SHADOW, scopes off and LEGACY with three determinism repeats, the 88
+  wrong-source cases, the 30 inference-adversarial cases, 15 conflict, 16 policy/system boundary and 6 held-source cases,
+  citation and procedure re-verification, cross-document QA, LEGACY isolation in a fresh process, a 38-turn application smoke
+  on the real NiceGUI app with a manual evidence review, idle performance, the targeted gate, the full suite and a security scan.
+- D-116 (freeze identifier, baseline, limitations, scope-off decision, safety and stability evidence, rollback, post-freeze
+  modification rules); `qa/post_freeze_pf6/` with the freeze manifest and every final artifact.
+
+### Tests performed
+
+- Registry and corpus audit (`source_registry_audit.json`, `corpus_integrity.json`): PASS; corpus `c8987b6079b11f39` equal to
+  PF-5C; a cold rebuild of all 15,000 embeddings in 444 s bit-identical to the production cache; cache invalidation verified.
+- Frozen 192-question set (`frozen_192_final.json`), production default and guide scopes on: 55 served, the same 55 as I-9, 55
+  correct, 0 wrong, 0 false acceptances, 0 exceptions, SHADOW 192 of 192, determinism subset 0 unstable, every record
+  identical to PF-5C, the guide registry never selected; T07 (legacy citation pages since PF-2) the only change against I-9.
+- Five sets, 307 questions (ACTIVE, DIRECT, SHADOW, scopes off, LEGACY, three repeats): P0 21 of 37 core (19 / 2 / 0) and 35
+  of 100, P1 7 of 41 (5 / 2 / 0), PF-4 1 of 50, PF-5B 0 of 56, PF-5C 0 of 60, every answer byte-identical to PF-5C; SHADOW 307
+  of 307; 900 repeat records, 0 differences; scopes off versus on 48 differences, the same as PF-5C; the production default
+  serves 4 handbook answers, all correct; 0 exceptions; 0 model calls.
+- Wrong-source 88 cases: 0 acceptances, 0 violations (identical to PF-5C). Inference adversarial 30 of 30 refused. Conflicts
+  15 cases: 0 quota leaks, 0 journal leaks, upload steps and two Communication procedures still served; "How do I log in to
+  iThenticate?" a documented conservative fallback. Policy/system boundary 16 of 16; held sources 6 of 6.
+- Citation integrity 58 answers, 204 items, every enabled source: 0 problems; procedure completeness 31 of 31; cross-document
+  14 questions, 6 served, every clause grounded.
+- LEGACY fresh process 20 of 20 minimal, no Plan F or guide module imported. Application smoke 38 turns (ACTIVE production
+  defaults 23, ACTIVE guide scopes on 12, LEGACY 3): 10 served, all correct, 28 expected fallbacks, 0 crashes, 0 internal ids,
+  developer details only in Developer mode.
+- Performance (idle, 191 questions): within 0 to 4.3% of PF-5C, no meaningful regression.
+- Targeted gate (33 modules): 2,827 passed. Full suite: 7,279 passed, 0 failed, 0 skipped, 0 xfail. `pip check`: no broken
+  requirements. Security scan: PASS (0 flags in the PF-6 files; every full-tree flag classified).
+
+### Known limitations
+
+1. `PLAN_F_GUIDE_SCOPES` OFF by default (production Plan F answers from the handbook only).
+2. Conservative implicit-system coverage (D-115; PF-5C fresh 0 of 25 implicit answerable).
+3. Conversational and multi-clause questions fall back whole (I-5 all-or-nothing aggregation).
+4. Assignments & Tests guide held (page-keyed index collisions, D-113).
+5. Grade Categories guide held (interleaved English and Arabic pages, D-113).
+6. Performance Appraisal Phase 2 guide held (Internal Use).
+7. iThenticate yearly quota conflict (30 versus 15) unresolved and blocked.
+8. Arabic not implemented.
+9. Voice not implemented.
+
+### Next task
+
+MANUAL / INDEPENDENT ACCEPTANCE TESTING of the frozen English system (then, only on the project owner's decision: Arabic,
+Arabic regression against `ENGLISH_CORE_FREEZE_PF6`, voice, final bilingual and security regression, optional guided onboarding).
+
+### Blockers
+
+None.
+
+### Files changed
+
+`qa/post_freeze_pf6/` (new: scripts and freeze artifacts), `docs/DECISIONS.md` (D-116), `docs/STATUS.md`.
+
+---
+
 ## 2026-11-01 - Safe guide-intent inference and blind fresh held-out validation (post-freeze phase PF-5C)
 
 | Field | Value |

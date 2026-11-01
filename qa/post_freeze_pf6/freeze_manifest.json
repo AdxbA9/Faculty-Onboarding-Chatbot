@@ -1,0 +1,103 @@
+{
+ "freeze_identifier": "ENGLISH_CORE_FREEZE_PF6",
+ "decision_record": "D-116 Final English technical freeze",
+ "freeze_commit": "the commit that adds this file (message 'Freeze final English technical baseline')",
+ "parent_commit": "720e9aa33f97a830fc2796b74f3655507f1ea530",
+ "branch": "feature/post-freeze-knowledge-expansion",
+ "timestamp_utc": "2026-11-01T05:18:37Z",
+ "frozen_control": "runtime-freeze-i9 (D-108) with D-109 to D-115",
+ "corpus_identity": {
+  "key": "c8987b6079b11f39",
+  "cache_version": "v13",
+  "sources": 8,
+  "pages": 309,
+  "chunks": 15000,
+  "conflict_stamped_chunks": 46,
+  "conflict_topics": [
+   "blackboard_journals_usage_recommendation_2022",
+   "ithenticate_yearly_submission_limit"
+  ],
+  "embedding_shape": [
+   15000,
+   768
+  ],
+  "cold_rebuild_identical": true
+ },
+ "enabled_sources": [
+  {
+   "source_id": "uos_faculty_handbook_2025_26",
+   "title": "UOS Faculty Handbook 2025/26",
+   "sha256": "fc9bc650529c85363ce87b452b93e0e0bdf3caae15acf587ba232b0ca4ea7ea7",
+   "pages_indexed": 272,
+   "chunks": 13688
+  },
+  {
+   "source_id": "uos_blackboard_faculty_short_guide",
+   "title": "Blackboard Ultra Faculty Short Guide",
+   "sha256": "4a9072699167a917e69b436064f4e54fce1b297587c39bce25d950bbe1a2448b",
+   "pages_indexed": 11,
+   "chunks": 403
+  },
+  {
+   "source_id": "uos_grade_transfer_dashboard_guide",
+   "title": "Grade Transfer Dashboard Guide",
+   "sha256": "06018cb153bc833831e651461eefe298ad7e8f4cf86b57c5c0b96b8dfc733892",
+   "pages_indexed": 3,
+   "chunks": 68
+  },
+  {
+   "source_id": "uos_blackboard_gradebook_guide",
+   "title": "Blackboard Ultra Guide: Gradebook",
+   "sha256": "e1171901516f58cd80af50ce442816eb919725ba30a4b13cb4155f443e87a2dc",
+   "pages_indexed": 10,
+   "chunks": 308
+  },
+  {
+   "source_id": "uos_ithenticate_guidelines",
+   "title": "iThenticate Guidelines",
+   "sha256": "061c30a2688a15cdae59aa5fd543538b146e6d7bf76706bd9d63c692de82371d",
+   "pages_indexed": 2,
+   "chunks": 82
+  },
+  {
+   "source_id": "uos_blackboard_attendance_guide",
+   "title": "Attendance Tool in Blackboard Ultra",
+   "sha256": "8959d5bb2d1f7e37183585b8039c27b68b7591d1843f48be0bc7f194cefd6864",
+   "pages_indexed": 2,
+   "chunks": 89
+  },
+  {
+   "source_id": "uos_blackboard_collaborate_guide",
+   "title": "Blackboard Collaborate Ultra Guide",
+   "sha256": "2ba9ecd552662828226301bf4bc86ddcbfbf841a6f66547569f195100ae5e122",
+   "pages_indexed": 4,
+   "chunks": 150
+  },
+  {
+   "source_id": "uos_blackboard_communication_guide",
+   "title": "Blackboard Learn Ultra: Communication Tools",
+   "sha256": "2982032fa476e4b8ae7e0b1a51898de766a476627ee150f502ed9488d3ed6875",
+   "pages_indexed": 5,
+   "chunks": 212
+  }
+ ],
+ "held_sources": {
+  "uos_performance_appraisal_phase2_guide": "registered, disabled, Internal Use (ingestion hold)",
+  "assignments_and_tests": "not registered: 25 pages collide with frozen page-keyed indexes (D-113)",
+  "grade_categories": "not registered: interleaved English/Arabic pages (D-113)"
+ },
+ "switch_defaults": {
+  "application_mode": "LEGACY",
+  "PLAN_F_ENABLED": false,
+  "PLAN_F_SHADOW": false,
+  "PLAN_F_GUIDE_SCOPES": false
+ },
+ "tests": {
+  "targeted_gate_passed": 2827,
+  "full_suite_passed": 7279,
+  "failed": 0,
+  "skipped": 0,
+  "xfail": 0,
+  "pip_check": "PASS"
+ }
+}

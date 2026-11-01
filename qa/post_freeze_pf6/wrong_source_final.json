@@ -1,0 +1,5164 @@
+{
+ "method": "PF-5C wrong-source adversarial check with the REAL models on the eight-source knowledge base (derived from\n``qa/post_freeze_pf5b/wrong_source.py``).\n\nThe 16 PF-2, 20 PF-4 and 24 PF-5B cases (unchanged) plus 28 PF-5C cases on what D-115 changes: questions that name NO system,\nso a guide can only be reached through guide-intent inference. They cover the inference collisions: the attendance policy\nversus the Attendance tool, the Gradebook versus the Grade Transfer Dashboard, the verb \"collaborate\" versus online classes, a\nresearch journal versus the Blackboard journal, the similarity report versus unrelated reports, a support office versus the\nsoftware, online teaching versus another meeting platform, an assignment submission versus a grade submission, plus messages,\nsessions and course administration. For each case:\n  * RETRIEVAL: the unscoped legacy ranking (dense + lexical candidates, production cross-encoder): is the first hit from an\n    expected source, is an expected page in the top five;\n  * PLAN F: the guide-enabled runtime (``build_runtime(kb, guide_scopes=True)``) attempts the question; a served answer\n    must rest only on expected sources (a wrong-source acceptance fails the check). ``must_not_serve`` cases (a conflict\n    or a policy limit) must not be served from a guide at all.\nWrites ``wrong_source_results.json``.\n\n    python -X utf8 qa/post_freeze_pf5c/wrong_source.py <repo> <out json>",
+ "summary": {
+  "cases": 88,
+  "pf2_cases": 16,
+  "pf4_cases": 20,
+  "pf5b_cases": 24,
+  "pf5c_cases": 28,
+  "pf5c_inference_accepted": [
+   "W07",
+   "I02",
+   "I04",
+   "I05",
+   "I09",
+   "I10",
+   "I12",
+   "I20"
+  ],
+  "top1_expected_source": 75,
+  "expected_page_in_top5": 85,
+  "plan_f_served": 11,
+  "wrong_source_acceptances": [],
+  "violations": [],
+  "retrieval_wrong_source_first": [
+   "P14",
+   "T01",
+   "T05",
+   "T08",
+   "S03",
+   "A01",
+   "G02",
+   "J02",
+   "I04",
+   "I06",
+   "I18",
+   "I20",
+   "I23"
+  ],
+  "seconds": 287.8
+ },
+ "cases_differing_from_pf5c": [],
+ "inference_adversarial": {
+  "method": "PF-5C inference adversarial check (D-115) with the REAL models on the eight-source knowledge base.\n\nQuestions that must NOT be inferred into a software guide: the six the project owner listed (single ambiguous words and\npronoun asks), and more of the same kinds (weak single words, policy and authority asks, organizational and contact asks,\nother platforms, collisions). For each question the guide-enabled runtime (``build_runtime(kb, guide_scopes=True)``)\nattempts it; the check passes when guide inference refuses it (question and every clause) AND no guide answer is served.\nWrites ``inference_adversarial.json``.\n\n    python -X utf8 qa/post_freeze_pf5c/inference_adversarial.py <repo> <out json>",
+  "summary": {
+   "cases": 30,
+   "passed": 30,
+   "failed": [],
+   "inference_accepted": [],
+   "guide_served": [],
+   "plan_f_served_handbook": [],
+   "seconds": 53.0
+  },
+  "pf5c_summary": {
+   "cases": 30,
+   "passed": 30,
+   "failed": [],
+   "inference_accepted": [],
+   "guide_served": [],
+   "plan_f_served_handbook": [],
+   "seconds": 41.6
+  }
+ },
+ "pass": true,
+ "cases": [
+  {
+   "id": "W01",
+   "term": "approval",
+   "question": "Who approves the grades before they reach Banner?",
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "expected_pages": [
+    2,
+    3
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3,
+     "procedure_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3,
+     "procedure_step"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3,
+     "procedure_step"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3,
+     "paragraph"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     3,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "W02",
+   "term": "approval",
+   "question": "Who approves conference travel?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": [
+    117
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     117,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     117,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     119,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     118,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     119,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_ACCEPTED",
+   "plan_f_served_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "organizational",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "W03",
+   "term": "submission",
+   "question": "How do I submit a document for a similarity check?",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": [
+    1
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "weak",
+    "family": "ithenticate",
+    "candidates": [],
+    "score": 1.5,
+    "margin": 1.0
+   },
+   "violation": false
+  },
+  {
+   "id": "W04",
+   "term": "submission",
+   "question": "Where can I see which submissions still need grading?",
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": [
+    1,
+    2,
+    4
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_gradebook_guide",
+     2,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     4,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     4,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     2,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "intent:location",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "W05",
+   "term": "submission",
+   "question": "Within how many hours must instructors submit final examination results?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": [
+    224
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     224,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     224,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     224,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     224,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     223,
+     "paragraph"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "policy",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "W06",
+   "term": "review",
+   "question": "How do I review my course as a student would see it?",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": [
+    5
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     5,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     5,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     5,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     5,
+     "row"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     4,
+     "paragraph"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "weak",
+    "family": "blackboard",
+    "candidates": [],
+    "score": 0.5,
+    "margin": 0.5
+   },
+   "violation": false
+  },
+  {
+   "id": "W07",
+   "term": "review",
+   "question": "How do I review the similarity report of my paper?",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": [
+    1
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": true,
+    "reason": "accepted",
+    "family": "ithenticate",
+    "candidates": [
+     "uos_ithenticate_guidelines"
+    ],
+    "score": 3.0,
+    "margin": 3.0
+   },
+   "violation": false
+  },
+  {
+   "id": "W08",
+   "term": "attendance",
+   "question": "How do I add attendance to the gradebook?",
+   "expected_sources": [
+    "uos_blackboard_attendance_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": [
+    3,
+    1
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     3,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "row"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "W09",
+   "term": "attendance",
+   "question": "What percentage of absences bars a student from the final examination?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     228,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     228,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     228,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     228,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     228,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_ACCEPTED",
+   "plan_f_served_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "intent:value",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "W10",
+   "term": "support",
+   "question": "Whom do I contact if I cannot access iThenticate?",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": [
+    1
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "W11",
+   "term": "login",
+   "question": "How do I log in to Blackboard from outside the campus?",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": [
+    1
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "row"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "W12",
+   "term": "login",
+   "question": "How do I log in to iThenticate?",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": [
+    1
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "W13",
+   "term": "login",
+   "question": "How do I log in to the Grade Transfer Dashboard?",
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "expected_pages": [
+    1
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "procedure_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "W14",
+   "term": "login",
+   "question": "How do I verify my identity when I sign in to Blackboard from outside the campus?",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": [
+    1
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     2,
+     "row"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "W15",
+   "term": "policy_boundary",
+   "question": "What grading policy applies to final examinations?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": [
+    222,
+    223,
+    224
+   ],
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     227,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     223,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     226,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     227,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     223,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "policy",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "W16",
+   "term": "policy_boundary",
+   "question": "How do I post grades to students in Blackboard?",
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": [
+    3,
+    6
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     6,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     6,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     6,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "P01",
+   "term": "attendance",
+   "question": "How do I set up attendance reporting for a Blackboard Collaborate session?",
+   "expected_sources": [
+    "uos_blackboard_attendance_guide",
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": [
+    2
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "paragraph"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "P02",
+   "term": "attendance",
+   "question": "How many absences are allowed before a student fails a course?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": [
+    228
+   ],
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     228,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     228,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     228,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     225,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     228,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "policy",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "P03",
+   "term": "attendance",
+   "question": "How do I export the attendance sheet of my Blackboard Collaborate sessions?",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": [
+    4
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     4,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     4,
+     "paragraph"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_ACCEPTED",
+   "plan_f_served_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "P04",
+   "term": "session",
+   "question": "How do I schedule a recurring Blackboard Collaborate session?",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": [
+    1
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_collaborate_guide",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "procedure_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "P05",
+   "term": "discussion",
+   "question": "How do I make a Blackboard discussion count for a grade?",
+   "expected_sources": [
+    "uos_blackboard_communication_guide"
+   ],
+   "expected_pages": [
+    2
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_communication_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_communication_guide",
+     2,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_communication_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_communication_guide",
+     2,
+     "row"
+    ],
+    [
+     "uos_blackboard_communication_guide",
+     2,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "P06",
+   "term": "discussion",
+   "question": "Who may be invited to the discussions of the College Council?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": [
+    25
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     25,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     25,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     25,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     25,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     25,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "organizational",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "P07",
+   "term": "journal",
+   "question": "Which journals count for promotion purposes?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": [
+    147,
+    148
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     148,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     148,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     148,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     147,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     148,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "intent:unrecognised",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "P08",
+   "term": "journal",
+   "question": "How do I create a journal in Blackboard Ultra?",
+   "expected_sources": [
+    "uos_blackboard_communication_guide"
+   ],
+   "expected_pages": [
+    5
+   ],
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_blackboard_communication_guide",
+     5,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_communication_guide",
+     5,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_communication_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_communication_guide",
+     5,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     1,
+     "paragraph"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "P09",
+   "term": "conversation",
+   "question": "How do I allow class conversations on an assignment in Blackboard?",
+   "expected_sources": [
+    "uos_blackboard_communication_guide",
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": [
+    10,
+    4
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_communication_guide",
+     4,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_communication_guide",
+     4,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_communication_guide",
+     4,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     10,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "paragraph"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_ACCEPTED",
+   "plan_f_served_sources": [
+    "uos_blackboard_communication_guide"
+   ],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "P10",
+   "term": "recording",
+   "question": "How do I record my Blackboard Collaborate session?",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": [
+    2
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "procedure_step"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "P11",
+   "term": "recording",
+   "question": "Who records the minutes of College Council meetings?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": [
+    25
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     25,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     25,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     25,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     25,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     28,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "organizational",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "P12",
+   "term": "announcement",
+   "question": "How do I send an announcement to my students in Blackboard?",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": [
+    9
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     9,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     9,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     9,
+     "row"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     9,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_ACCEPTED",
+   "plan_f_served_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "P13",
+   "term": "report",
+   "question": "Where do I see the similarity report for my manuscript in iThenticate?",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": [
+    1
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "P14",
+   "term": "report",
+   "question": "How do I see the attendance overview for my Blackboard Collaborate sessions?",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": [
+    4
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "procedure_window"
+    ]
+   ],
+   "top1_expected_source": false,
+   "expected_page_in_top5": false,
+   "plan_f_outcome": "PLAN_F_ACCEPTED",
+   "plan_f_served_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "P15",
+   "term": "grade",
+   "question": "How do I change the attendance grade schema in Blackboard?",
+   "expected_sources": [
+    "uos_blackboard_attendance_guide"
+   ],
+   "expected_pages": [
+    1
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "P16",
+   "term": "assessment",
+   "question": "Who reviews the final examination results of a course?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": [
+    224,
+    225
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     225,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     225,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     225,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     225,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     224,
+     "paragraph"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "organizational",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "P17",
+   "term": "upload",
+   "question": "How do I upload a document to iThenticate?",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": [
+    1
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_ACCEPTED",
+   "plan_f_served_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "P18",
+   "term": "access",
+   "question": "How do I access the attendance tool in Blackboard Ultra?",
+   "expected_sources": [
+    "uos_blackboard_attendance_guide"
+   ],
+   "expected_pages": [
+    1
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "row"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "P19",
+   "term": "support",
+   "question": "Who do I contact if I cannot log in to iThenticate?",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": [
+    1
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_HANDOFF",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "P20",
+   "term": "collaborate",
+   "question": "How do I collaborate with the Technology Transfer Office on a patent?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": [
+    178
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     176,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     155,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     177,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     155,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     155,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": false,
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "organizational",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "T01",
+   "term": "typo",
+   "question": "how do i send an anouncement to my students in blackbord",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": [
+    9
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     9,
+     "paragraph"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "paragraph"
+    ]
+   ],
+   "top1_expected_source": false,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "T02",
+   "term": "typo",
+   "question": "how do I upload a document to ithentcate",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": [
+    1
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_ACCEPTED",
+   "plan_f_served_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "T03",
+   "term": "typo",
+   "question": "how many documents can I submit to ithentcate per year",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "T04",
+   "term": "typo",
+   "question": "can I colab with a colleague from another university on a grant",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     173,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     173,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     173,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     173,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     165,
+     "paragraph"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "intent:yes_no",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "T05",
+   "term": "typo",
+   "question": "where are colab recordings kept in blackbord",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     2,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "row"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "row"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": false,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "T06",
+   "term": "typo",
+   "question": "how do I add a column in the gradbook",
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_gradebook_guide",
+     9,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     9,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     9,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     9,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     3,
+     "paragraph"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "T07",
+   "term": "typo",
+   "question": "how do I send grades to baner",
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "expected_pages": [
+    2
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2,
+     "procedure_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2,
+     "procedure_step"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2,
+     "row_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_ACCEPTED",
+   "plan_f_served_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "T08",
+   "term": "typo",
+   "question": "is the attendance polcy 15% in blackbord",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "row"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     224,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     224,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": false,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "S01",
+   "term": "where",
+   "question": "Where do I find the gradebook in Blackboard Ultra?",
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "S02",
+   "term": "where",
+   "question": "Where is the Blackboard support office?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     183,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     1,
+     "row"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "S03",
+   "term": "where",
+   "question": "Where is the iThenticate support office on campus?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     183,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": false,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "S04",
+   "term": "where",
+   "question": "Where in Blackboard do I see the attendance overview of my Collaborate sessions?",
+   "expected_sources": [
+    "uos_blackboard_attendance_guide",
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_collaborate_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     1,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_ACCEPTED",
+   "plan_f_served_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "C01",
+   "term": "collaborate",
+   "question": "How do I collaborate with industry partners on a research project?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     163,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     82,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     163,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     17,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     81,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "no_signal",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "C02",
+   "term": "collaborate",
+   "question": "How do I start a Blackboard Collaborate session?",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_collaborate_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     4,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "A01",
+   "term": "attendance",
+   "question": "Does the Blackboard attendance tool decide when a student is barred for absences?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "row"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "row"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "row"
+    ]
+   ],
+   "top1_expected_source": false,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "A02",
+   "term": "attendance",
+   "question": "How do I mark a student excused in the Blackboard attendance tool?",
+   "expected_sources": [
+    "uos_blackboard_attendance_guide"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     4,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     4,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     4,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     2,
+     "paragraph"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "G01",
+   "term": "grade",
+   "question": "What grade does a student need to pass a course?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     225,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     225,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     4,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     226,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     223,
+     "row"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "policy",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "G02",
+   "term": "grade",
+   "question": "How do I change a grade in the Blackboard gradebook?",
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     7,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1,
+     "procedure_step"
+    ]
+   ],
+   "top1_expected_source": false,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "U01",
+   "term": "submission",
+   "question": "How do I submit final grades to Banner through the Grade Transfer Dashboard?",
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "expected_pages": [
+    2
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_grade_transfer_dashboard_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2,
+     "procedure_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2,
+     "procedure_step"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "U02",
+   "term": "submission",
+   "question": "What is the deadline to submit final grades?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     225,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     225,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     236,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     224,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     225,
+     "row"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "policy",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "J01",
+   "term": "journal",
+   "question": "Which research journals are recognised for promotion?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     144,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     148,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     148,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     144,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     151,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "intent:enumeration",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "J02",
+   "term": "journal",
+   "question": "How do I set up a Blackboard journal for my research group?",
+   "expected_sources": [
+    "uos_blackboard_communication_guide"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_blackboard_collaborate_guide",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     1,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_communication_guide",
+     5,
+     "procedure_step"
+    ]
+   ],
+   "top1_expected_source": false,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "J03",
+   "term": "journal",
+   "question": "How do I submit my journal manuscript to iThenticate?",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "J04",
+   "term": "journal",
+   "question": "Can students see each other's journal entries in Blackboard?",
+   "expected_sources": [
+    "uos_blackboard_communication_guide"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_blackboard_communication_guide",
+     5,
+     "row"
+    ],
+    [
+     "uos_blackboard_communication_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     4,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_communication_guide",
+     5,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "row"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": null,
+   "violation": false
+  },
+  {
+   "id": "I01",
+   "term": "attendance",
+   "question": "What happens if a student misses more than a quarter of the classes?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     228,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     228,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     228,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     225,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     228,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "intent:authority",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "I02",
+   "term": "attendance",
+   "question": "How do I take attendance in my class?",
+   "expected_sources": [
+    "uos_blackboard_attendance_guide",
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_attendance_guide",
+     2,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     2,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     2,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     4,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     1,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": true,
+    "reason": "accepted",
+    "family": "blackboard",
+    "candidates": [
+     "uos_blackboard_attendance_guide",
+     "uos_blackboard_collaborate_guide"
+    ],
+    "score": 2.0,
+    "margin": 2.0
+   },
+   "violation": false
+  },
+  {
+   "id": "I03",
+   "term": "attendance",
+   "question": "Is attendance compulsory for students?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     228,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     2,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     193,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     228,
+     "row"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "procedure_step"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_SUBJECT_GUARD",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "policy",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "I04",
+   "term": "grade",
+   "question": "How do I send my final grades for approval?",
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "expected_pages": [
+    2
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     224,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     224,
+     "row_window"
+    ],
+    [
+     "uos_grade_transfer_dashboard_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     225,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     236,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": false,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_ACCEPTED",
+   "plan_f_served_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": true,
+    "reason": "accepted",
+    "family": "grade_transfer",
+    "candidates": [
+     "uos_grade_transfer_dashboard_guide"
+    ],
+    "score": 2.0,
+    "margin": 2.0
+   },
+   "violation": false
+  },
+  {
+   "id": "I05",
+   "term": "grade",
+   "question": "How do I post grades so students can see them?",
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_gradebook_guide",
+     6,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     6,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     4,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     4,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     6,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": true,
+    "reason": "accepted",
+    "family": "blackboard",
+    "candidates": [
+     "uos_blackboard_gradebook_guide"
+    ],
+    "score": 2.0,
+    "margin": 2.0
+   },
+   "violation": false
+  },
+  {
+   "id": "I06",
+   "term": "grade",
+   "question": "I need help with grades.",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_blackboard_gradebook_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     2,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     226,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     246,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     11,
+     "row"
+    ]
+   ],
+   "top1_expected_source": false,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "support",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "I07",
+   "term": "grade",
+   "question": "How do I upload final grades?",
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide",
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_blackboard_gradebook_guide",
+     10,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     10,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     10,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     10,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     2,
+     "paragraph"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "ambiguous",
+    "family": "blackboard",
+    "candidates": [],
+    "score": 2.0,
+    "margin": 0.0
+   },
+   "violation": false
+  },
+  {
+   "id": "I08",
+   "term": "collaborate",
+   "question": "Can I collaborate with a colleague from another college on teaching a course?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     88,
+     "row"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     1,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     226,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     121,
+     "row"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     1,
+     "paragraph"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "organizational",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "I09",
+   "term": "collaborate",
+   "question": "How do I schedule an online class for my students?",
+   "expected_sources": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": [
+    1
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_collaborate_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     1,
+     "row"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     10,
+     "paragraph"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": true,
+    "reason": "accepted",
+    "family": "blackboard",
+    "candidates": [
+     "uos_blackboard_collaborate_guide"
+    ],
+    "score": 2.0,
+    "margin": 2.0
+   },
+   "violation": false
+  },
+  {
+   "id": "I10",
+   "term": "journal",
+   "question": "How do I create a journal for my students to reflect on the course?",
+   "expected_sources": [
+    "uos_blackboard_communication_guide"
+   ],
+   "expected_pages": [
+    5
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_communication_guide",
+     5,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_communication_guide",
+     5,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_communication_guide",
+     5,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_communication_guide",
+     5,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_communication_guide",
+     5,
+     "procedure_step"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": true,
+    "reason": "accepted",
+    "family": "blackboard",
+    "candidates": [
+     "uos_blackboard_faculty_short_guide",
+     "uos_blackboard_communication_guide"
+    ],
+    "score": 2.5,
+    "margin": 2.5
+   },
+   "violation": false
+  },
+  {
+   "id": "I11",
+   "term": "journal",
+   "question": "Which journals should I publish in for promotion?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     148,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     148,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     147,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     8,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     147,
+     "paragraph"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_ROUTING",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "policy",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "I12",
+   "term": "report",
+   "question": "How do I check the similarity report for my paper?",
+   "expected_sources": [
+    "uos_ithenticate_guidelines"
+   ],
+   "expected_pages": [
+    1
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "procedure_step"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": true,
+    "reason": "accepted",
+    "family": "ithenticate",
+    "candidates": [
+     "uos_ithenticate_guidelines"
+    ],
+    "score": 4.0,
+    "margin": 4.0
+   },
+   "violation": false
+  },
+  {
+   "id": "I13",
+   "term": "report",
+   "question": "How do I submit the annual faculty activity report?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     142,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     124,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     110,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     124,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     142,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "no_signal",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "I14",
+   "term": "report",
+   "question": "Where can I see the attendance report for my online sessions?",
+   "expected_sources": [
+    "uos_blackboard_attendance_guide",
+    "uos_blackboard_collaborate_guide"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_collaborate_guide",
+     4,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     4,
+     "procedure_window"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     4,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_attendance_guide",
+     2,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "intent:location",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "I15",
+   "term": "support",
+   "question": "Where is the e-learning support office?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     183,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     192,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     183,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     193,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     183,
+     "paragraph"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "organizational",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "I16",
+   "term": "support",
+   "question": "Who helps faculty with problems in the online course system?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     78,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     231,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     183,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     138,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     114,
+     "paragraph"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "organizational",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "I17",
+   "term": "online",
+   "question": "How do I teach online?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     192,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     192,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     192,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_communication_guide",
+     1,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     192,
+     "paragraph"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "no_signal",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "I18",
+   "term": "online",
+   "question": "How do I schedule a Zoom meeting with my students?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     10,
+     "row"
+    ],
+    [
+     "uos_blackboard_communication_guide",
+     2,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     2,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_communication_guide",
+     3,
+     "row"
+    ],
+    [
+     "uos_blackboard_communication_guide",
+     3,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": false,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "other_platform",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "I19",
+   "term": "submission",
+   "question": "How do students submit their assignments?",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     10,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     10,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     11,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     10,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     11,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "other_actor",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "I20",
+   "term": "submission",
+   "question": "How do I submit final grades?",
+   "expected_sources": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "expected_pages": [
+    2
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     224,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     224,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     225,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     6,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     2,
+     "paragraph"
+    ]
+   ],
+   "top1_expected_source": false,
+   "expected_page_in_top5": false,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": true,
+    "reason": "accepted",
+    "family": "grade_transfer",
+    "candidates": [
+     "uos_grade_transfer_dashboard_guide"
+    ],
+    "score": 2.0,
+    "margin": 2.0
+   },
+   "violation": false
+  },
+  {
+   "id": "I21",
+   "term": "submission",
+   "question": "Where do I submit my course portfolio?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     216,
+     "row"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     2,
+     "row"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     2,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     216,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     233,
+     "row"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "intent:location",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "I22",
+   "term": "plagiarism",
+   "question": "What is the penalty for student plagiarism?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     229,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     229,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     233,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     233,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     233,
+     "paragraph"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "policy",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "I23",
+   "term": "plagiarism",
+   "question": "How can I check my students' essays for plagiarism?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_ithenticate_guidelines",
+     1,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     233,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     233,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     233,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     233,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": false,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "no_signal",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "I24",
+   "term": "gradebook",
+   "question": "How do I give zeros automatically for missing work?",
+   "expected_sources": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": [
+    8
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_gradebook_guide",
+     8,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     8,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     7,
+     "procedure_step"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     7,
+     "row"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     7,
+     "row_window"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "weak",
+    "family": "blackboard",
+    "candidates": [],
+    "score": 1.0,
+    "margin": 1.0
+   },
+   "violation": false
+  },
+  {
+   "id": "I25",
+   "term": "message",
+   "question": "How do I send a message to all my students?",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide",
+    "uos_blackboard_gradebook_guide"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_gradebook_guide",
+     4,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     4,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     4,
+     "row"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     9,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     4,
+     "row"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "no_signal",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "I26",
+   "term": "session",
+   "question": "How do I register for the new faculty orientation session?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     113,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     62,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     62,
+     "row"
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     1,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     78,
+     "row"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "no_signal",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  },
+  {
+   "id": "I27",
+   "term": "course",
+   "question": "How do I make my course available to students?",
+   "expected_sources": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "expected_pages": [
+    4
+   ],
+   "must_not_serve_from_guide": false,
+   "top5": [
+    [
+     "uos_blackboard_faculty_short_guide",
+     4,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     4,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     4,
+     "row_window"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     5,
+     "paragraph"
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     8,
+     "paragraph"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "weak",
+    "family": "blackboard",
+    "candidates": [],
+    "score": 0.5,
+    "margin": 0.5
+   },
+   "violation": false
+  },
+  {
+   "id": "I28",
+   "term": "course",
+   "question": "How do I propose a new course?",
+   "expected_sources": [
+    "uos_faculty_handbook_2025_26"
+   ],
+   "expected_pages": null,
+   "must_not_serve_from_guide": true,
+   "top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     220,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     220,
+     "paragraph"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     232,
+     "row"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     232,
+     "row_window"
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     220,
+     "row"
+    ]
+   ],
+   "top1_expected_source": true,
+   "expected_page_in_top5": true,
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "wrong_source_acceptance": false,
+   "guide_inference": {
+    "accepted": false,
+    "reason": "no_signal",
+    "family": null,
+    "candidates": [],
+    "score": 0.0,
+    "margin": null
+   },
+   "violation": false
+  }
+ ],
+ "inference_adversarial_cases": [
+  {
+   "id": "X01",
+   "kind": "owner_listed",
+   "question": "I need help with grades.",
+   "inference_refused": true,
+   "inference_reason": "support",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "support",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X02",
+   "kind": "owner_listed",
+   "question": "How do I use the system?",
+   "inference_refused": true,
+   "inference_reason": "no_signal",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X03",
+   "kind": "owner_listed",
+   "question": "Where is the report?",
+   "inference_refused": true,
+   "inference_reason": "intent:location",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "intent:location",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "intent:location",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X04",
+   "kind": "owner_listed",
+   "question": "How do I submit it?",
+   "inference_refused": true,
+   "inference_reason": "no_signal",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X05",
+   "kind": "owner_listed",
+   "question": "Can I collaborate with someone?",
+   "inference_refused": true,
+   "inference_reason": "intent:yes_no",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "intent:yes_no",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "intent:yes_no",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X06",
+   "kind": "owner_listed",
+   "question": "Where do I record this?",
+   "inference_refused": true,
+   "inference_reason": "intent:location",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "intent:location",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "intent:location",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X07",
+   "kind": "weak_word",
+   "question": "How do I submit grades?",
+   "inference_refused": true,
+   "inference_reason": "weak",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "weak",
+     "family": "grade_transfer",
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "weak",
+     "family": "grade_transfer",
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X08",
+   "kind": "weak_word",
+   "question": "Where are my submissions?",
+   "inference_refused": true,
+   "inference_reason": "intent:location",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "intent:location",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "intent:location",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X09",
+   "kind": "weak_word",
+   "question": "How do I check my messages?",
+   "inference_refused": true,
+   "inference_reason": "no_signal",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X10",
+   "kind": "weak_word",
+   "question": "How do I create a session?",
+   "inference_refused": true,
+   "inference_reason": "weak",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "weak",
+     "family": "blackboard",
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "weak",
+     "family": "blackboard",
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X11",
+   "kind": "weak_word",
+   "question": "How do I teach online?",
+   "inference_refused": true,
+   "inference_reason": "no_signal",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X12",
+   "kind": "weak_word",
+   "question": "Where can I find the reports?",
+   "inference_refused": true,
+   "inference_reason": "intent:location",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "intent:location",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "intent:location",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X13",
+   "kind": "weak_word",
+   "question": "How do I upload a document?",
+   "inference_refused": true,
+   "inference_reason": "weak",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "weak",
+     "family": "blackboard",
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "weak",
+     "family": "blackboard",
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X14",
+   "kind": "weak_word",
+   "question": "Is attendance shown to students?",
+   "inference_refused": true,
+   "inference_reason": "intent:yes_no",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "intent:yes_no",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "intent:yes_no",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X15",
+   "kind": "policy",
+   "question": "What is the attendance policy?",
+   "inference_refused": true,
+   "inference_reason": "policy",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "policy",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "policy",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X16",
+   "kind": "policy",
+   "question": "Do I have to take attendance in every lecture?",
+   "inference_refused": true,
+   "inference_reason": "policy",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "policy",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "policy",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X17",
+   "kind": "policy",
+   "question": "What is the deadline to submit final grades?",
+   "inference_refused": true,
+   "inference_reason": "policy",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "policy",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "policy",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X18",
+   "kind": "policy",
+   "question": "What is the penalty for plagiarism?",
+   "inference_refused": true,
+   "inference_reason": "policy",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "policy",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "policy",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X19",
+   "kind": "policy",
+   "question": "Am I required to use the discussion board in my course?",
+   "inference_refused": true,
+   "inference_reason": "policy",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "policy",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "policy",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X20",
+   "kind": "authority",
+   "question": "Who approves final grades?",
+   "inference_refused": true,
+   "inference_reason": "organizational",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "organizational",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "organizational",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X21",
+   "kind": "organizational",
+   "question": "Where is the e-learning support office?",
+   "inference_refused": true,
+   "inference_reason": "organizational",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "organizational",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "organizational",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X22",
+   "kind": "organizational",
+   "question": "Which team helps faculty with online classes?",
+   "inference_refused": true,
+   "inference_reason": "organizational",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "organizational",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "organizational",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X23",
+   "kind": "organizational",
+   "question": "Who do I contact about the similarity report?",
+   "inference_refused": true,
+   "inference_reason": "organizational",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "organizational",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "organizational",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X24",
+   "kind": "organizational",
+   "question": "How do I approve final grades as chair?",
+   "inference_refused": true,
+   "inference_reason": "organizational",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "organizational",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "organizational",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X25",
+   "kind": "other_platform",
+   "question": "How do I schedule a Zoom meeting for my online class?",
+   "inference_refused": true,
+   "inference_reason": "other_platform",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "other_platform",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "other_platform",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X26",
+   "kind": "other_platform",
+   "question": "How do I check the similarity report in Turnitin?",
+   "inference_refused": true,
+   "inference_reason": "other_platform",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "other_platform",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "other_platform",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_NOT_APPLICABLE",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X27",
+   "kind": "collision",
+   "question": "How do I check my students' assignments for plagiarism?",
+   "inference_refused": true,
+   "inference_reason": "weak",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "weak",
+     "family": "blackboard",
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "weak",
+     "family": "blackboard",
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X28",
+   "kind": "collision",
+   "question": "How do I add a journal to my research publications?",
+   "inference_refused": true,
+   "inference_reason": "no_signal",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X29",
+   "kind": "collision",
+   "question": "How do I send final grades to my students?",
+   "inference_refused": true,
+   "inference_reason": "no_signal",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "no_signal",
+     "family": null,
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  },
+  {
+   "id": "X30",
+   "kind": "collision",
+   "question": "How do I upload final grades?",
+   "inference_refused": true,
+   "inference_reason": "ambiguous",
+   "inference_parts": [
+    {
+     "accepted": false,
+     "reason": "ambiguous",
+     "family": "blackboard",
+     "candidates": []
+    },
+    {
+     "accepted": false,
+     "reason": "ambiguous",
+     "family": "blackboard",
+     "candidates": []
+    }
+   ],
+   "plan_f_outcome": "PLAN_F_UNSAFE_RESULT",
+   "plan_f_served_sources": [],
+   "guide_served": false,
+   "pass": true
+  }
+ ]
+}

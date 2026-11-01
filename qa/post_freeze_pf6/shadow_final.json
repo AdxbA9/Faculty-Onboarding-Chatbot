@@ -1,0 +1,15 @@
+{
+ "method": "SHADOW with guide scopes ON on the five sets (307 questions): the visible answer must be the direct legacy answer, field by field. The frozen 192-question SHADOW pass is in frozen_192_final.json.",
+ "summary": {
+  "questions": 307,
+  "identical_to_direct_legacy": 307,
+  "visible_mismatches": 0,
+  "per_set_mismatches": {
+   "p0": 0,
+   "p1": 0,
+   "held_out": 0,
+   "fresh5b": 0,
+   "fresh5c": 0
+  }
+ }
+}

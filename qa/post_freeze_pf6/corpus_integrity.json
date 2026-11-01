@@ -1,0 +1,280 @@
+{
+ "corpus_key": "c8987b6079b11f39",
+ "identity_key": "c8987b6079b11f39",
+ "identity_entries": [
+  {
+   "source_id": "uos_faculty_handbook_2025_26",
+   "sha256": "fc9bc650529c85363ce87b452b93e0e0bdf3caae15acf587ba232b0ca4ea7ea7",
+   "page_filter": "",
+   "procedures": false,
+   "section_map": "handbook_sections.json"
+  },
+  {
+   "source_id": "uos_blackboard_faculty_short_guide",
+   "sha256": "4a9072699167a917e69b436064f4e54fce1b297587c39bce25d950bbe1a2448b",
+   "page_filter": "english_only",
+   "procedures": true,
+   "section_map": ""
+  },
+  {
+   "source_id": "uos_grade_transfer_dashboard_guide",
+   "sha256": "06018cb153bc833831e651461eefe298ad7e8f4cf86b57c5c0b96b8dfc733892",
+   "page_filter": "english_only",
+   "procedures": true,
+   "section_map": ""
+  },
+  {
+   "source_id": "uos_blackboard_gradebook_guide",
+   "sha256": "e1171901516f58cd80af50ce442816eb919725ba30a4b13cb4155f443e87a2dc",
+   "page_filter": "english_only",
+   "procedures": true,
+   "section_map": ""
+  },
+  {
+   "source_id": "uos_ithenticate_guidelines",
+   "sha256": "061c30a2688a15cdae59aa5fd543538b146e6d7bf76706bd9d63c692de82371d",
+   "page_filter": "english_only",
+   "procedures": true,
+   "section_map": ""
+  },
+  {
+   "source_id": "uos_blackboard_attendance_guide",
+   "sha256": "8959d5bb2d1f7e37183585b8039c27b68b7591d1843f48be0bc7f194cefd6864",
+   "page_filter": "english_only",
+   "procedures": true,
+   "section_map": ""
+  },
+  {
+   "source_id": "uos_blackboard_collaborate_guide",
+   "sha256": "2ba9ecd552662828226301bf4bc86ddcbfbf841a6f66547569f195100ae5e122",
+   "page_filter": "english_only",
+   "procedures": true,
+   "section_map": ""
+  },
+  {
+   "source_id": "uos_blackboard_communication_guide",
+   "sha256": "2982032fa476e4b8ae7e0b1a51898de766a476627ee150f502ed9488d3ed6875",
+   "page_filter": "english_only",
+   "procedures": true,
+   "section_map": ""
+  }
+ ],
+ "sources": 8,
+ "pages_indexed": 309,
+ "chunks": 15000,
+ "per_source": [
+  {
+   "source_id": "uos_faculty_handbook_2025_26",
+   "pages_loaded": 272,
+   "pages_indexed": 272,
+   "chunks": 13688,
+   "chunk_id_range": [
+    0,
+    13687
+   ],
+   "conflict_chunks": 0,
+   "chunk_types": {
+    "paragraph": 847,
+    "row": 8412,
+    "row_window": 4429
+   },
+   "pages_dropped": []
+  },
+  {
+   "source_id": "uos_blackboard_faculty_short_guide",
+   "pages_loaded": 11,
+   "pages_indexed": 11,
+   "chunks": 403,
+   "chunk_id_range": [
+    13688,
+    14090
+   ],
+   "conflict_chunks": 0,
+   "chunk_types": {
+    "paragraph": 22,
+    "procedure_step": 32,
+    "procedure_window": 13,
+    "row": 202,
+    "row_window": 134
+   },
+   "pages_dropped": []
+  },
+  {
+   "source_id": "uos_grade_transfer_dashboard_guide",
+   "pages_loaded": 6,
+   "pages_indexed": 3,
+   "chunks": 68,
+   "chunk_id_range": [
+    14091,
+    14158
+   ],
+   "conflict_chunks": 0,
+   "chunk_types": {
+    "paragraph": 3,
+    "procedure_step": 13,
+    "procedure_window": 6,
+    "row": 30,
+    "row_window": 16
+   },
+   "pages_dropped": [
+    4,
+    5,
+    6
+   ]
+  },
+  {
+   "source_id": "uos_blackboard_gradebook_guide",
+   "pages_loaded": 10,
+   "pages_indexed": 10,
+   "chunks": 308,
+   "chunk_id_range": [
+    14159,
+    14466
+   ],
+   "conflict_chunks": 0,
+   "chunk_types": {
+    "paragraph": 14,
+    "procedure_step": 48,
+    "procedure_window": 20,
+    "row": 142,
+    "row_window": 84
+   },
+   "pages_dropped": []
+  },
+  {
+   "source_id": "uos_ithenticate_guidelines",
+   "pages_loaded": 3,
+   "pages_indexed": 2,
+   "chunks": 82,
+   "chunk_id_range": [
+    14467,
+    14548
+   ],
+   "conflict_chunks": 8,
+   "chunk_types": {
+    "paragraph": 3,
+    "procedure_step": 16,
+    "procedure_window": 7,
+    "row": 35,
+    "row_window": 21
+   },
+   "pages_dropped": [
+    2
+   ]
+  },
+  {
+   "source_id": "uos_blackboard_attendance_guide",
+   "pages_loaded": 2,
+   "pages_indexed": 2,
+   "chunks": 89,
+   "chunk_id_range": [
+    14549,
+    14637
+   ],
+   "conflict_chunks": 0,
+   "chunk_types": {
+    "paragraph": 3,
+    "procedure_step": 9,
+    "procedure_window": 3,
+    "row": 41,
+    "row_window": 33
+   },
+   "pages_dropped": []
+  },
+  {
+   "source_id": "uos_blackboard_collaborate_guide",
+   "pages_loaded": 4,
+   "pages_indexed": 4,
+   "chunks": 150,
+   "chunk_id_range": [
+    14638,
+    14787
+   ],
+   "conflict_chunks": 0,
+   "chunk_types": {
+    "paragraph": 7,
+    "procedure_step": 31,
+    "procedure_window": 14,
+    "row": 60,
+    "row_window": 38
+   },
+   "pages_dropped": []
+  },
+  {
+   "source_id": "uos_blackboard_communication_guide",
+   "pages_loaded": 5,
+   "pages_indexed": 5,
+   "chunks": 212,
+   "chunk_id_range": [
+    14788,
+    14999
+   ],
+   "conflict_chunks": 38,
+   "chunk_types": {
+    "paragraph": 12,
+    "procedure_step": 11,
+    "procedure_window": 5,
+    "row": 118,
+    "row_window": 66
+   },
+   "pages_dropped": []
+  }
+ ],
+ "deterministic_rebuild": true,
+ "assemble_s": 1.67,
+ "source_ids_in_chunks": [
+  "uos_blackboard_attendance_guide",
+  "uos_blackboard_collaborate_guide",
+  "uos_blackboard_communication_guide",
+  "uos_blackboard_faculty_short_guide",
+  "uos_blackboard_gradebook_guide",
+  "uos_faculty_handbook_2025_26",
+  "uos_grade_transfer_dashboard_guide",
+  "uos_ithenticate_guidelines"
+ ],
+ "duplicate_source_ids": false,
+ "duplicate_file_hashes": false,
+ "held_source_chunks": {
+  "uos_performance_appraisal_phase2_guide": 0,
+  "assignments_and_tests": 0,
+  "grade_categories": 0
+ },
+ "held_titles_in_chunk_metadata": 0,
+ "conflict_stamped_chunks": 46,
+ "conflict_topics": [
+  "blackboard_journals_usage_recommendation_2022",
+  "ithenticate_yearly_submission_limit"
+ ],
+ "matches_pf5c": {
+  "sources": true,
+  "pages_indexed": true,
+  "chunks": true,
+  "corpus_key": true
+ },
+ "pf5c_corpus_key": "c8987b6079b11f39",
+ "cache": {
+  "files_present": true,
+  "cache_dir_gitignored": true,
+  "embedding_shape": [
+   15000,
+   768
+  ],
+  "cache_inputs_match_corpus": true
+ },
+ "cold_rebuild": {
+  "seconds": 444.1,
+  "shape": [
+   15000,
+   768
+  ],
+  "max_abs_diff_vs_cached": 0.0,
+  "identical_to_cached": true,
+  "reload_from_new_cache_s": 0.31,
+  "reload_identical": true
+ },
+ "cache_invalidation": {
+  "changed_metadata_matches_cache": false,
+  "rule": "the cache is reused only when chunks, metadata and pages equal the cached files, under a key built from source ids, file hashes, page filters, chunking and CACHE_VERSION"
+ },
+ "pass": true
+}

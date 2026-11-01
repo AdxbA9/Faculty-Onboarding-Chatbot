@@ -1,0 +1,438 @@
+{
+ "method": "P1 (41 questions of the three P1 guides, negatives, collisions, cross-document) with guide scopes ON, compared with PF-5C.",
+ "all": {
+  "questions": 41,
+  "plan_f_served": 7,
+  "guide_served": 7,
+  "fallback": 34,
+  "correct": 5,
+  "limited": 2,
+  "wrong": 0,
+  "not_reviewed": 0,
+  "precision_pct": 100.0,
+  "coverage_pct": 17.1,
+  "served_ids": [
+   "A09",
+   "B05",
+   "B10",
+   "M01",
+   "M06",
+   "M08",
+   "X03"
+  ]
+ },
+ "must_not_serve_guide_served": [],
+ "changed_vs_pf5c": [],
+ "questions": [
+  {
+   "id": "A01",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "A02",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "A03",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "A04",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "A05",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "A06",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "A07",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "A08",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "A09",
+   "served": "plan_f",
+   "served_pf5c": "plan_f",
+   "guide_served": true,
+   "answer_sha": "9cd8ef8e7b0be133",
+   "identical_to_pf5c": true,
+   "verdict": "CORRECT",
+   "basis": "PF-4 review (answer unchanged)"
+  },
+  {
+   "id": "A10",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "B01",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "B02",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "B03",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "B04",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "B05",
+   "served": "plan_f",
+   "served_pf5c": "plan_f",
+   "guide_served": true,
+   "answer_sha": "93c077a32be84440",
+   "identical_to_pf5c": true,
+   "verdict": "CORRECT",
+   "basis": "PF-4 review (answer unchanged)"
+  },
+  {
+   "id": "B06",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "B07",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "B08",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "B09",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "B10",
+   "served": "plan_f",
+   "served_pf5c": "plan_f",
+   "guide_served": true,
+   "answer_sha": "daa5591b86fd4854",
+   "identical_to_pf5c": true,
+   "verdict": "CORRECT",
+   "basis": "PF-5C review"
+  },
+  {
+   "id": "M01",
+   "served": "plan_f",
+   "served_pf5c": "plan_f",
+   "guide_served": true,
+   "answer_sha": "48d740b3eea979b2",
+   "identical_to_pf5c": true,
+   "verdict": "ACCEPTABLE BUT LIMITED",
+   "basis": "PF-4 review (answer unchanged)"
+  },
+  {
+   "id": "M02",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "M03",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "M04",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "M05",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "M06",
+   "served": "plan_f",
+   "served_pf5c": "plan_f",
+   "guide_served": true,
+   "answer_sha": "f026f953b9cd26c0",
+   "identical_to_pf5c": true,
+   "verdict": "CORRECT",
+   "basis": "PF-4 review (answer unchanged)"
+  },
+  {
+   "id": "M07",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "M08",
+   "served": "plan_f",
+   "served_pf5c": "plan_f",
+   "guide_served": true,
+   "answer_sha": "f9c1cc39bc3d72b7",
+   "identical_to_pf5c": true,
+   "verdict": "CORRECT",
+   "basis": "PF-4 review (answer unchanged)"
+  },
+  {
+   "id": "M09",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "M10",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "N01",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "N02",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "N03",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "N04",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "abaffa05eb28aeab",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "N05",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "N06",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "N07",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "N08",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "X01",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "X02",
+   "served": "legacy",
+   "served_pf5c": "legacy",
+   "guide_served": false,
+   "answer_sha": "7558026eb6bcb357",
+   "identical_to_pf5c": true,
+   "verdict": null,
+   "basis": null
+  },
+  {
+   "id": "X03",
+   "served": "plan_f",
+   "served_pf5c": "plan_f",
+   "guide_served": true,
+   "answer_sha": "b90280713536d790",
+   "identical_to_pf5c": true,
+   "verdict": "ACCEPTABLE BUT LIMITED",
+   "basis": "PF-4 review (answer unchanged)"
+  }
+ ]
+}

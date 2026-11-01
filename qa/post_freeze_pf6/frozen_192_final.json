@@ -1,0 +1,360 @@
+{
+ "method": "The 192-question I-9 master set (qa/plan_f_i8/master_eval.py) through the real seam, ACTIVE and SHADOW, twice: with the production default (PLAN_F_GUIDE_SCOPES off) and with guide scopes on. Each run is analysed with the I-9 manual evidence review (qa/plan_f_i8/review.json: a served answer must be byte-identical to a reviewed one), compared field by field with the frozen I-9 run (qa/plan_f_i8/results_2026-10-30.json) and with the PF-5C run (guide scopes on).",
+ "frozen_default": {
+  "guide_scopes": [
+   false
+  ],
+  "questions": 192,
+  "served": 55,
+  "fallback": 137,
+  "correct": 55,
+  "limited": 0,
+  "wrong": 0,
+  "unreviewed": 0,
+  "precision_pct": 100.0,
+  "false_acceptances": [],
+  "false_fallbacks": [
+   "T10",
+   "T11",
+   "T12",
+   "T14",
+   "T19",
+   "R35",
+   "H13",
+   "H30",
+   "I45",
+   "X19",
+   "X29"
+  ],
+  "exceptions": 0,
+  "shadow_records": 192,
+  "shadow_mismatches": 0,
+  "shadow_leaks": 0,
+  "determinism_questions": 24,
+  "determinism_unstable": 0,
+  "plan_f_llm_calls": 0,
+  "legacy_llm_calls": 0,
+  "guide_registry_selected": 0,
+  "vs_i9": {
+   "active": {
+    "questions_common": 192,
+    "served_frozen": 55,
+    "served_rerun": 55,
+    "served_ids_equal": true,
+    "questions_changed": 1,
+    "changes": [
+     {
+      "id": "T07",
+      "question": "Is attendance mandatory for students?",
+      "fields": [
+       "pages"
+      ],
+      "frozen": {
+       "pages": [
+        193,
+        228
+       ]
+      },
+      "rerun": {
+       "pages": [
+        2,
+        193,
+        228
+       ]
+      }
+     }
+    ]
+   },
+   "shadow": {
+    "questions_common": 192,
+    "served_frozen": 0,
+    "served_rerun": 0,
+    "served_ids_equal": true,
+    "questions_changed": 1,
+    "changes": [
+     {
+      "id": "T07",
+      "question": "Is attendance mandatory for students?",
+      "fields": [
+       "pages"
+      ],
+      "frozen": {
+       "pages": [
+        193,
+        228
+       ]
+      },
+      "rerun": {
+       "pages": [
+        2,
+        193,
+        228
+       ]
+      }
+     }
+    ],
+    "identical_to_direct_legacy_frozen": 192,
+    "identical_to_direct_legacy_rerun": 192
+   }
+  },
+  "vs_i9_latency_active_ms": {
+   "latency_frozen": {
+    "n": 192,
+    "p50_ms": 1251.6,
+    "p95_ms": 2590.4,
+    "max_ms": 3489.5,
+    "mean_ms": 1226.0
+   },
+   "latency_rerun": {
+    "n": 192,
+    "p50_ms": 1552.8,
+    "p95_ms": 3142.0,
+    "max_ms": 4682.8,
+    "mean_ms": 1521.8
+   }
+  },
+  "records_differing_from_pf5c": [],
+  "legacy_sample": {
+   "questions": 30,
+   "minimal_diagnostics": 30,
+   "cache_untouched": true
+  },
+  "served_ids": [
+   "A18",
+   "H01",
+   "H02",
+   "H03",
+   "H04",
+   "H05",
+   "H06",
+   "H18",
+   "H41",
+   "H44",
+   "I01",
+   "I02",
+   "I03",
+   "I04",
+   "I05",
+   "I06",
+   "I12",
+   "I20",
+   "I25",
+   "I26",
+   "I28",
+   "I32",
+   "I34",
+   "R01",
+   "R02",
+   "R03",
+   "R04",
+   "R05",
+   "R06",
+   "R07",
+   "R08",
+   "R12",
+   "R16",
+   "R18",
+   "R25",
+   "R27",
+   "T01",
+   "T02",
+   "T03",
+   "T04",
+   "T05",
+   "T09",
+   "T13",
+   "T18",
+   "X01",
+   "X02",
+   "X03",
+   "X04",
+   "X05",
+   "X06",
+   "X07",
+   "X08",
+   "X15",
+   "X16",
+   "X18"
+  ]
+ },
+ "frozen_on": {
+  "guide_scopes": [
+   true
+  ],
+  "questions": 192,
+  "served": 55,
+  "fallback": 137,
+  "correct": 55,
+  "limited": 0,
+  "wrong": 0,
+  "unreviewed": 0,
+  "precision_pct": 100.0,
+  "false_acceptances": [],
+  "false_fallbacks": [
+   "T10",
+   "T11",
+   "T12",
+   "T14",
+   "T19",
+   "R35",
+   "H13",
+   "H30",
+   "I45",
+   "X19",
+   "X29"
+  ],
+  "exceptions": 0,
+  "shadow_records": 192,
+  "shadow_mismatches": 0,
+  "shadow_leaks": 0,
+  "determinism_questions": 24,
+  "determinism_unstable": 0,
+  "plan_f_llm_calls": 0,
+  "legacy_llm_calls": 0,
+  "guide_registry_selected": 0,
+  "vs_i9": {
+   "active": {
+    "questions_common": 192,
+    "served_frozen": 55,
+    "served_rerun": 55,
+    "served_ids_equal": true,
+    "questions_changed": 1,
+    "changes": [
+     {
+      "id": "T07",
+      "question": "Is attendance mandatory for students?",
+      "fields": [
+       "pages"
+      ],
+      "frozen": {
+       "pages": [
+        193,
+        228
+       ]
+      },
+      "rerun": {
+       "pages": [
+        2,
+        193,
+        228
+       ]
+      }
+     }
+    ]
+   },
+   "shadow": {
+    "questions_common": 192,
+    "served_frozen": 0,
+    "served_rerun": 0,
+    "served_ids_equal": true,
+    "questions_changed": 1,
+    "changes": [
+     {
+      "id": "T07",
+      "question": "Is attendance mandatory for students?",
+      "fields": [
+       "pages"
+      ],
+      "frozen": {
+       "pages": [
+        193,
+        228
+       ]
+      },
+      "rerun": {
+       "pages": [
+        2,
+        193,
+        228
+       ]
+      }
+     }
+    ],
+    "identical_to_direct_legacy_frozen": 192,
+    "identical_to_direct_legacy_rerun": 192
+   }
+  },
+  "vs_i9_latency_active_ms": {
+   "latency_frozen": {
+    "n": 192,
+    "p50_ms": 1251.6,
+    "p95_ms": 2590.4,
+    "max_ms": 3489.5,
+    "mean_ms": 1226.0
+   },
+   "latency_rerun": {
+    "n": 192,
+    "p50_ms": 1794.2,
+    "p95_ms": 4524.0,
+    "max_ms": 6933.6,
+    "mean_ms": 2032.2
+   }
+  },
+  "records_differing_from_pf5c": [],
+  "legacy_sample": {
+   "questions": 30,
+   "minimal_diagnostics": 30,
+   "cache_untouched": true
+  },
+  "served_ids": [
+   "A18",
+   "H01",
+   "H02",
+   "H03",
+   "H04",
+   "H05",
+   "H06",
+   "H18",
+   "H41",
+   "H44",
+   "I01",
+   "I02",
+   "I03",
+   "I04",
+   "I05",
+   "I06",
+   "I12",
+   "I20",
+   "I25",
+   "I26",
+   "I28",
+   "I32",
+   "I34",
+   "R01",
+   "R02",
+   "R03",
+   "R04",
+   "R05",
+   "R06",
+   "R07",
+   "R08",
+   "R12",
+   "R16",
+   "R18",
+   "R25",
+   "R27",
+   "T01",
+   "T02",
+   "T03",
+   "T04",
+   "T05",
+   "T09",
+   "T13",
+   "T18",
+   "X01",
+   "X02",
+   "X03",
+   "X04",
+   "X05",
+   "X06",
+   "X07",
+   "X08",
+   "X15",
+   "X16",
+   "X18"
+  ]
+ },
+ "same_served_set_scopes_off_and_on": true,
+ "pass": true,
+ "t07": "T07 'Is attendance mandatory for students?' is a legacy fallback in every mode; its legacy citation pages gained page 2 of the Attendance Tool guide when the guides were ingested (PF-2, D-109). Unchanged since then; not a Plan F answer."
+}

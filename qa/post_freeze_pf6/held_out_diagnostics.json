@@ -1,0 +1,37 @@
+{
+ "method": "Diagnostic only (never tuned against): the three held-out sets with guide scopes ON, compared with PF-5C.",
+ "sets": {
+  "held_out": {
+   "label": "PF-4 held-out (50)",
+   "served": 1,
+   "fallback": 49,
+   "correct": 1,
+   "limited": 0,
+   "wrong": 0,
+   "served_ids": [
+    "H03"
+   ],
+   "changed_vs_pf5c": []
+  },
+  "fresh5b": {
+   "label": "PF-5B fresh (56)",
+   "served": 0,
+   "fallback": 56,
+   "correct": 0,
+   "limited": 0,
+   "wrong": 0,
+   "served_ids": [],
+   "changed_vs_pf5c": []
+  },
+  "fresh5c": {
+   "label": "PF-5C fresh (60)",
+   "served": 0,
+   "fallback": 60,
+   "correct": 0,
+   "limited": 0,
+   "wrong": 0,
+   "served_ids": [],
+   "changed_vs_pf5c": []
+  }
+ }
+}

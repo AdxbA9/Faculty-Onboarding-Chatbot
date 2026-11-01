@@ -1,0 +1,1032 @@
+{
+ "method": "Every served guide answer re-verified: one approved source, every asked term stated, the complete procedure or section in printed order (guide_grounding.verify_answer), pages and first and last units recorded.",
+ "summary": {
+  "guide_answers": 43,
+  "procedures_and_sections": 31,
+  "complete": 31,
+  "incomplete_served": []
+ },
+ "answers": [
+  {
+   "id": "G01",
+   "question": "How do I access Blackboard from outside the campus?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_blackboard_faculty_short_guide:1:0",
+     "parts": 7,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    1
+   ],
+   "source": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "first_unit": "How to access Blackboard: - Open the University website http://www.sharjah.ac.ae",
+   "last_unit": "- Then you will be redirected to the main page of the blackboard.",
+   "index_steps": 7,
+   "complete": true
+  },
+  {
+   "id": "G03",
+   "question": "How can I pin a course to the top of my course list in Blackboard Ultra?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "list_item",
+     "procedure_key": "uos_blackboard_faculty_short_guide:3:0",
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    3
+   ],
+   "source": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "first_unit": "- You can mark one of your courses as a favorite, this will allow you to pin this course on the top of the courses list.",
+   "last_unit": "- You can mark one of your courses as a favorite, this will allow you to pin this course on the top of the courses list."
+  },
+  {
+   "id": "G05",
+   "question": "What is the minimum size of a Blackboard course banner image?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "statement",
+     "procedure_key": null,
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    4
+   ],
+   "source": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "first_unit": "Course Image: You will be able to upload a course banner image, the image always displays as the course card thumbnail on the Courses page. In Ultra Course View",
+   "last_unit": "s page. In Ultra Course View courses, you can toggle the Course Image to display the image within your course as well, Image must be at least 1200 x 240 pixels."
+  },
+  {
+   "id": "G08",
+   "question": "How do I move a content item with the keyboard in Blackboard Ultra?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_faculty_short_guide:L:7:45:1",
+     "parts": 5,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    7
+   ],
+   "source": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "first_unit": "With your keyboard, you can move an item to a new location, move an item into an expanded folder, and move a folder into another expanded folder.",
+   "last_unit": "4. Press Enter to drop the item in the new location.",
+   "index_units": 5,
+   "complete": true
+  },
+  {
+   "id": "G09",
+   "question": "How do I add a learning module in Blackboard Ultra?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_faculty_short_guide:L:8:54:0",
+     "parts": 6,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    8
+   ],
+   "source": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "first_unit": "Add a Learning Module or Folder:",
+   "last_unit": "You can manage the visibility of the module, by default, it is hidden but you can make it visible or add visibility condition to manage the visibility.",
+   "index_units": 6,
+   "complete": true
+  },
+  {
+   "id": "G10",
+   "question": "How do I send an announcement to my students in Blackboard?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_faculty_short_guide:L:9:67:0",
+     "parts": 9,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    9
+   ],
+   "source": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "first_unit": "Send an Announcement:",
+   "last_unit": "You can edit copy or delete announcement by going to the announcement page, then click on the “Three dots” icon, then you will find Edit, Copy and delete.",
+   "index_units": 9,
+   "complete": true
+  },
+  {
+   "id": "G11",
+   "question": "How do I create an assignment in Blackboard Ultra?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_faculty_short_guide:S:10:76",
+     "parts": 14,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    10,
+    11
+   ],
+   "source": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "first_unit": "Create an Assignment:",
+   "last_unit": "ubmitted automatically when time is up. You can also allow students to work past the time limit. At this time, you cannot add a time limit to group assignments.",
+   "index_units": 14,
+   "complete": true
+  },
+  {
+   "id": "G12",
+   "question": "Can I add a time limit to a group assignment in Blackboard Ultra?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "statement",
+     "procedure_key": null,
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    11
+   ],
+   "source": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "first_unit": "At this time, you cannot add a time limit to group assignments.",
+   "last_unit": "At this time, you cannot add a time limit to group assignments."
+  },
+  {
+   "id": "G14",
+   "question": "Where do I find the course gradebook in Blackboard Ultra?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "statement",
+     "procedure_key": null,
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    1
+   ],
+   "source": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "first_unit": "Inside your course, you can access the course gradebook on the navigation bar on the top right corner.",
+   "last_unit": "Inside your course, you can access the course gradebook on the navigation bar on the top right corner."
+  },
+  {
+   "id": "G15",
+   "question": "What are the two views of the Blackboard Ultra gradebook?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_gradebook_guide:L:1:6:2",
+     "parts": 5,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    1
+   ],
+   "source": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "first_unit": "You can grade coursework, manage items, and post grades from two views:",
+   "last_unit": "2. Student grid View. You can change the view using the toggle button on the top left of the gradebook page.",
+   "index_units": 5,
+   "complete": true
+  },
+  {
+   "id": "G17",
+   "question": "How do I make Blackboard assign zeros to missing work automatically?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_gradebook_guide:S:8:59",
+     "parts": 2,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    8
+   ],
+   "source": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "first_unit": "Assign automatic zeros:",
+   "last_unit": "In list view, students' grade pills display \"0\" when no submissions exist and the due date has passed. The label Automatic zero appears next to the grade pills.",
+   "index_units": 2,
+   "complete": true
+  },
+  {
+   "id": "G18",
+   "question": "How do I download the gradebook from Blackboard?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_gradebook_guide:S:10:75",
+     "parts": 6,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    10
+   ],
+   "source": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "first_unit": "1. Download Worflow",
+   "last_unit": "Select the location for the download. You can save the file to your device or Browse to select a folder in the Content Collection.",
+   "index_units": 6,
+   "complete": true
+  },
+  {
+   "id": "G19",
+   "question": "How do I set accommodations for a student in the Blackboard gradebook?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_gradebook_guide:S:5:41",
+     "parts": 2,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    5
+   ],
+   "source": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "first_unit": "Add accommodations from the Student list view:",
+   "last_unit": " three-dot options menu at the right end of a student row. Select the Accommodations option. The Accommodations panel will open at the right side of the screen.",
+   "index_units": 2,
+   "complete": true
+  },
+  {
+   "id": "G22",
+   "question": "How do I filter the Blackboard gradebook by merged child courses?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_gradebook_guide:S:8:61",
+     "parts": 5,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    8
+   ],
+   "source": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "first_unit": "Filter by child courses",
+   "last_unit": "All the students from all your child courses appear in the active filter area.",
+   "index_units": 5,
+   "complete": true
+  },
+  {
+   "id": "G23",
+   "question": "What can I change from the Gradebook Settings panel in Blackboard Ultra?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_blackboard_gradebook_guide:7:0",
+     "parts": 4,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    7
+   ],
+   "source": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "first_unit": "From the Gradebook Settings panel, you can: 1. You can make changes to the default grading schema.",
+   "last_unit": "4. Create & edit Rubrics for more information or rubrics click here.",
+   "index_steps": 4,
+   "complete": true
+  },
+  {
+   "id": "G24",
+   "question": "How do I transfer grades from Blackboard to Banner?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_grade_transfer_dashboard_guide:2:0",
+     "parts": 4,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    2
+   ],
+   "source": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "first_unit": "How to Send Grades to Banner as instructor?: 1. Search for the course by using the search bar at the top of the dashboard to locate the specific course you wish",
+   "last_unit": "4. You can click again in View Detail to see the grade under the Banner Column after the approval from Chair and Dean as below:",
+   "index_steps": 4,
+   "complete": true
+  },
+  {
+   "id": "G25",
+   "question": "Where is the Grade Transfer Dashboard link?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "statement",
+     "procedure_key": null,
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    1
+   ],
+   "source": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "first_unit": "NOTE: You can access directly by clicking on below link https://op.sharjah.ac.ae/GradeTransfer",
+   "last_unit": "NOTE: You can access directly by clicking on below link https://op.sharjah.ac.ae/GradeTransfer"
+  },
+  {
+   "id": "G28",
+   "question": "How does a Dean approve grades in the Grade Transfer portal?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_grade_transfer_dashboard_guide:3:0",
+     "parts": 4,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    3
+   ],
+   "source": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "first_unit": "How to approve Grades to Banner as Chair/Dean?: 1. Click on below link to access Grade transfer Portal https://op.sharjah.ac.ae/GradeTransfer",
+   "last_unit": "4. Navigate to the course search and select the course, revise grades, and approve by selecting Transfer option",
+   "index_steps": 4,
+   "complete": true
+  },
+  {
+   "id": "G29",
+   "question": "How do I access iThenticate?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_ithenticate_guidelines:1:0",
+     "parts": 3,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    1
+   ],
+   "source": [
+    "uos_ithenticate_guidelines"
+   ],
+   "first_unit": "How to access IThenticate: 1. Open www.ithenticate.com",
+   "last_unit": "nd your password (activation password is sent to you through ithenticate.com ) If you are unable to access iThenticate software email: servicedesk@sharjah.ac.ae",
+   "index_steps": 3,
+   "complete": true
+  },
+  {
+   "id": "G30",
+   "question": "How do I upload a document to iThenticate?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_ithenticate_guidelines:1:1",
+     "parts": 4,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    1
+   ],
+   "source": [
+    "uos_ithenticate_guidelines"
+   ],
+   "first_unit": "How to upload a document: 1. Select the “Upload a File” link under the “Submit a Document” section on the home screen",
+   "last_unit": "f you will upload the same document but with an updated version use the following button and upload the updated document Note: The analysis may take a few hours",
+   "index_steps": 4,
+   "complete": true
+  },
+  {
+   "id": "G35",
+   "question": "Where do I find the similarity report in iThenticate?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "statement",
+     "procedure_key": null,
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    1
+   ],
+   "source": [
+    "uos_ithenticate_guidelines"
+   ],
+   "first_unit": "The similarity index and originality report can be found under the “Documents”",
+   "last_unit": "The similarity index and originality report can be found under the “Documents”"
+  },
+  {
+   "id": "P11",
+   "question": "Which button do I use in the Blackboard gradebook to release grades to students?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "statement",
+     "procedure_key": null,
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    6
+   ],
+   "source": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "first_unit": "4. When you're ready to release grades to students, select the Post option in the column header.",
+   "last_unit": "4. When you're ready to release grades to students, select the Post option in the column header."
+  },
+  {
+   "id": "P14",
+   "question": "How many office hours must faculty hold, and how do I create an assignment in Blackboard?",
+   "verifications": [
+    {
+     "clause_index": 1,
+     "form": "section",
+     "procedure_key": "uos_blackboard_faculty_short_guide:S:10:76",
+     "parts": 14,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    10,
+    11
+   ],
+   "source": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "first_unit": "Create an Assignment:",
+   "last_unit": "ubmitted automatically when time is up. You can also allow students to work past the time limit. At this time, you cannot add a time limit to group assignments.",
+   "index_units": 14,
+   "complete": true
+  },
+  {
+   "id": "P16",
+   "question": "How many theses can a faculty member supervise at once, and how do I access iThenticate?",
+   "verifications": [
+    {
+     "clause_index": 1,
+     "form": "procedure",
+     "procedure_key": "uos_ithenticate_guidelines:1:0",
+     "parts": 3,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    1
+   ],
+   "source": [
+    "uos_ithenticate_guidelines"
+   ],
+   "first_unit": "How to access IThenticate: 1. Open www.ithenticate.com",
+   "last_unit": "nd your password (activation password is sent to you through ithenticate.com ) If you are unable to access iThenticate software email: servicedesk@sharjah.ac.ae",
+   "index_steps": 3,
+   "complete": true
+  },
+  {
+   "id": "C01",
+   "question": "How do I transfer grades to Banner using the Grade Transfer Dashboard?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_grade_transfer_dashboard_guide:2:0",
+     "parts": 4,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    2
+   ],
+   "source": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "first_unit": "How to Send Grades to Banner as instructor?: 1. Search for the course by using the search bar at the top of the dashboard to locate the specific course you wish",
+   "last_unit": "4. You can click again in View Detail to see the grade under the Banner Column after the approval from Chair and Dean as below:",
+   "index_steps": 4,
+   "complete": true
+  },
+  {
+   "id": "C04",
+   "question": "Where do I access the Grade Transfer Dashboard?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "statement",
+     "procedure_key": null,
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    1
+   ],
+   "source": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "first_unit": "NOTE: You can access directly by clicking on below link https://op.sharjah.ac.ae/GradeTransfer",
+   "last_unit": "NOTE: You can access directly by clicking on below link https://op.sharjah.ac.ae/GradeTransfer"
+  },
+  {
+   "id": "C05",
+   "question": "What are the steps to access the Grade Transfer link in Blackboard?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_grade_transfer_dashboard_guide:1:0",
+     "parts": 5,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    1
+   ],
+   "source": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "first_unit": "To access the Grade Transfer link follow these steps: 1. Log in to Blackboard and use your credentials to log in to Blackboard securely.",
+   "last_unit": "5. Once logged in, navigate to the Grade Transfer section, where you’ll find the dashboard and its associated tools for managing the grade transfer process.",
+   "index_steps": 5,
+   "complete": true
+  },
+  {
+   "id": "C06",
+   "question": "How do I access Blackboard?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_blackboard_faculty_short_guide:1:0",
+     "parts": 7,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    1
+   ],
+   "source": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "first_unit": "How to access Blackboard: - Open the University website http://www.sharjah.ac.ae",
+   "last_unit": "- Then you will be redirected to the main page of the blackboard.",
+   "index_steps": 7,
+   "complete": true
+  },
+  {
+   "id": "C07",
+   "question": "What can I do in the gradable items list of the Blackboard gradebook?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_blackboard_gradebook_guide:2:1+3:0",
+     "parts": 9,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    2,
+    3
+   ],
+   "source": [
+    "uos_blackboard_gradebook_guide"
+   ],
+   "first_unit": "In the gradable items list, you can: 1. Open items: Select an item's title to open a new layer. See whose submissions need grading and who hasn't received their",
+   "last_unit": "c) Add Attendance: Add a row for attendance. After you add attendance, the add option will not appear in the menu again.",
+   "index_steps": 9,
+   "complete": true
+  },
+  {
+   "id": "C09",
+   "question": "How do I mark a course as a favorite in Blackboard?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "list_item",
+     "procedure_key": "uos_blackboard_faculty_short_guide:3:0",
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    3
+   ],
+   "source": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "first_unit": "- You can mark one of your courses as a favorite, this will allow you to pin this course on the top of the courses list.",
+   "last_unit": "- You can mark one of your courses as a favorite, this will allow you to pin this course on the top of the courses list."
+  },
+  {
+   "id": "C11",
+   "question": "How do I check the similarity report in iThenticate?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_ithenticate_guidelines:1:2",
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    1
+   ],
+   "source": [
+    "uos_ithenticate_guidelines"
+   ],
+   "first_unit": "Checking Similarity Report: - The similarity index and originality report can be found under the “Documents” You need to click on report percentage shown to be ",
+   "last_unit": "es as shown below You can discard some resources by clicking on “Exclude resource” The user has a multiple settings and filtering options to deal with documents",
+   "index_steps": 1,
+   "complete": true
+  },
+  {
+   "id": "C15",
+   "question": "How many office hours must faculty hold, and how do I access Blackboard?",
+   "verifications": [
+    {
+     "clause_index": 1,
+     "form": "procedure",
+     "procedure_key": "uos_blackboard_faculty_short_guide:1:0",
+     "parts": 7,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    1
+   ],
+   "source": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "first_unit": "How to access Blackboard: - Open the University website http://www.sharjah.ac.ae",
+   "last_unit": "- Then you will be redirected to the main page of the blackboard.",
+   "index_steps": 7,
+   "complete": true
+  },
+  {
+   "id": "C16",
+   "question": "How many credit hours is a full teaching load, and how do I send grades to Banner?",
+   "verifications": [
+    {
+     "clause_index": 1,
+     "form": "procedure",
+     "procedure_key": "uos_grade_transfer_dashboard_guide:2:0",
+     "parts": 4,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    2
+   ],
+   "source": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "first_unit": "How to Send Grades to Banner as instructor?: 1. Search for the course by using the search bar at the top of the dashboard to locate the specific course you wish",
+   "last_unit": "4. You can click again in View Detail to see the grade under the Banner Column after the approval from Chair and Dean as below:",
+   "index_steps": 4,
+   "complete": true
+  },
+  {
+   "id": "C17",
+   "question": "How many theses can a faculty member supervise at once, and how do I upload a document to iThenticate?",
+   "verifications": [
+    {
+     "clause_index": 1,
+     "form": "procedure",
+     "procedure_key": "uos_ithenticate_guidelines:1:1",
+     "parts": 4,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    1
+   ],
+   "source": [
+    "uos_ithenticate_guidelines"
+   ],
+   "first_unit": "How to upload a document: 1. Select the “Upload a File” link under the “Submit a Document” section on the home screen",
+   "last_unit": "f you will upload the same document but with an updated version use the following button and upload the updated document Note: The analysis may take a few hours",
+   "index_steps": 4,
+   "complete": true
+  },
+  {
+   "id": "C29",
+   "question": "How do I reorder content with my keyboard in Blackboard?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_faculty_short_guide:L:7:45:1",
+     "parts": 5,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    7
+   ],
+   "source": [
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "first_unit": "With your keyboard, you can move an item to a new location, move an item into an expanded folder, and move a folder into another expanded folder.",
+   "last_unit": "4. Press Enter to drop the item in the new location.",
+   "index_units": 5,
+   "complete": true
+  },
+  {
+   "id": "A09",
+   "question": "Can I change a student's attendance record to excused in Blackboard?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "statement",
+     "procedure_key": null,
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    2
+   ],
+   "source": [
+    "uos_blackboard_attendance_guide"
+   ],
+   "first_unit": "If a student was absent with an acceptable excuse, you may change their attendance record to excused.",
+   "last_unit": "If a student was absent with an acceptable excuse, you may change their attendance record to excused."
+  },
+  {
+   "id": "B05",
+   "question": "What is the default attendee role for students in Blackboard Collaborate?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "statement",
+     "procedure_key": null,
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    2
+   ],
+   "source": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "first_unit": "The default attendee role for students is participants.",
+   "last_unit": "The default attendee role for students is participants."
+  },
+  {
+   "id": "B10",
+   "question": "How do I export the attendance sheet for my Blackboard Collaborate sessions?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_collaborate_guide:L:4:33:0",
+     "parts": 5,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    4
+   ],
+   "source": [
+    "uos_blackboard_collaborate_guide"
+   ],
+   "first_unit": "D- Checking Session Attendance",
+   "last_unit": "If you want to export the attendance sheet, click on export icon, and an excel sheet will be downloaded to your device.",
+   "index_units": 5,
+   "complete": true
+  },
+  {
+   "id": "M01",
+   "question": "How do I create a discussion in Blackboard Ultra?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_communication_guide:L:1:0:4",
+     "parts": 3,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    1
+   ],
+   "source": [
+    "uos_blackboard_communication_guide"
+   ],
+   "first_unit": "You can create discussions in two locations within your course:",
+   "last_unit": "panel. You can allow students to create discussions that appear in the list with the label Created by student. You can turn this setting on and off at any time.",
+   "index_units": 3,
+   "complete": true
+  },
+  {
+   "id": "M06",
+   "question": "Can students edit their discussion titles in Blackboard Ultra?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "statement",
+     "procedure_key": null,
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    3
+   ],
+   "source": [
+    "uos_blackboard_communication_guide"
+   ],
+   "first_unit": "Students cannot edit their discussion titles after they create discussions.",
+   "last_unit": "Students cannot edit their discussion titles after they create discussions."
+  },
+  {
+   "id": "M08",
+   "question": "How do I enable class conversations on a Blackboard content item?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_blackboard_communication_guide:4:0",
+     "parts": 2,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    4
+   ],
+   "source": [
+    "uos_blackboard_communication_guide"
+   ],
+   "first_unit": "Conversations: - Enable conversations: Select the item's Settings icon to open the panel with the item's details and information. Select Allow class conversatio",
+   "last_unit": "he Open class conversation icon in the upper-right corner of an item's page or submissions page. A purple circle appears with the icon to indicate new activity.",
+   "index_steps": 2,
+   "complete": true
+  },
+  {
+   "id": "X03",
+   "question": "How do I send an announcement in Blackboard, and how do I create a discussion in Blackboard Ultra?",
+   "verifications": [
+    {
+     "clause_index": 0,
+     "form": "section",
+     "procedure_key": "uos_blackboard_faculty_short_guide:L:9:67:0",
+     "parts": 9,
+     "verify_answer": null,
+     "specialist_approved": true
+    },
+    {
+     "clause_index": 1,
+     "form": "section",
+     "procedure_key": "uos_blackboard_communication_guide:L:1:0:4",
+     "parts": 3,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    1,
+    9
+   ],
+   "source": [
+    "uos_blackboard_communication_guide",
+    "uos_blackboard_faculty_short_guide"
+   ],
+   "first_unit": "Send an Announcement:",
+   "last_unit": "panel. You can allow students to create discussions that appear in the list with the label Created by student. You can turn this setting on and off at any time.",
+   "index_units": 9,
+   "complete": true
+  },
+  {
+   "id": "H03",
+   "question": "How do I send my final course grades to Banner through the grade transfer dashboard?",
+   "verifications": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_grade_transfer_dashboard_guide:2:0",
+     "parts": 4,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "pages": [
+    2
+   ],
+   "source": [
+    "uos_grade_transfer_dashboard_guide"
+   ],
+   "first_unit": "How to Send Grades to Banner as instructor?: 1. Search for the course by using the search bar at the top of the dashboard to locate the specific course you wish",
+   "last_unit": "4. You can click again in View Detail to see the grade under the Banner Column after the approval from Chair and Dean as below:",
+   "index_steps": 4,
+   "complete": true
+  }
+ ]
+}

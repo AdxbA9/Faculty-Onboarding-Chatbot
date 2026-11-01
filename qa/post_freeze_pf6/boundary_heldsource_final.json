@@ -1,0 +1,632 @@
+{
+ "method": "PF-6 targeted final checks with the REAL models on the eight-source knowledge base: registered conflicts, the policy/system\nboundary and the held sources, each question attempted by the guide-enabled runtime (guide scopes ON, the strictest\nsetting) and by the production default runtime (guide scopes OFF), plus the unscoped legacy ranking (what LEGACY cites).\n\n    python -X utf8 qa/post_freeze_pf6/final_checks.py <repo> <out dir>\n\nWrites ``conflict_final.json`` and ``boundary_heldsource_final.json`` (no model call; Plan F is deterministic).",
+ "summary": {
+  "boundary_cases": 16,
+  "boundary_passed": 16,
+  "policy_asks_served_from_a_guide": [],
+  "held_cases": 6,
+  "held_passed": 6,
+  "held_failures": [],
+  "llm_calls": 0
+ },
+ "boundary": [
+  {
+   "id": "B01",
+   "group": "attendance_policy_vs_tool",
+   "question": "How many absences are allowed before a student fails?",
+   "policy_ask": true,
+   "scopes_on": {
+    "outcome": "PLAN_F_NOT_APPLICABLE",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_NOT_APPLICABLE",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "pass": true
+  },
+  {
+   "id": "B02",
+   "group": "attendance_policy_vs_tool",
+   "question": "According to the Blackboard attendance tool, how many absences are allowed before a student fails?",
+   "policy_ask": true,
+   "scopes_on": {
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_REJECTED_BY_AGGREGATOR",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "pass": true
+  },
+  {
+   "id": "B03",
+   "group": "attendance_policy_vs_tool",
+   "question": "What percentage of absences bars a student from the final examination?",
+   "policy_ask": true,
+   "scopes_on": {
+    "outcome": "PLAN_F_ACCEPTED",
+    "served": true,
+    "sources": [
+     "uos_faculty_handbook_2025_26"
+    ],
+    "pages": [
+     228
+    ],
+    "llm_calls": 0
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_ACCEPTED",
+    "served": true,
+    "sources": [
+     "uos_faculty_handbook_2025_26"
+    ],
+    "pages": [
+     228
+    ],
+    "llm_calls": 0
+   },
+   "pass": true
+  },
+  {
+   "id": "B04",
+   "group": "attendance_policy_vs_tool",
+   "question": "Is attendance compulsory for students?",
+   "policy_ask": true,
+   "scopes_on": {
+    "outcome": "PLAN_F_REJECTED_BY_SUBJECT_GUARD",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_REJECTED_BY_SUBJECT_GUARD",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "pass": true
+  },
+  {
+   "id": "B05",
+   "group": "procedure_vs_policy",
+   "question": "What is the grading policy for final examinations?",
+   "policy_ask": true,
+   "scopes_on": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "pass": true
+  },
+  {
+   "id": "B06",
+   "group": "procedure_vs_policy",
+   "question": "Is it mandatory to use Blackboard for every course?",
+   "policy_ask": true,
+   "scopes_on": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "pass": true
+  },
+  {
+   "id": "B07",
+   "group": "procedure_vs_policy",
+   "question": "Am I required to record my online classes in Blackboard Collaborate?",
+   "policy_ask": true,
+   "scopes_on": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "pass": true
+  },
+  {
+   "id": "B08",
+   "group": "gradebook_vs_grade_transfer_policy",
+   "question": "What is the deadline to submit final grades?",
+   "policy_ask": true,
+   "scopes_on": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "pass": true
+  },
+  {
+   "id": "B09",
+   "group": "gradebook_vs_grade_transfer_policy",
+   "question": "Within how many hours must instructors submit final examination results?",
+   "policy_ask": true,
+   "scopes_on": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "pass": true
+  },
+  {
+   "id": "B10",
+   "group": "gradebook_vs_grade_transfer_policy",
+   "question": "Can I change a grade after it has been transferred to Banner?",
+   "policy_ask": true,
+   "scopes_on": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "pass": true
+  },
+  {
+   "id": "B11",
+   "group": "software_vs_organizational",
+   "question": "Where is the Blackboard support office?",
+   "policy_ask": true,
+   "scopes_on": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "pass": true
+  },
+  {
+   "id": "B12",
+   "group": "software_vs_organizational",
+   "question": "Who is responsible for Blackboard support at the university?",
+   "policy_ask": true,
+   "scopes_on": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "pass": true
+  },
+  {
+   "id": "B13",
+   "group": "software_vs_organizational",
+   "question": "Which office handles iThenticate accounts?",
+   "policy_ask": true,
+   "scopes_on": {
+    "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_REJECTED_BY_ROUTING",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "pass": true
+  },
+  {
+   "id": "T01",
+   "group": "attendance_tool",
+   "question": "How do I share attendance information with the LMS in Blackboard?",
+   "policy_ask": false,
+   "scopes_on": {
+    "outcome": "PLAN_F_ACCEPTED",
+    "served": true,
+    "sources": [
+     "uos_blackboard_attendance_guide"
+    ],
+    "pages": [
+     2
+    ],
+    "llm_calls": 0
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "pass": true
+  },
+  {
+   "id": "T02",
+   "group": "grade_transfer_tool",
+   "question": "How do I transfer grades to Banner?",
+   "policy_ask": false,
+   "scopes_on": {
+    "outcome": "PLAN_F_ACCEPTED",
+    "served": true,
+    "sources": [
+     "uos_grade_transfer_dashboard_guide"
+    ],
+    "pages": [
+     2
+    ],
+    "llm_calls": 0
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "pass": true
+  },
+  {
+   "id": "T03",
+   "group": "software_navigation",
+   "question": "Where do I find the gradebook in Blackboard Ultra?",
+   "policy_ask": false,
+   "scopes_on": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "pass": true
+  }
+ ],
+ "held_sources": [
+  {
+   "id": "H01",
+   "group": "appraisal",
+   "question": "How do I start the Phase 2 progress review in the HR Portal?",
+   "scopes_on": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "legacy_top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     20
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     61
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     60
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     60
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     6
+    ]
+   ],
+   "held_in_retrieval": [],
+   "held_in_plan_f": [],
+   "pass": true
+  },
+  {
+   "id": "H02",
+   "group": "appraisal",
+   "question": "What is the performance appraisal Phase 2 process for faculty?",
+   "scopes_on": {
+    "outcome": "PLAN_F_NOT_APPLICABLE",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_NOT_APPLICABLE",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "legacy_top5": [
+    [
+     "uos_faculty_handbook_2025_26",
+     123
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     122
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     141
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     122
+    ],
+    [
+     "uos_faculty_handbook_2025_26",
+     142
+    ]
+   ],
+   "held_in_retrieval": [],
+   "held_in_plan_f": [],
+   "pass": true
+  },
+  {
+   "id": "H03",
+   "group": "assignments_and_tests",
+   "question": "How do I create a test with a question pool in Blackboard Ultra?",
+   "scopes_on": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "legacy_top5": [
+    [
+     "uos_blackboard_collaborate_guide",
+     1
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     10
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     1
+    ],
+    [
+     "uos_blackboard_communication_guide",
+     1
+    ],
+    [
+     "uos_blackboard_faculty_short_guide",
+     10
+    ]
+   ],
+   "held_in_retrieval": [],
+   "held_in_plan_f": [],
+   "pass": true
+  },
+  {
+   "id": "H04",
+   "group": "assignments_and_tests",
+   "question": "How do I set up a timed test in Blackboard?",
+   "scopes_on": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "legacy_top5": [
+    [
+     "uos_blackboard_collaborate_guide",
+     1
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     1
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     1
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     2
+    ],
+    [
+     "uos_blackboard_collaborate_guide",
+     1
+    ]
+   ],
+   "held_in_retrieval": [],
+   "held_in_plan_f": [],
+   "pass": true
+  },
+  {
+   "id": "H05",
+   "group": "grade_categories",
+   "question": "How do I create grade categories in the Blackboard gradebook?",
+   "scopes_on": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "legacy_top5": [
+    [
+     "uos_blackboard_gradebook_guide",
+     7
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     7
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     2
+    ]
+   ],
+   "held_in_retrieval": [],
+   "held_in_plan_f": [],
+   "pass": true
+  },
+  {
+   "id": "H06",
+   "group": "grade_categories",
+   "question": "How do I weight grade categories in Blackboard Ultra?",
+   "scopes_on": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "scopes_off": {
+    "outcome": "PLAN_F_UNSAFE_RESULT",
+    "served": false,
+    "sources": [],
+    "pages": [],
+    "llm_calls": 0
+   },
+   "legacy_top5": [
+    [
+     "uos_blackboard_attendance_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ],
+    [
+     "uos_blackboard_gradebook_guide",
+     1
+    ]
+   ],
+   "held_in_retrieval": [],
+   "held_in_plan_f": [],
+   "pass": true
+  }
+ ]
+}

@@ -1,0 +1,160 @@
+{
+ "method": "Idle machine, warm cache, the same 191 questions (P0 100, P1 41, PF-4 held-out 50) through the real seam: guide scopes on with the PF-5C measurement script (compared with the PF-5C numbers of the same code), and the production defaults (LEGACY and ACTIVE with guide scopes off). A regression is flagged when a median is more than 25% and more than 50 ms slower.",
+ "guide_scopes_on_vs_pf5c": {
+  "guide_index_build_ms": {
+   "pf5c_p50_ms": 20.4,
+   "pf6_p50_ms": 20.5,
+   "pf5c_p95_ms": 28.4,
+   "pf6_p95_ms": 28.0,
+   "p50_change_pct": 0.5
+  },
+  "guide_retrieval_ms_per_clause": {
+   "pf5c_p50_ms": 607.3,
+   "pf6_p50_ms": 629.5,
+   "pf5c_p95_ms": 1223.7,
+   "pf6_p95_ms": 1268.3,
+   "p50_change_pct": 3.7
+  },
+  "guide_selection_ms_per_clause": {
+   "pf5c_p50_ms": 2.7,
+   "pf6_p50_ms": 2.7,
+   "pf5c_p95_ms": 13.6,
+   "pf6_p95_ms": 13.6,
+   "p50_change_pct": 0.0
+  },
+  "served_guide_answer_wall_ms": {
+   "pf5c_p50_ms": 618.3,
+   "pf6_p50_ms": 645.1,
+   "pf5c_p95_ms": 2190.5,
+   "pf6_p95_ms": 2262.7,
+   "p50_change_pct": 4.3
+  },
+  "guide_scope_fallback_wall_ms": {
+   "pf5c_p50_ms": 2155.7,
+   "pf6_p50_ms": 2206.0,
+   "pf5c_p95_ms": 3593.3,
+   "pf6_p95_ms": 3599.8,
+   "p50_change_pct": 2.3
+  },
+  "inference_ms_per_question": {
+   "pf5c_p50_ms": 0.4,
+   "pf6_p50_ms": 0.4,
+   "pf5c_p95_ms": 1.5,
+   "pf6_p95_ms": 1.4,
+   "p50_change_pct": 0.0
+  }
+ },
+ "pf6_guide_scopes_on": {
+  "code": "new",
+  "questions": 191,
+  "cached_kb_startup_s": 23.6,
+  "guide_index_build_ms": {
+   "n": 5,
+   "p50_ms": 20.5,
+   "p95_ms": 28.0
+  },
+  "guide_retrieval_ms_per_clause": {
+   "n": 117,
+   "p50_ms": 629.5,
+   "p95_ms": 1268.3
+  },
+  "guide_selection_ms_per_clause": {
+   "n": 117,
+   "p50_ms": 2.7,
+   "p95_ms": 13.6
+  },
+  "served_guide_answer_wall_ms": {
+   "n": 43,
+   "p50_ms": 645.1,
+   "p95_ms": 2262.7
+  },
+  "guide_scope_fallback_wall_ms": {
+   "n": 111,
+   "p50_ms": 2206.0,
+   "p95_ms": 3599.8
+  },
+  "inference_ms_per_question": {
+   "n": 191,
+   "p50_ms": 0.4,
+   "p95_ms": 1.4
+  }
+ },
+ "pf5c_guide_scopes_on": {
+  "code": "new",
+  "questions": 191,
+  "cached_kb_startup_s": 23.9,
+  "guide_index_build_ms": {
+   "n": 5,
+   "p50_ms": 20.4,
+   "p95_ms": 28.4
+  },
+  "guide_retrieval_ms_per_clause": {
+   "n": 117,
+   "p50_ms": 607.3,
+   "p95_ms": 1223.7
+  },
+  "guide_selection_ms_per_clause": {
+   "n": 117,
+   "p50_ms": 2.7,
+   "p95_ms": 13.6
+  },
+  "served_guide_answer_wall_ms": {
+   "n": 43,
+   "p50_ms": 618.3,
+   "p95_ms": 2190.5
+  },
+  "guide_scope_fallback_wall_ms": {
+   "n": 111,
+   "p50_ms": 2155.7,
+   "p95_ms": 3593.3
+  },
+  "inference_ms_per_question": {
+   "n": 191,
+   "p50_ms": 0.4,
+   "p95_ms": 1.5
+  }
+ },
+ "pf6_production_defaults": {
+  "questions": 191,
+  "cached_kb_startup_s": 25.1,
+  "legacy": {
+   "first_request_ms": 2027.3,
+   "all": {
+    "n": 191,
+    "p50_ms": 930.2,
+    "p95_ms": 1977.9,
+    "max_ms": 2019.3
+   },
+   "plan_f_served": null,
+   "legacy_served_or_fallback": {
+    "n": 191,
+    "p50_ms": 930.2,
+    "p95_ms": 1977.9,
+    "max_ms": 2019.3
+   }
+  },
+  "active_scopes_off": {
+   "first_request_ms": 1918.7,
+   "all": {
+    "n": 191,
+    "p50_ms": 1641.6,
+    "p95_ms": 2682.5,
+    "max_ms": 3384.9
+   },
+   "plan_f_served": {
+    "n": 4,
+    "p50_ms": 721.8,
+    "p95_ms": 786.2,
+    "max_ms": 786.2
+   },
+   "legacy_served_or_fallback": {
+    "n": 187,
+    "p50_ms": 1647.0,
+    "p95_ms": 2682.5,
+    "max_ms": 3384.9
+   }
+  }
+ },
+ "meaningful_regressions": [],
+ "pass": true
+}

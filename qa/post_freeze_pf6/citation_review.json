@@ -1,0 +1,5033 @@
+{
+ "method": "PF-6 citation and procedure integrity: every Plan F answer the PF-6 evaluation served (guide scopes ON) and a sample of the\nfrozen 192-question handbook answers (production default, guide scopes OFF) are asked again through the real seam and every\ncited item is re-verified independently of the specialist that produced it:\n\n* the quote is inside its chunk and, normalized, inside the printed text of the cited page (a procedure step chunk: its\n  heading and its step each printed on that page); the page and source are the chunk's own; the source is enabled and its\n  title is the registry's;\n* a guide answer: its D-111 record re-verified by ``guide_grounding.verify_answer`` (one source, the specialist's approved set,\n  every asked term stated, the complete procedure or section in printed order); its citation heading recomputed;\n* the answering specialist is approved for every cited guide (D-110);\n* the UI source chips (``ui.presentation.source_chips``) name the registry titles and exactly the cited pages, no raw id;\n* the answer is identical to the evaluation's (determinism).\n\n    python -X utf8 qa/post_freeze_pf6/citation_check.py <repo> <pf6 results.json> <frozen i8_results.json> <out dir>\n\nWrites ``citation_review.json`` and ``procedure_final.json``.",
+ "summary": {
+  "answers_checked": 58,
+  "items_checked": 204,
+  "passed": 58,
+  "failed": [],
+  "not_identical_to_evaluation": [],
+  "sources_covered": {
+   "uos_blackboard_attendance_guide": 1,
+   "uos_blackboard_collaborate_guide": 2,
+   "uos_blackboard_communication_guide": 4,
+   "uos_blackboard_faculty_short_guide": 14,
+   "uos_blackboard_gradebook_guide": 9,
+   "uos_faculty_handbook_2025_26": 20,
+   "uos_grade_transfer_dashboard_guide": 8,
+   "uos_ithenticate_guidelines": 6
+  },
+  "sources_not_covered": []
+ },
+ "answers": [
+  {
+   "id": "G01",
+   "question": "How do I access Blackboard from outside the campus?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "chunk_id": 13711,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access Blackboard",
+     "heading_recomputed": "How to access Blackboard",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "chunk_id": 13712,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access Blackboard",
+     "heading_recomputed": "How to access Blackboard",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "chunk_id": 13713,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access Blackboard",
+     "heading_recomputed": "How to access Blackboard",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "chunk_id": 13714,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access Blackboard",
+     "heading_recomputed": "How to access Blackboard",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "chunk_id": 13715,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access Blackboard",
+     "heading_recomputed": "How to access Blackboard",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "chunk_id": 13716,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access Blackboard",
+     "heading_recomputed": "How to access Blackboard",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "chunk_id": 13717,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access Blackboard",
+     "heading_recomputed": "How to access Blackboard",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_blackboard_faculty_short_guide:1:0",
+     "parts": 7,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Faculty Short Guide"
+    ],
+    [
+     "page",
+     "Page 1 · How to access Blackboard"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G03",
+   "question": "How can I pin a course to the top of my course list in Blackboard Ultra?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 3,
+     "chunk_id": 13765,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Your Courses",
+     "heading_recomputed": "Your Courses",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "list_item",
+     "procedure_key": "uos_blackboard_faculty_short_guide:3:0",
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Faculty Short Guide"
+    ],
+    [
+     "page",
+     "Page 3 · Your Courses"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G05",
+   "question": "What is the minimum size of a Blackboard course banner image?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 4,
+     "chunk_id": 13769,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "",
+     "heading_recomputed": "",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "statement",
+     "procedure_key": null,
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Faculty Short Guide"
+    ],
+    [
+     "page",
+     "Page 4"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G08",
+   "question": "How do I move a content item with the keyboard in Blackboard Ultra?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 7,
+     "chunk_id": 13923,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Reorder content",
+     "heading_recomputed": "Reorder content",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 7,
+     "chunk_id": 13925,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Reorder content",
+     "heading_recomputed": "Reorder content",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 7,
+     "chunk_id": 13926,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Reorder content",
+     "heading_recomputed": "Reorder content",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 7,
+     "chunk_id": 13927,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Reorder content",
+     "heading_recomputed": "Reorder content",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 7,
+     "chunk_id": 13928,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Reorder content",
+     "heading_recomputed": "Reorder content",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_faculty_short_guide:L:7:45:1",
+     "parts": 5,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Faculty Short Guide"
+    ],
+    [
+     "page",
+     "Page 7 · Reorder content"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G09",
+   "question": "How do I add a learning module in Blackboard Ultra?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 8,
+     "chunk_id": 13932,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Add a Learning Module or Folder",
+     "heading_recomputed": "Add a Learning Module or Folder",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 8,
+     "chunk_id": 13932,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Add a Learning Module or Folder",
+     "heading_recomputed": "Add a Learning Module or Folder",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 8,
+     "chunk_id": 13932,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Add a Learning Module or Folder",
+     "heading_recomputed": "Add a Learning Module or Folder",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 8,
+     "chunk_id": 13932,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Add a Learning Module or Folder",
+     "heading_recomputed": "Add a Learning Module or Folder",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 8,
+     "chunk_id": 13932,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Add a Learning Module or Folder",
+     "heading_recomputed": "Add a Learning Module or Folder",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 8,
+     "chunk_id": 13932,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Add a Learning Module or Folder",
+     "heading_recomputed": "Add a Learning Module or Folder",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_faculty_short_guide:L:8:54:0",
+     "parts": 6,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Faculty Short Guide"
+    ],
+    [
+     "page",
+     "Page 8 · Add a Learning Module or Folder"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G10",
+   "question": "How do I send an announcement to my students in Blackboard?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 9,
+     "chunk_id": 13978,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Send an Announcement",
+     "heading_recomputed": "Send an Announcement",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 9,
+     "chunk_id": 13978,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Send an Announcement",
+     "heading_recomputed": "Send an Announcement",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 9,
+     "chunk_id": 13978,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Send an Announcement",
+     "heading_recomputed": "Send an Announcement",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 9,
+     "chunk_id": 13978,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Send an Announcement",
+     "heading_recomputed": "Send an Announcement",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 9,
+     "chunk_id": 13978,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Send an Announcement",
+     "heading_recomputed": "Send an Announcement",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 9,
+     "chunk_id": 13978,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Send an Announcement",
+     "heading_recomputed": "Send an Announcement",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 9,
+     "chunk_id": 13978,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Send an Announcement",
+     "heading_recomputed": "Send an Announcement",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 9,
+     "chunk_id": 13978,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Send an Announcement",
+     "heading_recomputed": "Send an Announcement",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 9,
+     "chunk_id": 13978,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Send an Announcement",
+     "heading_recomputed": "Send an Announcement",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_faculty_short_guide:L:9:67:0",
+     "parts": 9,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Faculty Short Guide"
+    ],
+    [
+     "page",
+     "Page 9 · Send an Announcement"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G11",
+   "question": "How do I create an assignment in Blackboard Ultra?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14005,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14005,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14005,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14005,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14005,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14005,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14006,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14006,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14007,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14007,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14008,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14008,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 11,
+     "chunk_id": 14078,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 11,
+     "chunk_id": 14078,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_faculty_short_guide:S:10:76",
+     "parts": 14,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Faculty Short Guide"
+    ],
+    [
+     "page",
+     "Page 10 · Create an Assignment"
+    ],
+    [
+     "page",
+     "Page 11 · Create an Assignment"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G12",
+   "question": "Can I add a time limit to a group assignment in Blackboard Ultra?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 11,
+     "chunk_id": 14078,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "",
+     "heading_recomputed": "",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "statement",
+     "procedure_key": null,
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Faculty Short Guide"
+    ],
+    [
+     "page",
+     "Page 11"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G14",
+   "question": "Where do I find the course gradebook in Blackboard Ultra?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 1,
+     "chunk_id": 14159,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "",
+     "heading_recomputed": "",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "statement",
+     "procedure_key": null,
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Guide: Gradebook"
+    ],
+    [
+     "page",
+     "Page 1"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G15",
+   "question": "What are the two views of the Blackboard Ultra gradebook?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 1,
+     "chunk_id": 14159,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Course gradebook",
+     "heading_recomputed": "Course gradebook",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 1,
+     "chunk_id": 14199,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Course gradebook",
+     "heading_recomputed": "Course gradebook",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 1,
+     "chunk_id": 14200,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Course gradebook",
+     "heading_recomputed": "Course gradebook",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 1,
+     "chunk_id": 14201,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Course gradebook",
+     "heading_recomputed": "Course gradebook",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 1,
+     "chunk_id": 14202,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Course gradebook",
+     "heading_recomputed": "Course gradebook",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_gradebook_guide:L:1:6:2",
+     "parts": 5,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Guide: Gradebook"
+    ],
+    [
+     "page",
+     "Page 1 · Course gradebook"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G17",
+   "question": "How do I make Blackboard assign zeros to missing work automatically?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 8,
+     "chunk_id": 14378,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Assign automatic zeros",
+     "heading_recomputed": "Assign automatic zeros",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 8,
+     "chunk_id": 14378,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Assign automatic zeros",
+     "heading_recomputed": "Assign automatic zeros",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_gradebook_guide:S:8:59",
+     "parts": 2,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Guide: Gradebook"
+    ],
+    [
+     "page",
+     "Page 8 · Assign automatic zeros"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G18",
+   "question": "How do I download the gradebook from Blackboard?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 10,
+     "chunk_id": 14460,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Download Worflow",
+     "heading_recomputed": "Download Worflow",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 10,
+     "chunk_id": 14460,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Download Worflow",
+     "heading_recomputed": "Download Worflow",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 10,
+     "chunk_id": 14461,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Download Worflow",
+     "heading_recomputed": "Download Worflow",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 10,
+     "chunk_id": 14461,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Download Worflow",
+     "heading_recomputed": "Download Worflow",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 10,
+     "chunk_id": 14462,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Download Worflow",
+     "heading_recomputed": "Download Worflow",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 10,
+     "chunk_id": 14463,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Download Worflow",
+     "heading_recomputed": "Download Worflow",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_gradebook_guide:S:10:75",
+     "parts": 6,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Guide: Gradebook"
+    ],
+    [
+     "page",
+     "Page 10 · Download Worflow"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G19",
+   "question": "How do I set accommodations for a student in the Blackboard gradebook?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 5,
+     "chunk_id": 14318,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Add accommodations from the Student list view",
+     "heading_recomputed": "Add accommodations from the Student list view",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 5,
+     "chunk_id": 14318,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Add accommodations from the Student list view",
+     "heading_recomputed": "Add accommodations from the Student list view",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_gradebook_guide:S:5:41",
+     "parts": 2,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Guide: Gradebook"
+    ],
+    [
+     "page",
+     "Page 5 · Add accommodations from the Student list..."
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G22",
+   "question": "How do I filter the Blackboard gradebook by merged child courses?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 8,
+     "chunk_id": 14378,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Filter by child courses",
+     "heading_recomputed": "Filter by child courses",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 8,
+     "chunk_id": 14378,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Filter by child courses",
+     "heading_recomputed": "Filter by child courses",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 8,
+     "chunk_id": 14378,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Filter by child courses",
+     "heading_recomputed": "Filter by child courses",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 8,
+     "chunk_id": 14378,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Filter by child courses",
+     "heading_recomputed": "Filter by child courses",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 8,
+     "chunk_id": 14379,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Filter by child courses",
+     "heading_recomputed": "Filter by child courses",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_gradebook_guide:S:8:61",
+     "parts": 5,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Guide: Gradebook"
+    ],
+    [
+     "page",
+     "Page 8 · Filter by child courses"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G23",
+   "question": "What can I change from the Gradebook Settings panel in Blackboard Ultra?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 7,
+     "chunk_id": 14372,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "From the Gradebook Settings panel, you can",
+     "heading_recomputed": "From the Gradebook Settings panel, you can",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 7,
+     "chunk_id": 14373,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "From the Gradebook Settings panel, you can",
+     "heading_recomputed": "From the Gradebook Settings panel, you can",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 7,
+     "chunk_id": 14374,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "From the Gradebook Settings panel, you can",
+     "heading_recomputed": "From the Gradebook Settings panel, you can",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 7,
+     "chunk_id": 14375,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "From the Gradebook Settings panel, you can",
+     "heading_recomputed": "From the Gradebook Settings panel, you can",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_blackboard_gradebook_guide:7:0",
+     "parts": 4,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Guide: Gradebook"
+    ],
+    [
+     "page",
+     "Page 7 · From the Gradebook Settings panel, you can"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G24",
+   "question": "How do I transfer grades from Blackboard to Banner?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 2,
+     "chunk_id": 14135,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to Send Grades to Banner as instructor?",
+     "heading_recomputed": "How to Send Grades to Banner as instructor?",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 2,
+     "chunk_id": 14136,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to Send Grades to Banner as instructor?",
+     "heading_recomputed": "How to Send Grades to Banner as instructor?",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 2,
+     "chunk_id": 14137,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to Send Grades to Banner as instructor?",
+     "heading_recomputed": "How to Send Grades to Banner as instructor?",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 2,
+     "chunk_id": 14123,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to Send Grades to Banner as instructor?",
+     "heading_recomputed": "How to Send Grades to Banner as instructor?",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_grade_transfer_dashboard_guide:2:0",
+     "parts": 4,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Grade Transfer Dashboard Guide"
+    ],
+    [
+     "page",
+     "Page 2 · How to Send Grades to Banner as instructor?"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G25",
+   "question": "Where is the Grade Transfer Dashboard link?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 1,
+     "chunk_id": 14091,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "",
+     "heading_recomputed": "",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "statement",
+     "procedure_key": null,
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Grade Transfer Dashboard Guide"
+    ],
+    [
+     "page",
+     "Page 1"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G28",
+   "question": "How does a Dean approve grades in the Grade Transfer portal?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 3,
+     "chunk_id": 14153,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to approve Grades to Banner as Chair/Dean?",
+     "heading_recomputed": "How to approve Grades to Banner as Chair/Dean?",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 3,
+     "chunk_id": 14154,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to approve Grades to Banner as Chair/Dean?",
+     "heading_recomputed": "How to approve Grades to Banner as Chair/Dean?",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 3,
+     "chunk_id": 14155,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to approve Grades to Banner as Chair/Dean?",
+     "heading_recomputed": "How to approve Grades to Banner as Chair/Dean?",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 3,
+     "chunk_id": 14156,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to approve Grades to Banner as Chair/Dean?",
+     "heading_recomputed": "How to approve Grades to Banner as Chair/Dean?",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_grade_transfer_dashboard_guide:3:0",
+     "parts": 4,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Grade Transfer Dashboard Guide"
+    ],
+    [
+     "page",
+     "Page 3 · How to approve Grades to Banner as Chair/..."
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G29",
+   "question": "How do I access iThenticate?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "research"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_ithenticate_guidelines",
+     "page": 1,
+     "chunk_id": 14526,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access IThenticate",
+     "heading_recomputed": "How to access IThenticate",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_ithenticate_guidelines",
+     "page": 1,
+     "chunk_id": 14527,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access IThenticate",
+     "heading_recomputed": "How to access IThenticate",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_ithenticate_guidelines",
+     "page": 1,
+     "chunk_id": 14528,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access IThenticate",
+     "heading_recomputed": "How to access IThenticate",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_ithenticate_guidelines:1:0",
+     "parts": 3,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "iThenticate Guidelines"
+    ],
+    [
+     "page",
+     "Page 1 · How to access IThenticate"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G30",
+   "question": "How do I upload a document to iThenticate?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "research"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_ithenticate_guidelines",
+     "page": 1,
+     "chunk_id": 14530,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to upload a document",
+     "heading_recomputed": "How to upload a document",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_ithenticate_guidelines",
+     "page": 1,
+     "chunk_id": 14531,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to upload a document",
+     "heading_recomputed": "How to upload a document",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_ithenticate_guidelines",
+     "page": 1,
+     "chunk_id": 14532,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to upload a document",
+     "heading_recomputed": "How to upload a document",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_ithenticate_guidelines",
+     "page": 1,
+     "chunk_id": 14533,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to upload a document",
+     "heading_recomputed": "How to upload a document",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_ithenticate_guidelines:1:1",
+     "parts": 4,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "iThenticate Guidelines"
+    ],
+    [
+     "page",
+     "Page 1 · How to upload a document"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G35",
+   "question": "Where do I find the similarity report in iThenticate?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "research"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_ithenticate_guidelines",
+     "page": 1,
+     "chunk_id": 14468,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "",
+     "heading_recomputed": "",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "statement",
+     "procedure_key": null,
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "iThenticate Guidelines"
+    ],
+    [
+     "page",
+     "Page 1"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G43",
+   "question": "How many credit hours is a full teaching load?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "page": 91,
+     "chunk_id": 4811,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true
+    }
+   ],
+   "problems": [],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 91 · Workload Allocation Model (WLAM)"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G44",
+   "question": "How many theses can a faculty member supervise at once?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "research"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "page": 81,
+     "chunk_id": 4222,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true
+    }
+   ],
+   "problems": [],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 81 · Responsibility to Research"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G45",
+   "question": "What is the phone number of the Human Resources Department?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "institutional"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "page": 54,
+     "chunk_id": 2879,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true
+    }
+   ],
+   "problems": [],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 54 · Contact Information"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "G48",
+   "question": "Does HR arrange travel and hotel accommodations for new faculty members?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "faculty_services"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "page": 61,
+     "chunk_id": 3204,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true
+    }
+   ],
+   "problems": [],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 61 · Recruitment and Hiring"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "P11",
+   "question": "Which button do I use in the Blackboard gradebook to release grades to students?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 6,
+     "chunk_id": 14346,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "",
+     "heading_recomputed": "",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "statement",
+     "procedure_key": null,
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Guide: Gradebook"
+    ],
+    [
+     "page",
+     "Page 6"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "P14",
+   "question": "How many office hours must faculty hold, and how do I create an assignment in Blackboard?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "page": 79,
+     "chunk_id": 4104,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14005,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14005,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14005,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14005,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14005,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14005,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14006,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14006,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14007,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14007,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14008,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 10,
+     "chunk_id": 14008,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 11,
+     "chunk_id": 14078,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 11,
+     "chunk_id": 14078,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Create an Assignment",
+     "heading_recomputed": "Create an Assignment",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": 1,
+     "form": "section",
+     "procedure_key": "uos_blackboard_faculty_short_guide:S:10:76",
+     "parts": 14,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 79 · Responsibility to Office Hours"
+    ],
+    [
+     "doc",
+     "Blackboard Ultra Faculty Short Guide"
+    ],
+    [
+     "page",
+     "Page 10 · Create an Assignment"
+    ],
+    [
+     "page",
+     "Page 11 · Create an Assignment"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "P16",
+   "question": "How many theses can a faculty member supervise at once, and how do I access iThenticate?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "research"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "page": 81,
+     "chunk_id": 4222,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true
+    },
+    {
+     "source_id": "uos_ithenticate_guidelines",
+     "page": 1,
+     "chunk_id": 14526,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access IThenticate",
+     "heading_recomputed": "How to access IThenticate",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_ithenticate_guidelines",
+     "page": 1,
+     "chunk_id": 14527,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access IThenticate",
+     "heading_recomputed": "How to access IThenticate",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_ithenticate_guidelines",
+     "page": 1,
+     "chunk_id": 14528,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access IThenticate",
+     "heading_recomputed": "How to access IThenticate",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": 1,
+     "form": "procedure",
+     "procedure_key": "uos_ithenticate_guidelines:1:0",
+     "parts": 3,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 81 · Responsibility to Research"
+    ],
+    [
+     "doc",
+     "iThenticate Guidelines"
+    ],
+    [
+     "page",
+     "Page 1 · How to access IThenticate"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "C01",
+   "question": "How do I transfer grades to Banner using the Grade Transfer Dashboard?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 2,
+     "chunk_id": 14135,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to Send Grades to Banner as instructor?",
+     "heading_recomputed": "How to Send Grades to Banner as instructor?",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 2,
+     "chunk_id": 14136,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to Send Grades to Banner as instructor?",
+     "heading_recomputed": "How to Send Grades to Banner as instructor?",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 2,
+     "chunk_id": 14137,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to Send Grades to Banner as instructor?",
+     "heading_recomputed": "How to Send Grades to Banner as instructor?",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 2,
+     "chunk_id": 14123,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to Send Grades to Banner as instructor?",
+     "heading_recomputed": "How to Send Grades to Banner as instructor?",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_grade_transfer_dashboard_guide:2:0",
+     "parts": 4,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Grade Transfer Dashboard Guide"
+    ],
+    [
+     "page",
+     "Page 2 · How to Send Grades to Banner as instructor?"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "C04",
+   "question": "Where do I access the Grade Transfer Dashboard?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 1,
+     "chunk_id": 14091,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "",
+     "heading_recomputed": "",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "statement",
+     "procedure_key": null,
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Grade Transfer Dashboard Guide"
+    ],
+    [
+     "page",
+     "Page 1"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "C05",
+   "question": "What are the steps to access the Grade Transfer link in Blackboard?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 1,
+     "chunk_id": 14116,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "To access the Grade Transfer link follow these steps",
+     "heading_recomputed": "To access the Grade Transfer link follow these steps",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 1,
+     "chunk_id": 14117,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "To access the Grade Transfer link follow these steps",
+     "heading_recomputed": "To access the Grade Transfer link follow these steps",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 1,
+     "chunk_id": 14118,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "To access the Grade Transfer link follow these steps",
+     "heading_recomputed": "To access the Grade Transfer link follow these steps",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 1,
+     "chunk_id": 14119,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "To access the Grade Transfer link follow these steps",
+     "heading_recomputed": "To access the Grade Transfer link follow these steps",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 1,
+     "chunk_id": 14120,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "To access the Grade Transfer link follow these steps",
+     "heading_recomputed": "To access the Grade Transfer link follow these steps",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_grade_transfer_dashboard_guide:1:0",
+     "parts": 5,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Grade Transfer Dashboard Guide"
+    ],
+    [
+     "page",
+     "Page 1 · To access the Grade Transfer link follow..."
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "C06",
+   "question": "How do I access Blackboard?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "chunk_id": 13711,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access Blackboard",
+     "heading_recomputed": "How to access Blackboard",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "chunk_id": 13712,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access Blackboard",
+     "heading_recomputed": "How to access Blackboard",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "chunk_id": 13713,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access Blackboard",
+     "heading_recomputed": "How to access Blackboard",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "chunk_id": 13714,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access Blackboard",
+     "heading_recomputed": "How to access Blackboard",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "chunk_id": 13715,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access Blackboard",
+     "heading_recomputed": "How to access Blackboard",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "chunk_id": 13716,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access Blackboard",
+     "heading_recomputed": "How to access Blackboard",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "chunk_id": 13717,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access Blackboard",
+     "heading_recomputed": "How to access Blackboard",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_blackboard_faculty_short_guide:1:0",
+     "parts": 7,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Faculty Short Guide"
+    ],
+    [
+     "page",
+     "Page 1 · How to access Blackboard"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "C07",
+   "question": "What can I do in the gradable items list of the Blackboard gradebook?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 2,
+     "chunk_id": 14234,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "In the gradable items list, you can",
+     "heading_recomputed": "In the gradable items list, you can",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 2,
+     "chunk_id": 14235,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "In the gradable items list, you can",
+     "heading_recomputed": "In the gradable items list, you can",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 2,
+     "chunk_id": 14236,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "In the gradable items list, you can",
+     "heading_recomputed": "In the gradable items list, you can",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 2,
+     "chunk_id": 14237,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "In the gradable items list, you can",
+     "heading_recomputed": "In the gradable items list, you can",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 2,
+     "chunk_id": 14238,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "In the gradable items list, you can",
+     "heading_recomputed": "In the gradable items list, you can",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 3,
+     "chunk_id": 14264,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "In the gradable items list, you can",
+     "heading_recomputed": "In the gradable items list, you can",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 3,
+     "chunk_id": 14265,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "In the gradable items list, you can",
+     "heading_recomputed": "In the gradable items list, you can",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 3,
+     "chunk_id": 14266,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "In the gradable items list, you can",
+     "heading_recomputed": "In the gradable items list, you can",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_gradebook_guide",
+     "page": 3,
+     "chunk_id": 14267,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "In the gradable items list, you can",
+     "heading_recomputed": "In the gradable items list, you can",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_blackboard_gradebook_guide:2:1+3:0",
+     "parts": 9,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Guide: Gradebook"
+    ],
+    [
+     "page",
+     "Page 2 · In the gradable items list, you can"
+    ],
+    [
+     "page",
+     "Page 3 · In the gradable items list, you can"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "C09",
+   "question": "How do I mark a course as a favorite in Blackboard?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 3,
+     "chunk_id": 13765,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Your Courses",
+     "heading_recomputed": "Your Courses",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "list_item",
+     "procedure_key": "uos_blackboard_faculty_short_guide:3:0",
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Faculty Short Guide"
+    ],
+    [
+     "page",
+     "Page 3 · Your Courses"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "C11",
+   "question": "How do I check the similarity report in iThenticate?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "research"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_ithenticate_guidelines",
+     "page": 1,
+     "chunk_id": 14536,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Checking Similarity Report",
+     "heading_recomputed": "Checking Similarity Report",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_ithenticate_guidelines:1:2",
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "iThenticate Guidelines"
+    ],
+    [
+     "page",
+     "Page 1 · Checking Similarity Report"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "C15",
+   "question": "How many office hours must faculty hold, and how do I access Blackboard?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "page": 79,
+     "chunk_id": 4104,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "chunk_id": 13711,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access Blackboard",
+     "heading_recomputed": "How to access Blackboard",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "chunk_id": 13712,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access Blackboard",
+     "heading_recomputed": "How to access Blackboard",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "chunk_id": 13713,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access Blackboard",
+     "heading_recomputed": "How to access Blackboard",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "chunk_id": 13714,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access Blackboard",
+     "heading_recomputed": "How to access Blackboard",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "chunk_id": 13715,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access Blackboard",
+     "heading_recomputed": "How to access Blackboard",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "chunk_id": 13716,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access Blackboard",
+     "heading_recomputed": "How to access Blackboard",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 1,
+     "chunk_id": 13717,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to access Blackboard",
+     "heading_recomputed": "How to access Blackboard",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": 1,
+     "form": "procedure",
+     "procedure_key": "uos_blackboard_faculty_short_guide:1:0",
+     "parts": 7,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 79 · Responsibility to Office Hours"
+    ],
+    [
+     "doc",
+     "Blackboard Ultra Faculty Short Guide"
+    ],
+    [
+     "page",
+     "Page 1 · How to access Blackboard"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "C16",
+   "question": "How many credit hours is a full teaching load, and how do I send grades to Banner?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "page": 96,
+     "chunk_id": 5181,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true
+    },
+    {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "page": 91,
+     "chunk_id": 4811,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 2,
+     "chunk_id": 14135,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to Send Grades to Banner as instructor?",
+     "heading_recomputed": "How to Send Grades to Banner as instructor?",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 2,
+     "chunk_id": 14136,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to Send Grades to Banner as instructor?",
+     "heading_recomputed": "How to Send Grades to Banner as instructor?",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 2,
+     "chunk_id": 14137,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to Send Grades to Banner as instructor?",
+     "heading_recomputed": "How to Send Grades to Banner as instructor?",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 2,
+     "chunk_id": 14123,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to Send Grades to Banner as instructor?",
+     "heading_recomputed": "How to Send Grades to Banner as instructor?",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": 1,
+     "form": "procedure",
+     "procedure_key": "uos_grade_transfer_dashboard_guide:2:0",
+     "parts": 4,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 96 · Workload Allocation Model (WLAM)"
+    ],
+    [
+     "page",
+     "Page 91 · Workload Allocation Model (WLAM)"
+    ],
+    [
+     "doc",
+     "Grade Transfer Dashboard Guide"
+    ],
+    [
+     "page",
+     "Page 2 · How to Send Grades to Banner as instructor?"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "C17",
+   "question": "How many theses can a faculty member supervise at once, and how do I upload a document to iThenticate?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "research"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "page": 81,
+     "chunk_id": 4222,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true
+    },
+    {
+     "source_id": "uos_ithenticate_guidelines",
+     "page": 1,
+     "chunk_id": 14530,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to upload a document",
+     "heading_recomputed": "How to upload a document",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_ithenticate_guidelines",
+     "page": 1,
+     "chunk_id": 14531,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to upload a document",
+     "heading_recomputed": "How to upload a document",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_ithenticate_guidelines",
+     "page": 1,
+     "chunk_id": 14532,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to upload a document",
+     "heading_recomputed": "How to upload a document",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_ithenticate_guidelines",
+     "page": 1,
+     "chunk_id": 14533,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to upload a document",
+     "heading_recomputed": "How to upload a document",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": 1,
+     "form": "procedure",
+     "procedure_key": "uos_ithenticate_guidelines:1:1",
+     "parts": 4,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 81 · Responsibility to Research"
+    ],
+    [
+     "doc",
+     "iThenticate Guidelines"
+    ],
+    [
+     "page",
+     "Page 1 · How to upload a document"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "C29",
+   "question": "How do I reorder content with my keyboard in Blackboard?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 7,
+     "chunk_id": 13923,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Reorder content",
+     "heading_recomputed": "Reorder content",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 7,
+     "chunk_id": 13925,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Reorder content",
+     "heading_recomputed": "Reorder content",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 7,
+     "chunk_id": 13926,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Reorder content",
+     "heading_recomputed": "Reorder content",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 7,
+     "chunk_id": 13927,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Reorder content",
+     "heading_recomputed": "Reorder content",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 7,
+     "chunk_id": 13928,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Reorder content",
+     "heading_recomputed": "Reorder content",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_faculty_short_guide:L:7:45:1",
+     "parts": 5,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Faculty Short Guide"
+    ],
+    [
+     "page",
+     "Page 7 · Reorder content"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p0"
+  },
+  {
+   "id": "A09",
+   "question": "Can I change a student's attendance record to excused in Blackboard?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_attendance_guide",
+     "page": 2,
+     "chunk_id": 14594,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "",
+     "heading_recomputed": "",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "statement",
+     "procedure_key": null,
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Attendance Tool in Blackboard Ultra"
+    ],
+    [
+     "page",
+     "Page 2"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p1"
+  },
+  {
+   "id": "B05",
+   "question": "What is the default attendee role for students in Blackboard Collaborate?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_collaborate_guide",
+     "page": 2,
+     "chunk_id": 14675,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "",
+     "heading_recomputed": "",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "statement",
+     "procedure_key": null,
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Collaborate Ultra Guide"
+    ],
+    [
+     "page",
+     "Page 2"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p1"
+  },
+  {
+   "id": "B10",
+   "question": "How do I export the attendance sheet for my Blackboard Collaborate sessions?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_collaborate_guide",
+     "page": 4,
+     "chunk_id": 14784,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "D- Checking Session Attendance",
+     "heading_recomputed": "D- Checking Session Attendance",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_collaborate_guide",
+     "page": 4,
+     "chunk_id": 14784,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "D- Checking Session Attendance",
+     "heading_recomputed": "D- Checking Session Attendance",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_collaborate_guide",
+     "page": 4,
+     "chunk_id": 14785,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "D- Checking Session Attendance",
+     "heading_recomputed": "D- Checking Session Attendance",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_collaborate_guide",
+     "page": 4,
+     "chunk_id": 14786,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "D- Checking Session Attendance",
+     "heading_recomputed": "D- Checking Session Attendance",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_collaborate_guide",
+     "page": 4,
+     "chunk_id": 14786,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "D- Checking Session Attendance",
+     "heading_recomputed": "D- Checking Session Attendance",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_collaborate_guide:L:4:33:0",
+     "parts": 5,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Collaborate Ultra Guide"
+    ],
+    [
+     "page",
+     "Page 4 · D- Checking Session Attendance"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p1"
+  },
+  {
+   "id": "M01",
+   "question": "How do I create a discussion in Blackboard Ultra?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_communication_guide",
+     "page": 1,
+     "chunk_id": 14788,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Blackboard Learn Ultra: Communication Tools",
+     "heading_recomputed": "Blackboard Learn Ultra: Communication Tools",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_communication_guide",
+     "page": 1,
+     "chunk_id": 14831,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Blackboard Learn Ultra: Communication Tools",
+     "heading_recomputed": "Blackboard Learn Ultra: Communication Tools",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_communication_guide",
+     "page": 1,
+     "chunk_id": 14832,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Blackboard Learn Ultra: Communication Tools",
+     "heading_recomputed": "Blackboard Learn Ultra: Communication Tools",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "section",
+     "procedure_key": "uos_blackboard_communication_guide:L:1:0:4",
+     "parts": 3,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Learn Ultra: Communication..."
+    ],
+    [
+     "page",
+     "Page 1 · Blackboard Learn Ultra: Communication Tools"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p1"
+  },
+  {
+   "id": "M06",
+   "question": "Can students edit their discussion titles in Blackboard Ultra?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_communication_guide",
+     "page": 3,
+     "chunk_id": 14894,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "",
+     "heading_recomputed": "",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "statement",
+     "procedure_key": null,
+     "parts": 1,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Learn Ultra: Communication..."
+    ],
+    [
+     "page",
+     "Page 3"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p1"
+  },
+  {
+   "id": "M08",
+   "question": "How do I enable class conversations on a Blackboard content item?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_communication_guide",
+     "page": 4,
+     "chunk_id": 14943,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Conversations",
+     "heading_recomputed": "Conversations",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_communication_guide",
+     "page": 4,
+     "chunk_id": 14944,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Conversations",
+     "heading_recomputed": "Conversations",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_blackboard_communication_guide:4:0",
+     "parts": 2,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Learn Ultra: Communication..."
+    ],
+    [
+     "page",
+     "Page 4 · Conversations"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p1"
+  },
+  {
+   "id": "X03",
+   "question": "How do I send an announcement in Blackboard, and how do I create a discussion in Blackboard Ultra?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 9,
+     "chunk_id": 13978,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Send an Announcement",
+     "heading_recomputed": "Send an Announcement",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 9,
+     "chunk_id": 13978,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Send an Announcement",
+     "heading_recomputed": "Send an Announcement",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 9,
+     "chunk_id": 13978,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Send an Announcement",
+     "heading_recomputed": "Send an Announcement",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 9,
+     "chunk_id": 13978,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Send an Announcement",
+     "heading_recomputed": "Send an Announcement",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 9,
+     "chunk_id": 13978,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Send an Announcement",
+     "heading_recomputed": "Send an Announcement",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 9,
+     "chunk_id": 13978,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Send an Announcement",
+     "heading_recomputed": "Send an Announcement",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 9,
+     "chunk_id": 13978,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Send an Announcement",
+     "heading_recomputed": "Send an Announcement",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 9,
+     "chunk_id": 13978,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Send an Announcement",
+     "heading_recomputed": "Send an Announcement",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_faculty_short_guide",
+     "page": 9,
+     "chunk_id": 13978,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Send an Announcement",
+     "heading_recomputed": "Send an Announcement",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_communication_guide",
+     "page": 1,
+     "chunk_id": 14788,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Blackboard Learn Ultra: Communication Tools",
+     "heading_recomputed": "Blackboard Learn Ultra: Communication Tools",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_communication_guide",
+     "page": 1,
+     "chunk_id": 14831,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Blackboard Learn Ultra: Communication Tools",
+     "heading_recomputed": "Blackboard Learn Ultra: Communication Tools",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_blackboard_communication_guide",
+     "page": 1,
+     "chunk_id": 14832,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "Blackboard Learn Ultra: Communication Tools",
+     "heading_recomputed": "Blackboard Learn Ultra: Communication Tools",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": 0,
+     "form": "section",
+     "procedure_key": "uos_blackboard_faculty_short_guide:L:9:67:0",
+     "parts": 9,
+     "verify_answer": null,
+     "specialist_approved": true
+    },
+    {
+     "clause_index": 1,
+     "form": "section",
+     "procedure_key": "uos_blackboard_communication_guide:L:1:0:4",
+     "parts": 3,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Blackboard Ultra Faculty Short Guide"
+    ],
+    [
+     "page",
+     "Page 9 · Send an Announcement"
+    ],
+    [
+     "doc",
+     "Blackboard Learn Ultra: Communication..."
+    ],
+    [
+     "page",
+     "Page 1 · Blackboard Learn Ultra: Communication Tools"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "p1"
+  },
+  {
+   "id": "H03",
+   "question": "How do I send my final course grades to Banner through the grade transfer dashboard?",
+   "guide_scopes": true,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 2,
+     "chunk_id": 14135,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": false,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to Send Grades to Banner as instructor?",
+     "heading_recomputed": "How to Send Grades to Banner as instructor?",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 2,
+     "chunk_id": 14136,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to Send Grades to Banner as instructor?",
+     "heading_recomputed": "How to Send Grades to Banner as instructor?",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 2,
+     "chunk_id": 14137,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to Send Grades to Banner as instructor?",
+     "heading_recomputed": "How to Send Grades to Banner as instructor?",
+     "heading_matches": true
+    },
+    {
+     "source_id": "uos_grade_transfer_dashboard_guide",
+     "page": 2,
+     "chunk_id": 14123,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true,
+     "citation_heading": "How to Send Grades to Banner as instructor?",
+     "heading_recomputed": "How to Send Grades to Banner as instructor?",
+     "heading_matches": true
+    }
+   ],
+   "problems": [],
+   "guide_verification": [
+    {
+     "clause_index": null,
+     "form": "procedure",
+     "procedure_key": "uos_grade_transfer_dashboard_guide:2:0",
+     "parts": 4,
+     "verify_answer": null,
+     "specialist_approved": true
+    }
+   ],
+   "chips": [
+    [
+     "doc",
+     "Grade Transfer Dashboard Guide"
+    ],
+    [
+     "page",
+     "Page 2 · How to Send Grades to Banner as instructor?"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "held_out"
+  },
+  {
+   "id": "T01",
+   "question": "How many credit hours is a full teaching load?",
+   "guide_scopes": false,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "page": 91,
+     "chunk_id": 4811,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true
+    }
+   ],
+   "problems": [],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 91 · Workload Allocation Model (WLAM)"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "frozen192"
+  },
+  {
+   "id": "T09",
+   "question": "What is the teaching load for instructors?",
+   "guide_scopes": false,
+   "served": "plan_f",
+   "specialist": [
+    "teaching"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "page": 96,
+     "chunk_id": 5182,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true
+    }
+   ],
+   "problems": [],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 96 · Workload Allocation Model (WLAM)"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "frozen192"
+  },
+  {
+   "id": "R03",
+   "question": "How much petty cash advance can a principal investigator receive?",
+   "guide_scopes": false,
+   "served": "plan_f",
+   "specialist": [
+    "research"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "page": 166,
+     "chunk_id": 8419,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true
+    }
+   ],
+   "problems": [],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 166 · Scientific Research Procedures and Regula..."
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "frozen192"
+  },
+  {
+   "id": "R08",
+   "question": "Who approves the funding ceiling for research grants?",
+   "guide_scopes": false,
+   "served": "plan_f",
+   "specialist": [
+    "research"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "page": 165,
+     "chunk_id": 8360,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true
+    }
+   ],
+   "problems": [],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 165 · Scientific Research Procedures and Regula..."
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "frozen192"
+  },
+  {
+   "id": "R27",
+   "question": "Who approves conference travel requests?",
+   "guide_scopes": false,
+   "served": "plan_f",
+   "specialist": [
+    "research"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "page": 117,
+     "chunk_id": 6237,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true
+    }
+   ],
+   "problems": [],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 117 · Participation in Conferences"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "frozen192"
+  },
+  {
+   "id": "H05",
+   "question": "How many days of sick leave with full pay are faculty entitled to?",
+   "guide_scopes": false,
+   "served": "plan_f",
+   "specialist": [
+    "faculty_services"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "page": 107,
+     "chunk_id": 5738,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true
+    }
+   ],
+   "problems": [],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 107 · Leaves and Absences"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "frozen192"
+  },
+  {
+   "id": "I01",
+   "question": "What is the phone number of the Human Resources Department?",
+   "guide_scopes": false,
+   "served": "plan_f",
+   "specialist": [
+    "institutional"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "page": 54,
+     "chunk_id": 2879,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true
+    }
+   ],
+   "problems": [],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 54 · Contact Information"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "frozen192"
+  },
+  {
+   "id": "I06",
+   "question": "How many colleges does the University of Sharjah have?",
+   "guide_scopes": false,
+   "served": "plan_f",
+   "specialist": [
+    "institutional"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "page": 24,
+     "chunk_id": 1371,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true
+    }
+   ],
+   "problems": [],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 24 · The University Administration"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "frozen192"
+  },
+  {
+   "id": "I28",
+   "question": "What is the phone number of Public Relations?",
+   "guide_scopes": false,
+   "served": "plan_f",
+   "specialist": [
+    "institutional"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "page": 54,
+     "chunk_id": 2880,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true
+    }
+   ],
+   "problems": [],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 54 · Contact Information"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "frozen192"
+  },
+  {
+   "id": "X03",
+   "question": "What is the phone number of the Human Resources Department and what is the fax number of the Passport Unit?",
+   "guide_scopes": false,
+   "served": "plan_f",
+   "specialist": [
+    "institutional"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "page": 54,
+     "chunk_id": 2879,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true
+    },
+    {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "page": 53,
+     "chunk_id": 2818,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true
+    }
+   ],
+   "problems": [],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 54 · Contact Information"
+    ],
+    [
+     "page",
+     "Page 53 · Contact Information"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "frozen192"
+  },
+  {
+   "id": "X08",
+   "question": "What is the teaching load for lecturers and what is the phone number of the Registration office?",
+   "guide_scopes": false,
+   "served": "plan_f",
+   "specialist": [
+    "teaching",
+    "institutional"
+   ],
+   "same_answer_as_evaluation": true,
+   "items": [
+    {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "page": 96,
+     "chunk_id": 5182,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true
+    },
+    {
+     "source_id": "uos_faculty_handbook_2025_26",
+     "page": 53,
+     "chunk_id": 2809,
+     "quote_in_chunk": true,
+     "quote_on_page_strict": true,
+     "quote_on_page": true,
+     "page_is_chunk_page": true,
+     "source_is_chunk_source": true,
+     "source_enabled": true,
+     "title_is_registry_title": true
+    }
+   ],
+   "problems": [],
+   "chips": [
+    [
+     "doc",
+     "UOS Faculty Handbook 2025/26"
+    ],
+    [
+     "page",
+     "Page 96 · Workload Allocation Model (WLAM)"
+    ],
+    [
+     "page",
+     "Page 53 · Contact Information"
+    ]
+   ],
+   "chip_problems": [],
+   "pass": true,
+   "set": "frozen192"
+  }
+ ]
+}

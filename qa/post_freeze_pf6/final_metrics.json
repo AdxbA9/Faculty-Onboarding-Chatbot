@@ -1,0 +1,408 @@
+{
+ "freeze_identifier": "ENGLISH_CORE_FREEZE_PF6",
+ "coverage_is_not_a_freeze_criterion": true,
+ "enabled_sources": 8,
+ "corpus_pages": 309,
+ "total_chunks": 15000,
+ "frozen_192": {
+  "served": 55,
+  "correct": 55,
+  "limited": 0,
+  "wrong": 0,
+  "false_acceptances": 0,
+  "same_55_as_i9": true,
+  "guide_scopes_on_identical": true,
+  "pass": true
+ },
+ "p0": {
+  "core_guide": {
+   "questions": 37,
+   "plan_f_served": 21,
+   "guide_served": 21,
+   "fallback": 16,
+   "correct": 19,
+   "limited": 2,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": 100.0,
+   "coverage_pct": 56.8,
+   "served_ids": [
+    "G01",
+    "G03",
+    "G05",
+    "G08",
+    "G09",
+    "G10",
+    "G11",
+    "G12",
+    "G14",
+    "G15",
+    "G17",
+    "G18",
+    "G19",
+    "G22",
+    "G23",
+    "G24",
+    "G25",
+    "G28",
+    "G29",
+    "G30",
+    "G35"
+   ]
+  },
+  "all_guide": {
+   "questions": 100,
+   "plan_f_served": 35,
+   "guide_served": 35,
+   "fallback": 65,
+   "correct": 32,
+   "limited": 3,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": 100.0,
+   "coverage_pct": 35.0,
+   "served_ids": [
+    "G01",
+    "G03",
+    "G05",
+    "G08",
+    "G09",
+    "G10",
+    "G11",
+    "G12",
+    "G14",
+    "G15",
+    "G17",
+    "G18",
+    "G19",
+    "G22",
+    "G23",
+    "G24",
+    "G25",
+    "G28",
+    "G29",
+    "G30",
+    "G35",
+    "P11",
+    "P14",
+    "P16",
+    "C01",
+    "C04",
+    "C05",
+    "C06",
+    "C07",
+    "C09",
+    "C11",
+    "C15",
+    "C16",
+    "C17",
+    "C29"
+   ]
+  },
+  "changed_vs_pf5c": []
+ },
+ "p1": {
+  "all": {
+   "questions": 41,
+   "plan_f_served": 7,
+   "guide_served": 7,
+   "fallback": 34,
+   "correct": 5,
+   "limited": 2,
+   "wrong": 0,
+   "not_reviewed": 0,
+   "precision_pct": 100.0,
+   "coverage_pct": 17.1,
+   "served_ids": [
+    "A09",
+    "B05",
+    "B10",
+    "M01",
+    "M06",
+    "M08",
+    "X03"
+   ]
+  },
+  "must_not_serve_guide_served": [],
+  "changed_vs_pf5c": []
+ },
+ "held_out_diagnostics": {
+  "held_out": {
+   "label": "PF-4 held-out (50)",
+   "served": 1,
+   "fallback": 49,
+   "correct": 1,
+   "limited": 0,
+   "wrong": 0,
+   "served_ids": [
+    "H03"
+   ],
+   "changed_vs_pf5c": []
+  },
+  "fresh5b": {
+   "label": "PF-5B fresh (56)",
+   "served": 0,
+   "fallback": 56,
+   "correct": 0,
+   "limited": 0,
+   "wrong": 0,
+   "served_ids": [],
+   "changed_vs_pf5c": []
+  },
+  "fresh5c": {
+   "label": "PF-5C fresh (60)",
+   "served": 0,
+   "fallback": 60,
+   "correct": 0,
+   "limited": 0,
+   "wrong": 0,
+   "served_ids": [],
+   "changed_vs_pf5c": []
+  }
+ },
+ "wrong_source": {
+  "cases": 88,
+  "pf2_cases": 16,
+  "pf4_cases": 20,
+  "pf5b_cases": 24,
+  "pf5c_cases": 28,
+  "pf5c_inference_accepted": [
+   "W07",
+   "I02",
+   "I04",
+   "I05",
+   "I09",
+   "I10",
+   "I12",
+   "I20"
+  ],
+  "top1_expected_source": 75,
+  "expected_page_in_top5": 85,
+  "plan_f_served": 11,
+  "wrong_source_acceptances": [],
+  "violations": [],
+  "retrieval_wrong_source_first": [
+   "P14",
+   "T01",
+   "T05",
+   "T08",
+   "S03",
+   "A01",
+   "G02",
+   "J02",
+   "I04",
+   "I06",
+   "I18",
+   "I20",
+   "I23"
+  ],
+  "seconds": 287.8,
+  "pass": true
+ },
+ "inference_adversarial": {
+  "cases": 30,
+  "passed": 30,
+  "failed": [],
+  "inference_accepted": [],
+  "guide_served": [],
+  "plan_f_served_handbook": [],
+  "seconds": 53.0
+ },
+ "conflict": {
+  "cases": 15,
+  "passed": 14,
+  "failed": [
+   "Q09"
+  ],
+  "quota_leaks": [],
+  "journal_leaks": [],
+  "not_overblocked_served": [
+   "Q08",
+   "J05",
+   "J06"
+  ],
+  "llm_calls": 0,
+  "coverage_expectation_missed": [
+   "Q09"
+  ],
+  "safety_failures": [],
+  "pass": true
+ },
+ "boundary_and_held_sources": {
+  "boundary_cases": 16,
+  "boundary_passed": 16,
+  "policy_asks_served_from_a_guide": [],
+  "held_cases": 6,
+  "held_passed": 6,
+  "held_failures": [],
+  "llm_calls": 0
+ },
+ "procedure": {
+  "guide_answers": 43,
+  "procedures_and_sections": 31,
+  "complete": 31,
+  "incomplete_served": []
+ },
+ "citation": {
+  "answers_checked": 58,
+  "items_checked": 204,
+  "passed": 58,
+  "failed": [],
+  "not_identical_to_evaluation": [],
+  "sources_covered": {
+   "uos_blackboard_attendance_guide": 1,
+   "uos_blackboard_collaborate_guide": 2,
+   "uos_blackboard_communication_guide": 4,
+   "uos_blackboard_faculty_short_guide": 14,
+   "uos_blackboard_gradebook_guide": 9,
+   "uos_faculty_handbook_2025_26": 20,
+   "uos_grade_transfer_dashboard_guide": 8,
+   "uos_ithenticate_guidelines": 6
+  },
+  "sources_not_covered": []
+ },
+ "cross_document": {
+  "questions": 14,
+  "served": [
+   "P14",
+   "P16",
+   "C15",
+   "C16",
+   "C17",
+   "X03"
+  ],
+  "wrong": [],
+  "ungrounded": [],
+  "changed_vs_pf5c": []
+ },
+ "determinism": {
+  "repeats": 3,
+  "repeat_records": 900,
+  "answer_or_outcome_differences": [],
+  "routing_differences": [],
+  "direct_vs_active_outcome_differences": [],
+  "active_vs_pf5c_changed": [],
+  "exceptions": 0
+ },
+ "legacy": {
+  "mode": "legacy",
+  "questions": 20,
+  "minimal_diagnostics": 20,
+  "exceptions": 0,
+  "watched_modules_imported": [],
+  "runtime_cache_created": false,
+  "pass": true
+ },
+ "shadow": {
+  "questions": 307,
+  "identical_to_direct_legacy": 307,
+  "visible_mismatches": 0,
+  "per_set_mismatches": {
+   "p0": 0,
+   "p1": 0,
+   "held_out": 0,
+   "fresh5b": 0,
+   "fresh5c": 0
+  }
+ },
+ "active": {
+  "production_default_scopes_off": {
+   "questions": 307,
+   "served": {
+    "legacy": 303,
+    "plan_f": 4
+   },
+   "guide_answers_served": [],
+   "guide_registry_selected": [],
+   "exceptions": [],
+   "llm_calls": 0,
+   "changed_vs_pf5c": []
+  },
+  "scopes_on": {
+   "questions": 307,
+   "plan_f_served": 47,
+   "guide_served": 43,
+   "exceptions": [],
+   "llm_calls": 0
+  },
+  "control_scopes_off_vs_on": {
+   "changed": 48,
+   "unexplained": [
+    "H09",
+    "H11",
+    "H12",
+    "H27",
+    "F5C_C30"
+   ],
+   "explanation": "H09, H11, H12 kept by their specialist (D-114), H27 and F5C_C30 routed by the corrected system name; in all five the visible answer is the same legacy fallback with guide scopes on and off; every other difference is a reviewed guide answer (PF-5C review; the same five in PF-6)",
+   "unexplained_after_review": []
+  }
+ },
+ "app_smoke": {
+  "turns": 38,
+  "turns_production_defaults": 23,
+  "turns_guide_scopes_on": 12,
+  "turns_legacy": 3,
+  "required_categories_covered": [
+   "handbook factual answer",
+   "handbook policy answer",
+   "P0 guide answer",
+   "P1 explicit-system answer",
+   "implicit-system query",
+   "typo",
+   "unsupported query",
+   "policy trap",
+   "conflict",
+   "wrong-source trap",
+   "organizational question",
+   "software-navigation question",
+   "multi-part question",
+   "cross-document question",
+   "held Appraisal question",
+   "held Assignments & Tests question",
+   "held Grade Categories question",
+   "vague query",
+   "false premise",
+   "ordinary realistic faculty question"
+  ],
+  "crashes": 0,
+  "exceptions_in_server_log": 0,
+  "plan_f_served": 10,
+  "served_correct": 10,
+  "served_limited": 0,
+  "served_wrong": 0,
+  "fallbacks": 28,
+  "fallback_texts": [
+   "GROQ_API_KEY is not set. Please set it, then reload the app.",
+   "I do not have this information."
+  ],
+  "internal_ids_in_answer_view": 0,
+  "developer_details_without_developer_mode": 0,
+  "developer_details_with_developer_mode_off_checked": [
+   "1 (production defaults)",
+   "G1 (guide scopes on, after a page reload)"
+  ],
+  "held_sources_cited": 0,
+  "quota_values_shown": 0,
+  "journal_answers_served": 0,
+  "policy_answers_from_a_guide": 0,
+  "plan_f_llm_calls": 0
+ },
+ "performance": {
+  "meaningful_regressions": [],
+  "pass": true
+ },
+ "security": {
+  "pass": true,
+  "real_secrets_found": 0
+ },
+ "tests": {
+  "targeted_gate_passed": 2827,
+  "full_suite_passed": 7279,
+  "failed": 0,
+  "skipped": 0,
+  "xfail": 0,
+  "pip_check": "PASS"
+ },
+ "plan_f_guide_scopes_final_default": "OFF"
+}
