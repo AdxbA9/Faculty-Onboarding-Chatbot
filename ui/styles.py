@@ -485,6 +485,52 @@ details.evidence summary:hover { color: var(--text); background: var(--surface-2
 .dev-row .v { font-family: var(--mono); font-size: 12px; color: var(--text); text-align: end; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 60%; }
 
 /* ================================================================
+   SAVED CONVERSATIONS, DIALOGS, SETTINGS (PF-13)
+   ================================================================ */
+.session-row { display: flex; align-items: center; gap: 2px; min-width: 0; }
+.session-row .session-item.q-btn { flex: 1; min-width: 0; }
+.session-menu-btn.q-btn { flex: none; width: 30px; height: 30px; min-height: 30px; padding: 0; color: var(--text-3); opacity: 0; transition: opacity .15s; }
+.session-row:hover .session-menu-btn.q-btn, .session-row:focus-within .session-menu-btn.q-btn, .session-row.active .session-menu-btn.q-btn,
+.session-menu-btn.q-btn:focus-visible, .history-dialog .session-menu-btn.q-btn { opacity: 1; }
+.session-menu-btn.q-btn .q-icon { font-size: 18px; }
+.sb-empty { font-size: 12.5px; color: var(--text-3); padding: 6px; font-style: italic; }
+.saved-note { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-3); margin-top: 6px; line-height: 1.4; }
+.saved-note svg { width: 14px; height: 14px; flex: none; }
+.saved-note.warn { color: #9a5b00; }
+[data-theme="dark"] .saved-note.warn { color: #f0b35a; }
+.dialog-host { display: contents; }
+.fob-dialog.q-card { width: min(460px, 92vw); max-width: 92vw; padding: 20px 22px; border-radius: var(--radius-md); background: var(--surface); color: var(--text); align-items: stretch; gap: 0; }
+/* Quasar follows the system colour scheme for its fields; the dialog's fields follow the page's own tokens instead. */
+.fob-dialog .q-field__native, .fob-dialog .q-field__input, .fob-dialog .q-field__label, .fob-dialog .q-field__marginal,
+.fob-dialog .q-select__dropdown-icon, .fob-dialog .q-field__append { color: var(--text) !important; }
+.fob-dialog .q-field__native::placeholder { color: var(--text-3) !important; opacity: 1; }
+.fob-dialog .q-field--outlined .q-field__control::before { border-color: var(--border-strong) !important; }
+.fob-dialog .q-field--outlined .q-field__control:hover::before { border-color: var(--text-3) !important; }
+.fob-dialog .q-field--outlined.q-field--focused .q-field__control::after { border-color: var(--brand-fill) !important; }
+.fob-dialog .dialog-title { font-size: 18px; font-weight: 700; margin: 0 0 4px 0; line-height: 1.3; }
+.fob-dialog .dialog-sub, .fob-dialog .settings-note { font-size: 13px; color: var(--text-2); line-height: 1.5; margin: 0 0 10px 0; }
+.fob-dialog .dialog-text { font-size: 14px; line-height: 1.55; margin: 8px 0 6px 0; overflow-wrap: anywhere; }
+.dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.dialog-actions.spread { justify-content: space-between; }
+.settings-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.settings-row .settings-lbl { font-size: 14px; font-weight: 500; }
+.settings-row .q-select { min-width: 170px; }
+.settings-section { font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); margin: 14px 0 4px 0; }
+.history-dialog .session-list { max-height: 60vh; overflow: auto; margin-top: 8px; }
+.topbar-history { display: none; }
+.q-menu, .q-dialog .q-card { background: var(--surface); color: var(--text); }
+.q-menu .q-item { color: var(--text); min-height: 40px; }
+.q-menu .q-item:hover { background: var(--surface-2); }
+.q-dialog__inner > .q-card.fob-dialog { box-shadow: 0 18px 50px rgba(0,0,0,.28); }
+@media (max-width: 900px) { .topbar-history { display: flex; } }
+@media (max-width: 540px) {
+    .fob-dialog.q-card { padding: 16px; }
+    .settings-row { flex-direction: column; align-items: stretch; gap: 4px; }
+    .settings-row .q-select { min-width: 0; width: 100%; }
+    .dialog-actions.spread { flex-direction: column-reverse; align-items: stretch; }
+}
+
+/* ================================================================
    RESPONSIVE
    ================================================================ */
 @media (max-width: 1100px) {
