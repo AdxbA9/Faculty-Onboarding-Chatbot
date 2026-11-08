@@ -9,6 +9,40 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-11-08 - Arabic support (post-freeze phase PF-11)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/pf11-arabic-support` (from `feature/pf10-professional-ui` at `81b03c3`, the pushed PF-10 tip) |
+| Starting commit | `81b03c3` (PF-10) |
+| Ending state | COMPLETE for the phase (D-122). Arabic and mixed Arabic/English questions are detected, rewritten deterministically into the English retrieval question by a bilingual lexicon (437 entries), answered by the unchanged English pipeline, and shown in Arabic as a fixed sentence (refusals, notices), a checked model translation or an Arabic lead-in with the verified English text; a bounded model fallback translates poorly covered questions. Bilingual interface with a real RTL layout, an interface-language switch that keeps the conversation and an answer-language preference. English behaviour with the default preference is byte-identical to PF-10. Not pushed |
+| Freeze status | `ENGLISH_CORE_FREEZE_PF6` plus D-117, D-119, D-120, D-121, D-122; Plan F, retrieval, verification, the corpus (`c8987b6079b11f39`, 8 sources, 309 pages, 15,000 chunks) and the registry unchanged |
+| Elapsed | 2026-11-08, about 5 hours |
+
+### Completed
+
+- Multilingual audit and measured retrieval choice (`C:\qa-evals\pf11-arabic-support\ARABIC_ARCHITECTURE.md`, `evidence\retrieval_probe_dev.json`): direct Arabic retrieval 0 / 47 expected pages (34 confident wrong gate passes); lexicon transformation 46 / 47, equal to the English oracle; same Router route 47 / 47, same specialists 47 / 47.
+- `handbook_bot/arabic_text.py` (normalisation, detection, stemming), `handbook_bot/arabic_lexicon.py`, `handbook_bot/arabic_query.py` (transformation, bounded model fallback), `handbook_bot/arabic_answers.py` (fixed replies, frame, translation, deterministic check), `handbook_bot/bilingual.py` (the layer around the seam); `ui/pipeline.py` gained `answer_language`; `QAResult` gained four appended fields; `groq_check.CappedClient` + `LLM_PROCESS_CALL_CAP`; five `ARABIC_*`/cap settings in `config.py`.
+- `ui/i18n.py` (every string in both languages, Arabic first-use screen), `ui/chat.py` (language switch rebuilding the shell from state, answer-language select, Arabic notices, translation note, English source on request, `<html lang dir>`), `ui/styles.py` (Arabic typography, real RTL override of Quasar's `direction: ltr`, focus ring on Quasar buttons, `.app-root` fills the viewport), `ui/rendering.py` (`dir="auto"` on blocks, blockquotes kept), `ui/presentation.py` (Language section of the Developer panel).
+- Tests: new tests in tests/test_arabic_query.py, tests/test_arabic_answers.py, tests/test_arabic_eval_set.py, tests/test_ui_i18n.py and seven bilingual page tests in tests/test_ui_page.py; three existing tests adjusted to the extended contracts (result fields appended, i18n labels, `dir="auto"` blocks).
+- Evaluation: `qa/pf11_arabic/` (paired question set 56 dev + 14 holdout, retrieval probe, offline runner, Arabic example check, bounded live smoke, bilingual browser harness, QA launcher). Reports in `C:\qa-evals\pf11-arabic-support\`.
+
+### Tests performed
+
+- Full suite: 7,499 passed, 0 failed, 0 skipped (PF-10: 7,421, 0 failed).
+- Offline evaluation (ACTIVE, no key): dev 56 paired questions: same serving path 54 / 56, same specialist 56 / 56, expected page reached 46 / 47 (English 47), behaviour as expected 54 / 56, specialist path served 33 Arabic and 33 English, 0 model requests; holdout frozen 14 questions, mean coverage 0.843, behaviour as expected 9 / 14, expected page reached 10 / 11 (English 10), same pages 10 / 14, after the post-holdout round mean coverage 1.0, behaviour as expected 10 / 14, expected page reached 10 / 11, same pages 13 / 14; Arabic first-use examples 6 of 6 Arabic examples served without a model call with the same pages and English text as their English pair.
+- Live smoke under the 12-request process cap: 12 cases, 12 requests issued, 1 refused, 8 served by the specialist path, 3 by the legacy path, 8 translated and checked, 2 framed, 1 fixed replies.
+- Bilingual browser QA at 320, 375, 768, 1024 and 1440 px, both languages, real Arabic and mixed questions, switch back and forth, dark theme, keyboard focus: 0 problems; English PF-10 harness rerun: 0 problems.
+
+### Known limitations
+
+- The translation check is deterministic and limited; no human Arabic review yet; no screen-reader or device test in Arabic.
+- Coverage depends on the lexicon (holdout coverage 0.84 before the post-holdout round); Plan F's deterministic acceptance is wording-sensitive, so some Arabic paraphrases take the model path.
+- PF-9 live-validation debt and the archived-key item remain open.
+
+---
+
 ## 2026-11-08 - Professional web interface (post-freeze phase PF-10)
 
 | Field | Value |

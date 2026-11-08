@@ -24,6 +24,19 @@ Python process, no Node, no Docker, no build step.
   Enter to send / Shift+Enter for a new line, and a copy-answer button.
   Answers are rendered as escaped Markdown with filtered links; the
   layout is direction-aware for the coming Arabic phase.
+- **Arabic and English (bilingual) support** (PF-11) — ask in Arabic,
+  English or a mix of both. An Arabic question is rewritten deterministically
+  into the English retrieval question the documents answer (a bilingual
+  domain lexicon; one bounded model request only when the lexicon covers
+  too little), goes through the unchanged English pipeline and its
+  verification, and the verified English answer is translated by one
+  model request and checked (numbers, contacts, acronyms, negation,
+  structure) before it is shown; when the check fails or no model is
+  configured, the Arabic lead-in quotes the verified English text
+  verbatim. The interface switches between English and Arabic
+  (right-to-left) without losing the conversation; the answer language
+  follows the question unless the user chooses otherwise. See
+  "Arabic support" below.
 - **Developer mode** — open the page as `http://localhost:8501/?dev=1`
   (or set `APP_DEVELOPER_MODE=1`) to get a Developer switch in the
   header that reveals a per-answer panel: mode, served path, routing,
@@ -195,6 +208,45 @@ export GROQ_API_KEY="gsk_xxxxxxxxxxxxxxxxxxx"
 
 ---
 
+## Arabic support
+
+The approved documents are English; the chatbot answers Arabic questions
+through its English pipeline (decision record D-122):
+
+1. **Detection** — script-based, tolerant of short and code-switched
+   questions (`handbook_bot/arabic_text.py`).
+2. **Query transformation** — the normalised Arabic question is rewritten
+   into an English retrieval question with the bilingual domain lexicon
+   (`handbook_bot/arabic_lexicon.py`, `handbook_bot/arabic_query.py`);
+   Latin words, acronyms and numbers pass through unchanged, Arabic-Indic
+   digits become Western digits, clause structure is kept. When the
+   lexicon covers less than `ARABIC_QUERY_MIN_COVERAGE` of the question
+   and a model key is configured, ONE translation request may replace
+   the lexicon query (`ARABIC_QUERY_MODEL_FALLBACK`); the record of the
+   transformation travels with the answer (Developer panel, "Language").
+3. **Answering** — the English query goes through the unchanged
+   Coordinator, specialists, retrieval, verification and fallback.
+4. **Arabic presentation** — refusals, greetings and service notices are
+   fixed Arabic sentences; a real answer is translated by ONE model
+   request and accepted only when the deterministic check finds every
+   number, telephone, e-mail, URL, acronym and list item preserved and
+   no negation dropped (`handbook_bot/arabic_answers.py`); otherwise the
+   page shows an Arabic lead-in naming the source and page and the
+   verified English text verbatim (`ARABIC_ANSWER_TRANSLATION=0` forces
+   this). The page says which of the two it is showing and offers the
+   verified English source answer under the translation.
+
+Interface language: the header button switches between English and
+العربية (the page opens in Arabic when the browser prefers Arabic, or
+with `?lang=ar`). Answer language: "Same as the question" by default,
+English or Arabic on request (composer footer). Western digits are kept in
+answers by design. `ARABIC_SUPPORT=0` switches the whole layer off.
+
+Evaluation tooling: `qa/pf11_arabic/` (paired question set, retrieval
+probe, offline evaluation, bounded live smoke test, bilingual browser QA).
+
+---
+
 ## Developer mode
 
 Developer diagnostics are reachable only through a developer-facing
@@ -282,6 +334,11 @@ Every tunable lives in `handbook_bot/config.py`. Common changes:
 | `PARA_CHUNK_SIZE_WORDS` | Paragraph chunk size | `160` |
 | `FINAL_K` | Passages used in the prompt | `5` |
 | `MIN_RERANK_SCORE` | Below this → refuse | `-1.4` |
+| `ARABIC_SUPPORT` | Arabic layer on/off (env) | `True` |
+| `ARABIC_QUERY_MODEL_FALLBACK` | One model request may translate a poorly covered Arabic question (env) | `True` |
+| `ARABIC_QUERY_MIN_COVERAGE` | Lexicon coverage below which that fallback applies (env) | `0.6` |
+| `ARABIC_ANSWER_TRANSLATION` | Translate verified answers with one model request, else quote the English (env) | `True` |
+| `LLM_PROCESS_CALL_CAP` | Hard cap on model requests per process, 0 = none (env) | `0` |
 
 Bump `CACHE_VERSION` in `config.py` if you change chunking/ingestion
 logic and want to invalidate the embedding cache.
