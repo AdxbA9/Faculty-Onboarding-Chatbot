@@ -11,12 +11,18 @@ answer directly from the retrieved evidence instead of asking the LLM:
 When these extractors fire we get 100%-grounded answers with zero LLM cost
 and no hallucination risk. When they can't find a high-confidence match we
 fall back to the LLM path.
+
+An extractor answer skips the model and the Verifier's prose check, so a loose
+match would read as a certain fact. A value is therefore stated only when the
+printed line binds it (D-120): a contact number needs a complete directory row
+for exactly the asked office, and a date needs a row stating the asked event,
+a date and any term the question names. Anything less declines, and the model
+and the Verifier handle the question.
 """
 from __future__ import annotations
 
-import difflib
 import re
-from typing import Dict, List, Optional, Tuple
+from typing import Callable, Dict, List, Optional, Sequence, Tuple
 
 from .retrieval import classify_query
 from .text_utils import (
@@ -25,7 +31,6 @@ from .text_utils import (
     DAY_PATTERN,
     EMAIL_PATTERN,
     MONTH_PATTERN,
-    PHONE_PATTERN,
     normalize_line,
     normalize_text,
     tokenize,
@@ -34,6 +39,8 @@ from .text_utils import (
 
 # Type alias: (answer_text, list_of_page_numbers, evidence_snippet)
 ExtractorResult = Tuple[str, List[int], str]
+# Returns the printed rows of the page an item comes from, in printed order.
+PageLines = Callable[[Dict], List[str]]
 
 
 # ---------------------------------------------------------------------------
@@ -57,66 +64,121 @@ def _office_query_target(question: str) -> str:
     return normalize_text(target)
 
 
-def _score_row_against_target(target: str, row: str) -> float:
-    """Combine token-overlap with fuzzy-ratio to find the best matching row."""
-    target_tokens = tokenize(target)
-    if not target_tokens:
-        return 0.0
-    row_tokens = set(tokenize(row))
-    overlap = sum(1 for t in target_tokens if t in row_tokens)
-    seq_ratio = difflib.SequenceMatcher(None, target.lower(), row.lower()).ratio()
-    return overlap + seq_ratio
+_FULL_NUMBER = r"\+\d{3} \d \d{3} ?\d{4}"
+#: A directory row that holds a name, then exactly two complete numbers, then nothing else.
+_COMPLETE_ROW = re.compile(rf"^(?P<office>\S.*?)\s+(?P<telephone>{_FULL_NUMBER})\s+(?P<fax>{_FULL_NUMBER})$")
+_COLUMN_HEADER = re.compile(r"\btelephone\b.*\bfax\b", re.I)
+#: A line that carries on into the next one: a trailing "/" or an unfinished number.
+_RUNS_ON = re.compile(r"(?:/|\+\d{0,3}(?: \d{0,3})?)$")
+#: A line that continues the previous one: a broken number, or a Men / Women sub-row.
+_CONTINUES = re.compile(r"^(?:\d|(?:men|women)(?:['’]s)?\b)", re.I)
+#: A word a question adds after an office name that the directory may not print.
+_GENERIC_TAIL = re.compile(r"\s+(?:department|dept|office|unit|section)$")
+
+
+def _office_key(name: str) -> str:
+    """An office name for comparison: case, apostrophe style and outer punctuation do not matter."""
+    return normalize_text(name).replace("’", "'").strip(" .,:;").lower()
+
+
+def page_row_lines(chunks: Sequence[str], metadata: Sequence[Dict], item: Dict) -> List[str]:
+    """The printed rows of the document page ``item`` comes from, in printed order."""
+    page, source = item["meta"].get("page"), item["meta"].get("source_id")
+    return [
+        normalize_line(chunk) for chunk, meta in zip(chunks, metadata)
+        if meta.get("chunk_type") == "row" and meta.get("page") == page and meta.get("source_id") == source
+    ]
+
+
+def _rows_naming(office: str, lines: Sequence[str]) -> List[int]:
+    """Indexes of the lines that start with ``office`` and hold a digit."""
+    return [i for i, line in enumerate(lines)
+            if (_office_key(line) + " ").startswith(office + " ") and re.search(r"\d", line)]
+
+
+def _bind_directory_row(office: str, lines: Sequence[str]) -> Optional[Tuple[str, str, str]]:
+    """(telephone, fax, printed row) of ``office``, or None unless every link of the binding holds.
+
+    The same links the Institutional Specialist requires (D-104), written here because the legacy path imports no
+    Plan F module: the page's header fixes the columns, one row starts with exactly the asked office, that row holds
+    two complete numbers and nothing else, and neither neighbouring line runs into it. Lines are never joined. A
+    trailing generic word is dropped from the asked name only when the page prints no row under the full name."""
+    headers = [line for line in lines if re.search(r"\bfax\b", line, re.I) and re.search(r"\btelephone\b", line, re.I)]
+    if not headers or not all(_COLUMN_HEADER.search(line) for line in headers):
+        return None
+    named = _rows_naming(office, lines)
+    if not named:
+        office = _GENERIC_TAIL.sub("", office)
+        named = _rows_naming(office, lines)
+    if len(named) != 1:
+        return None
+    at = named[0]
+    row = _COMPLETE_ROW.match(lines[at])
+    if not row or _office_key(row.group("office")) != office:
+        return None
+    previous = lines[at - 1] if at else ""
+    following = lines[at + 1] if at + 1 < len(lines) else ""
+    if _RUNS_ON.search(previous) or _CONTINUES.match(previous) or _CONTINUES.match(following):
+        return None
+    return normalize_text(row.group("telephone")), normalize_text(row.group("fax")), lines[at]
+
+
+def _email_answer(target: str, items: List[Dict]) -> Optional[ExtractorResult]:
+    """An address from a row that names every word of the asked target."""
+    wanted = set(tokenize(target))
+    if not wanted:
+        return None
+    for item in items:
+        if item["meta"].get("chunk_type") not in {"row", "row_window"}:
+            continue
+        for line in item["chunk"].split(" | "):
+            emails = EMAIL_PATTERN.findall(line)
+            if emails and wanted <= set(tokenize(line)):
+                return f"The email address is {emails[0]}.", [item["meta"]["page"]], line
+    return None
 
 
 def extract_contact_answer(
-    question: str, items: List[Dict]
+    question: str, items: List[Dict], page_lines: Optional[PageLines] = None
 ) -> Optional[ExtractorResult]:
-    """Return (answer, pages, evidence) for a contact question or None."""
+    """Return (answer, pages, evidence) for a contact question or None.
+
+    ``page_lines`` gives the printed rows of an item's page. A number needs its neighbours and the column header to
+    be bound, so without it no number is stated."""
     if not CONTACT_QUESTION_PATTERN.search(question):
         return None
 
     target = _office_query_target(question)
     ql = question.lower()
     want_fax = "fax" in ql
+    want_phone = "phone" in ql
     want_email = "email" in ql
 
-    # Prefer row-shaped chunks – that's where phone tables live.
-    row_items = [
-        item for item in items
-        if item["meta"].get("chunk_type") in {"row", "row_window"}
-    ] or items
-
-    best: Optional[Dict] = None
-    best_score = -1.0
-    for item in row_items:
-        score = _score_row_against_target(target, item["chunk"])
-        if score > best_score:
-            best = item
-            best_score = score
-
-    if not best or best_score < 0.35:
-        return None
-
-    text = best["chunk"]
-    pages = [best["meta"]["page"]]
-
     if want_email:
-        emails = EMAIL_PATTERN.findall(text)
-        if emails:
-            return f"The email address is {emails[0]}.", pages, text
+        return _email_answer(target, items)
+    if page_lines is None:
         return None
 
-    numbers = [normalize_text(x) for x in PHONE_PATTERN.findall(text)]
-    if not numbers:
-        return None
-
-    if want_fax:
-        # Tables typically list "Office | Telephone | Fax", so the fax number
-        # tends to be the last phone-shaped token on the row.
-        fax = numbers[-1] if len(numbers) >= 2 else numbers[0]
-        return f"The fax number is {fax}.", pages, text
-
-    return f"The phone number is {numbers[0]}.", pages, text
+    office = _office_key(target)
+    seen = set()
+    for item in items:
+        if item["meta"].get("chunk_type") not in {"row", "row_window"}:
+            continue
+        key = (item["meta"].get("source_id"), item["meta"].get("page"))
+        if key in seen:
+            continue
+        seen.add(key)
+        bound = _bind_directory_row(office, page_lines(item))
+        if not bound:
+            continue
+        telephone, fax, line = bound
+        pages = [item["meta"]["page"]]
+        if want_fax and want_phone:
+            return f"The phone number is {telephone}. The fax number is {fax}.", pages, line
+        if want_fax:
+            return f"The fax number is {fax}.", pages, line
+        return f"The phone number is {telephone}.", pages, line
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -232,11 +294,26 @@ _DATE_LABELS = {
 }
 
 
+#: A term or year named in a question. Rows of different terms read alike and most do not print their term, so a row is
+#: bound to the asked term only when it prints it. Relative wording is never printed, so it always goes to the model.
+_ASKED_TERM = re.compile(
+    r"\b(?:fall|autumn|spring|summer|20\d{2}"
+    r"|(?:first|second|next|this|current|coming|upcoming|last|previous)\s+(?:semester|term|year))\b",
+    re.I,
+)
+
+
 def _resolve_target_label(q: str) -> Optional[str]:
     for label, keywords in _DATE_LABELS.items():
         if any(k in q for k in keywords):
             return label
     return None
+
+
+def _states_event_and_date(text: str, label: str) -> bool:
+    """True when a lowercased row names the asked event and prints a day of a month."""
+    names_event = any(re.search(re.escape(k) + r"s?\b", text) for k in _DATE_LABELS[label])
+    return names_event and bool(MONTH_PATTERN.search(text)) and bool(re.search(r"\b\d{1,2}\b", text))
 
 
 def extract_date_answer(
@@ -247,6 +324,10 @@ def extract_date_answer(
         return None
 
     target_label = _resolve_target_label(question.lower())
+    if not target_label:
+        return None
+
+    asked_terms = [term.lower() for term in _ASKED_TERM.findall(question)]
 
     # Expand row_window chunks back into their constituent rows so we can
     # score each row individually.
@@ -263,8 +344,10 @@ def extract_date_answer(
     best_score = -1.0
     for row in rows:
         text = row["chunk"].lower()
+        if not _states_event_and_date(text, target_label) or not all(term in text for term in asked_terms):
+            continue
         score = 0.0
-        if target_label and target_label in text:
+        if target_label in text:
             score += 3.0
         for tok in tokenize(question):
             if tok in text:
@@ -277,7 +360,7 @@ def extract_date_answer(
             best = row
             best_score = score
 
-    if not best or best_score < 1.1 or not target_label:
+    if not best or best_score < 1.1:
         return None
 
     row_text = best["chunk"]

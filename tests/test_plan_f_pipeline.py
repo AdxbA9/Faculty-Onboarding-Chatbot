@@ -25,7 +25,7 @@ import faiss
 import pytest
 
 import test_plan_f_runtime as T
-from conftest import CORPUS, GROUNDED_LEAVE, LEAVE_QUESTION, FakeEmbedder, FakeGroqClient, FakeReranker
+from conftest import KB_CORPUS, GROUNDED_LEAVE, LEAVE_QUESTION, FakeEmbedder, FakeGroqClient, FakeReranker
 from handbook_bot import config
 from handbook_bot import plan_f_runtime as PF
 from handbook_bot.qa import QAResult, answer_question
@@ -78,8 +78,8 @@ def other_kb():
 
 def small_kb(*replies):
     """The six-chunk legacy fixture corpus as a knowledge-base object, with a freshly scripted model client."""
-    chunks = [row[0] for row in CORPUS]
-    metadata = [{"page": row[1], "section": row[2], "chunk_type": row[3]} for row in CORPUS]
+    chunks = [row[0] for row in KB_CORPUS]
+    metadata = [{"page": row[1], "section": row[2], "chunk_type": row[3]} for row in KB_CORPUS]
     embedder = FakeEmbedder()
     index = faiss.IndexFlatIP(FakeEmbedder.dim)
     index.add(embedder.encode(chunks))
@@ -226,7 +226,7 @@ def test_legacy_mode_imports_and_builds_nothing_of_plan_f_in_a_fresh_interpreter
         "import ui.pipeline as pipeline\n"
         "import faiss\n"
         "from types import SimpleNamespace\n"
-        "from conftest import CORPUS, FakeEmbedder, FakeReranker\n"
+        "from conftest import KB_CORPUS as CORPUS, FakeEmbedder, FakeReranker\n"
         "chunks = [r[0] for r in CORPUS]; metadata = [{'page': r[1], 'section': r[2], 'chunk_type': r[3]} for r in CORPUS]\n"
         "e = FakeEmbedder(); index = faiss.IndexFlatIP(FakeEmbedder.dim); index.add(e.encode(chunks))\n"
         "kb = SimpleNamespace(embedder=e, reranker=FakeReranker(), index=index, chunks=chunks, metadata=metadata,\n"

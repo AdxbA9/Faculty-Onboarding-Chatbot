@@ -27,6 +27,11 @@ CORPUS = [
      15, "About", "paragraph"),
 ]
 
+#: The corpus the answer pipeline runs on: the directory row as the real table prints it, with the page's column header,
+#: because a contact number is stated only from a complete row (D-120). CORPUS stays as it is for the retrieval snapshot.
+KB_CORPUS = [("Information Technology Center +971 6 5050000 +971 6 5585101", 14, "Contacts", "row") if row[1] == 14 else row
+             for row in CORPUS] + [("Office / College / Department Telephone Number Fax Number", 14, "Contacts", "row")]
+
 _STOP = {"the", "a", "an", "is", "are", "of", "for", "to", "in", "on", "at", "and", "or",
          "by", "with", "what", "which", "who", "when", "where", "how", "does", "do", "can"}
 
@@ -139,8 +144,8 @@ def kb():
     """Everything ``answer_question`` needs, built once per test session."""
     import faiss
 
-    chunks = [row[0] for row in CORPUS]
-    metadata = [{"page": row[1], "section": row[2], "chunk_type": row[3]} for row in CORPUS]
+    chunks = [row[0] for row in KB_CORPUS]
+    metadata = [{"page": row[1], "section": row[2], "chunk_type": row[3]} for row in KB_CORPUS]
     embedder = FakeEmbedder()
     index = faiss.IndexFlatIP(FakeEmbedder.dim)
     index.add(embedder.encode(chunks))

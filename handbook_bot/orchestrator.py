@@ -86,6 +86,7 @@ from .extractors import (
     extract_contact_answer,
     extract_count_answer,
     extract_date_answer,
+    page_row_lines,
 )
 from .qa import REFUSAL, QAResult, legacy_fallback_pages, verify_answer
 from .retrieval import classify_query as _part1_classify
@@ -313,7 +314,7 @@ def _gather_evidence(
     tool_applicable = True
     blocked_by_part1_gate = False
     if route == "contact":
-        extracted = extract_contact_answer(question, final_items)
+        extracted = extract_contact_answer(question, final_items, lambda item: page_row_lines(chunks, metadata, item))
     elif route == "count":
         tool_applicable = bool(_COUNT_TOOL_SCOPE.search(question))
         if tool_applicable:
