@@ -141,6 +141,24 @@ PLAN_F_MAX_AGENT_CALLS: int = _env_int("PLAN_F_MAX_AGENT_CALLS", 4)
 PLAN_F_GUIDE_SCOPES: bool = _env_bool("PLAN_F_GUIDE_SCOPES", False)
 
 # ---------------------------------------------------------------------------
+# Arabic support (post-freeze PF-11)
+# ---------------------------------------------------------------------------
+# ARABIC_SUPPORT off: every question goes through the pipeline exactly as before PF-11 (no detection, no rewriting).
+ARABIC_SUPPORT: bool = _env_bool("ARABIC_SUPPORT", True)
+# An Arabic question is rewritten into an English retrieval query by the bilingual lexicon. When the lexicon understood
+# less than ARABIC_QUERY_MIN_COVERAGE of the question's content and a Groq client exists, ONE translation request may
+# replace the lexicon query (ARABIC_QUERY_MODEL_FALLBACK). Off: the lexicon query is always used.
+ARABIC_QUERY_MODEL_FALLBACK: bool = _env_bool("ARABIC_QUERY_MODEL_FALLBACK", True)
+ARABIC_QUERY_MIN_COVERAGE: float = _env_float("ARABIC_QUERY_MIN_COVERAGE", 0.6)
+# A verified English answer to an Arabic question is translated by ONE model request and then checked deterministically
+# (numbers, contacts, acronyms, negation, structure). Off, or when the check fails, the answer is shown as an Arabic
+# lead-in plus the verified English source text (nothing is paraphrased).
+ARABIC_ANSWER_TRANSLATION: bool = _env_bool("ARABIC_ANSWER_TRANSLATION", True)
+# Hard cap on model requests per process (0 = no cap). Used by bounded live evaluations; a request beyond the cap is
+# refused by the client wrapper and reported as a service problem, never silently dropped.
+LLM_PROCESS_CALL_CAP: int = max(0, _env_int("LLM_PROCESS_CALL_CAP", 0))
+
+# ---------------------------------------------------------------------------
 # OCR / image extraction
 # ---------------------------------------------------------------------------
 # OCR is OFF by default because it adds minutes to the first-run index build.
