@@ -10,7 +10,7 @@ WHY
 WHAT
     * :func:`error_kind`: a coarse class for an exception raised by the Groq SDK, read from its ``status_code`` or its
       class name, so the orchestrator can tell "the model does not exist for this account" from a transient failure.
-    * :func:`model_problem`: ONE ``models.retrieve`` request (never an inference) that says why the configured model
+    * :func:`model_problem`: ONE ``models.list`` request (never an inference) that says why the configured model
       cannot answer, or None. Used by ``app.py`` at startup when a key is configured.
 
     Nothing here changes which model is used, how it is prompted, or any retrieval or verification setting. The key is
@@ -58,16 +58,20 @@ def describe(kind: str, model: str) -> str:
 
 
 def model_problem(client: Any, model: str, *, timeout: float = 10.0) -> Optional[str]:
-    """Why ``model`` cannot answer through ``client``, or None when Groq lists it. ``client`` None (no key) gives None:
-    the missing key is reported elsewhere."""
+    """Why ``model`` cannot answer through ``client``, or None when Groq lists it for this account. ``client`` None (no
+    key) gives None: the missing key is reported elsewhere.
+
+    The check reads ``models.list`` and looks for the id. ``models.retrieve`` is not used: for an id with a slash
+    (``openai/gpt-oss-120b``) it answers 404 even when the model is listed and answers, so it would report a working
+    configuration as broken (seen on 2026-11-08)."""
     if client is None:
         return None
     caller = client.with_options(max_retries=0, timeout=timeout) if hasattr(client, "with_options") else client
     try:
-        caller.models.retrieve(model)
+        listed = {getattr(m, "id", None) or (m.get("id") if isinstance(m, dict) else None) for m in caller.models.list().data}
     except Exception as exc:                 # the SDK raises many classes; the kind is read from the exception itself
         return describe(error_kind(exc), model)
-    return None
+    return None if model in listed else describe(MODEL_UNAVAILABLE, model)
 
 
 __all__ = ["AUTHENTICATION", "CONNECTION", "MODEL_UNAVAILABLE", "OTHER", "RATE_LIMIT", "describe", "error_kind", "model_problem"]

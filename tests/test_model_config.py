@@ -2,7 +2,8 @@
 
 * ``GROQ_MODEL`` and ``LLM_REASONING_TOKENS`` come from the environment (``.env`` through ``app.py``), with the documented
   defaults; ``.env.example`` carries the verified values.
-* ``groq_check`` classifies SDK failures and describes the configured model's problem from ONE ``models.retrieve`` request.
+* ``groq_check`` classifies SDK failures and describes the configured model's problem from ONE ``models.list`` request
+  (``models.retrieve`` answers 404 for ids with a slash even when the model is available, so it is never used).
 * The legacy path answers a 404 with the model-configuration notice, not the outage notice and never the refusal.
 * The web app listens on this computer only unless ``APP_HOST`` says otherwise.
 """
@@ -78,20 +79,30 @@ def test_error_kind(exc, kind):
     assert G.error_kind(exc) == kind
 
 
-class _Models:
-    def __init__(self, exc):
-        self.exc, self.asked = exc, []
+class _Model:
+    def __init__(self, id):
+        self.id = id
 
-    def retrieve(self, model):
-        self.asked.append(model)
+
+class _Models:
+    """``models.list`` only: ``retrieve`` answers 404 for slash-named ids on the real API, so the check must not use it."""
+
+    def __init__(self, exc, listed):
+        self.exc, self.listed, self.calls = exc, listed, 0
+
+    def list(self):
+        self.calls += 1
         if self.exc:
             raise self.exc
-        return {"id": model}
+        return type("Page", (), {"data": [_Model(i) for i in self.listed]})()
+
+    def retrieve(self, model):
+        raise AssertionError("models.retrieve must not be used (404 for ids with a slash)")
 
 
 class _Client:
-    def __init__(self, exc=None):
-        self.models = _Models(exc)
+    def __init__(self, exc=None, listed=("allam-2-7b", "openai/gpt-oss-120b")):
+        self.models = _Models(exc, listed)
         self.options = None
 
     def with_options(self, **kw):
@@ -99,16 +110,21 @@ class _Client:
         return self
 
 
-def test_model_problem_names_the_model_and_the_setting_on_a_404():
-    client = _Client(_Status(404))
-    problem = G.model_problem(client, "some-model")
-    assert "some-model" in problem and "GROQ_MODEL" in problem and "404" in problem
-    assert client.models.asked == ["some-model"] and client.options == {"max_retries": 0, "timeout": 10.0}
+def test_a_model_the_account_does_not_list_names_the_model_and_the_setting():
+    client = _Client()
+    problem = G.model_problem(client, "llama-3.3-70b-versatile")
+    assert "llama-3.3-70b-versatile" in problem and "GROQ_MODEL" in problem and "404" in problem
+    assert client.models.calls == 1 and client.options == {"max_retries": 0, "timeout": 10.0}
 
 
-def test_model_problem_is_none_when_the_model_is_listed_or_there_is_no_client():
-    assert G.model_problem(_Client(), "m") is None
+def test_a_listed_model_with_a_slash_in_its_id_is_not_a_problem():
+    assert G.model_problem(_Client(), "openai/gpt-oss-120b") is None
+    assert G.model_problem(_Client(), "allam-2-7b") is None
     assert G.model_problem(None, "m") is None
+
+
+def test_a_failing_list_request_is_classified_not_mistaken_for_a_missing_model():
+    assert "404" in G.model_problem(_Client(_Status(404)), "openai/gpt-oss-120b")   # the endpoint itself answered 404
 
 
 def test_model_problem_distinguishes_key_and_network_failures():
