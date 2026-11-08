@@ -17,7 +17,7 @@ Python process, no Node, no Docker, no build step.
 - **Professional web interface** (PF-10) — NiceGUI page with a
   light-first design system in the University of Sharjah green (dark
   mode on request), a header with plain-language service status, a
-  sidebar with the conversations of the browser session, a first-use
+  sidebar with the saved conversations of this browser, a first-use
   screen that explains the scope and offers verified example questions,
   answer cards with a Sources row and an expandable "Supporting
   evidence" list, labelled refusal and service notices, a composer with
@@ -73,6 +73,19 @@ Python process, no Node, no Docker, no build step.
 
 ---
 
+- **Saved conversations, settings and guest sessions** (PF-13) — every
+  conversation is stored on the server in SQLite (standard library, one
+  file under `var/`) for the browser that held it, listed in the sidebar,
+  reopened from its stored record (never re-asked), renamed or deleted
+  with confirmation, and continued after a refresh or a server restart.
+  Arabic answers keep their English intermediate and translation state;
+  evidence and citations are stored with the answer. Settings (interface
+  language, answer language, theme, voice language) persist. Identity is
+  a signed HttpOnly session cookie, hashed in the database and checked on
+  every query; it is a guest identity, not a university login. Backups,
+  integrity checks and versioned migrations come with a small command
+  line. See "Saved conversations and settings" below.
+
 ## Folder structure
 
 ```
@@ -92,6 +105,15 @@ UOS_Handbook_Chatbot/
 │   └── UOS Faculty Handbook 25-26.pdf
 │
 ├── cache/                  # Auto-generated embeddings cache (gitignored)
+│
+├── var/                    # Saved conversations (SQLite) + cookie secret (gitignored)
+│
+├── persistence/            # SQLite layer: schema, migrations, store, backup CLI
+│   ├── db.py               # Connection settings, versioned migrations, backup/restore
+│   ├── store.py            # Owner-scoped persistence service used by the page
+│   ├── records.py          # Answer <-> rows (faithful replay)
+│   ├── secret.py           # Stable cookie-signing secret
+│   └── manage.py           # python -m persistence.manage check|backup|restore|...
 │
 ├── ui/                     # UI layer (NiceGUI)
 │   ├── __init__.py
@@ -282,6 +304,46 @@ and send. Send and Enter work as usual; Shift+Enter still adds a new line.
 - **Errors** (no microphone, no speech heard, service unreachable, time
   limit, language not available) are shown as plain sentences in the
   interface language; the text input is always available.
+
+---
+
+## Saved conversations and settings
+
+Conversations are saved on the server in a small SQLite database
+(`var/app.db`, created on first start) and listed in the sidebar, newest
+first. Reopening a conversation shows the stored answer exactly as it was
+given, with its citations and evidence, marked "Saved answer"; nothing is
+asked again. Each conversation can be renamed or deleted (with
+confirmation) from its menu; at phone and tablet width the history opens
+from the clock icon in the header. The gear icon opens Settings: interface
+language, answer language, theme and voice-input language, all remembered
+for the next visit, plus "Reset to defaults" and "Delete all
+conversations".
+
+- **Who sees what**: a conversation belongs to the browser that held it.
+  The browser is recognised by NiceGUI's signed, HttpOnly session cookie
+  (14 days); the database stores only a hash of that identity, and every
+  query is scoped to it, so another browser or another person on the
+  same computer with a different browser profile cannot see or reach it.
+  This is a guest identity, not a university account or a verified
+  faculty login. Clearing the cookie starts a fresh, empty guest.
+- **What is stored**: questions, answers, the answer's pages, evidence
+  excerpts, the English intermediate and translation state of Arabic
+  answers, timing and path diagnostics, and the four preferences. Never
+  stored: audio, partial voice transcripts, the Groq key, the cookie
+  secret or any token.
+- **Where**: `APP_DB_PATH` moves the database; `APP_STORAGE_SECRET` (or a
+  file at `APP_STORAGE_SECRET_PATH`, default `var/storage_secret.txt`)
+  is the cookie-signing secret, generated once and kept across restarts.
+  `var/` is ignored by git.
+- **Maintenance**: `python -m persistence.manage check | info | backup
+  [DEST] | restore SRC --yes | retention DAYS --yes`. Backups use
+  SQLite's online backup API (safe while the app runs); a restore keeps
+  the replaced file next to the database. Schema upgrades back the file
+  up first and never drop data; a file written by a newer version is
+  refused rather than downgraded.
+- **If the database cannot be written**, the page says so, still
+  answers, and marks the answer "Not saved" instead of pretending.
 
 ---
 

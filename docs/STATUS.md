@@ -9,6 +9,39 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-11-09 - Persistent conversations, preferences and guest sessions (post-freeze phase PF-13)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/pf13-persistent-database` (from `feature/pf12-bilingual-voice` at `43ccfb5`, the pushed PF-12 tip) |
+| Starting commit | `43ccfb5` (PF-12) |
+| Ending state | COMPLETE for the phase (D-124): conversations, messages, answer records with evidence and the user's preferences are stored in SQLite (standard library) for the browser's guest identity; the page lists, reopens, renames and deletes conversations, replays saved answers without re-asking, persists settings, survives reload and server restart, isolates browsers from each other and reports every save failure. Backend unchanged. Not pushed |
+| Freeze status | `ENGLISH_CORE_FREEZE_PF6` plus D-117, D-119, D-120, D-121, D-122, D-123, D-124; Plan F, retrieval, verification, the Arabic layer, the voice layer, the corpus and the registry unchanged |
+| Elapsed | 2026-11-09, about 3 hours |
+
+### Completed
+
+- `persistence/` (db.py: schema v1, connection settings, backup-first migrations, integrity, online backup/restore; store.py: owner-scoped service; records.py: answer to rows and back; secret.py: stable cookie secret; manage.py: CLI), `.gitignore` data paths, `.env.example` settings.
+- `ui/chat.py` (identity from the signed session cookie, owner created on first write, sidebar from the store, rename/delete/history/settings dialogs, save per turn with idempotent tokens, replay with the "Saved answer" label and corpus-changed note, failure notices), `ui/i18n.py` (46 strings per language), `ui/styles.py` (dialogs, menus, saved notes, phone history button), `start_app` stable `storage_secret`.
+- Tests: tests/test_persistence_db.py (15), tests/test_persistence_store.py (26), tests/test_persistence_records.py (5), tests/test_ui_history.py (17); autouse temporary-database fixture in tests/conftest.py; page fixture uses a temporary database.
+- QA tooling: `qa/pf13_db/browser_qa_persistence.py` (two persistent Chrome profiles, two phases around a real restart, five widths, both languages), `qa/pf13_db/live_persistence_integration.py` (bounded live run), launcher `--db` / `--secret`. Reports in `C:\qa-evals\pf13-persistent-database\`.
+
+### Tests performed
+
+- Full suite: 7,602 passed, 0 failed, 0 skipped in 291.98 s (PF-12: 7,539, 0 failed).
+- Browser harness: phase create 18 steps, phase restart 11 steps, 26 viewport checks (320/375/768/1024/1440 px, English and Arabic, conversation + history dialog + settings dialog), 0 problems; visitor B saw none of visitor A's conversations before or after the restart; the session cookie is HttpOnly, SameSite=Lax, 14 days.
+- Live integration (translation on, cap 4): 2 Arabic questions, 2 model requests, both translated and checked, persisted with the English originals, replayed identically; database rows equal to the page.
+- Backup drill on the QA database while served: backup, restore into a scratch copy, integrity, refusal of a garbage source, retention guard.
+
+### Known limitations
+
+- Guest identity only (a browser profile), no account linking, no encryption at rest, single-machine SQLite; a cleared cookie starts an empty guest with no recovery.
+- Retention is a manual command; rows of browsers that never return stay until it runs.
+- Carried over: PF-12 real-microphone acceptance test, PF-11 holdout mismatches and human Arabic review, PF-9 live-validation debt, eight-versus-nine Blackboard steps, the historic exposed-key item.
+
+---
+
 ## 2026-11-09 - Bilingual voice input (post-freeze phase PF-12)
 
 | Field | Value |
