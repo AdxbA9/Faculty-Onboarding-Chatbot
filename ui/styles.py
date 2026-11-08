@@ -446,6 +446,34 @@ details.evidence summary:hover { color: var(--text); background: var(--surface-2
 .composer-help:empty { display: none; }
 
 /* ================================================================
+   VOICE INPUT (post-freeze PF-12)
+   ================================================================ */
+.mic-btn.q-btn { width: 40px; height: 40px; min-height: 40px; flex: none; border-radius: 50%; color: var(--text-2); border: 1px solid transparent; transition: background var(--transition), color var(--transition), box-shadow var(--transition); }
+.mic-btn.q-btn .q-icon { font-size: 22px; }
+.mic-btn.q-btn:hover { background: var(--surface-2); color: var(--brand-text); }
+.mic-btn.voice-listening.q-btn, .mic-btn.voice-starting.q-btn { background: var(--danger-soft); color: var(--danger); border-color: var(--danger); box-shadow: 0 0 0 4px rgba(179, 38, 30, 0.14); animation: micPulse 1.4s ease-in-out infinite; }
+.mic-btn.voice-ready.q-btn { color: var(--brand-text); background: var(--brand-soft); }
+.mic-btn.voice-error.q-btn { color: var(--warn); background: var(--warn-soft); }
+.mic-btn.voice-unsupported.q-btn { color: var(--text-3); background: var(--surface-3); cursor: not-allowed; }
+@keyframes micPulse { 0%, 100% { box-shadow: 0 0 0 4px rgba(179, 38, 30, 0.14); } 50% { box-shadow: 0 0 0 9px rgba(179, 38, 30, 0.05); } }
+.voice-cancel-btn.q-btn { width: 36px; height: 36px; min-height: 36px; flex: none; border-radius: 50%; color: var(--text-2); }
+.voice-cancel-btn.q-btn:hover { background: var(--surface-2); color: var(--danger); }
+.voice-cancel-btn.hidden, .voice-strip.hidden { display: none !important; }
+.voice-strip { max-width: var(--content-w); margin: 6px auto 0 auto; padding: 0 6px; }
+.voice-live { display: flex; align-items: center; gap: 10px; min-height: 28px; padding: 6px 12px; border-radius: var(--radius-md); background: var(--danger-soft); color: var(--text); font-size: 13.5px; }
+.voice-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--danger); flex: none; animation: voiceDot 1.2s ease-in-out infinite; }
+@keyframes voiceDot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.75); } }
+.voice-live-label { font-weight: 650; color: var(--danger); flex: none; }
+.voice-preview { color: var(--text-2); overflow-wrap: anywhere; min-width: 0; }
+.voice-privacy { max-width: var(--content-w); margin: 6px auto 0 auto; padding: 6px 10px; display: flex; gap: 8px; align-items: flex-start; font-size: 12px; color: var(--text-3); line-height: 1.5; }
+.voice-privacy svg { width: 14px; height: 14px; flex: none; margin-top: 2px; }
+.voice-lang { margin-inline-start: 8px; }
+@media (max-width: 540px) {
+    .mic-btn.q-btn { width: 38px; height: 38px; min-height: 38px; }
+    .voice-lang .lbl { display: none; }
+}
+
+/* ================================================================
    DEVELOPER PANEL (reachable through ?dev=1 only)
    ================================================================ */
 .dev-panel { border: 1px dashed var(--border-strong); border-radius: var(--radius-md); background: var(--surface-2); font-size: 12.5px; }

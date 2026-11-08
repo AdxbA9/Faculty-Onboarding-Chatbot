@@ -49,7 +49,7 @@ from nicegui import app, run, ui
 from handbook_bot import QAResult
 from handbook_bot.arabic_answers import localize_reply
 
-from . import i18n, presentation, rendering
+from . import i18n, presentation, rendering, voice
 from .i18n import t
 from .pipeline import groq_is_configured, load_knowledge_base, preflight
 from .styles import GLOBAL_CSS, ICONS
@@ -143,7 +143,8 @@ def _client_state(client_id: str, lang: str = "en") -> Dict[str, Any]:
     state = _CLIENTS.get(client_id)
     if state is None:
         s = _new_session(lang)
-        state = {"sessions": [s], "active_id": s["id"], "debug": False, "theme": "light", "lang": i18n.normalize_lang(lang), "answer_lang": "auto"}
+        state = {"sessions": [s], "active_id": s["id"], "debug": False, "theme": "light", "lang": i18n.normalize_lang(lang), "answer_lang": "auto",
+                 "voice_lang": "auto", "voice": voice.VoiceMachine(), "voice_privacy_shown": False}
         _CLIENTS[client_id] = state
     return state
 
@@ -214,12 +215,12 @@ def _build_page(developer: bool = False, lang: str = "en") -> None:
     def _set_help(text: str) -> None:
         el = refs.get("help")
         if el is not None:
-            _safe(setattr, el, "content", html.escape(text) if text else "")
+            _safe(setattr, el, "content", html.escape(text, quote=False) if text else "")
 
     def _set_live(text: str) -> None:
         el = refs.get("live")
         if el is not None:
-            _safe(setattr, el, "content", html.escape(text) if text else "")
+            _safe(setattr, el, "content", html.escape(text, quote=False) if text else "")
 
     def _status_html() -> str:
         s = service_status(L())
@@ -249,6 +250,7 @@ def _build_page(developer: bool = False, lang: str = "en") -> None:
             _safe(btn.props, 'aria-label="%s"' % _theme_label())
 
     def _on_lang_toggle() -> None:
+        _voice_cancel()
         state["lang"] = "ar" if state["lang"] == "en" else "en"
         _safe(ui.query("html").props, f'lang={state["lang"]} dir={i18n.DIRECTION[state["lang"]]}')
         _render_all()                                            # every conversation and message survives the rebuild
@@ -256,11 +258,123 @@ def _build_page(developer: bool = False, lang: str = "en") -> None:
     def _on_answer_lang(value: Any) -> None:
         state["answer_lang"] = value if value in i18n.ANSWER_LANGUAGES else "auto"
 
+    # ---- voice input (post-freeze PF-12, D-123): the browser recognises, the page shows, the user sends -------------
+    def _voice_machine() -> "voice.VoiceMachine":
+        vm = state.get("voice")
+        if not isinstance(vm, voice.VoiceMachine):
+            vm = voice.VoiceMachine()
+            state["voice"] = vm
+        return vm
+
+    def _voice_lang_label(lang: str) -> str:
+        code = state.get("voice_lang") or "auto"
+        code = code if code in ("en", "ar") else lang
+        return t(lang, "voice_en" if code == "en" else "voice_ar")
+
+    def _js(code: str) -> None:
+        try:
+            page_client.run_javascript(code)
+        except Exception:
+            pass
+
+    def _render_mic() -> None:
+        """The microphone button and the listening strip follow the state machine."""
+        vm = _voice_machine()
+        lang = L()
+        btn = refs.get("mic")
+        if btn is not None:
+            listening = vm.active
+            label = t(lang, "voice_stop") if listening else (t(lang, "voice_unsupported") if vm.state == voice.UNSUPPORTED
+                                                             else t(lang, "voice_start_aria", voice=_voice_lang_label(lang)))
+            _safe(btn.props, 'icon=%s aria-label="%s" aria-pressed="%s" title="%s"' % (
+                "stop" if listening else ("mic_off" if vm.state == voice.UNSUPPORTED else "mic"), html.escape(label, quote=True),
+                "true" if listening else "false", html.escape(label, quote=True)))
+            for cls in voice.STATES:
+                _safe(btn.classes, remove="voice-" + cls)
+            _safe(btn.classes, add="voice-" + vm.state)
+        strip = refs.get("voice_strip")
+        if strip is not None:
+            if vm.active:
+                preview = html.escape(vm.interim or vm.final or "")
+                _safe(setattr, strip, "content",
+                      '<div class="voice-live" role="status" aria-live="polite"><span class="voice-dot" aria-hidden="true"></span>'
+                      '<span class="voice-live-label">%s</span><span class="voice-preview" dir="auto">%s</span></div>'
+                      % (html.escape(t(lang, "voice_listening_label")), preview))
+                _safe(strip.classes, remove="hidden")
+            else:
+                _safe(setattr, strip, "content", "")
+                _safe(strip.classes, add="hidden")
+        cancel = refs.get("voice_cancel")
+        if cancel is not None:
+            _safe(cancel.classes, remove="hidden") if vm.active else _safe(cancel.classes, add="hidden")
+
+    def _voice_apply(event: Dict[str, Any]) -> None:
+        """One browser event for this page: update the machine, the controls, the help line and, on a final transcript,
+        the composer draft (appended, never replaced, never sent)."""
+        vm = _voice_machine()
+        before = vm.active
+        key = vm.apply(event or {})
+        if event.get("kind") == "final":
+            text = " ".join(str(event.get("text") or "").split())
+            if text:
+                field = refs.get("input")
+                if field is not None:
+                    try:
+                        field.value = voice.merge_draft(field.value or "", text)
+                    except Exception:
+                        pass
+        if key:
+            message = t(L(), key)
+            _set_help(message)
+            if key in ("voice_listening", "voice_ready"):
+                _set_live(message)
+        if event.get("kind") == "end" and vm.state == voice.READY:
+            _js("(() => { const el = document.querySelector('.composer textarea'); if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); } })();")
+        if before != vm.active or event.get("kind") in ("interim", "final", "unsupported", "error", "end", "cancelled", "starting", "listening"):
+            _render_mic()
+
+    def _voice_start() -> None:
+        vm = _voice_machine()
+        if vm.active:
+            _js("window.fobVoice && window.fobVoice.stop();")
+            return
+        if is_busy["v"]:
+            _set_help(t(L(), "help_busy"))
+            return
+        if not state.get("voice_privacy_shown"):
+            state["voice_privacy_shown"] = True
+            note = refs.get("voice_privacy")
+            if note is not None:
+                _safe(setattr, note, "content", '<div class="voice-privacy">%s%s</div>' % (ICONS["info"], html.escape(t(L(), "voice_privacy"), quote=False)))
+        locale = voice.locale_for(state.get("voice_lang"), L())
+        _js("window.fobVoice ? window.fobVoice.start(%s, %d, %d) : emitEvent('fob_voice', {kind: 'unsupported'});"
+            % (json.dumps(locale), voice.NO_RESULT_TIMEOUT_MS, voice.MAX_UTTERANCE_MS))
+
+    def _voice_cancel() -> None:
+        if _voice_machine().active:
+            _js("window.fobVoice && window.fobVoice.cancel();")
+
+    def _on_voice_lang(value: Any) -> None:
+        state["voice_lang"] = value if value in i18n.VOICE_LANGUAGES else "auto"
+        _render_mic()
+
+    def _on_voice_event(e) -> None:
+        payload = getattr(e, "args", None)
+        if isinstance(payload, list) and payload:
+            payload = payload[0]
+        if isinstance(payload, dict):
+            _voice_apply(payload)
+
+    state["voice_apply"] = _voice_apply              # reachable by the simulated-user tests, which cannot emit browser events
+    state["voice_start"] = _voice_start
+    state["voice_cancel"] = _voice_cancel
+
     def _on_debug_toggle(value: bool) -> None:
         state["debug"] = bool(value)
         _render_chat()
 
     async def _on_new_chat() -> None:
+        _voice_cancel()                                         # a recording never outlives the conversation it was started in
         current = _active_session(state)
         if not current["messages"]:                              # already on an empty conversation: nothing to add
             _render_chat()
@@ -282,6 +396,7 @@ def _build_page(developer: bool = False, lang: str = "en") -> None:
 
                 def _make_click(sid: str):
                     async def _click() -> None:
+                        _voice_cancel()
                         state["active_id"] = sid
                         _render_sessions()
                         _render_chat()
@@ -600,11 +715,29 @@ def _build_page(developer: bool = False, lang: str = "en") -> None:
                             .props('autogrow borderless dense for=composer-input dir=auto aria-label="%s"' % html.escape(t(lang, "composer_aria"), quote=True)) \
                             .classes("flex-1").mark("composer")
                         refs["input"] = txt
+                        vm = _voice_machine()
+                        mic_btn = ui.button(on_click=_voice_start, icon="mic") \
+                            .props('flat dense round aria-label="%s" aria-pressed="false" title="%s"' % (
+                                html.escape(t(lang, "voice_start_aria", voice=_voice_lang_label(lang)), quote=True),
+                                html.escape(t(lang, "voice_start_aria", voice=_voice_lang_label(lang)), quote=True))) \
+                            .classes("mic-btn voice-" + vm.state).mark("mic")
+                        refs["mic"] = mic_btn
+                        cancel_btn = ui.button(on_click=_voice_cancel, icon="close") \
+                            .props('flat dense round aria-label="%s" title="%s"' % (html.escape(t(lang, "voice_cancel"), quote=True), html.escape(t(lang, "voice_cancel"), quote=True))) \
+                            .classes("voice-cancel-btn" + ("" if vm.active else " hidden")).mark("voice-cancel")
+                        refs["voice_cancel"] = cancel_btn
                         send_btn = ui.button(t(lang, "send"), on_click=_on_send_click, icon="arrow_upward") \
                             .props('unelevated dense no-caps aria-label="%s"' % html.escape(t(lang, "send_aria"), quote=True)).classes("send-btn").mark("send")
                         refs["send"] = send_btn
+                    refs["voice_strip"] = ui.html("").classes("voice-strip hidden")
+                    refs["voice_privacy"] = ui.html("")
                     with ui.element("div").classes("composer-foot"):
                         refs["help"] = ui.html("").classes("composer-help").props('role="status" aria-live="polite"')
+                        with ui.element("div").classes("answer-lang voice-lang"):
+                            ui.html(f'<span class="lbl">{html.escape(t(lang, "voice_language"))}</span>')
+                            voice_options = {"auto": t(lang, "voice_auto"), "en": t(lang, "voice_en"), "ar": t(lang, "voice_ar")}
+                            ui.select(voice_options, value=state.get("voice_lang", "auto"), on_change=lambda e: _on_voice_lang(e.value)) \
+                                .props('dense borderless options-dense aria-label="%s"' % html.escape(t(lang, "voice_language"), quote=True)).mark("voice-lang")
                         with ui.element("div").classes("answer-lang"):
                             ui.html(f'<span class="lbl">{html.escape(t(lang, "answer_language"))}</span>')
                             options = {"auto": t(lang, "answer_auto"), "en": t(lang, "answer_en"), "ar": t(lang, "answer_ar")}
@@ -619,10 +752,15 @@ def _build_page(developer: bool = False, lang: str = "en") -> None:
 
                 # Enter sends; Shift+Enter keeps the textarea's newline. Decided in the browser (D-09).
                 txt.on("keydown", _on_keydown_send, js_handler=ENTER_SENDS_JS)
+                # Escape cancels a running recognition (decided in the browser; the page learns of it through the voice events).
+                txt.on("keydown.escape", lambda _e: _voice_cancel())
+                ui.on("fob_voice", _on_voice_event)
+        _render_mic()
 
         _render_sessions()
         _render_chat()
 
+    ui.add_body_html("<script>%s</script>" % voice.VOICE_JS)
     refs["root"] = ui.element("div").classes("app-root")
     if _KB_STATE["kb"] is None and _KB_STATE["error"] is None:
         refs["status_timer"] = ui.timer(2.0, _refresh_status)
