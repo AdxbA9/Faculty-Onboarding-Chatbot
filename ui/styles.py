@@ -481,6 +481,7 @@ header.q-header, footer.q-footer { display: none !important; }
     flex-shrink: 0;
     padding: 0;
 }
+.topbar-new-chat { display: none; }
 .topbar-btn .q-btn__content,
 .topbar-btn .q-btn__content *,
 .topbar-btn svg,
@@ -1157,6 +1158,7 @@ header.q-header, footer.q-footer { display: none !important; }
 
 @media (max-width: 540px) {
     .sidebar { display: none; }
+    .topbar-new-chat { display: flex; }
     .chat-inner { padding: 16px 12px 170px 12px; }
     .msg-row { gap: 8px; }
     .msg-row.user > *:first-child { max-width: 92%; }

@@ -54,6 +54,9 @@ APP_SUBTITLE = (
     "and handbook guidance."
 )
 
+#: Runs in the browser: plain Enter sends, and any other key, Shift+Enter included, keeps its default action.
+ENTER_SENDS_JS = "(e) => { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); emit(); } }"
+
 SAMPLE_PROMPTS = [
     ("Mission",  "What is the University of Sharjah's mission?"),
     ("Contact",  "What is the phone number for the Information Technology Center?"),
@@ -558,6 +561,13 @@ def _build_page() -> None:
                         on_change=_dev_changed,
                     ).props('dense aria-label="Developer mode"')
 
+                # New chat at phone width, where the sidebar is hidden (D-118). Hidden by CSS above that width.
+                phone_new_btn = ui.button(on_click=_on_new_chat) \
+                    .props('flat dense aria-label="New chat"') \
+                    .classes("topbar-btn topbar-new-chat")
+                with phone_new_btn:
+                    ui.html(ICONS["plus"])
+
                 # Theme toggle button (sun/moon icon)
                 theme_btn = ui.button(on_click=_on_theme_toggle) \
                     .props('flat dense aria-label="Toggle light or dark mode"') \
@@ -601,9 +611,9 @@ def _build_page() -> None:
                 '</div>'
             )
 
-        # Enter-to-send: `.exact` means only plain Enter fires - Shift+Enter
-        # falls through to the textarea's default newline.
-        txt.on("keydown.enter.exact.prevent", _on_keydown_send)
+        # Enter sends and Shift+Enter falls through to the textarea's newline. This is decided in the browser because
+        # NiceGUI reads an `.exact` modifier as a key name, which made every Enter send (D-118).
+        txt.on("keydown", _on_keydown_send, js_handler=ENTER_SENDS_JS)
 
     # =======================================================================
     # INITIAL RENDER
