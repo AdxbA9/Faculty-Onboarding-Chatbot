@@ -24,3 +24,4 @@ python-dotenv>=1.0
 
 # --- Tests ---
 pytest>=7.0
+pytest-asyncio>=0.23      # NiceGUI simulated-user page tests (tests/test_ui_page.py)

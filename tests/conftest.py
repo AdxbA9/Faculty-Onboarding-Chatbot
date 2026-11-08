@@ -7,6 +7,9 @@ a six-chunk corpus that covers every route the orchestrator can take.
 """
 from __future__ import annotations
 
+#: NiceGUI's simulated user (post-freeze PF-10 page tests); no browser, no network.
+pytest_plugins = ["nicegui.testing.user_plugin"]
+
 import hashlib
 import re
 from typing import Dict, List
