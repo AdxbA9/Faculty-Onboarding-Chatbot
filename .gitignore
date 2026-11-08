@@ -6,3 +6,13 @@ cache/
 .ipynb_checkpoints/
 .pytest_cache/
 .venv_broken_backup/
+
+# application data (PF-13): the SQLite store, its journal, backups and the cookie-signing secret
+var/
+*.db
+*.db-wal
+*.db-shm
+*.sqlite3
+*.bak
+.nicegui/
+backups/
