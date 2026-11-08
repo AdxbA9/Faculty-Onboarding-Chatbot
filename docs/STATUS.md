@@ -9,6 +9,36 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-11-08 - Live acceptance and extractor binding (post-freeze phase PF-9)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `fix/restoration-acceptance` (from `feature/post-freeze-knowledge-expansion` at `c229d91`) |
+| Starting commit | `a9cb656` (PF-8) |
+| Ending state | IN PROGRESS. The Groq key was rotated on 8 November and verified usable; the four live smoke tests T1-T4 PASSED (4 of 4) with that key in ACTIVE mode with guide scopes on (two inference requests in total; facts, sources, citations, routing and the legacy fallback as expected). The startup model check was corrected (`models.list` instead of `models.retrieve`, which answers 404 for slash-named ids). D-120 adopts the extractor binding of the paused work (D-03): a contact or date value is stated deterministically only from a line that binds it. The frozen 192 before and after D-120 show the same Plan F results (55 served, precision 100 %, 0 exceptions, SHADOW 192/192, determinism 24/24) and only extractor answers changing: nine wrong or unsafe deterministic numbers removed, four correct ones handed to the model path, one gained. Open security item outside the repository: the 6 November key found in the transferred archive still authenticates under an account the owner has not located, and a fourth key sits in the archived `UOS_Handbook_Chatbot` folder; neither was used |
+| Freeze status | `ENGLISH_CORE_FREEZE_PF6` plus D-117, D-119 and D-120; Plan F, retrieval, verification, the corpus (`c8987b6079b11f39`, 8 sources, 309 pages, 15,000 chunks) and the registry unchanged |
+| Elapsed | 2026-11-08, about 5 hours including the two offline frozen-192 runs |
+
+### Completed
+
+- Security gate without exposing any secret (`C:\qa-evals\pf9-live-acceptance\SECURITY_KEY_STATUS.md`): new key valid and distinct from every archived key; 1 November key revoked; 6 November archived key still active and not under the owner's console (probing stopped on the owner's instruction, key never used); a fourth key found in the archived `UOS_Handbook_Chatbot/.env` and `.env.example` (never probed).
+- `c09994e`: `groq_check.model_problem` checks `models.list` membership; `tests/test_model_config.py` fakes fail if `retrieve` is used; the real application's banner shows the model line with no warning.
+- Live smoke tests T1-T4 (`LIVE_ACCEPTANCE_REPORT.md`): T1 direct call answered `OK`; T2 maternity leave served by Plan F (`faculty_services`, handbook p.107, 0 model calls); T3 Blackboard announcement served by Plan F through the guide scope (`teaching`, Short Guide p.9, 0 model calls); T4 handbook overview fell back to the legacy path as designed (1 synthesis call, legacy Verifier accepted, pages 2 and 250, every clause located on the cited pages).
+- `b7e6c06` (D-120): `handbook_bot/extractors.py` binding rules and `page_row_lines`, the one-line orchestrator wiring, `tests/test_extractor_binding.py` (36 tests), `KB_CORPUS` fixture. The rest of the paused work (D-01, D-02, D-06, the synthesis prompt, the multipart skip) stays unapplied.
+- F06 family (8 phrasings, offline): the F06 wording is routed as a date question by the word "begin" and its best evidence is the Short Guide title row at -3.26 against the -1.4 gate; Plan F rejects it; only "How do I access Blackboard?" is served by Plan F. No safe code change without lowering the gate or unfreezing the guide-grounding files: documented as a coverage limitation.
+
+### Tests performed
+
+- Targeted D-120 set (`test_extractor_binding`, `test_orchestrator`, `test_plan_f_pipeline`, `test_model_config`, `test_institutional_conflicts`): 151 passed. Full suite at `b7e6c06`: 7,382 passed, 0 failed, 0 skipped (7,345 at PF-8; +1 model-config test, +36 binding tests). LEGACY isolation (`legacy_check.py`): 30 sample, 0 exceptions, no Plan F import. `pip check`: no broken requirements.
+- Frozen 192 before and after D-120 (no key in the process, `qa/plan_f_i8/master_eval.py` + `compare_runs.py`): Plan F served 55 -> 55, precision 100 %, 0 false acceptances, 11 false fallbacks, 0 exceptions, SHADOW identical 192/192, determinism 24 x 4 stable. ACTIVE: 10 answers changed, all extractor -> model path (I11, I14, I16, I40, X39, A29 were wrong or unsafe; I15, I27, I45, I48 were right). Legacy-only pass: 14 changed, deterministic set 25 -> 13, every remaining number checked against the printed row (I34, X03, X15 wrong numbers removed; I26 gained). Evidence: `C:\qa-evals\pf9-live-acceptance\frozen192_before\`, `frozen192_after\`, `compare_runs.txt`, `review_changes.txt`.
+- Live: T1-T4 passed (above); the application started with the new key and bound to `127.0.0.1`.
+
+### Known limitations
+
+- The model's answers for the contact questions that now reach it instead of the extractor are unverified live (offline they return the no-key notice, never a wrong number).
+- The 6 November key remains active under an account the owner has not yet located; the 8 November key is unaffected.
+
 ## 2026-11-08 - Restoration on a new computer and model-configuration diagnostics (post-freeze phase PF-8)
 
 | Field | Value |
