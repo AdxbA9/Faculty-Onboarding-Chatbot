@@ -17,7 +17,7 @@ from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 
 from handbook_bot.agents.types import EXTRACTOR_ROUTES
 from handbook_bot.config import GROQ_MODEL
-from handbook_bot.orchestrator import NO_KEY_REPLY
+from handbook_bot.orchestrator import LLM_BUDGET_REPLY, LLM_UNAVAILABLE_REPLY, MODEL_UNAVAILABLE_REPLY, NO_KEY_REPLY
 from handbook_bot.qa import REFUSAL
 
 #: The runtime's path names (``AdapterResult.path``), as the pipeline diagnostics report them.
@@ -474,6 +474,65 @@ def error_diagnostics(exc: BaseException) -> Dict[str, Any]:
     return {"mode": None, "served": "error", "attempted": False, "error": type(exc).__name__}
 
 
-__all__ = ["DOMAIN_NAMES", "ERROR_TEXT", "NA", "NOT_APPLICABLE", "PATH_AGGREGATE", "PATH_SINGLE", "SEARCHING_TEXT", "answer_kind", "assistant_message",
-           "dev_sections", "domain_labels", "error_diagnostics", "escape_identifiers", "fmt_ms", "legacy_kind", "mode_label", "ordered_pages",
-           "path_label", "performance_rows", "plan_f_attempted", "served_by_plan_f", "served_label", "source_chips"]
+# ---------------------------------------------------------------------------
+# Notices and evidence (post-freeze PF-10)
+# ---------------------------------------------------------------------------
+#: The backend's own sentences for "no answer" situations, each with the kind and the short label the page shows above
+#: the sentence. The sentence itself is always shown unchanged: the page labels the backend's decision, it never
+#: replaces it.
+NOTICE_KINDS: Mapping[str, Tuple[str, str]] = {
+    REFUSAL: ("empty", "No supporting evidence found"),
+    NO_KEY_REPLY: ("config", "Language-model service not configured"),
+    LLM_UNAVAILABLE_REPLY: ("outage", "Language-model service unavailable"),
+    MODEL_UNAVAILABLE_REPLY: ("config", "Language-model configuration problem"),
+    LLM_BUDGET_REPLY: ("limit", "Answer limit reached"),
+    ERROR_TEXT: ("error", "Something went wrong"),
+}
+#: What the page may add under a notice: guidance about the page, never a fact about the university.
+NOTICE_HINTS: Mapping[str, str] = {
+    "empty": "The approved documents do not state this, or the question needs rewording. Try naming the policy, procedure, office or date you mean.",
+    "outage": "The answer service did not respond this time. Please send the question again in a moment.",
+    "config": "Deterministic lookups (contacts, dates, counts) still work. An administrator needs to complete the model configuration for open questions.",
+    "limit": "Please ask a narrower question.",
+    "error": "Please try again. If it keeps happening, tell the administrator what you asked.",
+}
+
+
+def notice_kind(answer: Any) -> Optional[Tuple[str, str]]:
+    """``(kind, label)`` when ``answer`` is one of the backend's no-answer sentences, else None (a normal answer)."""
+    text = (answer or "").strip() if isinstance(answer, str) else ""
+    if not text:
+        return None
+    for sentence, kind in NOTICE_KINDS.items():
+        if text == sentence or text.rstrip(".") == sentence.rstrip("."):
+            return kind
+    return None
+
+
+def evidence_rows(result: Any, limit: int = 360) -> List[Dict[str, Any]]:
+    """The evidence items behind an answer, one row each, for the page's "Supporting evidence" list: the document title
+    the knowledge base recorded (or None when it recorded none), the printed page, the section when the evidence names
+    one, and the item's own text shortened to ``limit`` characters. Rows are de-duplicated; nothing is invented."""
+    rows: List[Dict[str, Any]] = []
+    seen: set = set()
+    for item in (getattr(result, "items", None) or []):
+        if not isinstance(item, dict):
+            continue
+        meta = item.get("meta") if isinstance(item.get("meta"), dict) else {}
+        text = item.get("chunk") if isinstance(item.get("chunk"), str) else (item.get("text") if isinstance(item.get("text"), str) else "")
+        text = re.sub(r"\s*\|\s*", " · ", re.sub(r"\s+", " ", text or "")).strip()
+        page = meta.get("page")
+        page = page if isinstance(page, int) and not isinstance(page, bool) else None
+        key = (meta.get("source_id"), page, text[:limit])
+        if not text or key in seen:
+            continue
+        seen.add(key)
+        rows.append({"document": _title_of(meta) or None, "page": page, "section": _section_of(meta),
+                     "excerpt": _shorten(text, limit), "ocr": meta.get("chunk_type") == "image_ocr"})
+    return rows
+
+
+__all__ = ["DOMAIN_NAMES", "ERROR_TEXT", "NA", "NOT_APPLICABLE", "NOTICE_HINTS", "NOTICE_KINDS", "PATH_AGGREGATE", "PATH_SINGLE", "SEARCHING_TEXT",
+           "answer_kind", "assistant_message", "dev_sections", "domain_labels", "error_diagnostics", "escape_identifiers", "evidence_rows", "fmt_ms",
+           "legacy_kind", "mode_label", "notice_kind", "ordered_pages", "path_label", "performance_rows", "plan_f_attempted", "served_by_plan_f",
+           "served_label", "source_chips"]
