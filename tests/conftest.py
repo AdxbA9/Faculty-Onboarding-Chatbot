@@ -187,3 +187,15 @@ GROUNDED_LEAVE = ("Faculty members are entitled to thirty days of annual leave e
                   "\nPages: 3")
 FABRICATED_LEAVE = "Faculty members receive a housing allowance of 5000 dirhams each year.\nPages: 3"
 LEAVE_QUESTION = "How much annual leave are faculty members entitled to?"
+
+
+@pytest.fixture(autouse=True)
+def _temporary_conversation_database(monkeypatch, tmp_path):
+    """Post-freeze PF-13: no test may touch the project's own ``var/app.db``. Every test sees a fresh temporary database
+    path and a fresh process-wide store; the store is dropped again afterwards."""
+    from persistence import reset_store
+    monkeypatch.setenv("APP_DB_PATH", str(tmp_path / "test-conversations.db"))
+    monkeypatch.setenv("APP_STORAGE_SECRET", "test-storage-secret")
+    reset_store()
+    yield
+    reset_store()

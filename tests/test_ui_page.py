@@ -15,6 +15,7 @@ from nicegui.testing import User
 
 from handbook_bot.orchestrator import LLM_UNAVAILABLE_REPLY
 from handbook_bot.qa import QAResult, REFUSAL
+from persistence import reset_store
 from ui import chat
 
 HR_QUESTION = "What is the phone number of the Human Resources Department?"
@@ -43,15 +44,18 @@ class Scripted:
 
 
 @pytest.fixture
-def scripted(monkeypatch) -> Scripted:
+def scripted(monkeypatch, tmp_path) -> Scripted:
     script = Scripted()
     monkeypatch.setattr(chat, "_call_pipeline", script)
     monkeypatch.setitem(chat._KB_STATE, "kb", object())
     monkeypatch.setitem(chat._KB_STATE, "error", None)
     monkeypatch.setattr(chat, "_CLIENTS", {})
     monkeypatch.setenv("GROQ_API_KEY", "test-key-for-the-page-tests")
+    monkeypatch.setenv("APP_DB_PATH", str(tmp_path / "conversations.db"))    # PF-13: a fresh temporary database per test
+    reset_store()
     chat.register_pages()
-    return script
+    yield script
+    reset_store()
 
 
 async def _settle(user: User, text: str, timeout: float = 5.0) -> None:
