@@ -124,8 +124,27 @@ def ask(kb: KnowledgeBase, question: str) -> QAResult:
     return ask_with_diagnostics(kb, question)[0]
 
 
-def ask_with_diagnostics(kb: KnowledgeBase, question: str) -> Tuple[QAResult, Dict[str, Any]]:
-    """``ask`` plus the Plan F diagnostics of this question (a JSON-serialisable dict).
+def ask_with_diagnostics(kb: KnowledgeBase, question: str, *, answer_language: str = "auto") -> Tuple[QAResult, Dict[str, Any]]:
+    """``ask`` plus the diagnostics of this question (a JSON-serialisable dict).
+
+    Post-freeze PF-11 (D-122): a question that contains Arabic script, or an explicit ``answer_language="ar"``, goes
+    through the bilingual layer (``handbook_bot.bilingual``), which transforms the question into the English query the
+    core below sees and presents the verified English answer in Arabic. An English question with the default
+    ``answer_language`` reaches the core exactly as before PF-11. ``ARABIC_SUPPORT=0`` switches the layer off entirely.
+    """
+    text = question or ""
+    if _config.ARABIC_SUPPORT and (answer_language == "ar" or _has_arabic(text)):
+        from handbook_bot import bilingual                         # lazy: an English question never imports the layer
+        return bilingual.answer(text, core=lambda q: _ask_core(kb, q), client=kb.groq_client, answer_language=answer_language)
+    return _ask_core(kb, text)
+
+
+def _has_arabic(text: str) -> bool:
+    return any(0x0600 <= ord(c) <= 0x06FF or 0x0750 <= ord(c) <= 0x077F or 0x08A0 <= ord(c) <= 0x08FF or 0xFB50 <= ord(c) <= 0xFEFF for c in text)
+
+
+def _ask_core(kb: KnowledgeBase, question: str) -> Tuple[QAResult, Dict[str, Any]]:
+    """The seam's own control flow, unchanged since phase I-2 (the bilingual layer calls it with the English query).
 
     LEGACY: the legacy result and a minimal record; Plan F is not imported. SHADOW: the legacy result, produced first
     and returned unchanged, with the Plan F attempt recorded beside it. ACTIVE: the Plan F result when the adapter

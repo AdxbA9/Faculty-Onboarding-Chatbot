@@ -39,7 +39,9 @@ from handbook_bot.sources import annotate_metadata, unregistered_source
 
 REPO = Path(__file__).resolve().parents[1]
 QARESULT_FIELDS = ["answer", "pages", "best_section", "evidence", "query_type", "items", "used_llm",
-                   "timings", "num_candidates", "num_reranked", "agent_trace", "llm_calls", "retried", "sub_questions"]
+                   "timings", "num_candidates", "num_reranked", "agent_trace", "llm_calls", "retried", "sub_questions",
+                   # post-freeze PF-11 (D-122): the language fields are APPENDED with defaults; the fourteen above are unchanged
+                   "answer_language", "original_answer", "translation", "query_transform"]
 
 HR_PHONE = "What is the phone number of the Human Resources Department?"
 HR_KNOWN_WRONG = "What does Human Resources do?"

@@ -74,4 +74,71 @@ def model_problem(client: Any, model: str, *, timeout: float = 10.0) -> Optional
     return None if model in listed else describe(MODEL_UNAVAILABLE, model)
 
 
-__all__ = ["AUTHENTICATION", "CONNECTION", "MODEL_UNAVAILABLE", "OTHER", "RATE_LIMIT", "describe", "error_kind", "model_problem"]
+class LLMCallCapExceeded(RuntimeError):
+    """A request beyond ``LLM_PROCESS_CALL_CAP`` was refused (post-freeze PF-11); reported as a service problem, never dropped."""
+
+
+class _Counter:
+    def __init__(self, cap: int) -> None:
+        self.cap = int(cap)
+        self.issued = 0
+        self.refused = 0
+
+
+class CappedClient:
+    """A Groq client whose chat completions are counted per process and refused beyond a cap. ``with_options`` keeps the
+    same counter, so the router's and the translators' short-timeout callers share the budget. Every other attribute is
+    the wrapped client's."""
+
+    def __init__(self, inner: Any, cap: int, counter: Optional[_Counter] = None) -> None:
+        self._inner = inner
+        self._counter = counter or _Counter(cap)
+        self.chat = _CappedChat(inner.chat, self._counter)
+
+    @property
+    def calls_issued(self) -> int:
+        return self._counter.issued
+
+    @property
+    def calls_refused(self) -> int:
+        return self._counter.refused
+
+    @property
+    def cap(self) -> int:
+        return self._counter.cap
+
+    def with_options(self, **options: Any) -> "CappedClient":
+        inner = self._inner.with_options(**options) if hasattr(self._inner, "with_options") else self._inner
+        return CappedClient(inner, self._counter.cap, self._counter)
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self._inner, name)
+
+
+class _CappedChat:
+    def __init__(self, chat: Any, counter: _Counter) -> None:
+        self._chat = chat
+        self.completions = _CappedCompletions(chat.completions, counter)
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self._chat, name)
+
+
+class _CappedCompletions:
+    def __init__(self, completions: Any, counter: _Counter) -> None:
+        self._completions = completions
+        self._counter = counter
+
+    def create(self, **kwargs: Any) -> Any:
+        if self._counter.issued >= self._counter.cap:
+            self._counter.refused += 1
+            raise LLMCallCapExceeded("the process cap of %d model request(s) is spent" % self._counter.cap)
+        self._counter.issued += 1
+        return self._completions.create(**kwargs)
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self._completions, name)
+
+
+__all__ = ["AUTHENTICATION", "CONNECTION", "CappedClient", "LLMCallCapExceeded", "MODEL_UNAVAILABLE", "OTHER", "RATE_LIMIT", "describe",
+           "error_kind", "model_problem"]

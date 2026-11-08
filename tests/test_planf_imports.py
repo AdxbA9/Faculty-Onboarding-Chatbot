@@ -181,8 +181,10 @@ def test_runtime_modules_do_not_reference_plan_f_yet():
 # Existing result contract untouched
 # ---------------------------------------------------------------------------
 def test_qaresult_fields_are_unchanged_by_this_phase():
-    assert [f.name for f in dataclasses.fields(QAResult)] == [
-        "answer", "pages", "best_section", "evidence", "query_type", "items", "used_llm",
-        "timings", "num_candidates", "num_reranked",
-        "agent_trace", "llm_calls", "retried", "sub_questions",
-    ]
+    original = ["answer", "pages", "best_section", "evidence", "query_type", "items", "used_llm",
+                "timings", "num_candidates", "num_reranked",
+                "agent_trace", "llm_calls", "retried", "sub_questions"]
+    names = [f.name for f in dataclasses.fields(QAResult)]
+    assert names[:len(original)] == original                        # the Plan F phases changed nothing here
+    # post-freeze PF-11 (D-122) appended the language fields, all with defaults, after the original contract
+    assert names == original + ["answer_language", "original_answer", "translation", "query_transform"]

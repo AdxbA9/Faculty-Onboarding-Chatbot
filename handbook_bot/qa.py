@@ -73,6 +73,14 @@ class QAResult:
     retried: bool = False           # True when the Verifier asked for, and got, a second draft
     sub_questions: List[SubQuestion] = field(default_factory=list)   # filled by the Planner (Milestone 2)
 
+    # Post-freeze PF-11 (D-122): the language of ``answer`` ("en" | "ar"), the verified English intermediate when the
+    # answer was translated or framed for an Arabic reader, the translation record (status, check, problems) and the
+    # record of the Arabic-to-English query transformation. All empty for an English question answered in English.
+    answer_language: str = "en"
+    original_answer: str = ""
+    translation: Dict[str, Any] = field(default_factory=dict)
+    query_transform: Dict[str, Any] = field(default_factory=dict)
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "answer": self.answer,
@@ -89,6 +97,10 @@ class QAResult:
             "llm_calls": self.llm_calls,
             "retried": self.retried,
             "sub_questions": [dataclasses.asdict(sq) for sq in self.sub_questions],
+            "answer_language": self.answer_language,
+            "original_answer": self.original_answer,
+            "translation": self.translation,
+            "query_transform": self.query_transform,
         }
 
 

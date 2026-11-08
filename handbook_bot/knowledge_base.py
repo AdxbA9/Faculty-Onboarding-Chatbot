@@ -38,6 +38,7 @@ from .config import (
     CACHE_VERSION,
     EMBED_MODEL,
     ENABLE_OCR,
+    LLM_PROCESS_CALL_CAP,
     PAGE_ARABIC_SHARE_MAX,
     RERANK_MODEL,
     ROW_ARABIC_SHARE_MAX,
@@ -107,7 +108,11 @@ def _make_groq_client():
     if not api_key:
         return None
     from groq import Groq
-    return Groq(api_key=api_key)
+    client = Groq(api_key=api_key)
+    if LLM_PROCESS_CALL_CAP > 0:                                   # post-freeze PF-11: bounded live evaluations
+        from .groq_check import CappedClient
+        return CappedClient(client, LLM_PROCESS_CALL_CAP)
+    return client
 
 
 # ---------------------------------------------------------------------------
