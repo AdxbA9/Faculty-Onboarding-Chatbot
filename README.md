@@ -14,16 +14,21 @@ Python process, no Node, no Docker, no build step.
 
 ## Features
 
-- **Premium chat UI** — NiceGUI interface with a monochrome design
-  language, moon/sun theme toggle (dark + light), sidebar with chat
-  history, wide readable chat area, sticky composer with visible send
-  arrow, markdown rendering, typing indicator, source page chips, and
-  a copy-answer button.
-- **Developer mode** — a switch in the sidebar that reveals a
-  per-answer panel showing query type, which path answered
-  (deterministic extractor vs LLM), retrieved/reranked/kept counts,
-  cited pages, retrieval / rerank / generation / total timings in
-  milliseconds, and knowledge-base statistics.
+- **Professional web interface** (PF-10) — NiceGUI page with a
+  light-first design system in the University of Sharjah green (dark
+  mode on request), a header with plain-language service status, a
+  sidebar with the conversations of the browser session, a first-use
+  screen that explains the scope and offers verified example questions,
+  answer cards with a Sources row and an expandable "Supporting
+  evidence" list, labelled refusal and service notices, a composer with
+  Enter to send / Shift+Enter for a new line, and a copy-answer button.
+  Answers are rendered as escaped Markdown with filtered links; the
+  layout is direction-aware for the coming Arabic phase.
+- **Developer mode** — open the page as `http://localhost:8501/?dev=1`
+  (or set `APP_DEVELOPER_MODE=1`) to get a Developer switch in the
+  header that reveals a per-answer panel: mode, served path, routing,
+  verification, evidence, timings, model calls and knowledge-base
+  statistics. Ordinary users never see it.
 - **Grounded answers** — every answer is tied to handbook pages; the
   bot refuses to answer when evidence is weak.
 - **Hybrid retrieval** — dense FAISS search + lexical overlap +
@@ -93,6 +98,10 @@ UOS_Handbook_Chatbot/
 - Internet connection on first run (to download the embedding and
   reranker models from Hugging Face, about ~500 MB; plus ~100 MB of
   OCR models if `ENABLE_OCR=1`)
+- For the test suite: `pytest` and `pytest-asyncio` (both in
+  `requirements.txt`); the page tests use NiceGUI's simulated user and
+  need no browser. `qa/pf10_ui/browser_qa.py` drives an installed
+  Chrome or Edge for real-browser checks.
 
 ---
 
@@ -188,8 +197,10 @@ export GROQ_API_KEY="gsk_xxxxxxxxxxxxxxxxxxx"
 
 ## Developer mode
 
-Toggle **Developer mode** in the sidebar to reveal a collapsible panel
-under each assistant answer. It shows:
+Developer diagnostics are reachable only through a developer-facing
+path: open `http://localhost:8501/?dev=1` (or start the app with
+`APP_DEVELOPER_MODE=1`) and toggle **Developer** in the header to reveal
+a collapsible panel under each assistant answer. It shows:
 
 - Query type (contact / date / count / policy / list / yes-no)
 - Which path answered (deterministic extractor or LLM)

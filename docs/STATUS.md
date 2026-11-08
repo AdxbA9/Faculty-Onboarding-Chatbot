@@ -9,6 +9,38 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-11-08 - Professional web interface (post-freeze phase PF-10)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/pf10-professional-ui` (from `fix/restoration-acceptance` at `1ecbdcd`, the pushed PF-9 tip) |
+| Starting commit | `1ecbdcd` (PF-9) |
+| Ending state | COMPLETE for the phase. The chat page was redesigned on the same NiceGUI architecture (D-121): light-first design system with the UoS green accent and a dark mode, header with h1 and plain-language status, sidebar with session conversations, first-use screen with verified example questions, answer cards with Sources and an expandable Supporting evidence list, labelled refusal and service notices, composer with Enter/Shift+Enter, empty-message help and announced busy state, Developer diagnostics only with `?dev=1`, answers rendered as escaped Markdown with filtered links, direction-aware layout for the Arabic phase. Nothing in the backend, the pipeline seam, the corpus or the gates changed. Not pushed |
+| Freeze status | `ENGLISH_CORE_FREEZE_PF6` plus D-117, D-119, D-120, D-121; Plan F, retrieval, verification, the corpus (`c8987b6079b11f39`, 8 sources, 309 pages, 15,000 chunks) and the registry unchanged |
+| Elapsed | 2026-11-08, about 3 hours |
+
+### Completed
+
+- UI audit of the PF-9 page with before screenshots at five widths (`C:\qa-evals\pf10-professional-ui\UI_AUDIT.md`, `screenshots\before\`).
+- `ui/rendering.py` (new): escaped Markdown, link filtering; `ui/presentation.py`: `notice_kind`, `evidence_rows`.
+- `ui/styles.py` (rewritten): tokens for light and dark themes, components, responsive rules at 1100/900/640/540 px, focus-visible, reduced motion, logical properties; `ui/chat.py` (rewritten on the same structure): shell, first-use screen, message cards, notices, composer, status, `?dev=1` gating, `register_pages()`.
+- Tests: `tests/test_ui_page.py` (13, NiceGUI simulated user), `tests/test_ui_rendering.py` (17), nine assertions added to `tests/test_ui_controls.py`; `pytest-asyncio` added to `requirements.txt`; `pytest.ini` `asyncio_mode = auto`; `tests/conftest.py` loads `nicegui.testing.user_plugin`.
+- `qa/pf10_ui/browser_qa.py` (new): headless Chrome/Edge over DevTools at 320, 375, 768, 1024 and 1440 px with real interactions and screenshots.
+- Reports: `C:\qa-evals\pf10-professional-ui\{PF10_FINAL_REPORT,UI_DESIGN_DECISIONS,BROWSER_TEST_REPORT,REGRESSION_REPORT,FINAL_REPORT_UI_HANDOFF,PF11_READINESS,UI_AUDIT}.md`.
+
+### Tests performed
+
+- Full suite: 7,421 passed, 0 failed, 0 skipped (PF-9: 7,382; +39). Targeted UI modules: 88 passed.
+- Headless browser before and after at five widths: 0 layout problems; Enter, Shift+Enter, empty Enter, New chat, processing state and answer rendering verified at 375 and 1440 px (`screenshots\after\after_browser_qa.json`). Browser runs made no inference request (specialist-path questions).
+- In-browser inspection: light and dark themes, refusal notice without evidence, Supporting evidence list, `?dev=1` Developer panel.
+
+### Known limitations
+
+- No screen-reader session, no real device, no human usability evaluation (planned after the later phases).
+- Network loss relies on NiceGUI's own reconnect overlay; a request timeout is reported by the backend as the outage notice.
+- The PF-9 live-validation debt (about 12 contact questions on the model path) remains open and is unrelated to the UI.
+
 ## 2026-11-08 - Live acceptance and extractor binding (post-freeze phase PF-9)
 
 | Field | Value |
