@@ -4,7 +4,7 @@ switched OFF in THIS process only (``ARABIC_ANSWER_TRANSLATION=0``, ``ARABIC_QUE
 makes no inference request: Arabic answers are shown as the Arabic lead-in plus the verified English text. A process cap
 of 0 requests is set as a second guard. Logs the resolved configuration and the PID (never the key).
 
-    python -X utf8 qa/pf11_arabic/launch_bilingual_qa.py <repo> <log file> [--translate]
+    python -X utf8 qa/pf11_arabic/launch_bilingual_qa.py <repo> <log file> [--translate] [--cap N]
 
 ``--translate`` keeps the translation ON with a process cap of 2 requests (two screenshot cases of the authorised live
 budget); without it the cap is 0.
@@ -26,7 +26,8 @@ os.environ.setdefault("GROQ_MODEL", "openai/gpt-oss-120b")
 os.environ.setdefault("LLM_REASONING_TOKENS", "2048")
 os.environ["ARABIC_QUERY_MODEL_FALLBACK"] = "0"
 os.environ["ARABIC_ANSWER_TRANSLATION"] = "1" if TRANSLATE else "0"
-os.environ["LLM_PROCESS_CALL_CAP"] = "2" if TRANSLATE else "1"      # 1: the startup model check may use one request; no inference follows
+CAP = sys.argv[sys.argv.index("--cap") + 1] if "--cap" in sys.argv else ("2" if TRANSLATE else "1")
+os.environ["LLM_PROCESS_CALL_CAP"] = CAP                               # bounded: a request beyond the cap is refused and reported
 
 from handbook_bot import config                                     # noqa: E402
 from ui import pipeline                                             # noqa: E402
