@@ -28,6 +28,7 @@ import asyncio
 import html
 import json
 import logging
+import os
 import secrets
 import time
 import uuid
@@ -622,7 +623,11 @@ def _call_pipeline(kb, question: str):
 # ---------------------------------------------------------------------------
 # Public entry point
 # ---------------------------------------------------------------------------
-def start_app(port: int = 8501) -> None:
+def start_app(port: int = 8501, host: Optional[str] = None) -> None:
+    """Serve the application. Post-freeze PF-8 (D-119): it listens on this computer only (``127.0.0.1``) unless
+    ``APP_HOST`` (or ``host``) says otherwise, because the development server has no authentication and the previous
+    default announced itself on every network address."""
+    host = host or os.getenv("APP_HOST", "").strip() or "127.0.0.1"
     assets_dir = Path(__file__).resolve().parent.parent / "assets"
     if assets_dir.is_dir():
         app.add_static_files("/static", str(assets_dir))
@@ -634,7 +639,7 @@ def start_app(port: int = 8501) -> None:
         _build_page()
 
     ui.run(
-        host="0.0.0.0",
+        host=host,
         port=port,
         title=APP_TITLE,
         dark=None,

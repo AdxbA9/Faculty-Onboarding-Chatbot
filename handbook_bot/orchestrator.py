@@ -59,7 +59,7 @@ from typing import Callable, Dict, List, Optional, Tuple
 
 import numpy as np
 
-from . import conflict_guard
+from . import conflict_guard, groq_check
 from .agents import router as router_agent
 from .agents import synthesis as synthesis_agent
 from .agents.verifier import citing_items
@@ -100,6 +100,13 @@ NO_KEY_REPLY = "GROQ_API_KEY is not set. Please set it, then reload the app."
 LLM_UNAVAILABLE_REPLY = (
     "I could not generate an answer right now because the language-model "
     "service did not respond. Please try again."
+)
+#: Post-freeze PF-8 (D-119): the configured model does not exist for this account (HTTP 404). Not an outage and not a
+#: refusal: the operator must set GROQ_MODEL, so the reply says so instead of "try again".
+MODEL_UNAVAILABLE_REPLY = (
+    "I could not generate an answer because the configured language model is "
+    "not available to this account. Please ask the administrator to set "
+    "GROQ_MODEL in .env to an available model and restart the app."
 )
 
 #: Shown when MAX_LLM_CALLS leaves no call for the answer. Also not the refusal
@@ -488,7 +495,7 @@ def _synthesize(question: str, evidence: EvidenceResult, groq_client, budget: LL
                                            groq_client, feedback=feedback)
     except Exception as exc:
         trace.append(TraceEntry("synthesis", "llm_error", True, _ms(started),
-                                {"error": _safe_error(exc)}))
+                                {"error": _safe_error(exc), "kind": groq_check.error_kind(exc)}))
         return None
     trace.append(TraceEntry("synthesis", label, True, _ms(started), {
         "path": "llm",
@@ -499,6 +506,17 @@ def _synthesize(question: str, evidence: EvidenceResult, groq_client, budget: LL
         "refused": draft.answer.strip() == REFUSAL,
     }))
     return draft
+
+
+def _llm_failure_reply(trace: List[TraceEntry]) -> str:
+    """The reply for a draft the model could not produce: the budget notice, the model-configuration notice (D-119)
+    or the outage notice, read from the last synthesis trace entry."""
+    last = trace[-1]
+    if last.decision == "skipped:llm_budget":
+        return LLM_BUDGET_REPLY
+    if (last.detail or {}).get("kind") == groq_check.MODEL_UNAVAILABLE:
+        return MODEL_UNAVAILABLE_REPLY
+    return LLM_UNAVAILABLE_REPLY
 
 
 # ---------------------------------------------------------------------------
@@ -595,7 +613,7 @@ def run(
         timings["generation_ms"] = _ms(started)
         used_llm = draft is not None or trace[-1].decision == "llm_error"
         if draft is None:
-            reply = LLM_BUDGET_REPLY if trace[-1].decision == "skipped:llm_budget" else LLM_UNAVAILABLE_REPLY
+            reply = _llm_failure_reply(trace)
             return _finish(QAResult(answer=reply, evidence=display_evidence, used_llm=used_llm, **common))
 
     # ---- 4. Verify, with at most one retry -----------------------------------
@@ -631,7 +649,7 @@ def run(
                 used_llm = True
                 retry_outage = True
         if retry_outage:
-            answer, cited = LLM_UNAVAILABLE_REPLY, []
+            answer, cited = _llm_failure_reply(trace), []
         else:
             answer = draft.answer if verdict.accepted else REFUSAL
             cited = list(verdict.pages)

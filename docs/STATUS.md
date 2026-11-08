@@ -9,6 +9,52 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-11-08 - Restoration on a new computer and model-configuration diagnostics (post-freeze phase PF-8)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `fix/restoration-acceptance` (from `feature/post-freeze-knowledge-expansion` at `c229d91`) |
+| Starting commit | `c229d91` (PF-7) |
+| Ending state | IN PROGRESS. The project was restored on a new Windows computer from a transferred archive (restoration report: PARTIALLY RESTORED; the 7 November handover package, the four custom Skills and the F01-F06 screenshots did not arrive). D-119 makes a model this account cannot use visible at startup and in the reply, documents the verified model settings in `.env.example`, and binds the development server to this computer only. Live Groq answering is NOT yet verified here: the local key is the 1 November key that travelled inside a transferred archive and must be rotated before any request |
+| Freeze status | `ENGLISH_CORE_FREEZE_PF6` plus D-117 and D-119; Plan F, retrieval, verification, the corpus (`c8987b6079b11f39`, 8 sources, 309 pages, 15,000 chunks) and the registry unchanged |
+| Elapsed | restoration and this phase on 2026-11-08, about 5 hours including the offline reruns |
+
+### Completed
+
+- Restoration evidence outside the repository: `C:\qa-evals\restoration-report\` (report, archive hashes, knowledge-base audit, runtime wiring, offline test logs) and `C:\qa-evals\restoration-acceptance\` (this phase).
+- The paused 7 November work (16 files: 11 modified, 5 new test modules, 91 tests; decision record D-118 missing) was reconstructed as `paused_work_vs_c229d91.patch`, verified to apply to a clean `c229d91`, run in a scratch copy (its 122 new tests pass; the full suite there shows only three line-ending artifacts of the export) and probed against the real corpus. It is NOT applied: see `PATCH_TRIAGE_REPORT.md`.
+- D-119: `handbook_bot/groq_check.py` (new), `app.py` banner model line and startup check, `orchestrator.py` `MODEL_UNAVAILABLE_REPLY` on a 404, `ui/chat.py` `APP_HOST` (default `127.0.0.1`), `.env.example`; `tests/test_model_config.py` (19 tests).
+- Adopted from the paused work after verification in the real browser: D-09 (Shift+Enter inserted no newline because the
+  composer's `keydown.enter.exact.prevent` binding suppressed every Enter; the handler now decides in the browser) and D-10 (no
+  New chat control at phone width; a topbar button is shown under 540 px), with the paused `tests/test_ui_controls.py` (4 tests).
+- F06 ("I'm new to Blackboard and I don't know where to begin...") reproduced offline on the baseline: best reranker score -3.26 against the gate -1.4 (the Short Guide title row ranks first), so the legacy path refuses before any model call; Plan F declines at aggregation. The 6 November diagnosis stands; no gate change.
+
+### Tests performed
+
+- Targeted gate (33 modules + `test_pf7_legacy_safety.py` + `test_model_config.py`): 2,889 passed. Full suite: 7,345 passed, 0 failed, 0 skipped, 0 xfail (7,322 at the start; 23 new). `pip check`: no broken requirements.
+- Startup: the application serves `http://localhost:8501` (HTTP 200, Status Ready) on `127.0.0.1` with no key in the process. Live smoke test: NOT RUN (key rotation pending).
+
+### Known limitations
+
+- Live Groq answering is unverified on this computer; the default code model is unavailable to this account (`.env` carries the working settings).
+- F06-type conversational wording still falls below the confidence gate (documented, not changed).
+- The four custom Skills, Playwright and DeepEval are not installed here.
+
+### Next task
+
+After the key is rotated: the bounded live smoke test (one isolated request plus three new questions), then the decision on the paused D-118 work.
+
+### Blockers
+
+Rotated Groq key (user action).
+
+### Files changed
+
+`handbook_bot/groq_check.py` (new), `handbook_bot/orchestrator.py`, `app.py`, `ui/chat.py`, `ui/styles.py`, `.env.example`, `tests/test_model_config.py` (new), `tests/test_ui_controls.py` (new), `docs/DECISIONS.md` (D-119), `docs/STATUS.md`.
+
+---
+
 ## 2026-11-01 - Post-acceptance English safety fixes (post-freeze phase PF-7)
 
 | Field | Value |

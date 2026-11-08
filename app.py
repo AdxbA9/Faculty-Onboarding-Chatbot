@@ -28,6 +28,20 @@ DEFAULT_PORT = 8501
 APP_TITLE = "UOS Faculty Onboarding Chatbot"
 
 
+def _model_warning() -> str | None:
+    """Post-freeze PF-8 (D-119): one ``models.retrieve`` request (no inference) so a model this account cannot use is
+    reported here instead of surfacing as "the service did not respond" on the first question."""
+    from handbook_bot.config import GROQ_MODEL, LLM_REASONING_TOKENS
+    from handbook_bot.groq_check import model_problem
+    from handbook_bot.knowledge_base import _make_groq_client
+
+    print(f"  Model: {GROQ_MODEL} (reasoning allowance {LLM_REASONING_TOKENS} tokens)")
+    try:
+        return model_problem(_make_groq_client(), GROQ_MODEL)
+    except Exception as exc:                       # the banner must never stop the app
+        return "Groq model check failed: %s" % type(exc).__name__
+
+
 def _print_banner() -> None:
     line = "=" * 70
     print(line)
@@ -40,6 +54,10 @@ def _print_banner() -> None:
             "    answers will still work, but policy questions cannot reach\n"
             "    the LLM. Add your key to .env (see .env.example)."
         )
+    else:
+        problem = _model_warning()
+        if problem:
+            warnings.append(problem)
     if os.getenv("ENABLE_OCR", "").strip().lower() in {"1", "true", "yes", "on"}:
         warnings.append(
             "OCR is enabled. The FIRST run will take several extra minutes\n"
