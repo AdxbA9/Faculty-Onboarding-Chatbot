@@ -20,6 +20,7 @@ from typing import Dict, List
 LANGUAGES = ("en", "ar")
 DIRECTION = {"en": "ltr", "ar": "rtl"}
 ANSWER_LANGUAGES = ("auto", "en", "ar")
+VOICE_LANGUAGES = ("auto", "en", "ar")
 
 STRINGS: Dict[str, Dict[str, str]] = {
     "en": {
@@ -104,6 +105,29 @@ STRINGS: Dict[str, Dict[str, str]] = {
         "hint_error": "Please try again. If it keeps happening, tell the administrator what you asked.",
         "error_text": "Sorry, something went wrong while answering that. Please try again.",
         "logo_alt": "University of Sharjah logo",
+        "voice_start": "Ask by voice",
+        "voice_start_aria": "Ask by voice ({voice})",
+        "voice_stop": "Stop listening",
+        "voice_cancel": "Cancel voice input",
+        "voice_language": "Voice language",
+        "voice_auto": "Interface language",
+        "voice_en": "English",
+        "voice_ar": "Arabic",
+        "voice_starting": "Starting the microphone…",
+        "voice_listening": "Listening… speak your question, then press Stop or pause.",
+        "voice_ready": "Transcript added to the message box. Check it, edit if needed, then press Send.",
+        "voice_cancelled": "Voice input cancelled.",
+        "voice_unsupported": "Voice input is not available in this browser. You can type your question.",
+        "voice_err_permission": "Microphone access was not allowed. Allow the microphone in the browser's site settings, or type your question.",
+        "voice_err_no_mic": "No microphone was found. Connect one or type your question.",
+        "voice_err_no_speech": "No speech was heard. Press the microphone and try again, or type your question.",
+        "voice_err_network": "The speech service could not be reached. Check the connection and try again, or type your question.",
+        "voice_err_timeout": "Nothing was recognised within the time limit. Try again, or type your question.",
+        "voice_err_language": "This language is not available in the browser's speech service. Choose the other voice language or type your question.",
+        "voice_err_unrecognised": "The speech could not be recognised. Try again, or type your question.",
+        "voice_busy": "The microphone is already listening.",
+        "voice_privacy": "Speech is recognised by your browser's speech service; the audio may be processed on that provider's servers. The page keeps only the text you see in the message box.",
+        "voice_listening_label": "Listening",
     },
     "ar": {
         "org": "جامعة الشارقة",
@@ -187,6 +211,29 @@ STRINGS: Dict[str, Dict[str, str]] = {
         "hint_error": "يرجى المحاولة مرة أخرى. وإذا تكرر الأمر، أخبر مسؤول النظام بما سألت عنه.",
         "error_text": "عذرًا، حدث خطأ أثناء الإجابة عن ذلك. يرجى المحاولة مرة أخرى.",
         "logo_alt": "شعار جامعة الشارقة",
+        "voice_start": "اسأل بالصوت",
+        "voice_start_aria": "اسأل بالصوت ({voice})",
+        "voice_stop": "إيقاف الاستماع",
+        "voice_cancel": "إلغاء الإدخال الصوتي",
+        "voice_language": "لغة الصوت",
+        "voice_auto": "لغة الواجهة",
+        "voice_en": "الإنجليزية",
+        "voice_ar": "العربية",
+        "voice_starting": "جارٍ تشغيل الميكروفون…",
+        "voice_listening": "جارٍ الاستماع… انطق سؤالك ثم اضغط إيقاف أو توقّف عن الكلام.",
+        "voice_ready": "أُضيف النص المنطوق إلى مربع الرسالة. راجعه وعدّله إن لزم، ثم اضغط إرسال.",
+        "voice_cancelled": "تم إلغاء الإدخال الصوتي.",
+        "voice_unsupported": "الإدخال الصوتي غير متاح في هذا المتصفح. يمكنك كتابة سؤالك.",
+        "voice_err_permission": "لم يُسمح بالوصول إلى الميكروفون. اسمح بالميكروفون من إعدادات الموقع في المتصفح، أو اكتب سؤالك.",
+        "voice_err_no_mic": "لم يُعثر على ميكروفون. صِل ميكروفونًا أو اكتب سؤالك.",
+        "voice_err_no_speech": "لم يُسمع أي كلام. اضغط الميكروفون وحاول مرة أخرى، أو اكتب سؤالك.",
+        "voice_err_network": "تعذّر الوصول إلى خدمة التعرف على الكلام. تحقق من الاتصال وحاول مرة أخرى، أو اكتب سؤالك.",
+        "voice_err_timeout": "لم يُتعرّف على شيء ضمن المهلة. حاول مرة أخرى، أو اكتب سؤالك.",
+        "voice_err_language": "هذه اللغة غير متاحة في خدمة التعرف على الكلام في المتصفح. اختر لغة الصوت الأخرى أو اكتب سؤالك.",
+        "voice_err_unrecognised": "تعذّر التعرف على الكلام. حاول مرة أخرى، أو اكتب سؤالك.",
+        "voice_busy": "الميكروفون يستمع بالفعل.",
+        "voice_privacy": "يتم التعرف على الكلام بواسطة خدمة الكلام في متصفحك؛ وقد تُعالج التسجيلات على خوادم مزوّد تلك الخدمة. لا تحتفظ الصفحة إلا بالنص الذي تراه في مربع الرسالة.",
+        "voice_listening_label": "جارٍ الاستماع",
     },
 }
 
@@ -241,4 +288,4 @@ def lang_from_request(query_lang: object, accept_language: object) -> str:
     return "ar" if first.startswith("ar") else "en"
 
 
-__all__ = ["ANSWER_LANGUAGES", "DIRECTION", "DOMAIN_NAMES", "LANGUAGES", "STRINGS", "TOPICS_AR", "domain_name", "lang_from_request", "normalize_lang", "t"]
+__all__ = ["ANSWER_LANGUAGES", "VOICE_LANGUAGES", "DIRECTION", "DOMAIN_NAMES", "LANGUAGES", "STRINGS", "TOPICS_AR", "domain_name", "lang_from_request", "normalize_lang", "t"]
