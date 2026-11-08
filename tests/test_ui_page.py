@@ -30,11 +30,13 @@ class Scripted:
     def __init__(self, *results: QAResult):
         self.results: List[QAResult] = list(results)
         self.questions: List[str] = []
+        self.answer_languages: List[str] = []
         self.diagnostics: Dict[str, Any] = {"mode": "active", "served": "plan_f", "attempted": True, "specialist_id": "institutional",
                                             "plan_f_path": "single_finding_passthrough", "plan_f_pages": [54]}
 
-    def __call__(self, kb, question: str):
+    def __call__(self, kb, question: str, answer_language: str = "auto"):
         self.questions.append(question)
+        self.answer_languages.append(answer_language)
         result = self.results.pop(0) if self.results else QAResult(answer=HR_ANSWER, pages=[54], items=[HR_ITEM])
         served = "plan_f" if result.answer == HR_ANSWER else "legacy"
         return result, {**self.diagnostics, "served": served}, 12.5
@@ -111,7 +113,7 @@ async def test_the_processing_state_is_announced_while_the_pipeline_runs(user: U
     gate = asyncio.Event()
     import time as _time
 
-    def slow(kb, question):
+    def slow(kb, question, answer_language="auto"):
         while not gate.is_set():
             _time.sleep(0.02)
         return QAResult(answer=HR_ANSWER, pages=[54], items=[HR_ITEM]), scripted.diagnostics, 1.0
@@ -213,3 +215,89 @@ async def test_the_theme_starts_light_and_the_toggle_switches_it(user: User, scr
     user.find(marker="theme").click()
     await asyncio.sleep(0.1)
     assert state["theme"] == "dark"
+
+# ---------------------------------------------------------------------------
+# Bilingual interface (post-freeze PF-11)
+# ---------------------------------------------------------------------------
+async def test_the_language_switch_localises_the_shell_and_keeps_the_conversation(user: User, scripted: Scripted) -> None:
+    await user.open("/")
+    user.find(marker="composer").type(HR_QUESTION)
+    user.find(marker="send").click()
+    await _settle(user, HR_ANSWER)
+    user.find(marker="lang").click()                                   # English -> Arabic
+    await user.should_see("مساعد تهيئة أعضاء هيئة التدريس")
+    await user.should_see("محادثة جديدة")
+    await user.should_see("المصادر")
+    await user.should_see(HR_QUESTION)                                 # the conversation survives the rebuild
+    await user.should_see(HR_ANSWER)
+    assert len(user.find(marker="session").elements) == 1
+    user.find(marker="lang").click()                                   # Arabic -> English
+    await user.should_see("Faculty Onboarding Assistant")
+    await user.should_see(HR_ANSWER)
+    assert scripted.questions == [HR_QUESTION]                         # switching never resends anything
+
+
+async def test_the_arabic_first_use_screen_offers_arabic_examples_that_send_arabic_questions(user: User, scripted: Scripted) -> None:
+    await user.open("/?lang=ar")
+    await user.should_see("ما الذي يمكنك السؤال عنه")
+    for question in chat.EXAMPLE_QUESTIONS_AR:
+        await user.should_see(question)
+    user.find(chat.EXAMPLE_QUESTIONS_AR[0]).click()
+    await _settle(user, HR_ANSWER)
+    assert scripted.questions == [chat.EXAMPLE_QUESTIONS_AR[0]] and scripted.answer_languages == ["auto"]
+
+
+async def test_the_answer_language_preference_reaches_the_pipeline(user: User, scripted: Scripted) -> None:
+    await user.open("/")
+    user.find(marker="answer-lang").elements.pop().set_value("ar")
+    user.find(marker="composer").type(HR_QUESTION)
+    user.find(marker="send").click()
+    await _settle(user, HR_ANSWER)
+    assert scripted.answer_languages == ["ar"]
+
+
+async def test_an_arabic_answer_shows_its_translation_status_and_the_english_source_on_request(user: User, scripted: Scripted) -> None:
+    arabic = "رقم الهاتف هو +971 6 5050023."
+    result = QAResult(answer=arabic, pages=[54], items=[HR_ITEM], answer_language="ar", original_answer=HR_ANSWER,
+                      translation={"status": "translated", "llm_calls": 1, "problems": [], "check": {"ok": True}})
+    scripted.results.append(result)
+    await user.open("/?lang=ar")
+    user.find(marker="composer").type("ما هو رقم هاتف قسم الموارد البشرية؟")
+    user.find(marker="send").click()
+    await _settle(user, arabic)
+    await user.should_see("مُترجمة من الإجابة الإنجليزية المتحقَّق منها")
+    await user.should_see("عرض الإجابة الإنجليزية المتحقَّق منها")
+    await user.should_see(HR_ANSWER)                                   # inside the collapsed details element
+    await user.should_see("الأدلة الداعمة (1)")
+
+
+async def test_a_framed_arabic_answer_says_the_source_text_is_english(user: User, scripted: Scripted) -> None:
+    from handbook_bot.arabic_answers import frame_answer
+    result = QAResult(answer=frame_answer(HR_ANSWER, [HR_ITEM], [54]), pages=[54], items=[HR_ITEM], answer_language="ar", original_answer=HR_ANSWER,
+                      translation={"status": "framed", "llm_calls": 0, "problems": [], "reason": "no_client"})
+    scripted.results.append(result)
+    await user.open("/?lang=ar")
+    user.find(marker="composer").type("ما هو رقم هاتف قسم الموارد البشرية؟")
+    user.find(marker="send").click()
+    await _settle(user, HR_ANSWER)
+    await user.should_see("النص المصدر معروض بالإنجليزية")
+    await user.should_not_see("عرض الإجابة الإنجليزية المتحقَّق منها")   # nothing to unfold: the English is already shown
+
+
+async def test_a_refusal_in_the_arabic_interface_is_the_arabic_sentence_with_an_arabic_label(user: User, scripted: Scripted) -> None:
+    from handbook_bot.arabic_answers import REPLIES_AR
+    scripted.results.append(QAResult(answer=REFUSAL, answer_language="ar", translation={"status": "fixed"}))
+    await user.open("/?lang=ar")
+    user.find(marker="composer").type("سؤال بلا إجابة")
+    user.find(marker="send").click()
+    await _settle(user, REPLIES_AR[REFUSAL])
+    await user.should_see("لا توجد أدلة داعمة")
+    await user.should_not_see("المصادر")
+
+
+async def test_the_initial_language_follows_the_query_parameter(user: User, scripted: Scripted) -> None:
+    await user.open("/?lang=ar")
+    await user.should_see("محادثة جديدة")
+    await user.should_not_see("New chat")
+    await user.open("/?lang=en")
+    await user.should_see("New chat")

@@ -29,8 +29,8 @@ def test_raw_html_in_an_answer_is_shown_as_text_not_executed():
 
 def test_markdown_structure_survives_escaping():
     out = R.answer_html("Steps:\n\n1. Open the course\n2. Click **Announcements**\n\n| A | B |\n|---|---|\n| 1 | 2 |")
-    assert "<ol>" in out and "<li>Open the course</li>" in out and "<strong>Announcements</strong>" in out
-    assert "<table>" in out and "<td>2</td>" in out
+    assert "<ol>" in out and '<li dir="auto">Open the course</li>' in out and "<strong>Announcements</strong>" in out   # PF-11: blocks carry dir="auto"
+    assert "<table>" in out and '<td dir="auto">2</td>' in out
 
 
 def test_http_links_open_safely_and_other_schemes_become_plain_text():

@@ -46,7 +46,8 @@ GLOBAL_CSS = """
     --shadow-sm: 0 1px 2px rgba(16, 32, 24, 0.06);
     --shadow-md: 0 6px 20px rgba(16, 32, 24, 0.08);
 
-    --sans: "Inter", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Noto Sans Arabic", sans-serif;
+    --sans: "Inter", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Noto Sans Arabic", "Noto Naskh Arabic", Tahoma, sans-serif;
+    --sans-ar: "Segoe UI", "Noto Naskh Arabic", "Noto Sans Arabic", "Noto Kufi Arabic", Tahoma, "Arabic Typesetting", Arial, sans-serif;
     --mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
 
     --radius-sm: 8px;
@@ -115,9 +116,45 @@ button { font-family: inherit; }
 *::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 10px; border: 2px solid transparent; background-clip: padding-box; }
 *::-webkit-scrollbar-track { background: transparent; }
 
+/* The page root fills the viewport whatever the shell's intrinsic width (the shell is rebuilt inside it on a language switch) */
+.app-root { width: 100%; height: 100%; min-width: 0; display: block; }
+
+/* Real right-to-left layout: Quasar's stylesheet forces ``direction: ltr`` on html and body, which would silently turn
+   the dir="rtl" attribute into text-level bidi only; the attribute selectors below outrank that rule (post-freeze PF-11) */
+html[dir="rtl"], html[dir="rtl"] body, html[dir="rtl"] #q-app, html[dir="rtl"] .q-layout, html[dir="rtl"] .q-page-container, html[dir="rtl"] .q-page { direction: rtl; }
+
+/* Arabic interface and Arabic text: system Arabic fonts, a little more leading, the same tokens (post-freeze PF-11) */
+html[lang="ar"] body, html[lang="ar"] button, html[lang="ar"] textarea, html[lang="ar"] input { font-family: var(--sans-ar); }
+html[lang="ar"] .bubble, html[lang="ar"] .hero p, html[lang="ar"] .about, html[lang="ar"] .topic-blurb { line-height: 1.8; }
+.bubble[dir="auto"]:lang(ar), .answer [dir="auto"] { unicode-bidi: plaintext; }
+.answer p[dir="auto"], .answer li[dir="auto"], .answer blockquote[dir="auto"] { text-align: start; }
+.answer blockquote[dir="auto"] { unicode-bidi: isolate; }
+.topbar-lang.q-btn { min-width: 44px; padding: 0 12px; font-weight: 650; font-size: 13.5px; letter-spacing: 0; }
+.topbar-lang.q-btn .q-btn__content { gap: 6px; }
+.answer-lang { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-3); }
+.answer-lang .q-field { min-width: 0; }
+.answer-lang .q-field__native, .answer-lang .q-field__control { min-height: 26px !important; font-size: 12.5px; color: var(--text-2); }
+.answer-lang .q-field__control::before { border-color: var(--border) !important; }
+.answer-lang .q-select__dropdown-icon { color: var(--text-3); font-size: 18px; }
+.translation-note { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-3); }
+.translation-note svg { width: 14px; height: 14px; flex: none; }
+details.original { border: 1px dashed var(--border); border-radius: var(--radius-md); background: var(--surface-2); }
+details.original summary { cursor: pointer; padding: 8px 14px; font-size: 13px; font-weight: 600; color: var(--text-2); list-style: none; display: flex; align-items: center; gap: 8px; }
+details.original summary::-webkit-details-marker { display: none; }
+details.original summary svg { width: 16px; height: 16px; transition: transform var(--transition); }
+details.original[open] summary svg { transform: rotate(90deg); }
+html[dir="rtl"] details.original summary svg, html[dir="rtl"] details.evidence summary svg { transform: rotate(180deg); }
+html[dir="rtl"] details.original[open] summary svg, html[dir="rtl"] details.evidence[open] summary svg { transform: rotate(90deg); }
+.original-body { padding: 4px 14px 12px 14px; font-size: 14px; color: var(--text); }
+html[dir="rtl"] .example-btn .q-icon, html[dir="rtl"] .topic-title svg.arrow { transform: scaleX(-1); }
+html[dir="rtl"] .q-btn .q-icon.on-left { margin-right: 0; margin-left: 8px; }
+html[dir="rtl"] .composer-hint kbd { direction: ltr; unicode-bidi: isolate; }
+
 /* keyboard focus: one visible ring everywhere */
 :focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: var(--radius-sm); }
 .q-btn:focus-visible, button:focus-visible, summary:focus-visible, a:focus-visible, textarea:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+/* Quasar marks every button ``no-outline`` (outline: 0 !important) and we hide its own focus helper, so the ring must win here */
+.q-btn.no-outline:focus-visible, .q-btn:focus-visible { outline: 2px solid var(--brand) !important; outline-offset: 2px !important; }
 .q-focus-helper { display: none !important; }
 .q-ripple { display: none !important; }
 
@@ -434,6 +471,8 @@ details.evidence summary:hover { color: var(--text); background: var(--surface-2
 }
 @media (max-width: 640px) {
     .topic-grid { grid-template-columns: 1fr; }
+    .composer-foot { flex-wrap: wrap; }
+    .answer-lang .lbl { display: none; }
     .topbar { padding: 0 12px; }
     .topbar-sub { display: none; }
     .status-pill .status-text { display: none; }
@@ -490,4 +529,5 @@ ICONS = {
     "services": _icon('<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'),
     "institutional": _icon('<path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9v.01"/><path d="M9 12v.01"/><path d="M9 15v.01"/><path d="M9 18v.01"/>'),
     "arrow": _icon('<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>'),
+    "globe": _icon('<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>'),
 }

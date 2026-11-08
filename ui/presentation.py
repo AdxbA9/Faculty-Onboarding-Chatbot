@@ -443,6 +443,26 @@ def dev_sections(result: Any, diagnostics: Optional[Mapping[str, Any]], kb_stats
 
     sections.append(("Performance", performance_rows(result, d, wall_ms)))
 
+    lang = d.get("language") if isinstance(d.get("language"), Mapping) else None
+    if lang:                                                       # post-freeze PF-11 (D-122): codes and counts only
+        transform = getattr(result, "query_transform", None) or {}
+        translation = getattr(result, "translation", None) or {}
+        rows = [("Question language", str(lang.get("detected") or NA)), ("Answer language", str(lang.get("answer_language") or NA)),
+                ("Query transformation", str(lang.get("query_method") or NA)),
+                ("Lexicon coverage", ("%.0f%%" % (100 * float(lang["query_coverage"]))) if isinstance(lang.get("query_coverage"), (int, float)) else NA),
+                ("Unmapped words", str(lang.get("query_unmapped", NA)))]
+        if isinstance(transform, Mapping) and transform.get("english_query") and lang.get("query_method") not in ("passthrough", None):
+            rows.append(("English query", _shorten(str(transform["english_query"]), 160)))
+        rows.append(("Translation", str(lang.get("translation_status") or NA)))
+        if lang.get("translation_problems"):
+            rows.append(("Translation check", ", ".join(str(p) for p in lang["translation_problems"])))
+        if isinstance(translation, Mapping) and isinstance(translation.get("check"), Mapping):
+            detail = translation["check"].get("detail") or {}
+            if isinstance(detail, Mapping) and "length_ratio" in detail:
+                rows.append(("Length ratio", str(detail["length_ratio"])))
+        rows.append(("Language-layer LLM calls", str(int(lang.get("query_llm_calls") or 0) + int(lang.get("translation_llm_calls") or 0))))
+        sections.append(("Language", rows))
+
     llm: List[Tuple[str, str]] = []
     if attempted:
         llm.append(("Plan F LLM calls", str(d.get("plan_f_llm_calls", NA))))

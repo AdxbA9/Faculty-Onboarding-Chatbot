@@ -331,7 +331,9 @@ def test_chat_module_consumes_the_turns_diagnostics_and_stays_free_of_runtime_na
     assert "ran into an error" not in source and "{exc}" not in source and "presentation.ERROR_TEXT" in source
     for forbidden in ("PLAN_F", "plan_f_runtime", "plan_f_aggregation", "plan_f_routing", "plan_f_handoff", "coordinator", "Coordinator"):
         assert forbidden not in source, forbidden
-    assert 'aria-label="Send message"' in source and 'aria-label="Message the Onboarding Chatbot"' in source
+    from ui import i18n                                                      # PF-11: the labels live in the string table, unchanged in English
+    assert i18n.STRINGS["en"]["send_aria"] == "Send message" and i18n.STRINGS["en"]["composer_aria"] == "Message the Onboarding Chatbot"
+    assert 't(lang, "send_aria")' in source and 't(lang, "composer_aria")' in source
     tree = ast.parse((REPO / "ui" / "presentation.py").read_text(encoding="utf-8"))
     imported = {node.module for node in ast.walk(tree) if isinstance(node, ast.ImportFrom)} | {a.name for node in ast.walk(tree) if isinstance(node, ast.Import) for a in node.names}
     assert "nicegui" not in imported and not any(name.startswith("handbook_bot.plan_f") for name in imported if name)   # pure presentation, no runtime decision

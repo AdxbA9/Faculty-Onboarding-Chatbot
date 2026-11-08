@@ -4,8 +4,8 @@ Safe HTML for the chat page (post-freeze PF-10).
 The answer text comes from the model or from an extractor. NiceGUI's Markdown element passes raw HTML through
 (``<script>`` survives ``prepare_content``), so an answer is rendered here instead: every HTML special character is
 escaped FIRST, then Markdown is applied, then every link is checked. Only ``http``, ``https`` and ``mailto`` links are
-kept, and they open in a new tab with ``rel="noopener noreferrer"``; any other scheme becomes plain text. Nothing else
-of the answer is changed, so lists, numbered steps, tables and code blocks still render.
+kept, and they open in a new tab with ``rel="noopener noreferrer"``; any other scheme becomes plain text. Block elements carry ``dir="auto"`` so mixed Arabic/English answers keep each block's own direction (PF-11).
+Nothing else of the answer is changed, so lists, numbered steps, tables and code blocks still render.
 """
 from __future__ import annotations
 
@@ -19,6 +19,11 @@ _ANCHOR = re.compile(r"<a\s+([^>]*?)>", re.I)
 _HREF = re.compile(r"""href\s*=\s*(?:"([^"]*)"|'([^']*)')""", re.I)
 _SAFE_SCHEME = re.compile(r"^(?:https?://|mailto:)", re.I)
 _TAG = re.compile(r"<[^>]+>")
+_BLOCKQUOTE_MARK = re.compile(r"(?m)^([ \t]{0,3})(>+)")
+_BQ = "\x00"
+#: Block elements get ``dir="auto"`` so an Arabic lead-in and an English quotation each read in their own direction
+#: (post-freeze PF-11); the attribute is added only where none is present.
+_BLOCK_OPEN = re.compile(r"<(p|li|blockquote|h[1-6]|td|th|pre)((?:\s(?![^>]*\bdir=)[^>]*)?)>", re.I)
 
 
 def _rewrite_anchor(match: "re.Match[str]") -> str:
@@ -35,7 +40,9 @@ def answer_html(text: str) -> str:
     """The answer as safe HTML: escaped, Markdown-rendered, links filtered."""
     if not text:
         return ""
-    rendered = prepare_content(html.escape(text, quote=False), _EXTRAS)
+    # Markdown's blockquote marker is a ">" at the start of a line; it is kept as Markdown, everything else is escaped.
+    protected = _BLOCKQUOTE_MARK.sub(lambda m: m.group(1) + _BQ * len(m.group(2)), text)
+    rendered = prepare_content(html.escape(protected, quote=False).replace(_BQ, ">"), _EXTRAS)
     out = []
     pos = 0
     open_span = 0
@@ -47,7 +54,7 @@ def answer_html(text: str) -> str:
         out.append(replacement)
         pos = m.end()
     out.append(rendered[pos:])
-    result = "".join(out)
+    result = _BLOCK_OPEN.sub(r'<\1 dir="auto"\2>', "".join(out))
     if open_span:
         # every </a> that belonged to a dropped anchor becomes </span>; anchors are not nested in Markdown output, so the
         # first `open_span` closing tags after dropped anchors are theirs
