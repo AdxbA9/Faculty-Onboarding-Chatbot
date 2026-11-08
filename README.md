@@ -37,6 +37,15 @@ Python process, no Node, no Docker, no build step.
   (right-to-left) without losing the conversation; the answer language
   follows the question unless the user chooses otherwise. See
   "Arabic support" below.
+- **Voice input in English and Arabic** (PF-12) — a microphone button in
+  the composer uses the browser's Web Speech API (Chrome, Edge, Safari;
+  not Firefox) to turn one spoken question into text. The transcript is
+  appended to the message box for review and editing; nothing is sent
+  until you press Send or Enter. The voice language follows the interface
+  language unless you choose English or Arabic in the composer footer.
+  The browser asks for microphone permission once; the audio is processed
+  by the browser vendor's speech service, not by this application, which
+  keeps only the text you see. See "Voice input" below.
 - **Developer mode** — open the page as `http://localhost:8501/?dev=1`
   (or set `APP_DEVELOPER_MODE=1`) to get a Developer switch in the
   header that reveals a per-answer panel: mode, served path, routing,
@@ -244,6 +253,35 @@ answers by design. `ARABIC_SUPPORT=0` switches the whole layer off.
 
 Evaluation tooling: `qa/pf11_arabic/` (paired question set, retrieval
 probe, offline evaluation, bounded live smoke test, bilingual browser QA).
+
+---
+
+## Voice input
+
+Press the microphone (or focus it and press Enter) to dictate one question.
+While listening the button pulses red and shows Stop; a strip under the
+composer shows what is being recognised; × or Escape cancels. When the
+recogniser finishes, the text is added to the message box after anything
+already typed, the box gets the focus, and the help line asks you to check
+and send. Send and Enter work as usual; Shift+Enter still adds a new line.
+
+- **Languages**: the voice language follows the interface language
+  (English → `en-US`, Arabic → `ar-AE`); the composer footer lets you pick
+  the other one without restarting. A mixed English/Arabic utterance is
+  recognised in the chosen language's service and may need correction.
+- **Browsers**: Chrome and Edge (Windows, macOS, Android), Safari (macOS,
+  iOS). Firefox has no Web Speech API; the button shows that voice input is
+  not available and typing works as before.
+- **Privacy**: the browser's speech service (Google for Chrome, Microsoft
+  for Edge, Apple for Safari) may process the audio on its servers. The
+  application never receives audio, stores none and logs none; it keeps
+  only the text in the message box. The page states this on first use.
+- **Permission**: the browser asks once per site. If it was refused, allow
+  the microphone in the browser's site settings for `127.0.0.1:8501` (the
+  app's default address is a secure context; another host needs HTTPS).
+- **Errors** (no microphone, no speech heard, service unreachable, time
+  limit, language not available) are shown as plain sentences in the
+  interface language; the text input is always available.
 
 ---
 

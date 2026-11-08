@@ -9,6 +9,39 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-11-09 - Bilingual voice input (post-freeze phase PF-12)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/pf12-bilingual-voice` (from `feature/pf11-arabic-support` at `e22a665`, the pushed PF-11 tip) |
+| Starting commit | `e22a665` (PF-11) |
+| Ending state | PARTIALLY COMPLETE (D-123): the microphone control, the browser recogniser integration (Web Speech API, `en-US` / `ar-AE`), transcript review before sending, error handling in both languages, cleanup on every exit path, the privacy note and the voice-language choice are implemented and verified in real Chrome with a mocked recogniser and in the test suite; genuine recognition of spoken English and Arabic could not be demonstrated in this environment and remains a human acceptance test. Backend unchanged. Not pushed |
+| Freeze status | `ENGLISH_CORE_FREEZE_PF6` plus D-117, D-119, D-120, D-121, D-122, D-123; Plan F, retrieval, verification, the Arabic layer, the corpus and the registry unchanged |
+| Elapsed | 2026-11-09, about 2.5 hours |
+
+### Completed
+
+- `ui/voice.py` (state machine, draft-merge policy, locales, browser controller), microphone control with six states in `ui/chat.py`, styles in `ui/styles.py`, 24 voice strings per language in `ui/i18n.py`, README "Voice input" section, launcher `--cap`.
+- Tests: tests/test_voice.py (state machine, policy, controller source), tests/test_ui_voice.py (page behaviour with the simulated user).
+- QA tooling: `qa/pf12_voice/browser_qa_voice.py` (mocked recogniser, five widths, both languages and themes, sixteen scenarios), `qa/pf12_voice/live_voice_integration.py` (voice-to-answer with real model answers under a cap), `qa/pf12_voice/real_recognition_probe.py` (genuine recogniser with synthetic audio).
+- Reports in `C:\qa-evals\pf12-bilingual-voice\`.
+
+### Tests performed
+
+- Full suite: 7,539 passed, 0 failed, 0 skipped in 244.79 s (PF-11: 7,499, 0 failed).
+- Browser harness (mocked recogniser): 38 state checks at five widths in both languages plus 16 scenarios, 0 problems.
+- Voice-to-answer cases with real model answers: 3 cases, 3 answered with sources, 3 sent exactly once (fixture transcripts; recognition mocked).
+- Genuine-recogniser probe: chrome_headed_en: supported=True, errors=['no-speech'], transcripts=[]; chrome_headless_en: supported=True, errors=['no-speech'], transcripts=[].
+
+### Known limitations
+
+- Real speech recognition (English and Arabic) not demonstrated here: human acceptance test pending (instructions in `VOICE_ACCURACY_REPORT.md`).
+- Audio is processed by the browser vendor's speech service; Firefox unsupported; Edge and Safari not exercised in this session.
+- Carried over: PF-9 live-validation debt, PF-11 holdout mismatches, human Arabic review, eight-versus-nine Blackboard steps clarification, the historic exposed-key item.
+
+---
+
 ## 2026-11-08 - Arabic support (post-freeze phase PF-11)
 
 | Field | Value |
