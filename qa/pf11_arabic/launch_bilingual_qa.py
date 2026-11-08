@@ -8,6 +8,9 @@ of 0 requests is set as a second guard. Logs the resolved configuration and the 
 
 ``--translate`` keeps the translation ON with a process cap of 2 requests (two screenshot cases of the authorised live
 budget); without it the cap is 0.
+
+PF-13: ``--db PATH`` and ``--secret PATH`` point the conversation database and the cookie-signing secret at QA-owned files,
+so a browser run never touches the project's own ``var/`` data.
 """
 import os
 import sys
@@ -28,6 +31,10 @@ os.environ["ARABIC_QUERY_MODEL_FALLBACK"] = "0"
 os.environ["ARABIC_ANSWER_TRANSLATION"] = "1" if TRANSLATE else "0"
 CAP = sys.argv[sys.argv.index("--cap") + 1] if "--cap" in sys.argv else ("2" if TRANSLATE else "1")
 os.environ["LLM_PROCESS_CALL_CAP"] = CAP                               # bounded: a request beyond the cap is refused and reported
+if "--db" in sys.argv:
+    os.environ["APP_DB_PATH"] = os.path.abspath(sys.argv[sys.argv.index("--db") + 1])
+if "--secret" in sys.argv:
+    os.environ["APP_STORAGE_SECRET_PATH"] = os.path.abspath(sys.argv[sys.argv.index("--secret") + 1])
 
 from handbook_bot import config                                     # noqa: E402
 from ui import pipeline                                             # noqa: E402
@@ -41,6 +48,7 @@ with open(LOG, "w", encoding="utf-8") as f:
             % (config.ARABIC_SUPPORT, config.ARABIC_ANSWER_TRANSLATION, config.ARABIC_QUERY_MODEL_FALLBACK, config.LLM_PROCESS_CALL_CAP))
     f.write("GROQ_MODEL=%s LLM_REASONING_TOKENS=%s\n" % (config.GROQ_MODEL, config.LLM_REASONING_TOKENS))
     f.write("groq_is_configured=%s key_length=%d key_prefix_ok=%s\n" % (pipeline.groq_is_configured(), len(key), key.startswith("gsk_")))
+    f.write("APP_DB_PATH=%s APP_STORAGE_SECRET_PATH=%s\n" % (os.environ.get("APP_DB_PATH", "(default var/app.db)"), os.environ.get("APP_STORAGE_SECRET_PATH", "(default var/storage_secret.txt)")))
 del key
 
 from ui.chat import start_app                                       # noqa: E402
