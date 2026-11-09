@@ -103,7 +103,7 @@ async def wait_state(cdp: CDP, state: str, timeout: float = 10) -> bool:
 async def open_page(cdp: CDP, base_url: str, lang: str, width: int, height: int) -> bool:
     await cdp.send("Emulation.setDeviceMetricsOverride", {"width": width, "height": height, "deviceScaleFactor": 1, "mobile": width < 768})
     await cdp.send("Emulation.setTouchEmulationEnabled", {"enabled": width < 768})
-    await cdp.send("Page.navigate", {"url": base_url + "/?lang=" + lang})
+    await cdp.send("Page.navigate", {"url": base_url + "/?new=1&lang=" + lang})                 # PF-16: a fresh conversation per scenario (since PF-13 a reload restores the active one)
     ok = await cdp.wait_for("!!document.querySelector('.composer textarea') && !!document.querySelector('.mic-btn')", timeout=60)
     await asyncio.sleep(1.0)
     return ok

@@ -141,14 +141,34 @@ def find_browser(name: str) -> str:
 def launch(exe: str, profile: str) -> tuple[subprocess.Popen, str]:
     args = [exe, "--headless=new", "--remote-debugging-port=0", "--user-data-dir=" + profile, "--no-first-run", "--no-default-browser-check",
             "--disable-gpu", "--hide-scrollbars", "--window-size=1440,900", "about:blank"]
+    stale = os.path.join(profile, "DevToolsActivePort")     # a persistent profile keeps the previous session's port file
+    if os.path.exists(stale):
+        os.remove(stale)
     proc = subprocess.Popen(args, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True)
-    ws_url = None
+    found: dict = {}
+
+    def pump() -> None:                          # stderr is read on a thread: a browser that prints nothing must not block
+        for line in proc.stderr:
+            m = re.search(r"DevTools listening on (ws://\S+)", line or "")
+            if m and "ws" not in found:
+                found["ws"] = m.group(1)
+
+    import threading
+    threading.Thread(target=pump, daemon=True).start()
+    # PF-16: Edge 157 does not print the endpoint; every Chromium browser writes it to DevToolsActivePort in the profile.
+    port_file = os.path.join(profile, "DevToolsActivePort")
     deadline = time.time() + 30
-    while time.time() < deadline and ws_url is None:
-        line = proc.stderr.readline()
-        m = re.search(r"DevTools listening on (ws://\S+)", line or "")
-        if m:
-            ws_url = m.group(1)
+    while time.time() < deadline and "ws" not in found:
+        if os.path.exists(port_file):
+            try:
+                parts = open(port_file, encoding="utf-8").read().split()
+            except OSError:
+                parts = []
+            if len(parts) >= 2:
+                found["ws"] = "ws://127.0.0.1:%s%s" % (parts[0], parts[1])
+                break
+        time.sleep(0.2)
+    ws_url = found.get("ws")
     if ws_url is None:
         proc.kill()
         raise SystemExit("DevTools endpoint not announced")
