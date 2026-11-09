@@ -366,8 +366,8 @@ async def test_the_phone_width_history_dialog_lists_and_opens_conversations(user
     user.find(marker="new-chat").click()
     await user.should_see("Welcome to the Faculty Onboarding Assistant")
     user.find(marker="history-phone").click()
-    await user.should_see("Conversation history")
+    await user.should_see(marker="history-close")                           # the dialog is open (the navigation also names "Conversation history")
     assert len(user.find(marker="session").elements) == 4                   # two in the sidebar, two in the dialog
     _click_session(user, "phone number", newest=True)                       # the dialog's copy was created last
     await user.should_see(HR_ANSWER)
-    await user.should_not_see("Conversation history")                       # picking a conversation closes the dialog
+    await user.should_not_see(marker="history-close")                       # picking a conversation closes the dialog

@@ -60,6 +60,7 @@ from persistence.secret import storage_secret
 
 from . import i18n, presentation, rendering, voice
 from .i18n import t
+from .shell import SHELL_JS, about_html, brand_html, drawer_close_html, guest_chip_html, html_props, nav_html, nav_toggle_html, time_html
 from .pipeline import groq_is_configured, load_knowledge_base, preflight
 from .styles import GLOBAL_CSS, ICONS
 
@@ -200,6 +201,9 @@ def _load_owner(state: Dict[str, Any], owner_token: Optional[str], explicit_lang
         state["voice_lang"] = prefs["voice_lang"]
     if prefs.get("theme") in ("light", "dark"):
         state["theme"] = prefs["theme"]
+    state["text_size"] = prefs.get("text_size") or "standard"                                     # PF-15 accessibility settings
+    state["reduced_motion"] = prefs.get("reduced_motion") or "off"
+    state["display_name"] = prefs.get("display_name")
     state["sessions"] = [{**row, "messages": None, "persisted": True} for row in rows]          # rows carry context_task (PF-14)
     last = (prefs.get("extra") or {}).get("active_conversation")
     if last and any(sess["id"] == last for sess in state["sessions"]):
@@ -255,7 +259,14 @@ def page_context(request: Optional[Request]) -> Dict[str, Any]:
         ctx["lang"] = prefs["interface_lang"]
     if prefs.get("theme") in ("light", "dark"):
         ctx["theme"] = prefs["theme"]
+    ctx["display_name"] = prefs.get("display_name")
     return ctx
+
+
+def _now_iso() -> str:
+    """UTC timestamp in the store's format (rendered in the reader's local time by the browser)."""
+    from persistence.db import now_iso
+    return now_iso()
 
 
 def _format_saved(stored_at: Any) -> str:
@@ -302,13 +313,13 @@ def notice_for(content: str, lang: str) -> Optional[Dict[str, str]]:
 # ===========================================================================
 # Page
 # ===========================================================================
-def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool = False, ask: str = "", task: str = "") -> None:
+def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool = False, ask: str = "", task: str = "", new: bool = False) -> None:
     client_id = ui.context.client.id
     page_client = ui.context.client
     state = _client_state(client_id, lang, _owner_token(), explicit_lang=explicit_lang)
     from onboarding import catalog as _catalog                     # PF-14: a question asked from a task or a step
     context_task = task if _catalog.task(task) else ""
-    if ask or context_task:                                        # start on a fresh draft that carries the task
+    if ask or context_task or new:                                 # start on a fresh draft (that carries the task, if any)
         draft = _draft()
         draft["context_task"] = context_task or None
         state["sessions"] = [s for s in state["sessions"] if s.get("persisted") or s["messages"]]
@@ -321,7 +332,8 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
         pass
 
     ui.add_head_html(GLOBAL_CSS)
-    ui.query("html").props(f'data-theme={state["theme"]} lang={state["lang"]} dir={i18n.DIRECTION[state["lang"]]}')
+    ui.add_head_html(SHELL_JS)
+    ui.query("html").props(html_props(state["theme"], state["lang"], state.get("text_size"), state.get("reduced_motion")))
 
     refs: Dict[str, Any] = {}          # live elements: root, sessions, chat, scroll, input, send, composer, help, status, theme
     is_busy: Dict[str, bool] = {"v": False}
@@ -784,9 +796,8 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
         dialog, card = _new_dialog("history-dialog")
         with card:
             ui.html('<h2 class="dialog-title">%s</h2>' % html.escape(t(lang, "history")))
-            ui.html('<nav class="sb-nav" aria-label="%s"><a href="/onboarding?lang=%s">%s%s</a><a href="/resources?lang=%s">%s%s</a></nav>' % (
-                html.escape(t(lang, "nav_aria"), quote=True), lang, ICONS["check"], html.escape(t(lang, "sb_onboarding")), lang, ICONS["search"], html.escape(t(lang, "sb_resources"))))
             refs["history_list"] = ui.element("nav").classes("session-list").props('aria-label="%s"' % html.escape(t(lang, "conversations_aria"), quote=True))
+            ui.html('<a class="quiet-link" href="/history">%s<span>%s</span></a>' % (ICONS["history"], html.escape(t(lang, "view_all_conversations"))))
 
             def _close() -> None:
                 refs.pop("history_list", None)
@@ -818,6 +829,7 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
                     ui.select(options, value=value, on_change=handler) \
                         .props('dense outlined options-dense aria-label="%s"' % html.escape(t(lang, key), quote=True)).mark(marker)
             ui.html('<div class="settings-section">%s</div><p class="settings-note">%s</p>' % (html.escape(t(lang, "settings_data")), html.escape(t(lang, "settings_data_note"))))
+            ui.html('<p><a class="quiet-link" href="/settings">%s<span>%s</span></a></p>' % (ICONS["sliders"], html.escape(t(lang, "all_settings"))))
             with ui.element("div").classes("dialog-actions spread"):
                 ui.button(t(lang, "clear_all"), on_click=lambda: _open_clear_all(dialog)).props("flat no-caps color=negative").mark("clear-all")
                 with ui.element("div").classes("dialog-actions").style("margin-top: 0"):
@@ -840,7 +852,10 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
     async def _reset_settings(dialog) -> None:
         state["answer_lang"] = "auto"
         state["voice_lang"] = "auto"
+        state["text_size"] = "standard"
+        state["reduced_motion"] = "off"
         _apply_theme("light")
+        _safe(ui.query("html").props, html_props(state["theme"], state["lang"], "standard", "off"))
         store = _store_ok()
         if store is not None:
             try:
@@ -980,25 +995,26 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
             ui.html('<details class="original"><summary>%s<span>%s</span></summary><div class="original-body" dir="ltr" lang="en">%s</div></details>'
                     % (ICONS["chevron"], html.escape(t(lang, "show_original")), rendering.answer_html(presentation.escape_identifiers(result.original_answer))))
 
-    def _render_toolbar(text: str) -> None:
+    def _render_toolbar(text: str, when: Optional[str] = None) -> None:
         lang = L()
         js_literal = json.dumps(text)
         copy_js = ("(function(btn){ navigator.clipboard.writeText(%s).then(function(){ var l = btn.querySelector('.copy-lbl'); "
                    "if(!l) return; var o = l.innerText; l.innerText = %s; setTimeout(function(){ l.innerText = o; }, 1400); }); })(this);"
                    % (js_literal, json.dumps(t(lang, "copied"))))
         ui.html(f'<div class="msg-toolbar"><button type="button" class="icon-btn" aria-label="{html.escape(t(lang, "copy"), quote=True)}" onclick=\'{copy_js}\'>'
-                f'{ICONS["copy"]}<span class="copy-lbl">{html.escape(t(lang, "copy"))}</span></button></div>')
+                f'{ICONS["copy"]}<span class="copy-lbl">{html.escape(t(lang, "copy"))}</span></button>{time_html(when) if when else ""}</div>')
 
     def _render_storage_note(msg: Dict[str, Any]) -> None:
         """A replayed answer says it is saved (and whether the documents changed since); an unsaved one says so too."""
         lang = L()
         if msg.get("stored"):
             when = _format_saved(msg.get("stored_at"))
-            parts = [t(lang, "saved_answer_at", when=when) if when else t(lang, "saved_answer")]
+            stamp = time_html(msg.get("stored_at"), "saved-time")
+            label = html.escape(t(lang, "saved_answer_at", when="\x00")).replace("\x00", stamp) if (when and stamp) else html.escape(t(lang, "saved_answer"))
             current = _corpus_key()
             if current and msg.get("corpus_key") and msg["corpus_key"] != current:
-                parts.append(t(lang, "corpus_changed"))
-            ui.html('<div class="saved-note" dir="auto">%s<span>%s</span></div>' % (ICONS["clock"], html.escape(" · ".join(parts)))).classes("saved-note-wrap")
+                label += " · " + html.escape(t(lang, "corpus_changed"))
+            ui.html('<div class="saved-note" dir="auto">%s<span>%s</span></div>' % (ICONS["clock"], label)).classes("saved-note-wrap")
         elif msg.get("unsaved"):
             ui.html('<div class="saved-note warn" role="status" dir="auto">%s<span>%s</span></div>' % (ICONS["alert"], html.escape(t(lang, "not_saved")))).classes("saved-note-wrap")
 
@@ -1019,7 +1035,9 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
         content = msg["content"]
         if role == "user":
             with ui.element("div").classes("msg-row user").props('role="article" aria-label="%s"' % html.escape(t(lang, "your_message"), quote=True)):
-                ui.html(f'<div class="bubble user" dir="auto">{html.escape(content)}</div>')
+                when = msg.get("at") or msg.get("stored_at")
+                ui.html(f'<div class="bubble user" dir="auto">{html.escape(content)}</div>'
+                        + (f'<div class="msg-meta">{time_html(when)}</div>' if when else ""))
                 ui.html(f'<div class="avatar user" aria-hidden="true">{html.escape(t(lang, "you"))}</div>')
             return
 
@@ -1047,7 +1065,7 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
                     if not notice:                           # a refusal or a service notice is never dressed with evidence
                         _render_translation(result)
                         _render_sources(result, msg.get("diagnostics"))
-                        _render_toolbar(content)
+                        _render_toolbar(content, None if msg.get("stored") else msg.get("at"))
                     _render_storage_note(msg)
                     if state["debug"]:
                         _render_debug(msg)
@@ -1163,7 +1181,7 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
             sess["title"] = _title_for(question)
             _render_sessions()
         token = uuid.uuid4().hex                                 # one token per turn: a repeated callback never stores a second copy
-        sess["messages"].append({"role": "user", "content": question, "result": None, "client_token": token})
+        sess["messages"].append({"role": "user", "content": question, "result": None, "client_token": token, "at": _now_iso()})
         sess["messages"].append({"role": "assistant", "content": "__typing__", "result": None})
         try:
             refs["input"].value = ""
@@ -1178,6 +1196,7 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
             result = QAResult(answer=presentation.ERROR_TEXT)
             diagnostics, wall_ms = presentation.error_diagnostics(exc), None
         message = presentation.assistant_message(result, diagnostics, wall_ms)
+        message["at"] = _now_iso()
         sess["messages"][-1] = message
         if question_saved:
             await _persist_answer(sess, message, token)
@@ -1216,28 +1235,29 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
             return
         with root:
             ui.html(f'<a class="skip-link" href="#composer-input">{html.escape(t(lang, "skip"))}</a>')
-            with ui.element("div").classes("app-shell"):
-                sidebar = ui.element("aside").classes("sidebar").props('aria-label="%s"' % html.escape(t(lang, "conversations"), quote=True))
+            with ui.element("div").classes("app-shell").props('id="app-shell"'):
+                sidebar = ui.element("aside").classes("sidebar").props('id="app-nav" aria-label="%s"' % html.escape(t(lang, "nav_aria"), quote=True))
+                ui.html('<div class="nav-backdrop" onclick="fobNav(false)"></div>')
                 main = ui.element("main").classes("main")
 
             # ---------- Sidebar ------------------------------------------------
             with sidebar:
-                ui.html(f'<div class="brand"><div class="brand-logo"><img src="{_LOGO_URL}" alt="{html.escape(t(lang, "logo_alt"), quote=True)}"/></div>'
-                        f'<div class="brand-text"><div class="brand-org">{html.escape(t(lang, "org"))}</div>'
-                        f'<div class="brand-name">{html.escape(t(lang, "app_name"))}</div></div></div>')
+                ui.html(drawer_close_html(lang))
+                ui.html(brand_html(lang))
                 ui.button(t(lang, "new_chat"), on_click=_on_new_chat, icon="add").props('unelevated no-caps').classes("new-chat-btn").mark("new-chat")
-                ui.html('<nav class="sb-nav" aria-label="%s"><a href="/onboarding?lang=%s">%s%s</a><a href="/resources?lang=%s">%s%s</a></nav>' % (
-                    html.escape(t(lang, "nav_aria"), quote=True), lang, ICONS["check"], html.escape(t(lang, "sb_onboarding")), lang, ICONS["search"], html.escape(t(lang, "sb_resources"))))
-                ui.html(f'<div class="sb-label">{html.escape(t(lang, "conversations"))}</div>')
+                ui.html(nav_html(lang, "chat"))
+                ui.html('<div class="sb-recent-head"><div class="nav-section">%s</div><a class="sb-view-all" href="/history" aria-label="%s">%s</a></div>' % (
+                    html.escape(t(lang, "recent_conversations")), html.escape(t(lang, "view_all_conversations"), quote=True), html.escape(t(lang, "view_all"))))
                 refs["sessions"] = ui.element("nav").classes("session-list").props('aria-label="%s"' % html.escape(t(lang, "conversations_aria"), quote=True))
                 ui.html(f'<div class="sb-note">{html.escape(t(lang, "session_note"))}</div>')
                 with ui.element("div").classes("sb-footer"):
-                    ui.html(f'<div class="about"><strong>{html.escape(t(lang, "about_lead"))}</strong> {html.escape(t(lang, "about"))}</div>')
+                    ui.html(guest_chip_html(lang, state.get("display_name")))
+                    ui.html(about_html(lang))
 
             # ---------- Main ---------------------------------------------------
             with main:
                 with ui.element("header").classes("topbar"):
-                    ui.html(f'<div class="topbar-left"><div class="topbar-brand" aria-hidden="true"><img src="{_LOGO_URL}" alt=""/></div>'
+                    ui.html(f'<div class="topbar-left">{nav_toggle_html(lang)}<div class="topbar-brand" aria-hidden="true"><img src="{_LOGO_URL}" alt=""/></div>'
                             f'<div><h1 class="topbar-title">{html.escape(t(lang, "app_name"))}</h1><div class="topbar-sub">{html.escape(t(lang, "org"))}</div></div></div>').classes("tl")
                     with ui.element("div").classes("topbar-right"):
                         refs["status"] = ui.html(_status_html())
@@ -1255,7 +1275,7 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
                         # Interface language: the label names the OTHER language, as is conventional for a switch.
                         ui.button(t(lang, "lang_switch"), on_click=_on_lang_toggle).props('flat dense no-caps aria-label="%s" lang="%s"' % (
                             html.escape(t(lang, "lang_switch_aria"), quote=True), "ar" if lang == "en" else "en")).classes("topbar-btn topbar-lang").mark("lang")
-                        theme_btn = ui.button(on_click=_on_theme_toggle).props('flat dense aria-label="%s"' % html.escape(_theme_label(), quote=True)).classes("topbar-btn").mark("theme")
+                        theme_btn = ui.button(on_click=_on_theme_toggle).props('flat dense aria-label="%s"' % html.escape(_theme_label(), quote=True)).classes("topbar-btn theme-btn").mark("theme")
                         refs["theme"] = theme_btn
                         with theme_btn:
                             ui.html(ICONS["moon"] + ICONS["sun"])
@@ -1297,7 +1317,7 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
                     with ui.element("div").classes("composer-foot"):
                         refs["help"] = ui.html("").classes("composer-help").props('role="status" aria-live="polite"')
                         with ui.element("div").classes("answer-lang voice-lang"):
-                            ui.html(f'<span class="lbl">{html.escape(t(lang, "voice_language"))}</span>')
+                            ui.html(f'<span class="lbl">{html.escape(t(lang, "voice_language"))}</span>').props('aria-hidden="true"')
                             voice_options = {"auto": t(lang, "voice_auto"), "en": t(lang, "voice_en"), "ar": t(lang, "voice_ar")}
                             ui.select(voice_options, value=state.get("voice_lang", "auto"), on_change=lambda e: _on_voice_lang(e.value)) \
                                 .props('dense borderless options-dense aria-label="%s"' % html.escape(t(lang, "voice_language"), quote=True)).mark("voice-lang")
@@ -1419,12 +1439,15 @@ def register_pages() -> None:
         try:
             ask = (request.query_params.get("ask") or "").strip()
             task = (request.query_params.get("task") or "").strip()
+            new = (request.query_params.get("new") or "").strip() == "1"
         except Exception:
-            ask, task = "", ""
-        _build_page(developer=developer_requested(request), lang=language_requested(request), explicit_lang=language_explicit(request), ask=ask, task=task)
+            ask, task, new = "", "", False
+        _build_page(developer=developer_requested(request), lang=language_requested(request), explicit_lang=language_explicit(request), ask=ask, task=task, new=new)
 
     from . import onboarding as _onboarding                        # PF-14 pages (imported here: the module imports this one)
     _onboarding.register_pages()
+    from . import guest as _guest                                  # PF-15 pages: history, profile, settings
+    _guest.register_pages()
 
 
 # ---------------------------------------------------------------------------
