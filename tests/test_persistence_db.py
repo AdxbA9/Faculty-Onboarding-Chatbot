@@ -219,6 +219,29 @@ def test_backup_restore_round_trip_brings_deleted_data_back_and_keeps_the_replac
     assert db.list_backups(path) == [report["previous_kept_as"]]
 
 
+def test_a_damaged_live_database_is_restored_from_a_good_backup_and_kept_byte_for_byte(tmp_path) -> None:
+    # PF-16 (D-127): restoring is most needed when the live file is damaged; the damaged file cannot pass through the online
+    # backup API, so it is kept as a raw copy and the restore still succeeds (it failed with "malformed" before).
+    path = str(tmp_path / "app.db")
+    store = _populate(path)
+    backup_path = db.backup(path, str(tmp_path / "backups" / "app.bak"))
+    del store
+    for suffix in ("-wal", "-shm"):
+        if os.path.exists(path + suffix):
+            os.remove(path + suffix)
+    with open(path, "r+b") as f:
+        f.seek(100)
+        f.write(b"\x00\xff" * 400)
+    damaged = open(path, "rb").read()
+    with pytest.raises(sqlite3.DatabaseError):
+        db.check(path)
+    report = db.restore(backup_path, path)
+    assert report["to_version"] == db.SCHEMA_VERSION and report["previous_kept_as"].endswith(db.BACKUP_SUFFIX)
+    assert "before-restore-damaged" in report["previous_kept_as"] and open(report["previous_kept_as"], "rb").read() == damaged
+    assert db.check(path)["integrity"] == "ok" and Store(path).counts()["messages"] == 1
+    assert manage.main(["--db", path, "check"]) == 0
+
+
 def test_restore_refuses_a_damaged_or_newer_source(tmp_path) -> None:
     path = str(tmp_path / "app.db")
     _populate(path)

@@ -192,14 +192,18 @@ def now_iso() -> str:
 def connect(path: str, *, timeout: float = 5.0) -> sqlite3.Connection:
     """A configured connection (the caller closes it)."""
     conn = sqlite3.connect(path, timeout=timeout, isolation_level=None)   # no implicit transactions: explicit BEGIN/COMMIT only
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA foreign_keys = ON")
-    conn.execute("PRAGMA busy_timeout = %d" % int(timeout * 1000))
     try:
-        conn.execute("PRAGMA journal_mode = WAL")
-    except sqlite3.DatabaseError:
-        pass                                                   # read-only media: keep the default journal
-    conn.execute("PRAGMA synchronous = NORMAL")
+        conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA foreign_keys = ON")
+        conn.execute("PRAGMA busy_timeout = %d" % int(timeout * 1000))
+        try:
+            conn.execute("PRAGMA journal_mode = WAL")
+        except sqlite3.DatabaseError:
+            pass                                               # read-only media: keep the default journal
+        conn.execute("PRAGMA synchronous = NORMAL")
+    except BaseException:
+        conn.close()                                           # PF-16 (D-127): a damaged file must not leave an open handle behind
+        raise
     return conn
 
 
@@ -219,6 +223,17 @@ def file_backup(path: str, label: str) -> str:
     """Copy the database file (with its WAL checkpointed) next to itself. Returns the backup path."""
     dest = "%s.%s.%s%s" % (path, label, time.strftime("%Y%m%d-%H%M%S"), BACKUP_SUFFIX)
     backup(path, dest)
+    return dest
+
+
+def raw_file_copy(path: str, label: str) -> str:
+    """Byte-for-byte copy of a database file that SQLite cannot read, with its ``-wal``/``-shm`` files beside it, so that
+    nothing is lost even when the online backup API refuses the file (post-freeze PF-16). Returns the copy's path."""
+    dest = "%s.%s.%s%s" % (path, label, time.strftime("%Y%m%d-%H%M%S"), BACKUP_SUFFIX)
+    shutil.copyfile(path, dest)
+    for suffix in ("-wal", "-shm"):
+        if os.path.exists(path + suffix):
+            shutil.copyfile(path + suffix, dest + suffix)
     return dest
 
 
@@ -344,7 +359,12 @@ def restore(src: str, path: Optional[str] = None) -> Dict[str, Any]:
         probe.close()
     kept = None
     if os.path.exists(target) and os.path.getsize(target) > 0:
-        kept = file_backup(target, "before-restore")
+        try:
+            kept = file_backup(target, "before-restore")
+        except sqlite3.DatabaseError:
+            # PF-16 (D-127): a damaged database cannot go through the online backup API, and a damaged database is the
+            # main reason to restore. It is still kept, byte for byte (with its journal files), before it is replaced.
+            kept = raw_file_copy(target, "before-restore-damaged")
     Path(target).parent.mkdir(parents=True, exist_ok=True)
     for suffix in ("-wal", "-shm"):
         if os.path.exists(target + suffix):
