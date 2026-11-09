@@ -24,7 +24,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 DEFAULT_DB_PATH = os.path.join("var", "app.db")
 #: Where a backup taken before a migration goes (next to the database).
 BACKUP_SUFFIX = ".bak"
@@ -117,6 +117,55 @@ MIGRATIONS: Dict[int, str] = {
         rerank_score  REAL,
         UNIQUE (message_id, position)
     );
+    """,
+    # ---- version 2 (post-freeze PF-14): the onboarding checklist ---------------------------------------------------------
+    # The curated task catalog is mirrored into ``onboarding_tasks`` (idempotent sync at start; a task removed from the
+    # catalog is deactivated, never deleted, so existing progress keeps its foreign key); progress is guest-owned, one row
+    # per (owner, task); every status change is an audit event; a procedure's viewing position is separate from the task
+    # status; a conversation may carry the task it was asked about.
+    2: """
+    CREATE TABLE onboarding_tasks (
+        id               TEXT    PRIMARY KEY,
+        catalog_version  INTEGER NOT NULL,
+        category         TEXT    NOT NULL,
+        kind             TEXT    NOT NULL,
+        title_en         TEXT    NOT NULL,
+        title_ar         TEXT    NOT NULL,
+        source_id        TEXT    NOT NULL,
+        page             INTEGER,
+        section          TEXT,
+        procedure_id     TEXT,
+        sort_order       INTEGER NOT NULL DEFAULT 0,
+        active           INTEGER NOT NULL DEFAULT 1,
+        updated_at       TEXT    NOT NULL
+    );
+    CREATE TABLE task_progress (
+        owner_id      INTEGER NOT NULL REFERENCES owners(id) ON DELETE CASCADE,
+        task_id       TEXT    NOT NULL REFERENCES onboarding_tasks(id) ON DELETE CASCADE,
+        status        TEXT    NOT NULL DEFAULT 'not_started' CHECK (status IN ('not_started', 'in_progress', 'completed', 'not_applicable')),
+        updated_at    TEXT    NOT NULL,
+        completed_at  TEXT,
+        PRIMARY KEY (owner_id, task_id)
+    );
+    CREATE INDEX task_progress_owner_status ON task_progress(owner_id, status);
+    CREATE TABLE progress_events (
+        id           INTEGER PRIMARY KEY AUTOINCREMENT,
+        owner_id     INTEGER NOT NULL REFERENCES owners(id) ON DELETE CASCADE,
+        task_id      TEXT    NOT NULL,
+        from_status  TEXT,
+        to_status    TEXT    NOT NULL,
+        origin       TEXT    NOT NULL DEFAULT 'user',
+        created_at   TEXT    NOT NULL
+    );
+    CREATE INDEX progress_events_owner_time ON progress_events(owner_id, created_at);
+    CREATE TABLE procedure_positions (
+        owner_id      INTEGER NOT NULL REFERENCES owners(id) ON DELETE CASCADE,
+        procedure_id  TEXT    NOT NULL,
+        step_index    INTEGER NOT NULL DEFAULT 0,
+        updated_at    TEXT    NOT NULL,
+        PRIMARY KEY (owner_id, procedure_id)
+    );
+    ALTER TABLE conversations ADD COLUMN context_task TEXT;
     """,
 }
 
@@ -236,7 +285,7 @@ def check(path: Optional[str] = None) -> Dict[str, Any]:
     conn = connect(target)
     try:
         counts = {}
-        for table in ("owners", "preferences", "conversations", "messages", "answers", "evidence_items"):
+        for table in ("owners", "preferences", "conversations", "messages", "answers", "evidence_items", "onboarding_tasks", "task_progress", "progress_events", "procedure_positions"):
             try:
                 counts[table] = int(conn.execute('SELECT COUNT(*) FROM "%s"' % table).fetchone()[0])
             except sqlite3.DatabaseError:

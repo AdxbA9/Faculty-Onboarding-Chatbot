@@ -12,6 +12,9 @@ from persistence import db, manage
 from persistence.store import Store
 
 
+V1_TABLES = ("owners", "preferences", "conversations", "messages", "answers", "evidence_items")
+
+
 def _tables(path: str) -> set:
     conn = sqlite3.connect(path)
     try:
@@ -31,14 +34,15 @@ def _populate(path: str) -> Store:
 # ---------------------------------------------------------------------------
 # Creation and connection settings
 # ---------------------------------------------------------------------------
-def test_initialize_creates_every_table_at_schema_version_one(tmp_path) -> None:
+def test_initialize_creates_every_table_at_the_current_schema_version(tmp_path) -> None:
     path = str(tmp_path / "app.db")
     report = db.initialize(path)
-    assert report["created"] is True and report["migrated"] == [1] and report["to_version"] == db.SCHEMA_VERSION
-    assert _tables(path) == {"owners", "preferences", "conversations", "messages", "answers", "evidence_items"}
+    assert report["created"] is True and report["migrated"] == list(range(1, db.SCHEMA_VERSION + 1)) and report["to_version"] == db.SCHEMA_VERSION
+    assert _tables(path) >= {"owners", "preferences", "conversations", "messages", "answers", "evidence_items"}        # version 1
+    assert _tables(path) >= {"onboarding_tasks", "task_progress", "progress_events", "procedure_positions"}            # version 2 (PF-14)
     conn = db.connect(path)
     try:
-        assert db.schema_version(conn) == 1
+        assert db.schema_version(conn) == db.SCHEMA_VERSION
         assert conn.execute("PRAGMA foreign_keys").fetchone()[0] == 1
         assert conn.execute("PRAGMA journal_mode").fetchone()[0] == "wal"
     finally:
@@ -49,7 +53,7 @@ def test_initialize_creates_the_parent_directory_and_is_idempotent(tmp_path) -> 
     path = str(tmp_path / "nested" / "deeper" / "app.db")
     db.initialize(path)
     second = db.initialize(path)
-    assert second["created"] is False and second["migrated"] == [] and second["from_version"] == 1
+    assert second["created"] is False and second["migrated"] == [] and second["from_version"] == db.SCHEMA_VERSION
 
 
 def test_db_path_prefers_the_argument_then_the_environment_then_the_default(monkeypatch, tmp_path) -> None:
@@ -98,21 +102,22 @@ def test_a_file_that_is_not_a_database_is_reported_and_left_alone(tmp_path) -> N
 def test_a_migration_backs_up_a_database_with_data_first_and_keeps_the_data(tmp_path, monkeypatch) -> None:
     path = str(tmp_path / "app.db")
     _populate(path)
-    monkeypatch.setattr(db, "SCHEMA_VERSION", 2)
-    monkeypatch.setitem(db.MIGRATIONS, 2, "ALTER TABLE conversations ADD COLUMN pinned INTEGER NOT NULL DEFAULT 0;")
+    current = db.SCHEMA_VERSION
+    monkeypatch.setattr(db, "SCHEMA_VERSION", current + 1)
+    monkeypatch.setitem(db.MIGRATIONS, current + 1, "ALTER TABLE conversations ADD COLUMN pinned INTEGER NOT NULL DEFAULT 0;")
     report = db.initialize(path)
-    assert report["from_version"] == 1 and report["migrated"] == [2]
+    assert report["from_version"] == current and report["migrated"] == [current + 1]
     assert report["backup"] and os.path.exists(report["backup"]) and report["backup"].endswith(db.BACKUP_SUFFIX)
     conn = sqlite3.connect(path)
     try:
-        assert conn.execute("PRAGMA user_version").fetchone()[0] == 2
+        assert conn.execute("PRAGMA user_version").fetchone()[0] == current + 1
         assert conn.execute("SELECT COUNT(*) FROM messages").fetchone()[0] == 1
         assert "pinned" in [r[1] for r in conn.execute("PRAGMA table_info(conversations)")]
     finally:
         conn.close()
     backup_conn = sqlite3.connect(report["backup"])
     try:
-        assert backup_conn.execute("PRAGMA user_version").fetchone()[0] == 1        # the backup is the pre-migration state
+        assert backup_conn.execute("PRAGMA user_version").fetchone()[0] == current  # the backup is the pre-migration state
         assert backup_conn.execute("SELECT COUNT(*) FROM messages").fetchone()[0] == 1
     finally:
         backup_conn.close()
@@ -121,23 +126,25 @@ def test_a_migration_backs_up_a_database_with_data_first_and_keeps_the_data(tmp_
 def test_an_empty_database_migrates_without_a_backup(tmp_path, monkeypatch) -> None:
     path = str(tmp_path / "app.db")
     db.initialize(path)
-    monkeypatch.setattr(db, "SCHEMA_VERSION", 2)
-    monkeypatch.setitem(db.MIGRATIONS, 2, "CREATE TABLE later (id INTEGER PRIMARY KEY);")
+    current = db.SCHEMA_VERSION
+    monkeypatch.setattr(db, "SCHEMA_VERSION", current + 1)
+    monkeypatch.setitem(db.MIGRATIONS, current + 1, "CREATE TABLE later (id INTEGER PRIMARY KEY);")
     report = db.initialize(path)
-    assert report["migrated"] == [2] and report["backup"] is None and "later" in _tables(path)
+    assert report["migrated"] == [current + 1] and report["backup"] is None and "later" in _tables(path)
 
 
 def test_a_failing_migration_rolls_back_completely(tmp_path, monkeypatch) -> None:
     path = str(tmp_path / "app.db")
     _populate(path)
-    monkeypatch.setattr(db, "SCHEMA_VERSION", 2)
-    monkeypatch.setitem(db.MIGRATIONS, 2, "CREATE TABLE half_done (id INTEGER PRIMARY KEY); INSERT INTO no_such_table VALUES (1);")
+    current = db.SCHEMA_VERSION
+    monkeypatch.setattr(db, "SCHEMA_VERSION", current + 1)
+    monkeypatch.setitem(db.MIGRATIONS, current + 1, "CREATE TABLE half_done (id INTEGER PRIMARY KEY); INSERT INTO no_such_table VALUES (1);")
     with pytest.raises(sqlite3.OperationalError):
         db.initialize(path)
     assert "half_done" not in _tables(path)
     conn = sqlite3.connect(path)
     try:
-        assert conn.execute("PRAGMA user_version").fetchone()[0] == 1
+        assert conn.execute("PRAGMA user_version").fetchone()[0] == current
         assert conn.execute("SELECT COUNT(*) FROM messages").fetchone()[0] == 1
     finally:
         conn.close()
@@ -146,6 +153,8 @@ def test_a_failing_migration_rolls_back_completely(tmp_path, monkeypatch) -> Non
 def test_migration_scripts_are_split_into_statements_without_losing_any(tmp_path) -> None:
     statements = list(db._statements(db.MIGRATIONS[1]))
     assert len(statements) == 8 and all(s.upper().startswith(("CREATE TABLE", "CREATE INDEX")) for s in statements)
+    statements = list(db._statements(db.MIGRATIONS[2]))
+    assert len(statements) == 7 and all(s.upper().startswith(("CREATE TABLE", "CREATE INDEX", "ALTER TABLE")) for s in statements)
 
 
 # ---------------------------------------------------------------------------
@@ -161,13 +170,13 @@ def test_deleting_an_owner_cascades_through_every_dependent_table(tmp_path) -> N
     store.append_user_message(owner, conv["id"], "What is the attendance policy?")
     result = QAResult(answer="Attend 75% of classes (p. 12).", pages=[12], items=[{"chunk": "Students must attend 75%.", "meta": {"page": 12}}])
     store.append_assistant_message(owner, conv["id"], result, {"served": "plan_f"}, 10.0)
-    assert store.counts() == {"owners": 1, "preferences": 1, "conversations": 1, "messages": 2, "answers": 1, "evidence_items": 1}
+    assert {k: v for k, v in store.counts().items() if k in V1_TABLES} == {"owners": 1, "preferences": 1, "conversations": 1, "messages": 2, "answers": 1, "evidence_items": 1}
     conn = db.connect(path)
     try:
         conn.execute("DELETE FROM owners WHERE id = ?", (owner,))
     finally:
         conn.close()
-    assert store.counts() == {"owners": 0, "preferences": 0, "conversations": 0, "messages": 0, "answers": 0, "evidence_items": 0}
+    assert {k: v for k, v in store.counts().items() if k in V1_TABLES} == {"owners": 0, "preferences": 0, "conversations": 0, "messages": 0, "answers": 0, "evidence_items": 0}
 
 
 def test_an_orphan_row_cannot_be_inserted(tmp_path) -> None:
@@ -236,7 +245,7 @@ def test_check_reports_version_integrity_counts_and_journal_mode(tmp_path) -> No
     assert db.check(path) == {"path": os.path.abspath(path), "exists": False}
     _populate(path)
     report = db.check(path)
-    assert report["schema_version"] == 1 and report["integrity"] == "ok" and report["foreign_key_violations"] == 0
+    assert report["schema_version"] == db.SCHEMA_VERSION and report["integrity"] == "ok" and report["foreign_key_violations"] == 0
     assert report["counts"]["messages"] == 1 and report["journal_mode"] == "wal" and report["size_bytes"] > 0
 
 

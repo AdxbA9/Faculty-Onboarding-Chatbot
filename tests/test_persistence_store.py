@@ -130,7 +130,9 @@ def test_delete_removes_the_conversation_and_everything_under_it(store: Store) -
     assert store.counts()["evidence_items"] == 2
     assert store.delete_conversation(owner, conv["id"]) is True
     assert store.delete_conversation(owner, conv["id"]) is False
-    assert store.counts() == {"owners": 1, "preferences": 0, "conversations": 0, "messages": 0, "answers": 0, "evidence_items": 0}
+    counts = store.counts()
+    assert {k: counts[k] for k in ("owners", "preferences", "conversations", "messages", "answers", "evidence_items")} == {
+        "owners": 1, "preferences": 0, "conversations": 0, "messages": 0, "answers": 0, "evidence_items": 0}
 
 
 def test_delete_all_is_scoped_to_one_owner(store: Store) -> None:

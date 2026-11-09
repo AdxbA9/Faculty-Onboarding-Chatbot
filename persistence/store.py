@@ -18,12 +18,13 @@ import os
 import secrets
 import sqlite3
 import threading
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Iterable, List, Optional
 
 from . import db as _db
 from .records import answer_record, dumps, loads, restore_turn
 
 PREFERENCE_KEYS = ("interface_lang", "answer_lang", "theme", "voice_lang")
+TASK_STATUSES = ("not_started", "in_progress", "completed", "not_applicable")
 MAX_TITLE = 120
 MAX_CONTENT = 20000
 
@@ -172,27 +173,29 @@ class Store:
     def list_conversations(self, owner_id: int, *, limit: int = 200) -> List[Dict[str, Any]]:
         def op(conn):
             rows = conn.execute(
-                "SELECT c.id, c.title, c.status, c.interface_lang, c.created_at, c.updated_at, "
+                "SELECT c.id, c.title, c.status, c.interface_lang, c.created_at, c.updated_at, c.context_task, "
                 "(SELECT COUNT(*) FROM messages m WHERE m.conversation_id = c.id) AS message_count "
                 "FROM conversations c WHERE c.owner_id = ? AND c.status = 'active' ORDER BY c.updated_at DESC, c.rowid DESC LIMIT ?",
                 (owner_id, int(limit))).fetchall()
             return [dict(r) for r in rows]
         return self._read(op)
 
-    def create_conversation(self, owner_id: int, title: str = "", interface_lang: Optional[str] = None) -> Dict[str, Any]:
+    def create_conversation(self, owner_id: int, title: str = "", interface_lang: Optional[str] = None, context_task: Optional[str] = None) -> Dict[str, Any]:
         cid = secrets.token_urlsafe(16)
         now = _db.now_iso()
         title = (title or "")[:MAX_TITLE]
+        context_task = str(context_task)[:64] if context_task else None
 
         def op(conn):
-            conn.execute("INSERT INTO conversations (id, owner_id, title, status, interface_lang, created_at, updated_at) VALUES (?, ?, ?, 'active', ?, ?, ?)",
-                         (cid, owner_id, title, interface_lang, now, now))
-            return {"id": cid, "title": title, "status": "active", "interface_lang": interface_lang, "created_at": now, "updated_at": now, "message_count": 0}
+            conn.execute("INSERT INTO conversations (id, owner_id, title, status, interface_lang, created_at, updated_at, context_task) VALUES (?, ?, ?, 'active', ?, ?, ?, ?)",
+                         (cid, owner_id, title, interface_lang, now, now, context_task))
+            return {"id": cid, "title": title, "status": "active", "interface_lang": interface_lang, "created_at": now, "updated_at": now, "message_count": 0,
+                    "context_task": context_task}
         return self._write(op)
 
     def get_conversation(self, owner_id: int, conversation_id: str) -> Optional[Dict[str, Any]]:
         def op(conn):
-            row = conn.execute("SELECT id, title, status, interface_lang, created_at, updated_at FROM conversations WHERE id = ? AND owner_id = ?",
+            row = conn.execute("SELECT id, title, status, interface_lang, created_at, updated_at, context_task FROM conversations WHERE id = ? AND owner_id = ?",
                                (str(conversation_id), owner_id)).fetchone()
             return dict(row) if row else None
         return self._read(op)
@@ -317,6 +320,95 @@ class Store:
             return {"conversation": conversation, "messages": messages}
         return self._read(op)
 
+    # ---- onboarding checklist (post-freeze PF-14) --------------------------------------------------------------------------
+    def sync_task_catalog(self, tasks: Iterable[Dict[str, Any]], catalog_version: int) -> Dict[str, int]:
+        """Mirror the curated catalog into ``onboarding_tasks`` (idempotent). Tasks missing from the catalog are deactivated,
+        never deleted: existing progress rows keep their foreign key and are simply not counted."""
+        rows = list(tasks)
+        now = _db.now_iso()
+
+        def op(conn):
+            seen = set()
+            inserted = updated = 0
+            for t in rows:
+                seen.add(t["id"])
+                existing = conn.execute("SELECT catalog_version, category, kind, title_en, title_ar, source_id, page, section, procedure_id, sort_order, active "
+                                        "FROM onboarding_tasks WHERE id = ?", (t["id"],)).fetchone()
+                values = (int(catalog_version), t["category"], t["kind"], t["title_en"], t["title_ar"], t["source_id"], t.get("page"), t.get("section"),
+                          t.get("procedure_id"), int(t.get("sort_order") or 0), 1)
+                if existing is None:
+                    conn.execute("INSERT INTO onboarding_tasks (id, catalog_version, category, kind, title_en, title_ar, source_id, page, section, procedure_id, sort_order, active, updated_at) "
+                                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (t["id"],) + values + (now,))
+                    inserted += 1
+                elif tuple(existing) != values:
+                    conn.execute("UPDATE onboarding_tasks SET catalog_version = ?, category = ?, kind = ?, title_en = ?, title_ar = ?, source_id = ?, page = ?, section = ?, "
+                                 "procedure_id = ?, sort_order = ?, active = ?, updated_at = ? WHERE id = ?", values + (now, t["id"]))
+                    updated += 1
+            deactivated = 0
+            for row in conn.execute("SELECT id FROM onboarding_tasks WHERE active = 1").fetchall():
+                if row["id"] not in seen:
+                    conn.execute("UPDATE onboarding_tasks SET active = 0, updated_at = ? WHERE id = ?", (now, row["id"]))
+                    deactivated += 1
+            return {"inserted": inserted, "updated": updated, "deactivated": deactivated, "active": len(seen)}
+        return self._write(op)
+
+    def active_task_ids(self) -> List[str]:
+        return self._read(lambda conn: [r["id"] for r in conn.execute("SELECT id FROM onboarding_tasks WHERE active = 1 ORDER BY sort_order, id").fetchall()])
+
+    def task_progress(self, owner_id: int) -> Dict[str, Dict[str, Any]]:
+        """``{task_id: {"status", "updated_at", "completed_at"}}`` for this owner (active tasks only; absent = not started)."""
+        def op(conn):
+            rows = conn.execute("SELECT p.task_id, p.status, p.updated_at, p.completed_at FROM task_progress p JOIN onboarding_tasks t ON t.id = p.task_id "
+                                "WHERE p.owner_id = ? AND t.active = 1", (owner_id,)).fetchall()
+            return {r["task_id"]: {"status": r["status"], "updated_at": r["updated_at"], "completed_at": r["completed_at"]} for r in rows}
+        return self._read(op)
+
+    def set_task_status(self, owner_id: int, task_id: str, status: str, *, origin: str = "user") -> Dict[str, Any]:
+        """Set one task's status for one owner, atomically, with an audit event when it changes. A repeated identical
+        update changes nothing and writes no event. Unknown or inactive tasks and unknown statuses are refused."""
+        if status not in TASK_STATUSES:
+            raise StoreError("unknown status")
+        if origin != "user":
+            raise StoreError("progress changes come from the user only")
+        now = _db.now_iso()
+
+        def op(conn):
+            task = conn.execute("SELECT id FROM onboarding_tasks WHERE id = ? AND active = 1", (str(task_id),)).fetchone()
+            if task is None:
+                raise AccessError("task not found")
+            row = conn.execute("SELECT status, completed_at FROM task_progress WHERE owner_id = ? AND task_id = ?", (owner_id, str(task_id))).fetchone()
+            previous = row["status"] if row else "not_started"
+            if row is not None and previous == status:
+                return {"task_id": str(task_id), "status": status, "previous": previous, "changed": False, "updated_at": None}
+            completed_at = now if status == "completed" else None
+            if row is None:
+                conn.execute("INSERT INTO task_progress (owner_id, task_id, status, updated_at, completed_at) VALUES (?, ?, ?, ?, ?)",
+                             (owner_id, str(task_id), status, now, completed_at))
+            else:
+                conn.execute("UPDATE task_progress SET status = ?, updated_at = ?, completed_at = ? WHERE owner_id = ? AND task_id = ?",
+                             (status, now, completed_at, owner_id, str(task_id)))
+            conn.execute("INSERT INTO progress_events (owner_id, task_id, from_status, to_status, origin, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+                         (owner_id, str(task_id), previous if row is not None else None, status, origin, now))
+            return {"task_id": str(task_id), "status": status, "previous": previous, "changed": True, "updated_at": now}
+        return self._write(op)
+
+    def progress_events(self, owner_id: int, limit: int = 50) -> List[Dict[str, Any]]:
+        return self._read(lambda conn: [dict(r) for r in conn.execute(
+            "SELECT task_id, from_status, to_status, origin, created_at FROM progress_events WHERE owner_id = ? ORDER BY id DESC LIMIT ?", (owner_id, int(limit))).fetchall()])
+
+    def procedure_position(self, owner_id: int, procedure_id: str) -> int:
+        row = self._read(lambda conn: conn.execute("SELECT step_index FROM procedure_positions WHERE owner_id = ? AND procedure_id = ?", (owner_id, str(procedure_id))).fetchone())
+        return int(row["step_index"]) if row else 0
+
+    def set_procedure_position(self, owner_id: int, procedure_id: str, step_index: int) -> None:
+        """Where the owner is in a guided procedure (viewing state only; never a completion)."""
+        now = _db.now_iso()
+        index = max(int(step_index), 0)
+        self._write(lambda conn: conn.execute(
+            "INSERT INTO procedure_positions (owner_id, procedure_id, step_index, updated_at) VALUES (?, ?, ?, ?) "
+            "ON CONFLICT(owner_id, procedure_id) DO UPDATE SET step_index = excluded.step_index, updated_at = excluded.updated_at",
+            (owner_id, str(procedure_id)[:64], index, now)))
+
     def delete_older_than(self, days: int) -> int:
         """Retention: delete conversations (all owners) not updated for ``days`` days. Returns how many were removed."""
         if days <= 0:
@@ -326,7 +418,8 @@ class Store:
         return int(self._write(lambda conn: conn.execute("DELETE FROM conversations WHERE updated_at < ?", (cutoff,)).rowcount))
 
     def counts(self) -> Dict[str, int]:
-        return self._read(lambda conn: {t: int(conn.execute('SELECT COUNT(*) FROM "%s"' % t).fetchone()[0]) for t in ("owners", "preferences", "conversations", "messages", "answers", "evidence_items")})
+        return self._read(lambda conn: {t: int(conn.execute('SELECT COUNT(*) FROM "%s"' % t).fetchone()[0]) for t in (
+            "owners", "preferences", "conversations", "messages", "answers", "evidence_items", "onboarding_tasks", "task_progress", "progress_events", "procedure_positions")})
 
 
 _STORE: Optional[Store] = None
