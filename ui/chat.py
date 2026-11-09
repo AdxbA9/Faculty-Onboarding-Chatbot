@@ -200,7 +200,7 @@ def _load_owner(state: Dict[str, Any], owner_token: Optional[str], explicit_lang
         state["voice_lang"] = prefs["voice_lang"]
     if prefs.get("theme") in ("light", "dark"):
         state["theme"] = prefs["theme"]
-    state["sessions"] = [{**row, "messages": None, "persisted": True} for row in rows]
+    state["sessions"] = [{**row, "messages": None, "persisted": True} for row in rows]          # rows carry context_task (PF-14)
     last = (prefs.get("extra") or {}).get("active_conversation")
     if last and any(sess["id"] == last for sess in state["sessions"]):
         state["active_id"] = last
@@ -229,6 +229,33 @@ def _active_session(state: Dict[str, Any]) -> Dict[str, Any]:
     state["sessions"].insert(0, draft)
     state["active_id"] = draft["id"]
     return draft
+
+
+def page_context(request: Optional[Request]) -> Dict[str, Any]:
+    """What a page other than the chat needs from the PF-13 identity layer: the store, the owner (None until the browser
+    first stores something), the saved preferences and the resolved interface language and theme (PF-14)."""
+    token = _owner_token()
+    store = _store()
+    ctx: Dict[str, Any] = {"request": request, "owner_token": token, "store": store, "owner_id": None, "prefs": {}, "storage_notice": None,
+                           "lang": language_requested(request), "theme": "light"}
+    if store is None or not token:
+        ctx["storage_notice"] = "storage_unavailable"
+        return ctx
+    try:
+        owner_id = store.find_owner(token)
+        if owner_id is not None:
+            ctx["owner_id"] = owner_id
+            ctx["prefs"] = store.get_preferences(owner_id)
+    except StoreError as exc:
+        _log.error("loading the owner failed: %s", type(exc).__name__)
+        ctx["storage_notice"] = "storage_unavailable"
+        return ctx
+    prefs = ctx["prefs"]
+    if prefs.get("interface_lang") in i18n.LANGUAGES and not language_explicit(request):
+        ctx["lang"] = prefs["interface_lang"]
+    if prefs.get("theme") in ("light", "dark"):
+        ctx["theme"] = prefs["theme"]
+    return ctx
 
 
 def _format_saved(stored_at: Any) -> str:
@@ -275,10 +302,19 @@ def notice_for(content: str, lang: str) -> Optional[Dict[str, str]]:
 # ===========================================================================
 # Page
 # ===========================================================================
-def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool = False) -> None:
+def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool = False, ask: str = "", task: str = "") -> None:
     client_id = ui.context.client.id
     page_client = ui.context.client
     state = _client_state(client_id, lang, _owner_token(), explicit_lang=explicit_lang)
+    from onboarding import catalog as _catalog                     # PF-14: a question asked from a task or a step
+    context_task = task if _catalog.task(task) else ""
+    if ask or context_task:                                        # start on a fresh draft that carries the task
+        draft = _draft()
+        draft["context_task"] = context_task or None
+        state["sessions"] = [s for s in state["sessions"] if s.get("persisted") or s["messages"]]
+        state["sessions"].insert(0, draft)
+        state["active_id"] = draft["id"]
+        state["prefill"] = (ask or "")[:2000]
     try:
         page_client.on_disconnect(lambda: _CLIENTS.pop(client_id, None))
     except Exception:
@@ -579,6 +615,7 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
         state["active_id"] = draft["id"]
         _render_sessions()
         _render_chat()
+        _render_context()
         await _remember_active(None)
 
     def _find_session(sid: str) -> Optional[Dict[str, Any]]:
@@ -597,6 +634,7 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
             await _ensure_loaded_async(sess)
             _render_sessions()
             _render_chat()
+            _render_context()
             if after_pick is not None:
                 after_pick()
             await _remember_active(sid if sess.get("persisted") else None)
@@ -746,6 +784,8 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
         dialog, card = _new_dialog("history-dialog")
         with card:
             ui.html('<h2 class="dialog-title">%s</h2>' % html.escape(t(lang, "history")))
+            ui.html('<nav class="sb-nav" aria-label="%s"><a href="/onboarding?lang=%s">%s%s</a><a href="/resources?lang=%s">%s%s</a></nav>' % (
+                html.escape(t(lang, "nav_aria"), quote=True), lang, ICONS["check"], html.escape(t(lang, "sb_onboarding")), lang, ICONS["search"], html.escape(t(lang, "sb_resources"))))
             refs["history_list"] = ui.element("nav").classes("session-list").props('aria-label="%s"' % html.escape(t(lang, "conversations_aria"), quote=True))
 
             def _close() -> None:
@@ -1068,12 +1108,12 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
         owner_id = state["owner_id"]
         if not sess.get("persisted"):
             try:
-                row = await run.io_bound(store.create_conversation, owner_id, sess["title"], L())
+                row = await run.io_bound(lambda: store.create_conversation(owner_id, sess["title"], L(), context_task=sess.get("context_task")))
             except StoreError as exc:
                 _log.error("creating a conversation failed: %s", type(exc).__name__)
                 _storage_failed()
                 return False
-            sess.update({"id": row["id"], "persisted": True, "created_at": row["created_at"], "updated_at": row["updated_at"]})
+            sess.update({"id": row["id"], "persisted": True, "created_at": row["created_at"], "updated_at": row["updated_at"], "context_task": row.get("context_task")})
             state["active_id"] = row["id"]
             _render_sessions()
             await _remember_active(row["id"])
@@ -1186,6 +1226,8 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
                         f'<div class="brand-text"><div class="brand-org">{html.escape(t(lang, "org"))}</div>'
                         f'<div class="brand-name">{html.escape(t(lang, "app_name"))}</div></div></div>')
                 ui.button(t(lang, "new_chat"), on_click=_on_new_chat, icon="add").props('unelevated no-caps').classes("new-chat-btn").mark("new-chat")
+                ui.html('<nav class="sb-nav" aria-label="%s"><a href="/onboarding?lang=%s">%s%s</a><a href="/resources?lang=%s">%s%s</a></nav>' % (
+                    html.escape(t(lang, "nav_aria"), quote=True), lang, ICONS["check"], html.escape(t(lang, "sb_onboarding")), lang, ICONS["search"], html.escape(t(lang, "sb_resources"))))
                 ui.html(f'<div class="sb-label">{html.escape(t(lang, "conversations"))}</div>')
                 refs["sessions"] = ui.element("nav").classes("session-list").props('aria-label="%s"' % html.escape(t(lang, "conversations_aria"), quote=True))
                 ui.html(f'<div class="sb-note">{html.escape(t(lang, "session_note"))}</div>')
@@ -1228,6 +1270,7 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
                 refs["scroll"] = chat_scroll
 
                 with ui.element("div").classes("composer-wrap").props('aria-label="%s"' % html.escape(t(lang, "composer_aria"), quote=True)):
+                    refs["context"] = ui.html("").classes("chat-context-wrap")
                     composer = ui.element("div").classes("composer")
                     refs["composer"] = composer
                     with composer:
@@ -1277,9 +1320,34 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
                 ui.on("fob_voice", _on_voice_event)
             refs["dialogs"] = ui.element("div").classes("dialog-host")      # dialogs live here, outside the lists that are re-rendered
         _render_mic()
+        _render_context()
+        prefill = state.pop("prefill", "")
+        if prefill:
+            try:
+                refs["input"].value = prefill                        # pre-filled, never sent: the user reviews and sends
+            except Exception:
+                pass
 
         _render_sessions()
         _render_chat()
+
+    def _render_context() -> None:
+        """The task a conversation was asked about (PF-14): a chip above the composer with a way back to the task."""
+        el = refs.get("context")
+        if el is None:
+            return
+        sess = _active_session(state)
+        task_id = sess.get("context_task")
+        from onboarding import catalog as _catalog
+        task = _catalog.task(task_id) if task_id else None
+        if task is None:
+            _safe(setattr, el, "content", "")
+            return
+        lang = L()
+        title = task.title_ar if lang == "ar" else task.title_en
+        _safe(setattr, el, "content", '<div class="chat-context" role="status">%s<span>%s<strong dir="auto">%s</strong></span>'
+              '<a href="/onboarding?task=%s&lang=%s#task-%s">%s</a></div>' % (ICONS["check"], html.escape(t(lang, "chat_context")), html.escape(title),
+                                                                             task.id, lang, task.id, html.escape(t(lang, "chat_open_task"))))
 
     ui.add_body_html("<script>%s</script>" % voice.VOICE_JS)
     refs["root"] = ui.element("div").classes("app-root")
@@ -1298,6 +1366,20 @@ def _call_pipeline(kb, question: str, answer_language: str = "auto"):
     started = time.perf_counter()
     result, diagnostics = ask_with_diagnostics(kb, question, answer_language=answer_language)
     return result, diagnostics, (time.perf_counter() - started) * 1000.0
+
+
+def _sync_onboarding_catalog() -> None:
+    """Mirror the curated task catalog into the store once per start (idempotent; PF-14). A failure is logged, not fatal:
+    the pages then show the checklist without saved statuses."""
+    try:
+        from onboarding import catalog as _catalog
+        store = get_store()
+        rows = [{"id": tk.id, "category": tk.category, "kind": tk.kind, "title_en": tk.title_en, "title_ar": tk.title_ar, "source_id": tk.evidence[0].source_id,
+                 "page": tk.evidence[0].page, "section": tk.evidence[0].section, "procedure_id": tk.procedure_id, "sort_order": tk.order} for tk in _catalog.tasks_by_category()]
+        report = store.sync_task_catalog(rows, _catalog.CATALOG_VERSION)
+        _log.info("onboarding catalog v%s synced: %s", _catalog.CATALOG_VERSION, report)
+    except Exception as exc:
+        _log.error("onboarding catalog sync failed: %s", type(exc).__name__)
 
 
 def developer_requested(request: Optional[Request]) -> bool:
@@ -1331,10 +1413,18 @@ def language_explicit(request: Optional[Request]) -> bool:
 
 
 def register_pages() -> None:
-    """Register the chat page on the NiceGUI app (called by ``start_app`` and by the page tests)."""
+    """Register the chat page and the onboarding pages on the NiceGUI app (called by ``start_app`` and by the page tests)."""
     @ui.page("/")
     def index(request: Request) -> None:
-        _build_page(developer=developer_requested(request), lang=language_requested(request), explicit_lang=language_explicit(request))
+        try:
+            ask = (request.query_params.get("ask") or "").strip()
+            task = (request.query_params.get("task") or "").strip()
+        except Exception:
+            ask, task = "", ""
+        _build_page(developer=developer_requested(request), lang=language_requested(request), explicit_lang=language_explicit(request), ask=ask, task=task)
+
+    from . import onboarding as _onboarding                        # PF-14 pages (imported here: the module imports this one)
+    _onboarding.register_pages()
 
 
 # ---------------------------------------------------------------------------
@@ -1350,6 +1440,7 @@ def start_app(port: int = 8501, host: Optional[str] = None) -> None:
         app.add_static_files("/static", str(assets_dir))
 
     app.on_startup(_ensure_kb_loaded)
+    app.on_startup(_sync_onboarding_catalog)
     register_pages()
 
     ui.run(
