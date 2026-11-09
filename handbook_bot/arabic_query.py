@@ -93,11 +93,13 @@ class QueryTransform:
     llm_calls: int = 0
     model_error: Optional[str] = None
     is_greeting: bool = False
+    meaning_loss: List[str] = field(default_factory=list)       # PF-16: why the lexicon query is unsafe (see meaning_loss())
 
     def to_dict(self) -> Dict[str, Any]:
         return {"language": self.language.to_dict(), "english_query": self.english_query, "lexicon_query": self.lexicon_query,
                 "method": self.method, "mapped": list(self.mapped), "unmapped": list(self.unmapped), "coverage": round(self.coverage, 3),
-                "llm_calls": self.llm_calls, "model_error": self.model_error, "is_greeting": self.is_greeting}
+                "llm_calls": self.llm_calls, "model_error": self.model_error, "is_greeting": self.is_greeting,
+                "meaning_loss": list(self.meaning_loss)}
 
 
 def is_arabic_greeting(text: str) -> bool:
@@ -356,6 +358,49 @@ def translate_question(client, question: str) -> str:
 # ---------------------------------------------------------------------------
 # Public entry point
 # ---------------------------------------------------------------------------
+#: Post-freeze PF-16 (D-127) meaning-loss guard. A negation, refusal or prohibition word that the lexicon drops or renders
+#: without any English negation inverts or erases what the question asks; an unknown word after a contact keyword means the
+#: unit whose number is asked for is incomplete ("phone number of the center" for the Central Laboratories). Either makes
+#: the lexicon query unsafe however high its coverage is, so the validated model translation replaces it when a client is
+#: configured. Multi-word lexicon phrases are trusted (``غير المتفرغ`` is "part-time", not a negation).
+_NEGATION_WORDS = frozenset(normalize_arabic(w) for w in (
+    "لا", "لم", "لن", "ليس", "ليست", "عدم", "غير", "دون", "بدون", "بلا", "رفض", "يرفض", "أرفض", "نرفض", "ترفض",
+    "ممنوع", "يمنع", "تمنع", "يحظر", "محظور"))
+_CONTACT_WORDS = frozenset(normalize_arabic(w) for w in (
+    "رقم", "أرقام", "هاتف", "هاتفيا", "تلفون", "تليفون", "فاكس", "بريد", "ايميل", "إيميل", "اتصل", "أتصل", "اتصال", "تواصل", "أتواصل"))
+_ENGLISH_NEGATION = re.compile(r"\b(?:not|no|without|cannot|never|refus\w*|prohibit\w*|forbid\w*|declin\w*)\b", re.I)
+
+
+def _bare(token: str) -> str:
+    """A token without one leading conjunction or preposition letter and without the definite article."""
+    t = token
+    if len(t) > 3 and t[0] in "وفبل":
+        t = t[1:]
+    if len(t) > 3 and t.startswith("ال"):
+        t = t[2:]
+    return t
+
+
+def meaning_loss(pieces: List[Piece]) -> List[str]:
+    """Reasons why the lexicon query does not say what the Arabic question asks (empty when none)."""
+    reasons: List[str] = []
+    for p in pieces:
+        words = p.surface.split()
+        if len(words) != 1:
+            continue                                          # a multi-word lexicon phrase carries its own meaning
+        w = words[0]
+        if w not in _NEGATION_WORDS and (len(w) <= 3 or w[0] not in "وف" or w[1:] not in _NEGATION_WORDS):
+            continue
+        if p.kind == "unknown":
+            reasons.append("negation_dropped")
+        elif p.kind == "term" and "neg" not in p.flags.split() and not _ENGLISH_NEGATION.search(p.english or ""):
+            reasons.append("negation_mistranslated")
+    head = next((i for i, p in enumerate(pieces) if any(w in _CONTACT_WORDS or _bare(w) in _CONTACT_WORDS for w in p.surface.split())), None)
+    if head is not None and any(p.kind == "unknown" and len(p.surface) >= 2 for p in pieces[head + 1:]):
+        reasons.append("contact_target_incomplete")
+    return sorted(set(reasons))
+
+
 def transform_query(question: str, *, client=None, allow_model: Optional[bool] = None, min_coverage: Optional[float] = None) -> QueryTransform:
     """The English retrieval query for ``question`` and the record of how it was made. Never raises."""
     from . import config
@@ -375,10 +420,10 @@ def transform_query(question: str, *, client=None, allow_model: Optional[bool] =
     content = len(mapped) + len(unmapped) + sum(1 for p in pieces if p.kind == "latin")
     coverage = 1.0 if content == 0 else (len(mapped) + sum(1 for p in pieces if p.kind == "latin")) / content
     result = QueryTransform(text, profile, lexicon_query, lexicon_query, "lexicon" if lexicon_query.strip("? ") else "empty",
-                            mapped=mapped, unmapped=unmapped, coverage=coverage)
+                            mapped=mapped, unmapped=unmapped, coverage=coverage, meaning_loss=meaning_loss(pieces))
     use_model = config.ARABIC_QUERY_MODEL_FALLBACK if allow_model is None else bool(allow_model)
     threshold = config.ARABIC_QUERY_MIN_COVERAGE if min_coverage is None else float(min_coverage)
-    if client is not None and use_model and (coverage < threshold or result.method == "empty"):
+    if client is not None and use_model and (coverage < threshold or result.method == "empty" or result.meaning_loss):
         result.llm_calls = 1
         try:
             result.english_query = translate_question(client, text)

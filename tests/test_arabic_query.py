@@ -181,3 +181,48 @@ def test_the_transformation_record_is_json_friendly_and_auditable():
     assert record["method"] == "lexicon" and record["language"]["code"] == "ar"
     assert {"ar": "رقم هاتف", "en": "phone number"} in record["mapped"]
     assert {"ar": "قسم الموارد البشرية", "en": "Human Resources Department"} in record["mapped"]
+    assert record["meaning_loss"] == []
+
+
+# ---------------------------------------------------------------------------
+# Post-freeze PF-16 (D-127): the meaning-loss guard and the "official" collision
+# ---------------------------------------------------------------------------
+@pytest.mark.parametrize("question, reason", [
+    ("هل يحق لعضو هيئة التدريس رفض المشاركة في الامتحانات خلال العطل الرسمية؟", "negation_dropped"),   # "refuse" was dropped
+    ("ما رقم هاتف المختبرات المركزية؟", "contact_target_incomplete"),                                  # "laboratories" was dropped
+    ("رقم هاتف قسم التقنية؟", "contact_target_incomplete"),                                            # "technology" was dropped
+])
+def test_a_lexicon_query_that_loses_a_negation_or_the_contact_target_is_flagged(question, reason):
+    result = transform_query(question, client=None, allow_model=False)
+    assert reason in result.meaning_loss and result.method == "lexicon"      # offline: the lexicon query stands, flagged
+
+
+@pytest.mark.parametrize("question", [
+    "ما هو رقم هاتف قسم الموارد البشرية؟",                                  # every word of the unit is mapped
+    "ما عدد الساعات المكتبية المطلوبة من عضو هيئة التدريس غير المتفرغ؟",     # "غير المتفرغ" is the phrase "part-time"
+    "هل صحيح أن أعضاء هيئة التدريس لا يحصلون على إجازة مرضية؟",             # the negation is rendered as "not"
+    "هل يجوز لعضو هيئة التدريس العمل خارج الجامعة دون موافقة؟",              # "دون" is rendered as "without"
+])
+def test_a_faithful_lexicon_query_is_not_flagged(question):
+    assert transform_query(question, client=None, allow_model=False).meaning_loss == []
+
+
+def test_a_flagged_query_uses_the_validated_model_translation_even_with_high_coverage():
+    client = _ScriptedClient("What is the phone number of the Central Laboratories?")
+    result = transform_query("ما رقم هاتف المختبرات المركزية؟", client=client, allow_model=True, min_coverage=0.6)
+    assert result.coverage >= 0.6 and result.meaning_loss == ["contact_target_incomplete"]
+    assert result.method == "model" and client.calls == 1 and result.english_query == "What is the phone number of the Central Laboratories?"
+    # a faithful query keeps the lexicon and spends nothing
+    client = _ScriptedClient("ignored")
+    assert transform_query("ما هو رقم هاتف قسم الموارد البشرية؟", client=client, allow_model=True).method == "lexicon" and client.calls == 0
+    # with the fallback switched off the flag is recorded and nothing is called
+    client = _ScriptedClient("ignored")
+    result = transform_query("ما رقم هاتف المختبرات المركزية؟", client=client, allow_model=False)
+    assert result.method == "lexicon" and client.calls == 0 and result.meaning_loss
+
+
+def test_an_official_holiday_is_never_read_as_fees():
+    query = transform_query("هل أُعفى من الامتحانات إذا صادفت عطلة رسمية؟", client=None, allow_model=False).english_query
+    assert "public holiday" in query and "fees" not in query
+    assert "fees" not in transform_query("ما هي الإجراءات الرسمية للاستقالة؟", client=None, allow_model=False).english_query
+    assert "fees" in transform_query("ما هي رسوم التسجيل؟", client=None, allow_model=False).english_query    # real fees still are
