@@ -24,7 +24,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 DEFAULT_DB_PATH = os.path.join("var", "app.db")
 #: Where a backup taken before a migration goes (next to the database).
 BACKUP_SUFFIX = ".bak"
@@ -166,6 +166,14 @@ MIGRATIONS: Dict[int, str] = {
         PRIMARY KEY (owner_id, procedure_id)
     );
     ALTER TABLE conversations ADD COLUMN context_task TEXT;
+    """,
+    # ---- version 3 (post-freeze PF-15): settings page and guest profile ---------------------------------------------------
+    # Two accessibility preferences that change the page (text size, reduced motion) and an optional display name shown only
+    # to the same browser. Columns, not JSON, so the store can validate them like the other preferences.
+    3: """
+    ALTER TABLE preferences ADD COLUMN text_size TEXT;
+    ALTER TABLE preferences ADD COLUMN reduced_motion TEXT;
+    ALTER TABLE preferences ADD COLUMN display_name TEXT;
     """,
 }
 

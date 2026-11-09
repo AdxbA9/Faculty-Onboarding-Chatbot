@@ -219,7 +219,7 @@ def test_a_version_one_database_with_conversations_upgrades_with_everything_inta
     conn.close()
 
     report = db.initialize(path)
-    assert report["from_version"] == 1 and report["migrated"] == [2] and report["backup"] and report["backup"].endswith(".bak")
+    assert report["from_version"] == 1 and report["migrated"] == list(range(2, db.SCHEMA_VERSION + 1)) and report["backup"] and report["backup"].endswith(".bak")
     store = Store(path)
     owner = store.find_owner  # noqa: F841  (the API is unchanged)
     assert store.get_preferences(1) == {"interface_lang": "ar", "theme": "dark", "updated_at": "2026-11-08T20:00:00Z", "extra": {"active_conversation": "c1"}}
@@ -251,7 +251,7 @@ def test_the_store_opens_a_version_one_file_and_migrates_it_once(tmp_path) -> No
     path = str(tmp_path / "app.db")
     _version_one_database(path)
     first = Store(path)
-    assert first.init_report["migrated"] == [2] and first.init_report["backup"] is None   # empty: no backup needed
+    assert first.init_report["migrated"] == list(range(2, db.SCHEMA_VERSION + 1)) and first.init_report["backup"] is None   # empty: no backup needed
     second = Store(path)
     assert second.init_report["migrated"] == [] and db.list_backups(path) == []
 

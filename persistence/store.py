@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import hashlib
 import os
+import re
 import secrets
 import sqlite3
 import threading
@@ -23,7 +24,43 @@ from typing import Any, Dict, Iterable, List, Optional
 from . import db as _db
 from .records import answer_record, dumps, loads, restore_turn
 
-PREFERENCE_KEYS = ("interface_lang", "answer_lang", "theme", "voice_lang")
+PREFERENCE_KEYS = ("interface_lang", "answer_lang", "theme", "voice_lang", "text_size", "reduced_motion", "display_name")
+#: The allowed values of each choice preference (PF-15: every value is validated before it is stored).
+PREFERENCE_VALUES = {"interface_lang": ("en", "ar"), "answer_lang": ("auto", "en", "ar"), "voice_lang": ("auto", "en", "ar"),
+                     "theme": ("light", "dark"), "text_size": ("standard", "large"), "reduced_motion": ("off", "on")}
+MAX_DISPLAY_NAME = 40
+_CONTROL_CHARS = re.compile(r"[\x00-\x1f\x7f-\x9f\u200b-\u200f\u202a-\u202e\u2066-\u2069]")
+_LONG_NUMBER = re.compile(r"\d{6,}")
+
+
+def clean_display_name(value: Any) -> Optional[str]:
+    """The display name to store, or None to remove it. Raises StoreError for anything that is not a short plain name:
+    control or bidi-override characters, more than 40 characters, an email address or a long number (the profile asks for
+    no identifiers)."""
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        raise StoreError("invalid display name")
+    if _CONTROL_CHARS.search(value.replace("\n", " ").replace("\t", " ")) or "\n" in value or "\r" in value:
+        raise StoreError("invalid display name")
+    text = " ".join(value.split())
+    if not text:
+        return None
+    if len(text) > MAX_DISPLAY_NAME or "@" in text or _LONG_NUMBER.search(text) or any(ch in text for ch in "<>{}[]\\`"):
+        raise StoreError("invalid display name")
+    return text
+
+
+def clean_preference(key: str, value: Any) -> Optional[str]:
+    """The stored form of one preference value (None clears it); StoreError for a value outside the allowed set."""
+    if value is None or value == "":
+        return None
+    if key == "display_name":
+        return clean_display_name(value)
+    allowed = PREFERENCE_VALUES.get(key)
+    if allowed is None or str(value) not in allowed:
+        raise StoreError("invalid value for %s" % key)
+    return str(value)
 TASK_STATUSES = ("not_started", "in_progress", "completed", "not_applicable")
 MAX_TITLE = 120
 MAX_CONTENT = 20000
@@ -118,7 +155,8 @@ class Store:
     # ---- preferences ----------------------------------------------------------------------------------------------------
     def get_preferences(self, owner_id: int) -> Dict[str, Any]:
         def op(conn):
-            row = conn.execute("SELECT interface_lang, answer_lang, theme, voice_lang, extra, updated_at FROM preferences WHERE owner_id = ?", (owner_id,)).fetchone()
+            row = conn.execute("SELECT interface_lang, answer_lang, theme, voice_lang, text_size, reduced_motion, display_name, extra, updated_at "
+                               "FROM preferences WHERE owner_id = ?", (owner_id,)).fetchone()
             if not row:
                 return {}
             out = {k: row[k] for k in PREFERENCE_KEYS if row[k] is not None}
@@ -133,14 +171,15 @@ class Store:
         unknown = [k for k in changes if k not in PREFERENCE_KEYS]
         if unknown:
             raise StoreError("unknown preference(s): %s" % ", ".join(sorted(unknown)))
+        cleaned = {key: clean_preference(key, value) for key, value in changes.items()}     # validated before any write
         now = _db.now_iso()
 
         def op(conn):
             row = conn.execute("SELECT owner_id FROM preferences WHERE owner_id = ?", (owner_id,)).fetchone()
             if not row:
                 conn.execute("INSERT INTO preferences (owner_id, updated_at) VALUES (?, ?)", (owner_id, now))
-            for key, value in changes.items():
-                conn.execute("UPDATE preferences SET %s = ?, updated_at = ? WHERE owner_id = ?" % key, (None if value in (None, "") else str(value), now, owner_id))
+            for key, value in cleaned.items():
+                conn.execute("UPDATE preferences SET %s = ?, updated_at = ? WHERE owner_id = ?" % key, (value, now, owner_id))
             return None
         self._write(op)
         return self.get_preferences(owner_id)
@@ -167,7 +206,26 @@ class Store:
         return self._write(op)
 
     def reset_preferences(self, owner_id: int) -> None:
-        self._write(lambda conn: conn.execute("DELETE FROM preferences WHERE owner_id = ?", (owner_id,)))
+        """Return every setting to its default. The optional display name is profile data, not a setting: it is kept
+        (PF-15); without one the row is removed as before."""
+        now = _db.now_iso()
+
+        def op(conn):
+            row = conn.execute("SELECT display_name FROM preferences WHERE owner_id = ?", (owner_id,)).fetchone()
+            if row and row["display_name"]:
+                conn.execute("UPDATE preferences SET interface_lang = NULL, answer_lang = NULL, theme = NULL, voice_lang = NULL, text_size = NULL, "
+                             "reduced_motion = NULL, extra = '{}', updated_at = ? WHERE owner_id = ?", (now, owner_id))
+            else:
+                conn.execute("DELETE FROM preferences WHERE owner_id = ?", (owner_id,))
+            return None
+        self._write(op)
+
+    def owner_info(self, owner_id: int) -> Dict[str, Any]:
+        """When this guest was first saved and last seen (no identifier is returned)."""
+        def op(conn):
+            row = conn.execute("SELECT kind, created_at, last_seen_at FROM owners WHERE id = ?", (owner_id,)).fetchone()
+            return dict(row) if row else {}
+        return self._read(op)
 
     # ---- conversations --------------------------------------------------------------------------------------------------
     def list_conversations(self, owner_id: int, *, limit: int = 200) -> List[Dict[str, Any]]:
@@ -399,6 +457,11 @@ class Store:
     def procedure_position(self, owner_id: int, procedure_id: str) -> int:
         row = self._read(lambda conn: conn.execute("SELECT step_index FROM procedure_positions WHERE owner_id = ? AND procedure_id = ?", (owner_id, str(procedure_id))).fetchone())
         return int(row["step_index"]) if row else 0
+
+    def procedure_positions(self, owner_id: int) -> Dict[str, int]:
+        """Every saved viewing position of this owner (procedure id -> step index)."""
+        return self._read(lambda conn: {r["procedure_id"]: int(r["step_index"]) for r in conn.execute(
+            "SELECT procedure_id, step_index FROM procedure_positions WHERE owner_id = ?", (owner_id,)).fetchall()})
 
     def set_procedure_position(self, owner_id: int, procedure_id: str, step_index: int) -> None:
         """Where the owner is in a guided procedure (viewing state only; never a completion)."""
