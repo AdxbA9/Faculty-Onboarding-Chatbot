@@ -632,6 +632,9 @@ details.evidence summary:hover { color: var(--text); background: var(--surface-2
 .ob-root .q-field--outlined .q-field__control::before { border-color: var(--border-strong) !important; }
 .ob-root .q-field--outlined.q-field--focused .q-field__control::after { border-color: var(--brand-fill) !important; }
 .ob-root .q-field__native::placeholder { color: var(--text-3) !important; opacity: 1; }
+/* PF-16 (D-127): the field counter and hint follow the page tokens too (Quasar painted them in the OS colour scheme:
+   white on white in the light theme when the OS is dark, measured contrast 1:1). An error message keeps Quasar's colour. */
+.ob-root .q-field__counter, .ob-root .q-field:not(.q-field--error) .q-field__messages { color: var(--text-3) !important; }
 /* procedure */
 .ob-crumbs { font-size: 13px; color: var(--text-3); margin-bottom: 10px; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
 .pr-heading { margin: 8px 0 0 0; font-size: 13.5px; color: var(--text-2); }

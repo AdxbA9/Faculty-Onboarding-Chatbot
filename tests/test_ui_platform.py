@@ -332,3 +332,10 @@ def test_phone_numbers_in_answers_are_kept_whole_in_the_browser_without_changing
     assert "+971 6 5050023 +971 6 5585200" in out and 'class="tel"' not in out
     assert "window.fobTel" in shell.SHELL_JS and "'.answer, .original-body'" in shell.SHELL_JS and "closest('code, pre, .tel')" in shell.SHELL_JS
     assert ".answer .tel, .original-body .tel { white-space: nowrap; unicode-bidi: isolate;" in styles.GLOBAL_CSS
+
+
+def test_field_counters_and_hints_follow_the_page_tokens_not_the_os_colour_scheme() -> None:
+    # PF-16 (D-127): measured 1:1 contrast for the display-name counter ("0 / 40") in the light theme when the OS is dark;
+    # an error message keeps Quasar's own colour
+    from ui import styles
+    assert ".ob-root .q-field__counter, .ob-root .q-field:not(.q-field--error) .q-field__messages { color: var(--text-3) !important; }" in styles.GLOBAL_CSS

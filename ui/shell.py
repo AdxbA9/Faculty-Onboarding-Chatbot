@@ -89,7 +89,7 @@ SHELL_JS = r"""
   };
   // PF-15: a UAE phone number inside an answer is shown whole and left-to-right, also inside an Arabic sentence. Display
   // only: the server HTML and the text are unchanged; code is left alone; an element already wrapped is skipped.
-  var TEL = /\+971(?:[ \-]?\d){8,9}(?!\d)/g;
+  var TEL = /\+971(?:[     \-]?\d){8,9}(?!\d)/g;   // PF-16: model answers separate digits with no-break spaces
   window.fobTel = function () {
     document.querySelectorAll('.answer, .original-body').forEach(function (box) {
       var walker = document.createTreeWalker(box, NodeFilter.SHOW_TEXT, {acceptNode: function (n) {
