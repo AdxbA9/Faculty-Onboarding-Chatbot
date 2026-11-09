@@ -9,6 +9,38 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-11-09 - Intelligent onboarding experience: checklist, procedure navigator, resource finder (post-freeze phase PF-14)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/pf14-intelligent-onboarding` (from `feature/pf13-persistent-database` at `55fe94f`, the pushed PF-13 tip) |
+| Starting commit | `55fe94f` (PF-13) |
+| Ending state | COMPLETE for the phase (D-125): a source-grounded onboarding checklist with persisted, owner-isolated progress; a guided navigator for seven documented procedures whose steps are exact quotes of the approved guides; a finder for the eight approved documents, eight departments (contacts only as printed) and four checked official pages; the three connected to each other and to the chat, whose unchanged pipeline answers contextual questions. Backend unchanged. Not pushed |
+| Freeze status | `ENGLISH_CORE_FREEZE_PF6` plus D-117, D-119 to D-125; Plan F, retrieval, verification, the Arabic and voice layers, the corpus and the registry unchanged |
+| Elapsed | 2026-11-09, about 4 hours |
+
+### Completed
+
+- Source audit before the catalog (`ONBOARDING_SOURCE_AUDIT.md`): 12 tasks, 7 procedures (35 steps), 19 resources, every quote an exact substring of an indexed chunk; rejected candidates listed; the held appraisal guide excluded; eight-versus-nine resolved from the PDF (heading + 8 items).
+- `onboarding/` (catalog, progress arithmetic, bilingual finder, URL policy), schema version 2 in `persistence/db.py` with the store methods (`sync_task_catalog`, `task_progress`, `set_task_status`, `progress_events`, `procedure_position`, conversation `context_task`), `ui/onboarding.py` (three pages, shared shell), chat page integration (`page_context`, `?ask=&task=`, context chip, sidebar links, catalog sync at start), 90 strings per language, styles.
+- Tests: tests/test_onboarding_catalog.py, tests/test_onboarding_progress.py (incl. the version-1 → 2 migration with stored conversations), tests/test_onboarding_finder.py, tests/test_ui_onboarding.py; evidence fixture `tests/fixtures/pf14_evidence.json` (generator `qa/pf14_onboarding/make_evidence_fixture.py`).
+- QA tooling: `qa/pf14_onboarding/browser_qa_onboarding.py` (three workflows, Arabic, dark theme, five widths, two visitors, real restart), `qa/pf14_onboarding/live_onboarding_integration.py` (bounded live run). Reports in `C:\qa-evals\pf14-intelligent-onboarding\`.
+
+### Tests performed
+
+- Full suite: 7,666 passed, 0 failed, 0 skipped in 303.52 s (PF-13: 7,602, 0 failed).
+- Browser harness: 23 workflow steps (create) + 5 (after a real restart) + 30 viewport checks, 0 problems; visitor B saw none of visitor A's progress before or after the restart.
+- Live integration (translation on, cap 6): 4 cases (the Arabic one re-run once with an improved question frame), 5 model requests of the 6 authorised; citations p. 9 of the Blackboard short guide and handbook pp. 83 and 113; one honest refusal; no progress row changed.
+
+### Known limitations
+
+- The catalog is compact by design (12 tasks); procedures exist only where the deterministic recovery reads a complete ordered list; step text is English (the guides are English).
+- Guest identity only; progress is self-reported, never an approval; four official URLs checked on one date.
+- Carried over: PF-11 holdout mismatches and human Arabic fluency review, PF-12 real-microphone acceptance, PF-9 contact live validation, the historic exposed-key item. The eight-versus-nine Blackboard item is resolved from the source in D-125.
+
+---
+
 ## 2026-11-09 - Persistent conversations, preferences and guest sessions (post-freeze phase PF-13)
 
 | Field | Value |

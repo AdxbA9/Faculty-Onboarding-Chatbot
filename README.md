@@ -85,6 +85,14 @@ Python process, no Node, no Docker, no build step.
   every query; it is a guest identity, not a university login. Backups,
   integrity checks and versioned migrations come with a small command
   line. See "Saved conversations and settings" below.
+- **Onboarding checklist, guided procedures and resource finder** (PF-14)
+  — twelve source-grounded onboarding activities with persisted,
+  self-reported progress; seven documented procedures shown step by step
+  as exact guide text; a bilingual finder for the approved documents,
+  departments (contacts as printed) and checked official pages; all three
+  connected to each other and to the chat, whose unchanged pipeline
+  answers contextual questions. See "Onboarding checklist, guided
+  procedures and resource finder" below.
 
 ## Folder structure
 
@@ -108,6 +116,8 @@ UOS_Handbook_Chatbot/
 │
 ├── var/                    # Saved conversations (SQLite) + cookie secret (gitignored)
 │
+├── onboarding/             # PF-14: task/procedure/resource catalog, progress arithmetic, finder, URL policy
+│
 ├── persistence/            # SQLite layer: schema, migrations, store, backup CLI
 │   ├── db.py               # Connection settings, versioned migrations, backup/restore
 │   ├── store.py            # Owner-scoped persistence service used by the page
@@ -118,6 +128,7 @@ UOS_Handbook_Chatbot/
 ├── ui/                     # UI layer (NiceGUI)
 │   ├── __init__.py
 │   ├── chat.py             # Page layout + interaction logic
+│   ├── onboarding.py       # Onboarding dashboard, procedure navigator, resource finder
 │   ├── styles.py           # Theme + CSS + inline SVG icons
 │   └── pipeline.py         # Thin wrapper over the backend
 │
@@ -344,6 +355,41 @@ conversations".
   refused rather than downgraded.
 - **If the database cannot be written**, the page says so, still
   answers, and marks the answer "Not saved" instead of pretending.
+
+---
+
+## Onboarding checklist, guided procedures and resource finder
+
+Three connected pages for a new faculty member's first weeks, built only
+from the approved documents (PF-14, decision record D-125):
+
+- **Onboarding** (`/onboarding`): twelve source-grounded activities in
+  four categories, each with its kind (required by the handbook,
+  documented activity, optional, guidance), the exact evidence sentence
+  and page, a status you set yourself (not started, in progress,
+  completed, not applicable), progress figures and the next activities.
+  Progress is saved for your browser and survives reloads and restarts.
+  Marking a task complete records your own progress; it is not a
+  university approval, and the assistant never changes it.
+- **Guided procedures** (`/onboarding/procedure/<id>`): seven documented
+  procedures (Blackboard access and announcements, attendance reports,
+  grade transfer, iThenticate) shown step by step, every step the exact
+  text of the approved guide, with conditional and after-the-procedure
+  items flagged; Previous / Next remember your place; "Ask about this
+  step" opens the chat with the question pre-filled for you to review and
+  send.
+- **Resources** (`/resources`): the eight approved documents, the
+  departments with the contact numbers exactly as the handbook prints
+  them (units without a printed contact say so), and four official web
+  pages that were opened and checked on the date shown. Search works in
+  English and Arabic; a task context lists its resources first.
+
+What the model does here: nothing on these pages. A question asked from a
+task or a step goes through the same Coordinator, specialists, retrieval
+and verification as any typed question. Data: schema version 2 of the
+PF-13 database (`onboarding_tasks`, `task_progress`, `progress_events`,
+`procedure_positions`, `conversations.context_task`); a version-1
+database upgrades at the first start with a backup first.
 
 ---
 
