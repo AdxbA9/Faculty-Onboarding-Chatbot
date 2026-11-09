@@ -280,5 +280,9 @@ async def test_the_chat_page_accepts_a_task_question_and_links_back_to_the_task(
 
 async def test_the_chat_sidebar_links_to_the_onboarding_pages(user: User, ready: Scripted) -> None:
     await user.open("/")
-    await user.should_see("Onboarding checklist")
-    await user.should_see("Services &amp; documents")
+    for label, href in (("Assistant chat", 'href="/"'), ("Onboarding checklist", 'href="/onboarding"'), ("Guided procedures", 'href="/procedures"'),
+                        ("Resources &amp; documents", 'href="/resources"'), ("Conversation history", 'href="/history"'), ("Guest profile", 'href="/profile"'),
+                        ("Settings", 'href="/settings"')):
+        await user.should_see(label)
+        await user.should_see(href)
+    await user.should_see('aria-current="page"')                              # the chat item is marked as the current page

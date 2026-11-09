@@ -1,6 +1,7 @@
 """
-The onboarding pages (post-freeze PF-14, D-125): the checklist dashboard (``/onboarding``), the guided procedure
-navigator (``/onboarding/procedure/{procedure_id}``) and the services and documents finder (``/resources``).
+The onboarding pages (post-freeze PF-14, D-125; on the shared shell since PF-15, D-126): the checklist dashboard
+(``/onboarding``), the guided procedures index (``/procedures``, PF-15), the procedure navigator
+(``/onboarding/procedure/{procedure_id}``) and the services and documents finder (``/resources``).
 
 What this module decides: layout and wording of the three pages (``ui.i18n`` in English and Arabic), which catalog
 entries are shown and how, and when a progress row is written (only on an explicit control the user operated). What it
@@ -14,6 +15,7 @@ the owner row is created by the first write (a progress change, a theme or langu
 from __future__ import annotations
 
 import html
+import re
 from typing import Any, Dict, List, Optional
 from urllib.parse import quote, urlencode
 
@@ -28,8 +30,10 @@ from persistence import StoreError
 
 from . import chat, i18n
 from .i18n import t
-from .styles import GLOBAL_CSS, ICONS
+from .shell import Page, time_html
+from .styles import ICONS
 
+PHONE = re.compile(r"\+971 6 \d{7}")                  # a printed number is shown whole (never broken across lines)
 KIND_KEYS = {"required": "kind_required", "recommended": "kind_recommended", "optional": "kind_optional", "info": "kind_info"}
 STATUS_KEYS = {"not_started": "status_not_started", "in_progress": "status_in_progress", "completed": "status_completed", "not_applicable": "status_not_applicable"}
 CATEGORY_ICONS = {"teaching": "teaching", "research": "research", "faculty_services": "services", "institutional": "institutional"}
@@ -64,100 +68,6 @@ def ask_url(task_id: Optional[str], question: str) -> str:
     if task_id:
         params["task"] = task_id
     return "/?" + urlencode(params, quote_via=quote)
-
-
-# =====================================================================================================================
-# Shared shell
-# =====================================================================================================================
-class Page:
-    """One page build: context, shell and the small helpers every page needs."""
-
-    def __init__(self, request: Request, active: str) -> None:
-        self.ctx = chat.page_context(request)
-        self.lang = self.ctx["lang"]
-        self.active = active
-        self.refs: Dict[str, Any] = {}
-
-    def L(self) -> str:
-        return self.lang
-
-    def store(self):
-        return self.ctx["store"]
-
-    def owner_id(self) -> Optional[int]:
-        return self.ctx.get("owner_id")
-
-    def ensure_owner(self) -> Optional[int]:
-        """The owner id, creating the row on this first write (never on a visit)."""
-        if self.ctx.get("owner_id") is not None:
-            return self.ctx["owner_id"]
-        store, token = self.ctx.get("store"), self.ctx.get("owner_token")
-        if store is None or not token:
-            return None
-        try:
-            self.ctx["owner_id"] = store.owner_for_token(token)
-        except StoreError as exc:
-            chat._log.error("creating the owner failed: %s", type(exc).__name__)
-            return None
-        return self.ctx["owner_id"]
-
-    def notify(self, text: str, kind: str = "info") -> None:
-        el = self.refs.get("live")
-        if el is not None:
-            chat._safe(setattr, el, "content", '<div class="page-note %s" role="status">%s%s</div>' % (kind, ICONS["check" if kind == "ok" else "info"], esc(text)))
-
-    async def save_pref(self, **changes: Any) -> None:
-        owner = self.ensure_owner()
-        store = self.store()
-        if owner is None or store is None:
-            return
-        try:
-            await run.io_bound(lambda: store.set_preferences(owner, **changes))
-        except StoreError as exc:
-            chat._log.error("saving preferences failed: %s", type(exc).__name__)
-
-    def shell(self, page_title: str):
-        lang = self.lang
-        ui.add_head_html(GLOBAL_CSS)
-        ui.query("html").props('data-theme=%s lang=%s dir=%s' % (self.ctx["theme"], lang, i18n.DIRECTION[lang]))
-        root = ui.element("div").classes("app-root ob-root")
-        with root:
-            ui.html('<a class="skip-link" href="#ob-main">%s</a>' % esc(t(lang, "skip_to_content")))
-            with ui.element("header").classes("ob-topbar").props('role="banner"'):
-                ui.html('<a class="ob-brand" href="/"><img src="%s" alt="%s"/><span><span class="brand-org">%s</span><span class="brand-name">%s</span></span></a>'
-                        % (chat._LOGO_URL, esc(t(lang, "logo_alt"), True), esc(t(lang, "org")), esc(t(lang, "app_name"))))
-                with ui.element("nav").classes("ob-nav").props('aria-label="%s"' % esc(t(lang, "nav_aria"), True)):
-                    for key, href, label in (("chat", "/", "nav_chat"), ("onboarding", "/onboarding", "nav_onboarding"), ("resources", "/resources", "nav_resources")):
-                        current = ' aria-current="page"' if key == self.active else ""
-                        ui.html('<a class="ob-nav-link%s" href="%s"%s>%s%s</a>' % (" active" if key == self.active else "", href, current, ICONS["arrow" if key == "chat" else ("check" if key == "onboarding" else "search")], esc(t(lang, label))))
-                with ui.element("div").classes("ob-topbar-right"):
-                    ui.button(t(lang, "lang_switch"), on_click=self._toggle_lang).props('flat dense no-caps aria-label="%s" lang="%s"' % (esc(t(lang, "lang_switch_aria"), True), "ar" if lang == "en" else "en")).classes("topbar-btn topbar-lang").mark("lang")
-                    theme_btn = ui.button(on_click=self._toggle_theme).props('flat dense aria-label="%s"' % esc(t(lang, "theme_to_light" if self.ctx["theme"] == "dark" else "theme_to_dark"), True)).classes("topbar-btn").mark("theme")
-                    with theme_btn:
-                        ui.html(ICONS["moon"] + ICONS["sun"])
-            main = ui.element("main").classes("ob-main").props('id="ob-main"')
-            with main:
-                self.refs["live"] = ui.html("").classes("ob-live").props('aria-live="polite"')
-                if self.ctx.get("storage_notice"):
-                    ui.html('<div class="banner warn" role="status">%s<div><strong>%s</strong> %s</div></div>' % (ICONS["info"], esc(t(lang, "storage_unavailable")), esc(t(lang, "ob_storage_unavailable"))))
-        return main
-
-    async def _toggle_lang(self) -> None:
-        new = "ar" if self.lang == "en" else "en"
-        await self.save_pref(interface_lang=new)
-        ui.navigate.to(self._same_page_with(lang=new))
-
-    async def _toggle_theme(self) -> None:
-        new = "light" if self.ctx["theme"] == "dark" else "dark"
-        self.ctx["theme"] = new
-        chat._safe(ui.query("html").props, "data-theme=%s" % new)
-        await self.save_pref(theme=new)
-
-    def _same_page_with(self, **params: str) -> str:
-        request: Request = self.ctx["request"]
-        query = {k: v for k, v in request.query_params.items() if k != "lang"}
-        query.update(params)
-        return request.url.path + ("?" + urlencode(query, quote_via=quote) if query else "")
 
 
 # =====================================================================================================================
@@ -227,6 +137,7 @@ def build_dashboard(request: Request) -> None:
             page.notify(t(lang, "ob_save_failed"), "warn")
             return
         state["progress"][task_id] = {"status": result["status"], "updated_at": result.get("updated_at"), "completed_at": None}
+        state["flash"] = task_id if (result["changed"] and status == "completed") else None
         if result["changed"]:
             page.notify(t(lang, "ob_marked", task=title_of(C.TASKS[task_id], lang), status=status_label(status)), "ok")
         render_summary()
@@ -244,9 +155,10 @@ def build_dashboard(request: Request) -> None:
                 return
             for task in tasks:
                 status = status_of(state["progress"], task.id)
-                with ui.element("article").classes("ob-task" + (" done" if status == "completed" else "") + (" highlight" if task.id == highlight else "")) \
+                with ui.element("article").classes("ob-task" + (" done" if status == "completed" else "") + (" highlight" if task.id == highlight else "")
+                                                   + (" just-done" if task.id == state.get("flash") else "")) \
                         .props('id="task-%s" aria-labelledby="task-title-%s"' % (task.id, task.id)).mark("task"):
-                    ui.html('<div class="ob-task-head"><span class="ob-task-cat">%s%s</span><span class="kind %s">%s</span>'
+                    ui.html('<div class="ob-task-head"><div class="ob-task-tags"><span class="ob-task-cat">%s%s</span><span class="kind %s">%s</span></div>'
                             '<span class="ob-status-pill %s">%s</span></div>' % (
                                 ICONS[CATEGORY_ICONS[task.category]], esc(i18n.domain_name(lang, task.category)), task.kind, esc(t(lang, KIND_KEYS[task.kind])),
                                 status, esc(status_label(status))))
@@ -302,7 +214,7 @@ def build_dashboard(request: Request) -> None:
 # Procedure navigator
 # =====================================================================================================================
 def build_procedure(request: Request, procedure_id: str) -> None:
-    page = Page(request, "onboarding")
+    page = Page(request, "procedures")
     lang = page.lang
     proc = C.procedure(procedure_id)
     task_id = request.query_params.get("task") or ""
@@ -472,15 +384,13 @@ def build_finder(request: Request) -> None:
                         res.type, esc(t(lang, TYPE_KEYS[res.type])), ICONS[CATEGORY_ICONS[res.category]], esc(i18n.domain_name(lang, res.category)),
                         ('<span class="rf-context">%s</span>' % esc(t(lang, "rf_contextual"))) if entry["contextual"] else ""))
                     ui.html('<h3 class="rf-title" id="res-%s" dir="auto">%s</h3><p class="rf-desc" dir="auto">%s</p>' % (res.id, esc(title_of(res, lang)), esc(text_of(res, "description", lang))))
-                    meta: List[str] = []
                     if res.source_id:
                         pages_text = t(lang, "rf_pages", first=res.pages[0], last=res.pages[-1]) if len(res.pages) > 1 and res.type == "document" else ", ".join(t(lang, "rf_page", page=p) for p in res.pages)
-                        meta.append('<span class="chip page">%s</span><span class="chip">%s</span><span class="chip verified">%s%s</span>' % (
-                            esc(source_label(res.source_id)), esc(pages_text), ICONS["check"], esc(t(lang, "rf_in_corpus"))))
-                    if meta:
-                        ui.html('<div class="rf-meta">%s</div>' % "".join(meta))
+                        ui.html('<div class="rf-source">%s<span>%s</span><span aria-hidden="true">·</span><span>%s</span><span class="verified">%s%s</span></div>' % (
+                            ICONS["file"], esc(source_label(res.source_id)), esc(pages_text), ICONS["check"], esc(t(lang, "rf_in_corpus"))))
                     if res.contacts:
-                        rows = "".join('<li><span class="rf-contact-label">%s</span> <span class="rf-contact-value" dir="ltr">%s</span></li>' % (esc(c.label.rstrip(":")), esc(c.value)) for c in res.contacts)
+                        rows = "".join('<li><span class="rf-contact-label">%s</span> <span class="rf-contact-value" dir="ltr">%s</span></li>' % (
+                            esc(c.label.rstrip(":")), " ".join('<span class="tel">%s</span>' % esc(n) for n in (PHONE.findall(c.value) or [c.value]))) for c in res.contacts)
                         ui.html('<div class="rf-contacts"><div class="rf-contacts-head">%s%s</div><ul>%s</ul></div>' % (ICONS["shield"], esc(t(lang, "rf_contact_as_printed")), rows))
                     elif res.type == "department":
                         ui.html('<p class="rf-contact-note">%s%s</p>' % (ICONS["info"], esc(text_of(res, "contact_note", lang))))
@@ -488,8 +398,8 @@ def build_finder(request: Request) -> None:
                         if safe_url(link.url) is None:
                             continue
                         note = t(lang, "rf_document_link") if link.kind == "document_link" else t(lang, "rf_outside_corpus", date=link.verified_on)
-                        ui.html('<div class="rf-link">%s%s <span class="rf-link-note">· %s</span><br/><span class="rf-link-desc">%s</span></div>' % (
-                            ICONS["globe"], anchor(link.url, link.label_ar if lang == "ar" else link.label_en), esc(note), esc(link.note_ar if lang == "ar" else link.note_en)))
+                        ui.html('<div class="rf-link"><div class="rf-link-head">%s%s%s</div><span class="rf-link-note">%s</span></div>' % (
+                            ICONS["globe"], anchor(link.url, link.label_ar if lang == "ar" else link.label_en), ICONS["external"], esc(note)))
                     related = [C.TASKS[tid] for tid in res.related_tasks if tid in C.TASKS]
                     if related:
                         ui.html('<div class="rf-related"><span class="lbl">%s</span>%s</div>' % (esc(t(lang, "rf_related")), "".join(
@@ -517,6 +427,8 @@ def build_finder(request: Request) -> None:
 
     with main:
         ui.html('<div class="ob-page-head"><h1 class="ob-h1">%s</h1><p class="ob-sub">%s</p></div>' % (esc(t(lang, "rf_title")), esc(t(lang, "rf_subtitle"))))
+        by_type = {kind: sum(1 for r in C.RESOURCES.values() if r.type == kind) for kind in ("document", "department", "website")}
+        ui.html('<p class="rf-counts">%s</p>' % esc(t(lang, "rf_counts", docs=by_type["document"], depts=by_type["department"], sites=by_type["website"])))
         if task is not None:
             with ui.element("div").classes("rf-context-box").props('role="status"') as box:
                 page.refs["context"] = box
@@ -540,6 +452,58 @@ def build_finder(request: Request) -> None:
     render_results()
 
 
+# =====================================================================================================================
+# Guided procedures index (PF-15)
+# =====================================================================================================================
+def linked_task(procedure_id: str) -> Optional[C.Task]:
+    """The checklist task whose guide this procedure is (None for a procedure no task links to)."""
+    for task in C.tasks_by_category():
+        if task.procedure_id == procedure_id:
+            return task
+    return None
+
+
+def build_procedures_index(request: Request) -> None:
+    page = Page(request, "procedures")
+    lang = page.lang
+    content = page.shell(t(lang, "px_title"))
+    store, owner = page.store(), page.owner_id()
+    positions: Dict[str, int] = {}
+    progress: Dict[str, Dict[str, Any]] = {}
+    if store is not None and owner is not None:
+        try:
+            positions = store.procedure_positions(owner)
+            progress = store.task_progress(owner)
+        except StoreError as exc:
+            chat._log.error("loading procedure positions failed: %s", type(exc).__name__)
+    with content:
+        ui.html('<div class="page-head"><div class="page-head-text"><h1 class="page-title">%s</h1><p class="page-sub">%s</p></div></div>' % (
+            esc(t(lang, "px_title")), esc(t(lang, "px_subtitle"))))
+        with ui.element("section").classes("px-grid").props('aria-label="%s"' % esc(t(lang, "px_title"), True)):
+            for proc in C.PROCEDURES.values():
+                task = linked_task(proc.id)
+                total = len(proc.steps)
+                conditional = sum(1 for step in proc.steps if step.flag == "conditional")
+                position = positions.get(proc.id)
+                href = "/onboarding/procedure/%s%s" % (proc.id, ("?task=" + task.id) if task else "")
+                status_html = ""
+                if task is not None:
+                    status = status_of(progress, task.id)
+                    status_html = '<span class="px-task">%s<a class="quiet-link" href="/onboarding?task=%s#task-%s" dir="auto">%s</a><span class="ob-status-pill %s">%s</span></span>' % (
+                        esc(t(lang, "px_task")) + ":", task.id, task.id, esc(title_of(task, lang)), status, esc(t(lang, STATUS_KEYS[status])))
+                else:
+                    status_html = '<span class="px-task muted">%s</span>' % esc(t(lang, "px_no_task"))
+                pos_text = t(lang, "px_continue", n=min(position, total - 1) + 1, total=total) if position else ""
+                ui.html(('<article class="card px-card" aria-labelledby="px-%s"><div class="card-head"><div class="card-icon">%s</div><div><h2 class="card-title" id="px-%s" dir="auto">%s</h2>'
+                         '<p class="card-desc" lang="en" dir="ltr">%s</p></div></div>'
+                         '<div class="px-meta"><span class="chip page">%s</span><span class="chip">%s</span><span class="chip">%s</span>%s</div>%s'
+                         '<div class="px-foot"><span class="px-position">%s</span><a class="link-btn" href="%s">%s<span>%s</span></a></div></article>') % (
+                    proc.id, ICONS["steps"], proc.id, esc(title_of(proc, lang)), esc(proc.heading), esc(source_label(proc.source_id)),
+                    esc(t(lang, "pr_pages", pages=", ".join(str(p) for p in proc.pages))), esc(t(lang, "px_steps", n=total)),
+                    ('<span class="chip">%s</span>' % esc(t(lang, "px_conditional", n=conditional))) if conditional else "", status_html,
+                    esc(pos_text), href, ICONS["arrow"], esc(t(lang, "px_resume") if position else t(lang, "px_start")))).mark("procedure-card")
+
+
 def register_pages() -> None:
     @ui.page("/onboarding")
     def onboarding_page(request: Request) -> None:
@@ -552,6 +516,10 @@ def register_pages() -> None:
     @ui.page("/resources")
     def resources_page(request: Request) -> None:
         build_finder(request)
+
+    @ui.page("/procedures")
+    def procedures_page(request: Request) -> None:
+        build_procedures_index(request)
 
 
 __all__ = ["build_dashboard", "build_finder", "build_procedure", "register_pages"]
