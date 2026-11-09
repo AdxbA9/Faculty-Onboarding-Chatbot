@@ -59,7 +59,7 @@ from typing import Callable, Dict, List, Optional, Tuple
 
 import numpy as np
 
-from . import conflict_guard, groq_check
+from . import conflict_guard, contact_guard, groq_check
 from .agents import router as router_agent
 from .agents import synthesis as synthesis_agent
 from .agents.verifier import citing_items
@@ -664,6 +664,14 @@ def run(
         problem = conflict_guard.answer_problem(answer, conflicts["stamped"])
         if problem:
             trace.append(TraceEntry("conflict_guard", "answer_refused", False, 0.0, {"reason": problem}))
+            answer, cited = REFUSAL, []
+    # ---- 4c. Contact columns (post-freeze PF-16, D-127) --------------------------------------------------------
+    # A model-written answer to a telephone (or fax) question whose directory numbers all sit in the OTHER column of the
+    # contact table answers a different question (live case: the College of Engineering's fax given as its telephone).
+    if used_llm and answer not in (REFUSAL, LLM_UNAVAILABLE_REPLY):
+        problem = contact_guard.answer_problem(question, answer, pages)
+        if problem:
+            trace.append(TraceEntry("contact_guard", "answer_refused", False, 0.0, {"reason": problem}))
             answer, cited = REFUSAL, []
     if used_llm and cited and answer not in (REFUSAL, LLM_UNAVAILABLE_REPLY):
         chosen = [items[i] for i in citing_items(answer, items, draft.claimed_pages) if int(items[i]["meta"]["page"]) in cited]
