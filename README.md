@@ -46,6 +46,14 @@ Python process, no Node, no Docker, no build step.
   The browser asks for microphone permission once; the audio is processed
   by the browser vendor's speech service, not by this application, which
   keeps only the text you see. See "Voice input" below.
+- **One platform, seven pages** (PF-15) — every page shares the same
+  sidebar navigation (Assistant chat, Onboarding checklist, Guided
+  procedures, Resources & documents, Conversation history, Guest profile,
+  Settings), which becomes a slide-in menu on phones and tablets. The
+  chat stays the start page. Settings add a larger text size and reduced
+  motion; the guest profile shows what this browser has saved and an
+  optional display name. See "Navigation, settings, guest profile and
+  history" below.
 - **Developer mode** — open the page as `http://localhost:8501/?dev=1`
   (or set `APP_DEVELOPER_MODE=1`) to get a Developer switch in the
   header that reveals a per-answer panel: mode, served path, routing,
@@ -340,7 +348,8 @@ conversations".
   faculty login. Clearing the cookie starts a fresh, empty guest.
 - **What is stored**: questions, answers, the answer's pages, evidence
   excerpts, the English intermediate and translation state of Arabic
-  answers, timing and path diagnostics, and the four preferences. Never
+  answers, timing and path diagnostics, the preferences (languages,
+  theme, text size, reduced motion) and the optional display name. Never
   stored: audio, partial voice transcripts, the Groq key, the cookie
   secret or any token.
 - **Where**: `APP_DB_PATH` moves the database; `APP_STORAGE_SECRET` (or a
@@ -390,6 +399,44 @@ and verification as any typed question. Data: schema version 2 of the
 PF-13 database (`onboarding_tasks`, `task_progress`, `progress_events`,
 `procedure_positions`, `conversations.context_task`); a version-1
 database upgrades at the first start with a backup first.
+
+## Navigation, settings, guest profile and history
+
+Every page uses one frame (PF-15, decision record D-126): a sidebar with
+the brand, **New chat**, the navigation in two groups ("Workspace" and
+"Your guest session"), the guest chip and "About this assistant". Below
+900 px the sidebar becomes a drawer opened by the menu button in the
+header (Escape or a tap outside closes it). The current page is marked
+for assistive technology, and every item is an ordinary link, so the
+browser's Back button and bookmarks work.
+
+| Page | Address | What it does |
+|---|---|---|
+| Assistant chat | `/` | the start page; `/?new=1` opens an empty conversation |
+| Onboarding checklist | `/onboarding` | the PF-14 checklist |
+| Guided procedures | `/procedures` | the seven procedures, with "Continue at step k of n" where you left one |
+| Resources & documents | `/resources` | the PF-14 finder |
+| Conversation history | `/history` | search titles, open, rename and delete (with confirmation); groups by age |
+| Guest profile | `/profile` | what this browser has saved, progress, recent activity, optional display name |
+| Settings | `/settings` | languages, theme, text size, reduced motion, reset, delete all conversations |
+
+- **Settings are saved at once** for this browser and applied on every
+  page, also after a server restart. Large text enlarges the reading text;
+  reduced motion turns off transitions (the device's own reduced-motion
+  setting is always respected). The quick settings dialog on the chat
+  page remains and links to the full page.
+- **The display name** is optional, at most 40 characters, and shown only
+  in this browser. Email addresses, long digit sequences (ID or phone
+  numbers), line breaks and markup characters are refused. Resetting the
+  settings keeps it; "Remove" deletes it.
+- **A guest profile is not an account.** It is the PF-13 guest identity
+  (a signed, HttpOnly browser cookie). There is no sign-in, and the
+  application never asks for a university password, employee number or
+  Emirates ID.
+- **Times** are shown in your own time zone and language.
+- **Data**: schema version 3 adds `text_size`, `reduced_motion` and
+  `display_name` to `preferences`; a version-2 database upgrades at the
+  first start with a backup first.
 
 ---
 
@@ -574,9 +621,12 @@ the terminal for a `[OCR]` line explaining the failure.
 
 - OCR quality depends on the quality of the embedded images. Heavily
   stylised or very low-DPI screenshots produce noisy text.
-- The bot answers only in English; the UI copy is English-only.
-- Chat history is per-browser-tab and held in memory — closing the
-  tab clears it.
+- Arabic answers depend on the translation and checking layer (PF-11);
+  an independent fluency review of the Arabic interface is outstanding.
+- Conversations and settings belong to one browser's guest identity;
+  clearing the browser's site data starts a new, empty guest.
+- Phone and tablet layouts were checked by viewport emulation in Chrome,
+  not on physical devices.
 
 ---
 

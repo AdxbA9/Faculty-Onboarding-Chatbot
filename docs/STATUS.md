@@ -9,6 +9,38 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-11-09 - Professional web platform: shared navigation, settings, guest profile, history (post-freeze phase PF-15)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/pf15-professional-web-platform` (from `feature/pf14-intelligent-onboarding` at `0fa76a1`, the pushed PF-14 tip) |
+| Starting commit | `0fa76a1` (PF-14) |
+| Ending state | COMPLETE for the phase (D-126): one shell and seven-item navigation on every page (desktop sidebar, drawer below 900 px), Settings with persisted text size and reduced motion, an optional guest display name, a conversation history page, a procedures index, chat and onboarding layout fixes for phones and Arabic; schema version 3 |
+| Freeze status | `ENGLISH_CORE_FREEZE_PF6` plus D-117, D-119 to D-126; Plan F, retrieval, verification, the Arabic and voice layers, the corpus, the registry and the onboarding catalog unchanged |
+| Elapsed | 2026-11-09, one working session |
+
+### Completed
+
+- Audit with real before screenshots of `0fa76a1` (`UI_UX_DESIGN_AUDIT.md`); external design references recorded as links only (`WEB_DESIGN_REFERENCES.md`).
+- `ui/shell.py` (shared shell, navigation, drawer script, local times, `Page` helper), `ui/guest.py` (`/history`, `/profile`, `/settings`), `/procedures` in `ui/onboarding.py`, the chat page moved into the shell, PF-15 styles in `ui/styles.py`, 338 strings per language in `ui/i18n.py`, phone numbers kept whole in answers by the shell script.
+- `persistence/db.py` schema version 3 and the store validation (`clean_preference`, `clean_display_name`, `owner_info`, `procedure_positions`).
+- Tests: tests/test_ui_platform.py, tests/test_persistence_v3.py; QA tooling `qa/pf15_web/` (before/after capture, browser workflows with a real restart).
+
+### Tests performed
+
+- Full suite: 7,717 passed, 0 failed, 0 skipped in 315.37 s (PF-14: 7,666).
+- Browser harness (headless Chrome 157, viewport emulation): 25 workflow steps + 6 after a real restart, 70 viewport checks and 42 drawer checks, 0 problems; visitor B saw nothing of visitor A before and after the restart.
+- Before/after capture with the same scenario; 13 side-by-side comparisons. No Groq request.
+
+### Known limitations
+
+- Guest identity only (a signed browser cookie); the display name is a convenience, not an identity, and is visible only to the same browser.
+- Responsive behaviour verified by viewport emulation in one engine; no physical phone, tablet, Safari or Firefox; no screen-reader session; no formal WCAG audit.
+- Carried over: PF-11 holdout mismatches and human Arabic fluency review, PF-12 real-microphone acceptance, PF-9 contact live validation, source-version and resource-link review, the historic exposed-key item, human usability and accessibility validation.
+
+---
+
 ## 2026-11-09 - Intelligent onboarding experience: checklist, procedure navigator, resource finder (post-freeze phase PF-14)
 
 | Field | Value |
