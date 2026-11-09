@@ -9,6 +9,38 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-11-09 - System-wide quality audit and targeted fixes (post-freeze phase PF-16)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/pf16-system-wide-quality-audit` (from `feature/pf15-professional-web-platform` at `6c03442`, the pushed PF-15 tip) |
+| Starting commit | `6c03442` (PF-15) |
+| Ending state | COMPLETE for the automated engineering scope (D-127): audit, 258-case independent evaluation plus a frozen Arabic holdout, 20 live model requests, database, voice-control, security, UI, contrast and performance checks; five defects fixed (database restore, two Arabic rewrite faults, a wrong-column contact answer, an invisible field counter, phone wrap), documentation of the runtime modes; open items listed in `DEFECT_REGISTER.md` |
+| Freeze status | `ENGLISH_CORE_FREEZE_PF6` plus D-117, D-119 to D-127; Plan F, retrieval thresholds, the Verifier, the corpus and the registry unchanged |
+| Elapsed | 2026-11-09, one working session |
+
+### Completed
+
+- Reproduced: frozen 192 set, Plan F 55 of 192, every served answer identical to the reviewed I-9 answers (scopes off and on, before and after the fixes).
+- New evaluation: 258 cases (201 English, 52 Arabic, 5 mixed); routing exact 148 of 207 single-specialist cases; expected page retrieved 219 of 233; 0 of 36 expected refusals answered; 0 forbidden facts.
+- Live (20 requests): 1 wrong contact (fixed to a refusal), 1 misleading contact (open), injections ignored, agency request refused.
+- Fixes with tests: `persistence/db.py` (D-01), `handbook_bot/arabic_query.py` + `arabic_lexicon.py` (D-02), `handbook_bot/contact_guard.py` + `orchestrator.py` (D-03), `ui/styles.py` + `ui/shell.py` (D-08, D-09); README runtime modes (D-07).
+- Tooling: `qa/pf16_audit/`; harness updates for persistent chats and Edge 157.
+
+### Tests performed
+
+- Full suite: 7,740 passed, 0 failed, 0 skipped in 316.33 s on `21263b5` (PF-15: 7,717).
+- Browser: Chrome 157 and Edge 157, 0 problems; voice (simulated recogniser) 54 of 54 in both; contrast 0 of 32 states below threshold.
+
+### Known limitations
+
+- Real speech, physical devices, Safari/Firefox, screen readers, Arabic fluency and human usability are not verified (PF-17 plan ready).
+- Specialist coverage on fresh wording is low (8 of 258); the evidence gate refuses some long or two-part questions; single-turn answering.
+- Guest identity only; plain-text local database; developer mode by URL.
+
+---
+
 ## 2026-11-09 - Professional web platform: shared navigation, settings, guest profile, history (post-freeze phase PF-15)
 
 | Field | Value |

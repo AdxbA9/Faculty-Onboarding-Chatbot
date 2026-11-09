@@ -536,6 +536,18 @@ Every tunable lives in `handbook_bot/config.py`. Common changes:
 Bump `CACHE_VERSION` in `config.py` if you change chunking/ingestion
 logic and want to invalidate the embedding cache.
 
+### Runtime modes (set these before an evaluation)
+
+| Mode | Switches (`.env`) | What answers |
+|---|---|---|
+| LEGACY (application default) | none | one retrieval, reranking, extractor-or-model and Verifier pipeline; no specialist is consulted and no specialist label is shown |
+| ACTIVE (acceptance configuration) | `PLAN_F_ENABLED=1`, `PLAN_F_GUIDE_SCOPES=1` | the Coordinator and the four specialists answer first when their deterministic, source-quoted answer passes the findings verification; every other question falls back to the LEGACY pipeline |
+| SHADOW (diagnostics) | `PLAN_F_SHADOW=1` | the LEGACY answer is shown; the specialists run beside it for the Developer panel only |
+
+The owner's manual acceptance tests and every QA run since PF-6 used ACTIVE with guide scopes on, so a human
+evaluation of the Agentic AI behaviour must set those two switches; with an empty `.env` the application runs in
+LEGACY. The Developer panel (`?dev=1`) shows the mode of every answer.
+
 ---
 
 ## Troubleshooting
