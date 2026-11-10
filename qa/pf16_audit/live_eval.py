@@ -1,6 +1,6 @@
 """PF-16 bounded live evaluation: real Groq inference for a small, chosen subset, with the budget enforced in code.
 
-    python -X utf8 qa/pf16_audit/live_eval.py <repo> <out dir> --budget 20 --items ITEMS.json
+    python -X utf8 qa/pf16_audit/live_eval.py <repo> <out dir> --budget 20 --items ITEMS.json [--pause SECONDS]
 
 ITEMS.json is a list of {"id", "question", "language", "expected_facts", "evidence": [[source_id, page], ...],
 "forbidden_facts", "why"} in priority order.
@@ -32,6 +32,8 @@ REPO, OUT = os.path.abspath(sys.argv[1]), os.path.abspath(sys.argv[2])
 ARGS = sys.argv[3:]
 BUDGET = int(ARGS[ARGS.index("--budget") + 1]) if "--budget" in ARGS else 20
 ITEMS = ARGS[ARGS.index("--items") + 1]
+#: PF-16.6: seconds to wait after a question that sent requests (the PF-16.5 run hit the per-minute rate limit at 30 requests in 102 s)
+PAUSE = float(ARGS[ARGS.index("--pause") + 1]) if "--pause" in ARGS else 0.0
 os.chdir(REPO)
 sys.path.insert(0, REPO)
 os.makedirs(OUT, exist_ok=True)
@@ -125,6 +127,8 @@ for item in items:
         rec["forbidden_present"] = [x for x in item.get("forbidden_facts") or [] if x.lower() in (result.answer or "").lower() + " " + text]
     run["records"].append(rec)
     save()
+    if PAUSE and issued:
+        time.sleep(PAUSE)
     print("%-14s requests=%d served=%s pages=%s facts=%s/%s" % (item["id"], issued, rec.get("served"), rec.get("pages"), len(rec.get("facts_found") or []),
                                                                  len(item.get("expected_facts") or [])), flush=True)
 run["finished"] = time.strftime("%Y-%m-%d %H:%M:%S")
