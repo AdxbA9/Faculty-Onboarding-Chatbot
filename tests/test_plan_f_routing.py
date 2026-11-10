@@ -134,7 +134,7 @@ def test_single_owner_decisions_are_returned_as_the_same_object(runtime):
     assert result.outcome is PF.PlanFOutcome.ACCEPTED and result.path == PF.PATH_PASSTHROUGH and result.routing.reason is RC.ROUTE_UNCHANGED
     assert "routing" not in T.trace_agents(result) and result.handoff is None and result.handoff_outcome is None and result.specialist_calls == 1
     assert T.trace_agents(result) == ["plan_f_adapter", "plan_f_registry", "coordinator", "dispatcher", "specialist:institutional", "quote_guard",
-                                      "subject_guard", "findings_verifier", "verifier", "plan_f_outcome"]
+                                      "subject_guard", "findings_verifier", "contact_labels", "verifier", "plan_f_outcome"]    # D-129 step
     assert "routing_ms" in result.timings and result.to_dict()["routing"]["reason"] == "ROUTE_UNCHANGED"
 
 
@@ -176,7 +176,9 @@ def test_contact_and_location_clauses_are_owned_by_institutional_navigation(kb, 
     institutional = lambda task: AT.directory(kb, task, Q["hr_row"], office_id="human_resources", value="+971 6 5050023")
     result = AT.attempt(kb, THESES_HR_PHONE, research=research, institutional=institutional, faculty_services=never)
     assert result.outcome is PF.PlanFOutcome.ACCEPTED and result.path == PF.PATH_AGGREGATE, result.reason
-    assert result.result.answer == Q["theses"][1] + "\n\n" + Q["hr_row"][1] and result.result.pages == [81, 54] and result.specialist_calls == 2
+    # D-129: the directory part is labelled; the research quote is unchanged; the evidence item stays the printed row
+    assert result.result.answer == Q["theses"][1] + "\n\n" + T.HR_PHONE_ANSWER and result.result.pages == [81, 54] and result.specialist_calls == 2
+    assert result.result.items[1]["chunk"] == Q["hr_row"][1]
     located_decision = coordinate(HR_LOCATED)
     refined, routing = R.refine(located_decision)
     assert routing.final_specialists == ("institutional",) and routing.reason is RC.ROUTE_REFINED_BY_REQUEST_KIND

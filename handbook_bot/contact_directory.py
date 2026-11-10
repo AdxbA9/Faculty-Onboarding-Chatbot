@@ -190,13 +190,72 @@ def _tail_free(name: str) -> str:
     return re.sub(r"\s+(?:department|dept|office|unit|section)$", "", name)
 
 
-_HEADER_TEXT = "Contact directory: Office / College / Department | Telephone Number | Fax Number |"
+#: The column header printed at the top of every directory page (pp. 52-55), word for word. Post-freeze PF-16.6: the
+#: evidence text carries only printed words (PF-16.5 prefixed a descriptive "Contact directory:" that is not printed).
+_HEADER_TEXT = "Office / College / Department Telephone Number Fax Number"
 
 
 def _evidence(lines: List[str]) -> str:
     """The printed lines an answer rests on, with the page's column header, as one evidence text (numbers that wrap onto
     the next line are joined, exactly as they are printed)."""
     return _HEADER_TEXT + " " + re.sub(r"\s+", " ", " ".join(lines)).strip()
+
+
+# ---------------------------------------------------------------------------
+# Plan F directory rows (post-freeze PF-16.6, decision D-129)
+# ---------------------------------------------------------------------------
+#: Plan F's Institutional specialist binds the asked fields of a complete directory row from the page's printed column
+#: header and quotes the whole row ("Passport Unit +971 6 5050066 +971 6 5050026"). Rendered verbatim, the row does not
+#: say which number is the telephone and which the fax. These helpers render the bound fields with their labels and check
+#: every label against an independent reader of the printed page lines before anything is shown.
+FIELD_WORDS = {TELEPHONE: "telephone", FAX: "fax"}
+_FIRST_NUMBER = re.compile(r"\+\s*971|\d")
+
+
+def _squash(text: str) -> str:
+    return re.sub(r"\s+", " ", _SPACES.sub(" ", text or "")).strip()
+
+
+def printed_name(row_text: str) -> str:
+    """The office name as printed at the start of a directory row (everything before its first number)."""
+    text = _squash(row_text)
+    m = _FIRST_NUMBER.search(text)
+    return (text[:m.start()] if m else text).strip(" :-")
+
+
+def bound_row_answer(row_text: str, values: Dict[str, str]) -> Optional[str]:
+    """'<printed name> (contact directory): fax +971 6 5050026.' for the bound fields of a Plan F directory row, in the
+    order they were asked; None when a field has no label word, a value is not printed in the row, or no name is printed."""
+    name, row = printed_name(row_text), _squash(row_text)
+    parts = []
+    for field_name, value in (values or {}).items():
+        word = FIELD_WORDS.get(field_name)
+        value = _squash(str(value or ""))
+        if word is None or not value or value not in row:
+            return None
+        parts.append("%s %s" % (word, value))
+    if not name or not parts:
+        return None
+    return "%s (contact directory): %s." % (name, "; ".join(parts))
+
+
+def column_check(values: Dict[str, str], pages: Sequence[Dict[str, Any]]) -> Tuple[bool, str]:
+    """Whether every number of every bound value is printed in that field's column according to the page-line reader
+    (``contact_guard.directory_columns``, independent of the specialist's row-and-header binding). (True, note) when it
+    agrees, or when no directory page lines are available (the header binding then stands alone); (False, reason) else."""
+    from .contact_guard import directory_columns
+    table = directory_columns(pages or [])
+    if not table:
+        return True, "page lines unavailable: the specialist's printed-header binding stands alone"
+    for field_name, value in (values or {}).items():
+        numbers = _NUMBER.findall(_squash(str(value or "")))
+        if field_name not in FIELD_WORDS or not numbers:
+            return False, "the %s value is not a complete printed number" % field_name
+        for number in numbers:
+            columns = table.get(re.sub(r"\D", "", number), set())
+            if field_name not in columns:
+                return False, "%s is not printed in the %s column (page reader: %s)" % (number, field_name, sorted(columns) or "not found")
+    return True, "every number confirmed in its column by the page reader"
 
 
 def _format(numbers: List[Tuple[str, str]]) -> str:
@@ -249,4 +308,4 @@ def answer(question: str, pages: Sequence[Dict[str, Any]]) -> Optional[Tuple[str
     return None
 
 
-__all__ = ["Entry", "Group", "Unit", "answer", "parse", "units"]
+__all__ = ["Entry", "FIELD_WORDS", "Group", "Unit", "answer", "bound_row_answer", "column_check", "parse", "printed_name", "units"]

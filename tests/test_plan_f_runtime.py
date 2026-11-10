@@ -44,6 +44,10 @@ QARESULT_FIELDS = ["answer", "pages", "best_section", "evidence", "query_type", 
                    "answer_language", "original_answer", "translation", "query_transform"]
 
 HR_PHONE = "What is the phone number of the Human Resources Department?"
+#: Post-freeze PF-16.6 (D-129): the Institutional directory row is rendered with the label of the asked field; the
+#: evidence item stays the verbatim printed row. Before D-129 the answer was the bare row (HR_ROW).
+HR_ROW = "Human Resources +971 6 5050023 +971 6 5585200"
+HR_PHONE_ANSWER = "Human Resources (contact directory): telephone +971 6 5050023."
 HR_KNOWN_WRONG = "What does Human Resources do?"
 ANNUAL_LEAVE = "How many days of annual leave do faculty members get?"
 
@@ -366,7 +370,7 @@ def test_subject_guard_accepts_an_explicit_subject_in_the_evidence(kb):
 
 def test_subject_guard_accepts_a_metadata_bound_subject_in_a_lowercase_question(runtime):
     attempt = runtime.attempt("what is the phone number of human resources")
-    assert attempt.outcome is PF.PlanFOutcome.ACCEPTED and attempt.result.answer == "Human Resources +971 6 5050023 +971 6 5585200"
+    assert attempt.outcome is PF.PlanFOutcome.ACCEPTED and attempt.result.answer == HR_PHONE_ANSWER    # D-129: labelled
 
 
 @pytest.mark.parametrize("clause,label", [
@@ -517,7 +521,7 @@ def test_only_an_eligible_supported_result_progresses(kb, label, kwargs, expecte
 
 def test_an_eligible_supported_stub_result_is_rendered(kb):
     attempt = PF.PlanFRuntime(stub_registry(institutional=_hr_phone_task_stub(kb, FindingStatus.SUPPORTED)), kb.chunks, kb.metadata).attempt(HR_PHONE)
-    assert attempt.outcome is PF.PlanFOutcome.ACCEPTED and attempt.result.answer == "Human Resources +971 6 5050023 +971 6 5585200"
+    assert attempt.outcome is PF.PlanFOutcome.ACCEPTED and attempt.result.answer == HR_PHONE_ANSWER    # D-129: labelled
 
 
 def test_a_general_ask_is_not_eligible_even_when_the_entity_is_quoted(kb):
@@ -541,7 +545,7 @@ def test_a_pending_task_requests_fallback(kb, runtime, monkeypatch):
 # One valid supported example from each frozen specialist (section 29)
 # ---------------------------------------------------------------------------
 @pytest.mark.parametrize("question,specialist,pages,starts_with", [
-    (HR_PHONE, "institutional", [54], "Human Resources +971 6 5050023 +971 6 5585200"),
+    (HR_PHONE, "institutional", [54], HR_PHONE_ANSWER),    # D-129: labelled
     ("Does HR arrange travel and hotel accommodations for new faculty members?", "faculty_services", [61],
      "• HR arranges travel and hotel accommodations for new faculty members."),
     ("How many credit hours is a full teaching load?", "teaching", [96], 'o "A" Regular Faculty'),
@@ -557,8 +561,9 @@ def test_each_specialist_has_a_supported_example_the_adapter_renders(kb, runtime
     assert result.llm_calls == 0 and result.used_llm is False and result.retried is False
     for item in result.items:
         assert item["chunk"] in kb.chunks[item["idx"]] and item["meta"]["page"] in result.pages
+    labels = ["contact_labels"] if specialist == "institutional" else []      # D-129: a directory row's labels are checked
     assert trace_agents(attempt) == ["plan_f_adapter", "plan_f_registry", "coordinator", "dispatcher", "specialist:%s" % specialist,
-                                     "quote_guard", "subject_guard", "findings_verifier", "verifier", "plan_f_outcome"]   # I-4 adds findings_verifier
+                                     "quote_guard", "subject_guard", "findings_verifier"] + labels + ["verifier", "plan_f_outcome"]   # I-4 adds findings_verifier
 
 
 def test_secondary_findings_that_do_not_cover_the_ask_are_dropped_not_rendered(runtime):
@@ -716,9 +721,10 @@ def test_accepted_result_fills_every_field_consistently(kb, runtime):
     attempt = runtime.attempt(HR_PHONE)
     result = attempt.result
     assert isinstance(result, QAResult) and set(vars(result)) == set(QARESULT_FIELDS)
-    assert result.answer == "Human Resources +971 6 5050023 +971 6 5585200" == result.items[0]["chunk"]
+    # D-129: the answer is the labelled field; the evidence item and the preview stay the verbatim printed row
+    assert result.answer == HR_PHONE_ANSWER and result.items[0]["chunk"] == HR_ROW
     assert result.pages == [54] and result.best_section == "Contact Information" and result.query_type == "contact"
-    assert result.evidence == result.answer and len(result.items) == 1
+    assert result.evidence == HR_ROW and len(result.items) == 1
     assert result.used_llm is False and result.llm_calls == 0 and result.retried is False and result.sub_questions == []
     assert result.num_candidates == 1 and result.num_reranked == 1
     assert set(result.timings) >= {"coordinator_ms", "dispatch_ms", "specialist_ms", "guards_ms", "verify_ms", "generation_ms", "total_ms"}
@@ -779,7 +785,7 @@ def test_attempts_are_deterministic(runtime):
 # ---------------------------------------------------------------------------
 def test_answer_with_fallback_prefers_plan_f_and_otherwise_returns_the_legacy_result(kb, runtime):
     accepted = PF.answer_with_fallback(HR_PHONE, kb, runtime)
-    assert accepted.answer == "Human Resources +971 6 5050023 +971 6 5585200" and accepted.llm_calls == 0
+    assert accepted.answer == HR_PHONE_ANSWER and accepted.llm_calls == 0    # D-129: labelled
     legacy = PF.answer_with_fallback("Which office handles faculty housing?", kb, runtime)
     assert isinstance(legacy, QAResult) and legacy.answer != accepted.answer
     agents = trace_agents(legacy)

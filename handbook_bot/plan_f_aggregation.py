@@ -519,11 +519,18 @@ def aggregate(decision: CoordinatorDecision, dispatched: DispatchResult, chunks:
 # Rendering
 # ---------------------------------------------------------------------------
 def render_parts(parts: Sequence[AggregatePart]) -> str:
-    """The verbatim quotes of the parts, in their order, one paragraph each. No label, no connective, no rewording; the
-    first step of a D-111 guide procedure puts its printed heading on its own line (post-freeze PF-3C)."""
+    """The verbatim quotes of the parts, in their order, one paragraph each. No connective, no rewording; the first step
+    of a D-111 guide procedure puts its printed heading on its own line (post-freeze PF-3C). Post-freeze PF-16.6 (D-129):
+    a directory row bound by the Institutional specialist carries its field labels (``plan_f_runtime.contact_text``)."""
     from . import guide_grounding as _guides
-    return "\n\n".join(_guides.render_part(part.finding.evidence_quote.strip(), (part.finding.metadata or {}).get(_guides.GUIDE_KEY))
-                       for part in parts if part.finding.evidence_quote.strip())
+    from .plan_f_runtime import contact_text
+    out = []
+    for part in parts:
+        quote = part.finding.evidence_quote.strip()
+        if quote:
+            meta = part.finding.metadata or {}
+            out.append(_guides.render_part(contact_text(quote, part.specialist_id, meta.get("contact_values")), meta.get(_guides.GUIDE_KEY)))
+    return "\n\n".join(out)
 
 
 __all__ = [

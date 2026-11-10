@@ -113,6 +113,7 @@ from .agents.verifier import verify
 from .config import EVIDENCE_PREVIEW_CHARS
 from .qa import QAResult, answer_question
 from . import guide_grounding as _guides                         # post-freeze PF-3C (D-111): the one guide evidence path
+from . import contact_directory as _directory                    # post-freeze PF-16.6 (D-129): labelled directory rows
 from .agents.specialists.guide_evidence import GuideCapableSpecialist, GuideEvidence
 
 #: Integration phase this module implements.
@@ -735,15 +736,48 @@ def subject_binding(clause: str, report: Dict[str, Any], finding: Finding, item:
 # ---------------------------------------------------------------------------
 # Rendering
 # ---------------------------------------------------------------------------
+def contact_text(text: str, specialist_id: Any, values: Any) -> str:
+    """Post-freeze PF-16.6 (D-129): an Institutional directory row whose asked fields the specialist bound from the page's
+    printed column header is rendered with its field labels ("Passport Unit (contact directory): fax +971 6 5050026.")
+    instead of the bare row, which does not show which number is the telephone and which the fax. Every other quote, and a
+    row that cannot be rendered with labels, is returned unchanged (``contact_label_problem`` has rejected those first)."""
+    sid = getattr(specialist_id, "value", specialist_id)
+    if sid != SpecialistId.INSTITUTIONAL.value or not isinstance(values, dict) or not values:
+        return text
+    return _directory.bound_row_answer(text, values) or text
+
+
+def contact_label_problem(items: Sequence[Dict[str, Any]], pages: Optional[Sequence[Dict[str, Any]]]) -> Tuple[Optional[str], List[str]]:
+    """(problem, notes) for the labelled directory rows among ``items``: a problem when a bound row cannot be rendered with
+    its labels or when the page-line reader puts a number in another column; None when every label is confirmed (or no
+    item is a directory row). The answer is then left to the legacy path rather than shown with an unverified label."""
+    notes: List[str] = []
+    for item in items:
+        plan_f = (item.get("meta") or {}).get("plan_f") or {}
+        values = plan_f.get("contact_values")
+        if plan_f.get("specialist_id") != SpecialistId.INSTITUTIONAL.value or not isinstance(values, dict) or not values:
+            continue
+        if _directory.bound_row_answer(str(item.get("chunk") or ""), values) is None:
+            return "directory row %s cannot be rendered with its field labels" % plan_f.get("finding_id"), notes
+        ok, note = _directory.column_check(values, pages or [])
+        if not ok:
+            return "directory row %s: %s" % (plan_f.get("finding_id"), note), notes
+        notes.append(note)
+    return None, notes
+
+
 def render_answer(items: Sequence[Dict[str, Any]]) -> str:
     """The accepted quotes, verbatim, one per paragraph. Nothing is added or reworded; the first step of a D-111 guide
-    procedure puts its printed heading on its own line (post-freeze PF-3C, ``guide_grounding.render_part``)."""
+    procedure puts its printed heading on its own line (post-freeze PF-3C, ``guide_grounding.render_part``). Post-freeze
+    PF-16.6 (D-129): a directory row bound by the Institutional specialist is rendered with its field labels
+    (``contact_text``); its evidence item stays the verbatim printed row."""
     parts = []
     for item in items:
         text = str(item.get("chunk") or "").strip()
         if text:
-            record = ((item.get("meta") or {}).get("plan_f") or {}).get(_guides.GUIDE_KEY)
-            parts.append(_guides.render_part(text, record))
+            plan_f = (item.get("meta") or {}).get("plan_f") or {}
+            text = contact_text(text, plan_f.get("specialist_id"), plan_f.get("contact_values"))
+            parts.append(_guides.render_part(text, plan_f.get(_guides.GUIDE_KEY)))
     return "\n\n".join(parts)
 
 
@@ -782,7 +816,8 @@ class PlanFRuntime:
 
     def __init__(self, registry: SpecialistRegistry, chunks: Sequence[str], metadata: Sequence[Dict[str, Any]], *,
                  guide_registry: Optional[SpecialistRegistry] = None, guide_records: Sequence[Any] = (),
-                 guide_index: Optional[_guides.GuideIndex] = None) -> None:
+                 guide_index: Optional[_guides.GuideIndex] = None,
+                 directory_pages: Optional[Sequence[Dict[str, Any]]] = None) -> None:
         if not isinstance(registry, SpecialistRegistry):
             raise TypeError("PlanFRuntime expects a SpecialistRegistry, got %s" % type(registry).__name__)
         if guide_registry is not None and not isinstance(guide_registry, SpecialistRegistry):
@@ -795,6 +830,7 @@ class PlanFRuntime:
         self.guide_index = guide_index                        # post-freeze PF-3C (D-111): procedures, registry and approved sets
         self.chunks = chunks
         self.metadata = metadata
+        self.directory_pages = directory_pages                # post-freeze PF-16.6 (D-129): page lines for the label check
 
     def select_registry(self, text: str) -> Tuple[SpecialistRegistry, Dict[str, Any]]:
         """The registry a question runs on (post-freeze PF-3B): the guide-enabled one only when the question names the
@@ -1130,6 +1166,13 @@ class PlanFRuntime:
                 return state.finish(PlanFOutcome.REQUIRES_FALLBACK, "no verified finding left to render", specialist=sid.value, status=status,
                                     dispatched=dispatched, verification=verification)
 
+            problem, notes = contact_label_problem(accepted, self.directory_pages)
+            if problem is not None:                               # post-freeze PF-16.6 (D-129): never an unverified label
+                state.add("contact_labels", "rejected", detail={"reason": problem})
+                return state.finish(PlanFOutcome.REQUIRES_FALLBACK, "contact labels not verified: %s" % problem, specialist=sid.value,
+                                    status=status, dispatched=dispatched, verification=verification)
+            if notes:
+                state.add("contact_labels", "verified", detail={"rows": len(notes), "check": notes[0]})
             answer = render_answer(accepted)
             pages = accepted_pages(accepted)
             if not answer or not pages:
@@ -1286,6 +1329,13 @@ class PlanFRuntime:
             for part in outcome.parts:
                 items.append(adapt_finding(part.finding, SpecialistId.parse(part.specialist_id), part.clause, self.chunks, self.metadata,
                                            clause_index=part.clause_index))
+            problem, notes = contact_label_problem(items, self.directory_pages)
+            if problem is not None:                               # post-freeze PF-16.6 (D-129): never an unverified label
+                state.add("contact_labels", "rejected", detail={"reason": problem})
+                return state.finish(PlanFOutcome.REQUIRES_FALLBACK, "contact labels not verified: %s" % problem, specialist=joined,
+                                    status=status, dispatched=dispatched, aggregation=record)
+            if notes:
+                state.add("contact_labels", "verified", detail={"rows": len(notes), "check": notes[0]})
             answer = aggregation.render_parts(outcome.parts)
             pages = accepted_pages(items)
             if not answer or not pages:
@@ -1428,7 +1478,8 @@ def build_runtime(kb: Any, *, builders: Optional[Mapping[SpecialistId, Callable[
     build = RegistryBuild(build.registry, dict(build.errors), build.ms, report)
     try:
         chunks, metadata = kb.chunks, kb.metadata
-        runtime = PlanFRuntime(build.registry, chunks, metadata, guide_registry=guide_registry, guide_records=records, guide_index=guide_index)
+        runtime = PlanFRuntime(build.registry, chunks, metadata, guide_registry=guide_registry, guide_records=records, guide_index=guide_index,
+                               directory_pages=getattr(kb, "pages", None))
     except Exception as exc:
         return None, RegistryBuild(None, {"runtime": redact_error(exc)}, build.ms)
     return runtime, build
@@ -1537,6 +1588,6 @@ __all__ = [
     "RegistryBuild", "RuntimeCache", "SUBJECT_CHECK_VERSION", "accepted_pages", "accepted_record", "adapt_finding", "answer_with_fallback",
     "build_runtime", "handoff_outcome",
     "build_specialist_registry", "clause_covered_by", "decision_problem", "entity_in_text", "missing_specialists",
-    "named_entities", "quote_problem", "render_answer", "result_problem", "source_conflict_problem", "guide_evidence_problem", "guide_builders", "subject_binding",
+    "named_entities", "quote_problem", "render_answer", "contact_text", "contact_label_problem", "result_problem", "source_conflict_problem", "guide_evidence_problem", "guide_builders", "subject_binding",
     "guide_citation_items",
 ]

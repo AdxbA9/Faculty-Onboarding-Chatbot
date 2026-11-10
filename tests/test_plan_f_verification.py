@@ -767,7 +767,7 @@ def test_pipeline_diagnostics_carry_the_verification_codes_without_text(kb, monk
     monkeypatch.setattr(config, "PLAN_F_ENABLED", True)
     pipeline.reset_plan_f_state()
     result, d = pipeline.ask_with_diagnostics(kb, HR_PHONE)
-    assert d["served"] == "plan_f" and d["accepted"] is True and d["findings_accepted"] is True and result.answer.startswith("Human Resources +971 6 5050023")
+    assert d["served"] == "plan_f" and d["accepted"] is True and d["findings_accepted"] is True and result.answer == T.HR_PHONE_ANSWER    # D-129: labelled
     result, d = pipeline.ask_with_diagnostics(kb, HR_KNOWN_WRONG)
     assert d["served"] == "legacy" and d["findings_verified"] is False and d["findings_reason"] is None and d["outcome"] == "PLAN_F_UNSAFE_RESULT"
 

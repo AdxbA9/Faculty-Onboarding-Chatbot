@@ -125,4 +125,4 @@ def test_the_directory_lines_become_the_evidence_the_verifier_checks(run):
     assert "Men: +971 6 5050901" in result.answer and "Women: +971 6 5050952" in result.answer
     assert "5585173" not in result.answer and result.pages == [53]
     first = result.items[0]
-    assert first["meta"]["page"] == 53 and first["chunk"].startswith("Contact directory:") and "+971 6 5050901" in first["chunk"]
+    assert first["meta"]["page"] == 53 and first["chunk"].startswith("Office / College / Department Telephone Number Fax Number")   # PF-16.6: printed header only and "+971 6 5050901" in first["chunk"]

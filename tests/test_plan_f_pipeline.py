@@ -409,7 +409,7 @@ def test_shadow_registry_failure_is_cached_per_knowledge_base_and_isolated(kb, m
 # ACTIVE mode (sections 16 to 19)
 # ---------------------------------------------------------------------------
 @pytest.mark.parametrize("question,specialist,pages,starts_with", [
-    (HR_PHONE, "institutional", [54], "Human Resources +971 6 5050023 +971 6 5585200"),
+    (HR_PHONE, "institutional", [54], T.HR_PHONE_ANSWER),    # D-129: labelled
     ("Does HR arrange travel and hotel accommodations for new faculty members?", "faculty_services", [61],
      "• HR arranges travel and hotel accommodations for new faculty members."),
     ("How many credit hours is a full teaching load?", "teaching", [96], 'o "A" Regular Faculty'),
@@ -461,7 +461,7 @@ def test_active_falls_back_to_legacy_for_every_rejected_outcome(kb, monkeypatch,
     assert visible(result) == visible(direct) and trace_of(result) == trace_of(direct), label
     assert diagnostics["mode"] == "active" and diagnostics["served"] == "legacy" and diagnostics["accepted"] is False, label
     assert diagnostics["fallback_reason"], label
-    assert result.answer != "Human Resources +971 6 5050023 +971 6 5585200", label      # never the Plan F rendering
+    assert result.answer not in (T.HR_PHONE_ANSWER, T.HR_ROW), label      # never the Plan F rendering (D-129 and before)
 
 
 def test_active_never_serves_a_plan_f_result_without_an_accepted_outcome(kb, monkeypatch):
@@ -501,7 +501,7 @@ def test_a_new_knowledge_base_gets_its_own_runtime(kb, other_kb, monkeypatch):
     first, d1 = pipeline.ask_with_diagnostics(kb, HR_PHONE)
     second, d2 = pipeline.ask_with_diagnostics(other_kb, HR_PHONE)
     assert calls == [id(kb), id(other_kb)] and d1["registry_reused"] is False and d2["registry_reused"] is False
-    assert first.answer == second.answer == "Human Resources +971 6 5050023 +971 6 5585200"
+    assert first.answer == second.answer == T.HR_PHONE_ANSWER    # D-129: labelled
     cache = pipeline._PLAN_F_CACHE
     assert cache.get_or_build(kb).runtime is not cache.get_or_build(other_kb).runtime
     assert cache.get_or_build(kb).runtime.registry is not cache.get_or_build(other_kb).runtime.registry

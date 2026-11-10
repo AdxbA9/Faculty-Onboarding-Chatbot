@@ -436,9 +436,9 @@ def test_the_same_quote_returned_twice_is_rendered_once(kb, Q):
 def test_single_finding_pass_through_is_unchanged(kb, runtime, monkeypatch):
     result = runtime.attempt(HR_PHONE)
     assert result.outcome is PF.PlanFOutcome.ACCEPTED and result.path == PF.PATH_PASSTHROUGH and result.aggregation is None and result.verified
-    assert result.result.answer == "Human Resources +971 6 5050023 +971 6 5585200" and result.result.sub_questions == []
+    assert result.result.answer == T.HR_PHONE_ANSWER and result.result.sub_questions == []    # D-129: labelled
     assert T.trace_agents(result) == ["plan_f_adapter", "plan_f_registry", "coordinator", "dispatcher", "specialist:institutional", "quote_guard",
-                                      "subject_guard", "findings_verifier", "verifier", "plan_f_outcome"]
+                                      "subject_guard", "findings_verifier", "contact_labels", "verifier", "plan_f_outcome"]    # D-129 step
     assert next(e for e in result.trace if e.agent == "plan_f_outcome").detail["path"] == PF.PATH_PASSTHROUGH
     called = []
     monkeypatch.setattr(A, "aggregate", lambda *a, **k: called.append(1))
@@ -590,7 +590,10 @@ def test_wrong_entity_in_a_contact_clause_falls_back(kb, Q):
     assert result.outcome is PF.PlanFOutcome.REJECTED_BY_AGGREGATOR and result.reason.startswith("CHILD_FINDING_REJECTED: clause 1: SUBJECT_MISMATCH")
     good = attempt(kb, CROSS_CONTACT, teaching=lambda task: retrieval(kb, task, Q["load"]),
                    institutional=lambda task: directory(kb, task, Q["finance_row"], office_id="finance_department", value="+971 6 5050040"))
-    assert good.outcome is PF.PlanFOutcome.ACCEPTED and good.result.answer == Q["load"][1] + "\n\n" + Q["finance_row"][1] and good.result.pages == [91, 54]
+    # D-129: the directory part is labelled; the teaching quote is unchanged
+    assert good.outcome is PF.PlanFOutcome.ACCEPTED and good.result.pages == [91, 54]
+    assert good.result.answer == Q["load"][1] + "\n\n" + "Finance Department (contact directory): telephone +971 6 5050040."
+    assert good.result.items[1]["chunk"] == Q["finance_row"][1]
 
 
 def test_wrong_contact_field_falls_back(kb, Q):
