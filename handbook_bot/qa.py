@@ -21,6 +21,7 @@ builder, the Groq call, the ``Pages:`` parser and the Part 1 grounding check.
 from __future__ import annotations
 
 import dataclasses
+import logging
 import re
 import time
 from dataclasses import dataclass, field
@@ -193,6 +194,7 @@ class LLMOutputTruncated(RuntimeError):
 
 
 _sleep = time.sleep                                   # replaced by the test fixtures (no real back-off in tests)
+_log = logging.getLogger(__name__)
 
 
 def transient_error(exc: BaseException) -> bool:
@@ -223,9 +225,10 @@ def ask_groq(client, prompt: str) -> str:
     """Call the Groq chat completion endpoint and return the raw text.
 
     One call here is ONE logical LLM call, which is what ``QAResult.llm_calls``
-    counts. The Groq SDK may repeat the HTTP request on 429, 5xx and timeouts,
-    with back-off; ``LLM_TRANSPORT_RETRIES`` sets how often and is applied
-    explicitly so that it is a documented setting and not a hidden SDK default.
+    counts. Since PF-16.5 the SDK never repeats the HTTP request itself; a
+    transient failure is repeated here at most ``LLM_TRANSPORT_RETRIES`` times,
+    each attempt a separate HTTP request that a capped client counts
+    (``CappedClient.calls_issued``) and that is logged with its error kind.
 
     Post-freeze PF-7 (D-117): the cap is ``LLM_MAX_TOKENS`` plus the reasoning
     allowance ``LLM_REASONING_TOKENS`` (0 by default). A reply that stopped at
@@ -262,6 +265,9 @@ def ask_groq(client, prompt: str) -> str:
         except Exception as exc:
             if attempt + 1 >= attempts or not transient_error(exc):
                 raise
+            from .groq_check import error_kind
+            _log.warning("transient model failure (%s); repeating the request (attempt %d of %d)",
+                         error_kind(exc), attempt + 2, attempts)
             _sleep(_backoff_seconds(attempt, exc))
     choice = resp.choices[0]
     text = (choice.message.content or "").strip()

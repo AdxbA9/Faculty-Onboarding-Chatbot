@@ -36,6 +36,14 @@ def test_a_transient_failure_is_repeated_and_the_answer_is_served(ask):
     assert {"max_retries": 0} in client.options                     # the SDK itself never repeats a request
 
 
+def test_every_repeat_is_logged_with_its_error_kind(ask, caplog):
+    client = _Recorder(APIConnectionError("reset"), GROUNDED_LEAVE)
+    with caplog.at_level("WARNING", logger="handbook_bot.qa"):
+        ask(LEAVE_QUESTION, client)
+    repeats = [r.getMessage() for r in caplog.records if r.name == "handbook_bot.qa"]
+    assert len(repeats) == client.calls - 1 == 1 and G.CONNECTION in repeats[0] and "attempt 2" in repeats[0]
+
+
 def test_server_errors_are_repeated_at_most_the_configured_number_of_times(ask):
     client = FakeGroqClient(_Status(503))                            # every attempt fails
     result = ask(LEAVE_QUESTION, client)
