@@ -9,6 +9,35 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-11-10 - Final critical closure (post-freeze phase PF-16.6)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `fix/pf16-6-final-critical-closure` (from `feature/pf16-5-answer-quality-stabilization` at `d4b95f9`, the pushed PF-16.5 tip) |
+| Starting commit | `d4b95f9` (PF-16.5) |
+| Ending state | COMPLETE (D-129, D-130): the two PF-16.5 P1 findings corrected - Plan F directory answers state each number with its field label, confirmed by an independent page reader; a printed exception dropped by a model answer triggers one retry and is otherwise quoted with its page. READY for PF-17 and the demonstration rehearsal (ACTIVE) |
+| Freeze status | `ENGLISH_CORE_FREEZE_PF6` plus D-117, D-119 to D-130; Plan F answer selection, retrieval thresholds, the Verifier, the synthesis prompt, the corpus and the registry unchanged; Plan F directory answers re-rendered (17 of the 55 frozen answers, documented) |
+| Elapsed | 2026-11-10, one working session |
+
+### Completed
+
+- `plan_f_runtime.contact_text` / `contact_label_problem`, `plan_f_aggregation.render_parts`, `contact_directory.bound_row_answer` / `column_check` (D-129); `handbook_bot/exception_guard.py` + orchestrator retry and step 4e (D-130); `qa/pf16_audit/live_eval.py --pause`.
+- Two exception evaluation sets frozen before use; ACTIVE-mode check and full-pipeline contact sweep on the real knowledge base.
+- Live: 7 of 8 authorised requests.
+
+### Tests performed
+
+- Full suite: 7,834 passed, 0 failed, 0 skipped in 407.35 s on `5343904` (PF-16.5: 7,787).
+- Offline: frozen 192 (scopes off and on), 258 cases, Arabic holdout 2, LEGACY/SHADOW pairs, ACTIVE contact sweep (132 of 132 numbers in the asked column).
+
+### Known limitations
+
+- The exception guard catches the omission in 4 of 9 untouched conditional cases and sometimes adds a related, unasked quoted note; Arabic lexicon rewrites can lose a unit or a condition; routing gaps and false refusals as in PF-16.5; provider rate limits require paced sessions.
+- Real speech, physical devices, native Arabic review and human usability remain for PF-17.
+
+---
+
 ## 2026-11-10 - Answer-quality stabilization (post-freeze phase PF-16.5)
 
 | Field | Value |
