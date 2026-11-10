@@ -50,9 +50,11 @@ def test_an_answer_from_the_other_column_is_a_problem(question, answer, wrong):
 
 
 def test_the_legacy_path_refuses_a_fax_number_given_as_a_telephone(run, monkeypatch):
-    # The extractor is switched off so the answer is model-written, as on the live path of the frozen question I14.
+    # The extractor and (since PF-16.5) the directory reader are switched off so the answer is model-written, as on the
+    # live path of the frozen question I14 before PF-16.5 and for any unit neither of them can bind.
     from conftest import FakeGroqClient
     monkeypatch.setattr(orchestrator, "extract_contact_answer", lambda *a, **k: None)
+    monkeypatch.setattr(orchestrator.contact_directory, "answer", lambda *a, **k: None)
     pages = [{"page": 14, "lines": ["Page 14", "Office / College / Department", "Telephone Number", "Fax Number",
                                     "Information Technology Center", "+971 6 5050000", "+971 6 5585101"]}]
     question = "What is the telephone number of the Information Technology Center?"

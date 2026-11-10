@@ -59,7 +59,7 @@ from typing import Callable, Dict, List, Optional, Tuple
 
 import numpy as np
 
-from . import conflict_guard, contact_guard, groq_check
+from . import conflict_guard, contact_directory, contact_guard, groq_check
 from .agents import router as router_agent
 from .agents import synthesis as synthesis_agent
 from .agents.verifier import citing_items
@@ -119,6 +119,8 @@ LLM_BUDGET_REPLY = (
 
 VerifierFn = Callable[..., VerifyResult]
 _log = logging.getLogger(__name__)
+#: The handbook prints the contact directory (PF-16.5); the legacy path names it here instead of importing a Plan F module.
+_HANDBOOK_ID = "uos_faculty_handbook_2025_26"
 _VERIFIER_NAME = "handbook_bot.agents.verifier"
 _VERIFIER_CALL = "verify(question, synthesis, evidence, sub_questions, *, is_retry)"
 
@@ -315,6 +317,20 @@ def _gather_evidence(
     blocked_by_part1_gate = False
     if route == "contact":
         extracted = extract_contact_answer(question, final_items, lambda item: page_row_lines(chunks, metadata, item))
+        if not extracted:
+            # PF-16.5 (D-128): entries the single-line binding cannot read (labelled telephones, sub-units, wrapped names
+            # or numbers) are read from the directory in printed order; an uncertain unit answers nothing here
+            extracted = contact_directory.answer(question, pages)
+            if extracted:
+                # the printed directory lines the answer rests on become its first evidence item, so the Verifier checks
+                # every stated number against the page text itself (retrieval may not have kept that cell)
+                page = int(extracted[1][0])
+                handbook = [i for i in final_items if i["meta"].get("source_id") in (None, _HANDBOOK_ID)]
+                base = next((dict(i["meta"]) for i in handbook if int(i["meta"].get("page", -1)) == page), None) or (
+                    dict(handbook[0]["meta"]) if handbook else {"source_id": _HANDBOOK_ID, "source_title": "UOS Faculty Handbook 2025/26",
+                                                                 "citation_label": "UOS Faculty Handbook 2025/26"})
+                base.update(page=page, section="Contact Information", chunk_type="row")
+                final_items = [{"chunk": extracted[2], "meta": base, "rerank_score": best_score}] + final_items[:FINAL_K - 1]
     elif route == "count":
         tool_applicable = bool(_COUNT_TOOL_SCOPE.search(question))
         if tool_applicable:
