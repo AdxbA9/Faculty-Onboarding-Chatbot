@@ -59,7 +59,7 @@ from typing import Callable, Dict, List, Optional, Tuple
 
 import numpy as np
 
-from . import conflict_guard, contact_directory, contact_guard, groq_check
+from . import conflict_guard, contact_directory, contact_guard, exception_guard, groq_check
 from .agents import router as router_agent
 from .agents import synthesis as synthesis_agent
 from .agents.verifier import citing_items
@@ -775,6 +775,24 @@ def run(
                                          sub_questions=sub_questions)
                 if second_verdict.accepted and len(second_verdict.uncovered_subquestions) < len(verdict.uncovered_subquestions):
                     draft, verdict, retried = second, second_verdict, True
+        # PF-16.6 (D-130): an accepted model answer that leaves out a relevant exception or conditional permission printed in
+        # its own evidence gets the one retry, quoting it; the second draft replaces the first only when it is accepted,
+        # states the exception and covers no fewer clauses. Without a retry left, step 4e appends the printed sentence.
+        if verdict.accepted and used_llm and not retry_outage and (draft.answer or "").strip() != REFUSAL:
+            missed = exception_guard.uncovered(question, draft.answer, items)
+            if missed and not retried and groq_client is not None and budget.retry_allowance > 0:
+                t_retry = time.perf_counter()
+                second = _synthesize(question, evidence, groq_client, budget, trace, feedback=exception_guard.feedback(missed))
+                timings["generation_ms"] = timings.get("generation_ms", 0.0) + _ms(t_retry)
+                kept = False
+                if second is not None:
+                    second_verdict = _verify(check, impl, question, second, evidence, allowed_pages, is_retry=True, trace=trace,
+                                             sub_questions=sub_questions)
+                    if (second_verdict.accepted and len(exception_guard.uncovered(question, second.answer, items)) < len(missed)
+                            and len(second_verdict.uncovered_subquestions) <= len(verdict.uncovered_subquestions)):
+                        draft, verdict, retried, kept = second, second_verdict, True, True
+                trace.append(TraceEntry("exception_guard", "retry_kept" if kept else "retry_not_kept", False, 0.0,
+                                        {"exceptions": len(missed), "pages": sorted({str(pg) for _s, pg in missed})}))
         if retry_outage:
             answer, cited = _llm_failure_reply(trace), []
         else:
@@ -807,8 +825,26 @@ def run(
         if missing:
             answer = answer.rstrip() + "\n\nThe approved documents do not answer this part of the question: %s." % "; ".join(
                 "“%s”" % c for c in missing)
+    # ---- 4e. Exceptions the answer leaves out (PF-16.6, D-130) -------------------------------------------------------
+    # A relevant exception or conditional permission printed in the evidence that the final model answer still leaves out
+    # is appended verbatim with its page: a condition is never turned into a flat yes or no.
+    note_items: List[Dict] = []
+    if used_llm and VERIFY_ANSWERS and answer not in (REFUSAL, LLM_UNAVAILABLE_REPLY) and not retry_outage:
+        missed = exception_guard.uncovered(question, answer, items)
+        if missed:
+            answer = answer.rstrip() + "\n\n" + exception_guard.note(missed)
+            for sentence, page in missed:
+                if isinstance(page, int) and page not in cited:
+                    cited.append(page)
+                source = next((i for i in items if sentence in " ".join(str(i.get("chunk") or "").split())), None)
+                if source is not None and source not in note_items:
+                    note_items.append(source)
+            trace.append(TraceEntry("exception_guard", "note", False, 0.0,
+                                    {"exceptions": len(missed), "pages": sorted({str(pg) for _s, pg in missed})}))
     if used_llm and cited and answer not in (REFUSAL, LLM_UNAVAILABLE_REPLY):
         chosen = [items[i] for i in citing_items(answer, items, draft.claimed_pages) if int(items[i]["meta"]["page"]) in cited]
+        # a quoted exception keeps its own item and page (D-130): it is printed text the answer now rests on
+        chosen = chosen + [i for i in note_items if i not in chosen] if chosen else []
         if chosen:
             chosen_pages = {int(item["meta"]["page"]) for item in chosen}
             cited = [p for p in cited if p in chosen_pages]
