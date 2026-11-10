@@ -24,6 +24,14 @@ LEAVE_ONLY = "Faculty members are entitled to thirty days of annual leave each a
     ("Who approves leave and promotion requests?", []),                                     # one question
     ("Dr. Sara asks: what is the teaching load for lecturers?", []),
     ("What is the phone number of HR? Thanks.", []),
+    # a condition is context, not a clause (no inversion after "when")
+    ("When I start next month, which forms do I need to sign?", []),
+    ("When I submit my grades in Banner, can they still be changed afterwards?", []),
+    # "and" inside a noun phrase never cuts a clause short; it splits only where a new question starts
+    ("Who approves sabbatical and conference requests, and how long does approval take?",
+     ["Who approves sabbatical and conference requests", "how long does approval take"]),
+    ("How many days of annual and sick leave do I get, and when does the leave year start?",
+     ["How many days of annual and sick leave do I get", "when does the leave year start"]),
 ])
 def test_only_two_or_three_real_question_clauses_are_split(question, clauses):
     assert orchestrator.answerable_clauses(question) == clauses

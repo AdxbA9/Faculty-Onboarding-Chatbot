@@ -365,9 +365,18 @@ def _gather_evidence(
 # Step: evidence per clause (post-freeze PF-16.5, D-128)
 # ---------------------------------------------------------------------------
 #: A clause that is itself a question starts with a question word or an auxiliary.
-_QUESTION_HEAD = re.compile(r"^(?:what|how|who|whom|whose|when|where|which|why|can|could|do|does|did|is|are|am|was|were|should|"
-                            r"may|must|will|would|shall|have|has)\b", re.I)
+_HEAD_WORDS = ("what|how|who|whom|whose|when|where|which|why|can|could|do|does|did|is|are|am|was|were|should|may|must|"
+               "will|would|shall|have|has")
+_QUESTION_HEAD = re.compile(r"^(?:%s)\b" % _HEAD_WORDS, re.I)
 _ANAPHOR = re.compile(r"\b(?:they|them|their|it|its|this|that|these|those)\b", re.I)
+#: "?" and ";" end a question; a comma, a sentence break or "and" splits only where the next word starts a question, so
+#: "and" inside a name or a noun phrase ("deans and vice chancellors") never cuts a clause short
+_CLAUSE_SPLIT = re.compile(r"[?;]|(?:,|\.\s)\s*(?:and\s+)?(?=(?:%s)\b)|\band\s+(?=(?:%s)\b)" % (_HEAD_WORDS, _HEAD_WORDS), re.I)
+_LEADING_CONJUNCTION = re.compile(r"^(?:and|but|also|so|or|then)\s+", re.I)
+#: "When I'm hired, ..." / "When I post ..., can it ...": a when/where clause without inversion is a condition, not a
+#: question (an English question inverts: "When do I ...", "Where is ...")
+_SUBORDINATE = re.compile(r"^(?:when|where)\s+(?:i|i'm|i’m|i've|i’ve|we|you|they|he|she|it|my|our|your|their|the|a|an|"
+                          r"this|that|someone|somebody)\b", re.I)
 _MAX_CLAUSES = 3
 _ITEMS_PER_CLAUSE = 3
 
@@ -375,12 +384,13 @@ _ITEMS_PER_CLAUSE = 3
 def answerable_clauses(question: str) -> List[str]:
     """The question clauses of a question that asks two or three things ("How many office hours …, and how many sick
     days …?"), each as a retrieval query; [] for a single question. A clause with a pronoun ("do they have a fax
-    number") carries the clause before it as context. Deterministic; no model; legacy-only (no Plan F import)."""
-    raw = [p.strip(" \t\"'()") for p in re.split(r"[?;,]|\.\s|\band\b", question or "", flags=re.I)]
+    number") carries the text before it as context; a condition ("When I'm hired, ...") is context, never a clause.
+    Deterministic; no model; legacy-only (no Plan F import)."""
+    raw = [_LEADING_CONJUNCTION.sub("", p.strip(" \t\"'()")) for p in _CLAUSE_SPLIT.split(question or "")]
     raw = [p for p in raw if p]
     out: List[str] = []
     for i, part in enumerate(raw):
-        if not _QUESTION_HEAD.match(part) or len(part.split()) < 3:
+        if not _QUESTION_HEAD.match(part) or _SUBORDINATE.match(part) or len(part.split()) < 3:
             continue
         if i and _ANAPHOR.search(part):
             part = raw[i - 1] + " " + part
