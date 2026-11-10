@@ -9,6 +9,35 @@ Rules: one entry per session; commit hashes are the short hashes shown by
 
 ---
 
+## 2026-11-10 - Answer-quality stabilization (post-freeze phase PF-16.5)
+
+| Field | Value |
+|---|---|
+| Developer | AdxbA9 (project account) |
+| Branch | `feature/pf16-5-answer-quality-stabilization` (from `feature/pf16-system-wide-quality-audit` at `c9ab4b8`, the pushed PF-16 tip) |
+| Starting commit | `c9ab4b8` (PF-16) |
+| Ending state | COMPLETE for the engineering scope (D-128): deterministic contact-directory answers, per-clause evidence and completeness checks for multi-part questions, counted repeat of transient model failures, routing adjudication, a new frozen Arabic holdout, 30 live model requests; READY for PF-17; complete handover waits on one owner decision (Plan F contact rows in ACTIVE mode, P165-19) |
+| Freeze status | `ENGLISH_CORE_FREEZE_PF6` plus D-117, D-119 to D-128; Plan F, retrieval thresholds, the Verifier, the synthesis prompt, the corpus and the registry unchanged |
+| Elapsed | 2026-11-10, one working session |
+
+### Completed
+
+- `handbook_bot/contact_directory.py` and its use on the legacy contact route; `orchestrator.answerable_clauses` / `_gather_clause_evidence`, sub-questions to the Verifier, completeness retry, named unsupported clause; `qa.ask_groq` counted transient repeat and logged failure kinds; `qa/pf16_audit/live_eval.py` ledger before every request.
+- Offline: 258 cases (false refusals 13 -> 9 of 222; routing unchanged), frozen 192 (55 of 55 identical, scopes off and on), Arabic holdout 2 (16, frozen first), LEGACY/SHADOW 45 of 45 identical.
+- Live: 30 of 30 authorised requests, 22 items; the 10 PF-16 English cases now 7 correct, 1 correct refusal, 1 partial, 1 safe refusal (PF-16: 3, 1, 2, 1 refusal, 1 wrong, 2 service failures).
+
+### Tests performed
+
+- Full suite: 7,787 passed, 0 failed, 0 skipped in 475.78 s on `44c4d4e` (PF-16: 7,740).
+- Browser: directory answers in the application started with no model client.
+
+### Known limitations
+
+- Plan F contact rows are unlabelled in ACTIVE mode (P165-19, owner decision); one missed cross-page exception (P165-20); Arabic fax-of-a-college lexicon defect (P165-12, holdout finding, not tuned); false premise refused instead of corrected; F06; 11 Coordinator cue gaps; provider rate limit in bursts.
+- Carried over: real speech, physical devices, Arabic fluency and human usability (PF-17).
+
+---
+
 ## 2026-11-09 - System-wide quality audit and targeted fixes (post-freeze phase PF-16)
 
 | Field | Value |
