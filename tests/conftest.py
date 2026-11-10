@@ -190,6 +190,12 @@ LEAVE_QUESTION = "How much annual leave are faculty members entitled to?"
 
 
 @pytest.fixture(autouse=True)
+def _no_model_backoff(monkeypatch):
+    """Post-freeze PF-16.5: the bounded retry of a transient model failure sleeps between attempts; tests do not."""
+    monkeypatch.setattr("handbook_bot.qa._sleep", lambda seconds: None)
+
+
+@pytest.fixture(autouse=True)
 def _temporary_conversation_database(monkeypatch, tmp_path):
     """Post-freeze PF-13: no test may touch the project's own ``var/app.db``. Every test sees a fresh temporary database
     path and a fresh process-wide store; the store is dropped again afterwards."""

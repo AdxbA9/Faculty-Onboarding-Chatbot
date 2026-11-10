@@ -581,8 +581,11 @@ def _synthesize(question: str, evidence: EvidenceResult, groq_client, budget: LL
         draft = synthesis_agent.synthesize(question, evidence.items, evidence.route,
                                            groq_client, feedback=feedback)
     except Exception as exc:
+        kind = groq_check.error_kind(exc)
         trace.append(TraceEntry("synthesis", "llm_error", True, _ms(started),
-                                {"error": _safe_error(exc), "kind": groq_check.error_kind(exc)}))
+                                {"error": _safe_error(exc), "kind": kind}))
+        # PF-16.5 (D-128): an operator sees why (key rejected, unknown model, rate limit, network); the text is redacted
+        _log.warning("model request failed (%s): %s", kind, _safe_error(exc))
         return None
     trace.append(TraceEntry("synthesis", label, True, _ms(started), {
         "path": "llm",

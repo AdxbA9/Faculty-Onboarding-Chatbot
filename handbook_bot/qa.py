@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import dataclasses
 import re
+import time
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -191,6 +192,33 @@ class LLMOutputTruncated(RuntimeError):
     """The model spent its whole completion budget before writing any answer (post-freeze PF-7, D-117)."""
 
 
+_sleep = time.sleep                                   # replaced by the test fixtures (no real back-off in tests)
+
+
+def transient_error(exc: BaseException) -> bool:
+    """True for a failure that may pass on a second attempt: a connection or timeout error, HTTP 429, or HTTP 5xx."""
+    from .groq_check import CONNECTION, RATE_LIMIT, LLMCallCapExceeded, error_kind
+    if isinstance(exc, LLMCallCapExceeded):
+        return False
+    if error_kind(exc) in (CONNECTION, RATE_LIMIT):
+        return True
+    status = getattr(exc, "status_code", None)
+    return isinstance(status, int) and 500 <= status < 600
+
+
+def _backoff_seconds(attempt: int, exc: BaseException) -> float:
+    """0.8 s, then 1.6 s; a Retry-After of at most 5 s from a 429 is honoured."""
+    response = getattr(exc, "response", None)
+    headers = getattr(response, "headers", None) or {}
+    try:
+        after = float(headers.get("retry-after", "")) if hasattr(headers, "get") else None
+    except (TypeError, ValueError):
+        after = None
+    if after is not None and 0 <= after <= 5:
+        return after
+    return min(4.0, 0.8 * (2 ** attempt))
+
+
 def ask_groq(client, prompt: str) -> str:
     """Call the Groq chat completion endpoint and return the raw text.
 
@@ -205,24 +233,36 @@ def ask_groq(client, prompt: str) -> str:
     wrote no answer, which is a generation failure, not evidence that the
     sources lack the answer, so it must not become the refusal sentence.
     """
+    # Post-freeze PF-16.5 (D-128): the SDK never repeats a request by itself (its repeats were invisible to every request
+    # count); a TRANSIENT failure (connection, timeout, HTTP 429 or 5xx) is repeated here instead, at most
+    # LLM_TRANSPORT_RETRIES times with a short back-off, and every attempt is an ordinary, counted request (a capped client
+    # counts and caps it). Authentication, unknown model, other client errors and the process cap are never repeated.
     caller = client
     if hasattr(client, "with_options"):
-        caller = client.with_options(max_retries=max(0, LLM_TRANSPORT_RETRIES))
-    resp = caller.chat.completions.create(
-        model=GROQ_MODEL,
-        temperature=LLM_TEMPERATURE,
-        max_tokens=LLM_MAX_TOKENS + LLM_REASONING_TOKENS,
-        messages=[
-            {
-                "role": "system",
-                "content": (
-                    "You answer accurately from supplied context only. "
-                    "Be conservative. Never invent facts."
-                ),
-            },
-            {"role": "user", "content": prompt},
-        ],
-    )
+        caller = client.with_options(max_retries=0)
+    attempts = 1 + max(0, LLM_TRANSPORT_RETRIES)
+    for attempt in range(attempts):
+        try:
+            resp = caller.chat.completions.create(
+                model=GROQ_MODEL,
+                temperature=LLM_TEMPERATURE,
+                max_tokens=LLM_MAX_TOKENS + LLM_REASONING_TOKENS,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": (
+                            "You answer accurately from supplied context only. "
+                            "Be conservative. Never invent facts."
+                        ),
+                    },
+                    {"role": "user", "content": prompt},
+                ],
+            )
+            break
+        except Exception as exc:
+            if attempt + 1 >= attempts or not transient_error(exc):
+                raise
+            _sleep(_backoff_seconds(attempt, exc))
     choice = resp.choices[0]
     text = (choice.message.content or "").strip()
     if not text and getattr(choice, "finish_reason", None) == "length":
