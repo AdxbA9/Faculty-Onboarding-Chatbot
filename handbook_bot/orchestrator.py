@@ -362,6 +362,76 @@ def _gather_evidence(
 
 
 # ---------------------------------------------------------------------------
+# Step: evidence per clause (post-freeze PF-16.5, D-128)
+# ---------------------------------------------------------------------------
+#: A clause that is itself a question starts with a question word or an auxiliary.
+_QUESTION_HEAD = re.compile(r"^(?:what|how|who|whom|whose|when|where|which|why|can|could|do|does|did|is|are|am|was|were|should|"
+                            r"may|must|will|would|shall|have|has)\b", re.I)
+_ANAPHOR = re.compile(r"\b(?:they|them|their|it|its|this|that|these|those)\b", re.I)
+_MAX_CLAUSES = 3
+_ITEMS_PER_CLAUSE = 3
+
+
+def answerable_clauses(question: str) -> List[str]:
+    """The question clauses of a question that asks two or three things ("How many office hours …, and how many sick
+    days …?"), each as a retrieval query; [] for a single question. A clause with a pronoun ("do they have a fax
+    number") carries the clause before it as context. Deterministic; no model; legacy-only (no Plan F import)."""
+    raw = [p.strip(" \t\"'()") for p in re.split(r"[?;,]|\.\s|\band\b", question or "", flags=re.I)]
+    raw = [p for p in raw if p]
+    out: List[str] = []
+    for i, part in enumerate(raw):
+        if not _QUESTION_HEAD.match(part) or len(part.split()) < 3:
+            continue
+        if i and _ANAPHOR.search(part):
+            part = raw[i - 1] + " " + part
+        out.append(part)
+    return out if 2 <= len(out) <= _MAX_CLAUSES else []
+
+
+def _gather_clause_evidence(question: str, clauses: List[str], route: str, **kw):
+    """The whole question's evidence exactly as before, plus each clause's own evidence (the same retrieval, rerank,
+    conflict screening and MIN_RERANK_SCORE gate, per clause), merged. Returns (evidence, candidates, extractor extra,
+    conflicts, sub-questions (one per clause), clause_ok (did the clause's own evidence pass the gate)). Every clause
+    answered by a deterministic extractor -> one combined extractor answer; otherwise ONE synthesis sees the merged items."""
+    whole, n_whole, extra_whole, conf_whole = _gather_evidence(question, route, **kw)
+    runs = []
+    for clause in clauses:
+        clause_route = router_agent.classify(clause)
+        ev, n, extra, conf = _gather_evidence(clause, clause_route, **kw)
+        runs.append((clause, clause_route, ev, n, extra, conf))
+    conflicts: Dict = {"stamped": list(conf_whole["stamped"]) + [s for r in runs for s in r[5]["stamped"]],
+                       "report": list(conf_whole["report"]) + [e for r in runs for e in r[5]["report"]]}
+    candidates = n_whole + sum(r[3] for r in runs)
+    subs = [SubQuestion(r[0], r[1]) for r in runs]
+    clause_ok = [bool(r[2].sufficient) for r in runs]
+    # only evidence that passed its own gate reaches the model: the whole question's items when the whole question
+    # passed, and the top items of each clause that passed (the threshold is never lowered by merging)
+    merged: List[Dict] = []
+    seen = set()
+    passed = (list(whole.items) if whole.sufficient else []) + [
+        i for r in runs if r[2].sufficient for i in r[2].items[:_ITEMS_PER_CLAUSE]]
+    for item in passed:
+        key = item.get("chunk")
+        if key not in seen:
+            seen.add(key)
+            merged.append(item)
+    scores = [s for s in [whole.best_score] + [r[2].best_score for r in runs] if s is not None]
+    best = max(scores) if scores else None
+    if runs and all(r[2].sufficient and r[2].used_extractor for r in runs):
+        answer = " ".join(r[2].extractor_answer for r in runs)
+        pages_ = sorted({p for r in runs for p in r[4][0]})
+        snippet = " | ".join(r[4][1] for r in runs)
+        return (EvidenceResult(question, route, merged, best, True, None, True, answer),
+                candidates, (pages_, snippet), conflicts, subs, clause_ok)
+    if whole.used_extractor:
+        return whole, candidates, extra_whole, conflicts, subs, clause_ok
+    if not (whole.sufficient or any(clause_ok)):
+        # nothing passed: exactly the whole question's (insufficient) result, as without the split - the refusal
+        return whole, candidates, extra_whole, conflicts, subs, clause_ok
+    return (EvidenceResult(question, route, merged, best, True, None, False, None), candidates, None, conflicts, subs, clause_ok)
+
+
+# ---------------------------------------------------------------------------
 # Step: verify
 # ---------------------------------------------------------------------------
 def _legacy_verify(question: str, synthesis: SynthesisResult, evidence: List[EvidenceResult],
@@ -460,12 +530,12 @@ def _normalise_verdict(result, allowed_pages: List[int]) -> Tuple[VerifyResult, 
 
 def _verify(verifier: VerifierFn, impl: str, question: str, synthesis: SynthesisResult,
             evidence: EvidenceResult, allowed_pages: List[int], *, is_retry: bool,
-            trace: List[TraceEntry]) -> VerifyResult:
+            trace: List[TraceEntry], sub_questions: Optional[List[SubQuestion]] = None) -> VerifyResult:
     started = time.perf_counter()
     note: Dict = {"impl": impl, "is_retry": is_retry}
     try:
         result, dropped = _normalise_verdict(
-            verifier(question, synthesis, [evidence], [], is_retry=is_retry), allowed_pages)
+            verifier(question, synthesis, [evidence], list(sub_questions or []), is_retry=is_retry), allowed_pages)
     except Exception as exc:
         if verifier is _legacy_verify:
             raise
@@ -583,9 +653,20 @@ def run(
 
     # ---- 2. Evidence ---------------------------------------------------------
     started = time.perf_counter()
-    evidence, num_candidates, extractor_extra, conflicts = _gather_evidence(
-        question, route, embedder=embedder, reranker=reranker, index=index,
-        chunks=chunks, metadata=metadata, pages=pages, timings=timings)
+    clauses = answerable_clauses(question)
+    sub_questions: List[SubQuestion] = []
+    clause_ok: List[bool] = []
+    if clauses:
+        # PF-16.5 (D-128): two or three question clauses get their own evidence, gated by the same threshold each
+        evidence, num_candidates, extractor_extra, conflicts, sub_questions, clause_ok = _gather_clause_evidence(
+            question, clauses, route, embedder=embedder, reranker=reranker, index=index,
+            chunks=chunks, metadata=metadata, pages=pages, timings=timings)
+        trace.append(TraceEntry("clauses", "split", False, 0.0,
+                                {"clauses": len(clauses), "supported": sum(clause_ok), "unsupported": len(clause_ok) - sum(clause_ok)}))
+    else:
+        evidence, num_candidates, extractor_extra, conflicts = _gather_evidence(
+            question, route, embedder=embedder, reranker=reranker, index=index,
+            chunks=chunks, metadata=metadata, pages=pages, timings=timings)
     items = evidence.items
     if conflicts["report"]:
         trace.append(TraceEntry("conflict_guard", "screened", False, 0.0, {
@@ -642,7 +723,8 @@ def run(
         cited = list(draft.claimed_pages) or legacy_fallback_pages(items)
     else:
         check, impl = _resolve_verifier(verifier)
-        verdict = _verify(check, impl, question, draft, evidence, allowed_pages, is_retry=False, trace=trace)
+        verdict = _verify(check, impl, question, draft, evidence, allowed_pages, is_retry=False, trace=trace,
+                          sub_questions=sub_questions)
         if (not verdict.accepted and verdict.retry_feedback and groq_client is not None
                 and budget.retry_allowance > 0):
             t_retry = time.perf_counter()
@@ -659,12 +741,27 @@ def run(
                 # set would let the Verifier wave an ungrounded answer through.
                 llm_evidence = dataclasses.replace(evidence, used_extractor=False, extractor_answer=None)
                 verdict = _verify(check, impl, question, draft, llm_evidence, _item_pages(items),
-                                  is_retry=True, trace=trace)
+                                  is_retry=True, trace=trace, sub_questions=sub_questions)
             elif trace[-1].decision == "llm_error":
                 # The first draft was rejected and the service failed on the second.
                 # That is an outage, not evidence that the handbook lacks the answer.
                 used_llm = True
                 retry_outage = True
+        # PF-16.5 (D-128): an accepted model answer that leaves out a supported clause gets the one retry, naming the
+        # clauses; the second draft replaces the first only when it is accepted AND covers more clauses.
+        if (verdict.accepted and not retried and not retry_outage and used_llm and verdict.uncovered_subquestions
+                and groq_client is not None and budget.retry_allowance > 0):
+            missing = [sub_questions[i].question for i in verdict.uncovered_subquestions if 0 <= i < len(sub_questions)]
+            feedback = ("The answer leaves out part of the question: %s. Answer every part from the context; for a part the "
+                        "context does not support, write: I do not have this information." % "; ".join(missing))
+            t_retry = time.perf_counter()
+            second = _synthesize(question, evidence, groq_client, budget, trace, feedback=feedback)
+            timings["generation_ms"] = timings.get("generation_ms", 0.0) + _ms(t_retry)
+            if second is not None:
+                second_verdict = _verify(check, impl, question, second, evidence, allowed_pages, is_retry=True, trace=trace,
+                                         sub_questions=sub_questions)
+                if second_verdict.accepted and len(second_verdict.uncovered_subquestions) < len(verdict.uncovered_subquestions):
+                    draft, verdict, retried = second, second_verdict, True
         if retry_outage:
             answer, cited = _llm_failure_reply(trace), []
         else:
@@ -689,6 +786,14 @@ def run(
         if problem:
             trace.append(TraceEntry("contact_guard", "answer_refused", False, 0.0, {"reason": problem}))
             answer, cited = REFUSAL, []
+    # ---- 4d. Clauses without evidence (PF-16.5, D-128) -------------------------------------------------------------
+    # A clause whose own evidence failed the threshold AND that the answer leaves out is named, never guessed.
+    if sub_questions and VERIFY_ANSWERS and answer not in (REFUSAL, LLM_UNAVAILABLE_REPLY) and not retry_outage:
+        left_out = set(getattr(verdict, "uncovered_subquestions", None) or [])
+        missing = [sub_questions[i].question for i in sorted(left_out) if i < len(clause_ok) and not clause_ok[i]]
+        if missing:
+            answer = answer.rstrip() + "\n\nThe approved documents do not answer this part of the question: %s." % "; ".join(
+                "“%s”" % c for c in missing)
     if used_llm and cited and answer not in (REFUSAL, LLM_UNAVAILABLE_REPLY):
         chosen = [items[i] for i in citing_items(answer, items, draft.claimed_pages) if int(items[i]["meta"]["page"]) in cited]
         if chosen:
