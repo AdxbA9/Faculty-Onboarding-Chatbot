@@ -764,8 +764,12 @@ What the shell adds to the website:
 Build it:
 
 1. Install [Android Studio](https://developer.android.com/studio) (it brings the JDK, the Android SDK and Gradle).
-2. Set the chatbot's HTTPS address in `android/gradle.properties`: `FOB_SERVER_URL=https://...` (no trailing slash). A
-   release build refuses to start while the placeholder or an `http://` address is there.
+2. Give the build the chatbot's HTTPS address (no trailing slash). `android/gradle.properties` ships with the
+   placeholder `FOB_SERVER_URL=https://CHANGE-ME.invalid`; keep the real address out of the repository and pass it with
+   `-PFOB_SERVER_URL=https://...`, or put `FOB_SERVER_URL=https://...` in your own `%USERPROFILE%\.gradle\gradle.properties`
+   (it overrides the project file and Android Studio reads it), or set the environment variable
+   `ORG_GRADLE_PROJECT_FOB_SERVER_URL`. A release build refuses to start while the placeholder or an `http://` address
+   is in effect, and a debug build shows "The server address is not set".
 3. Open the `android` folder in Android Studio, let it sync, then Run on a phone or emulator, or
    Build > Generate Signed App Bundle / APK for a release (create the signing key there; `android/.gitignore` keeps
    keystores out of the repository).
