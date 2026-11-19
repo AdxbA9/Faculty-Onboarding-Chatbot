@@ -835,7 +835,8 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
                     ui.html('<span class="settings-lbl">%s</span>' % html.escape(t(lang, key)))
                     ui.select(options, value=value, on_change=handler) \
                         .props('dense outlined options-dense aria-label="%s"' % html.escape(t(lang, key), quote=True)).mark(marker)
-            ui.html('<div class="settings-section">%s</div><p class="settings-note">%s</p>' % (html.escape(t(lang, "settings_data")), html.escape(t(lang, "settings_data_note"))))
+            ui.html('<div class="settings-section">%s</div><p class="settings-note">%s</p><p class="settings-note">%s</p>' % (
+                html.escape(t(lang, "settings_data")), html.escape(t(lang, "settings_data_note")), html.escape(t(lang, "about_processing"))))
             ui.html('<p><a class="quiet-link" href="/settings">%s<span>%s</span></a></p>' % (ICONS["sliders"], html.escape(t(lang, "all_settings"))))
             with ui.element("div").classes("dialog-actions spread"):
                 ui.button(t(lang, "clear_all"), on_click=lambda: _open_clear_all(dialog)).props("flat no-caps color=negative").mark("clear-all")
@@ -1004,12 +1005,10 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
 
     def _render_toolbar(text: str, when: Optional[str] = None) -> None:
         lang = L()
-        js_literal = json.dumps(text)
-        copy_js = ("(function(btn){ navigator.clipboard.writeText(%s).then(function(){ var l = btn.querySelector('.copy-lbl'); "
-                   "if(!l) return; var o = l.innerText; l.innerText = %s; setTimeout(function(){ l.innerText = o; }, 1400); }); })(this);"
-                   % (js_literal, json.dumps(t(lang, "copied"))))
-        ui.html(f'<div class="msg-toolbar"><button type="button" class="icon-btn" aria-label="{html.escape(t(lang, "copy"), quote=True)}" onclick=\'{copy_js}\'>'
-                f'{ICONS["copy"]}<span class="copy-lbl">{html.escape(t(lang, "copy"))}</span></button>{time_html(when) if when else ""}</div>')
+        # The click is handled by rendering.COPY_JS (one delegated listener); no script and no answer text in an attribute.
+        ui.html('<div class="msg-toolbar">%s%s</div>' % (
+            rendering.copy_button_html(text, t(lang, "copy"), t(lang, "copied"), t(lang, "copy_failed"), ICONS["copy"]),
+            time_html(when) if when else ""))
 
     def _render_storage_note(msg: Dict[str, Any]) -> None:
         """A replayed answer says it is saved (and whether the documents changed since); an unsaved one says so too."""
@@ -1403,6 +1402,7 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
                                                                              task.id, lang, task.id, html.escape(t(lang, "chat_open_task"))))
 
     ui.add_body_html("<script>%s</script>" % voice.VOICE_JS)
+    ui.add_body_html("<script>%s</script>" % rendering.COPY_JS)
     refs["root"] = ui.element("div").classes("app-root")
     if _KB_STATE["kb"] is None and _KB_STATE["error"] is None:
         refs["status_timer"] = ui.timer(2.0, _refresh_status)

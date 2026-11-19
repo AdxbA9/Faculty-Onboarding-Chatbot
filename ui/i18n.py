@@ -31,6 +31,9 @@ STRINGS: Dict[str, Dict[str, str]] = {
         "about_lead": "About this assistant.",
         "about": ("Answers come from the UOS Faculty Handbook 2025/26 and approved official guides. "
                   "When the documents do not state something, the assistant says so instead of guessing."),
+        "about_processing": ("Some answers are written with a language model run by Groq, an external service. For those, your "
+                             "question and the document passages found for it are sent to Groq. "
+                             "Do not type personal or confidential information."),
         "session_note": "Conversations are saved for this browser on this server, so you can reopen them later.",
         "new_chat": "New chat",
         "conversations": "Conversations",
@@ -85,6 +88,7 @@ STRINGS: Dict[str, Dict[str, str]] = {
         "evidence": "Supporting evidence ({count})",
         "copy": "Copy answer",
         "copied": "Copied",
+        "copy_failed": "Could not copy",
         "show_original": "Show the verified English source answer",
         "translation_checked": "Translated from the verified English answer; numbers, contacts and conditions checked",
         "translation_framed": "Source text shown in English (translation not available or not verified)",
@@ -384,6 +388,9 @@ STRINGS: Dict[str, Dict[str, str]] = {
         "about_lead": "عن هذا المساعد.",
         "about": ("تأتي الإجابات من دليل أعضاء هيئة التدريس 2025/2026 والأدلة الرسمية المعتمدة. "
                   "وعندما لا تنص الوثائق على أمر ما، يقول المساعد ذلك بدلًا من التخمين."),
+        "about_processing": ("تُصاغ بعض الإجابات بنموذج لغوي تشغّله Groq، وهي خدمة خارجية. في هذه الحالات يُرسَل سؤالك "
+                             "ومقاطع الوثائق التي عُثر عليها له إلى Groq. "
+                             "لا تكتب معلومات شخصية أو سرّية."),
         "session_note": "تُحفظ المحادثات لهذا المتصفح على هذا الخادم، فيمكنك فتحها لاحقًا.",
         "new_chat": "محادثة جديدة",
         "conversations": "المحادثات",
@@ -438,6 +445,7 @@ STRINGS: Dict[str, Dict[str, str]] = {
         "evidence": "الأدلة الداعمة ({count})",
         "copy": "نسخ الإجابة",
         "copied": "تم النسخ",
+        "copy_failed": "تعذّر النسخ",
         "show_original": "عرض الإجابة الإنجليزية المتحقَّق منها",
         "translation_checked": "مُترجمة من الإجابة الإنجليزية المتحقَّق منها؛ تم التحقق من الأرقام وجهات الاتصال والشروط",
         "translation_framed": "النص المصدر معروض بالإنجليزية (الترجمة غير متاحة أو لم يتم التحقق منها)",

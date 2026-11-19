@@ -10,6 +10,7 @@ Nothing else of the answer is changed, so lists, numbered steps, tables and code
 from __future__ import annotations
 
 import html
+import json
 import re
 
 from nicegui.elements.markdown import prepare_content
@@ -95,4 +96,63 @@ def plain_text(rendered_html: str) -> str:
     return html.unescape(_TAG.sub("", rendered_html or "")).strip()
 
 
-__all__ = ["answer_html", "plain_text"]
+# ---------------------------------------------------------------------------
+# Copy answer
+# ---------------------------------------------------------------------------
+#: One delegated click handler for every "Copy answer" button. The button carries no script: the text to copy sits
+#: beside it as JSON inside a hidden element, so no answer text is ever written into an HTML attribute or into
+#: JavaScript source (an inline ``onclick`` broke on the quotes of its own code and on any apostrophe in an answer).
+#: ``navigator.clipboard`` exists only in a secure context (https or localhost); over plain http on a local network
+#: (a phone on the same Wi-Fi) the handler falls back to a temporary text box and ``document.execCommand('copy')``.
+#: The label reports the real outcome: the "copied" text only after a copy succeeded, the "failed" text otherwise.
+COPY_JS = r"""
+(function () {
+  if (window.fobCopy) return;
+  function legacyCopy(text) {
+    var box = document.createElement('textarea');
+    box.value = text; box.setAttribute('readonly', ''); box.setAttribute('aria-hidden', 'true');
+    box.style.position = 'fixed'; box.style.top = '0'; box.style.left = '-9999px'; box.style.opacity = '0';
+    document.body.appendChild(box);
+    var ok = false;
+    try { box.select(); box.setSelectionRange(0, text.length); ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(box);
+    return ok;
+  }
+  function report(btn, ok) {
+    var label = btn.querySelector('.copy-lbl');
+    var message = btn.getAttribute(ok ? 'data-copied' : 'data-copy-failed');
+    if (!label || !message) return;
+    if (btn.fobCopyTimer) clearTimeout(btn.fobCopyTimer); else btn.fobCopyLabel = label.textContent;
+    label.textContent = message;
+    btn.fobCopyTimer = setTimeout(function () { label.textContent = btn.fobCopyLabel; btn.fobCopyTimer = null; }, 1400);
+  }
+  window.fobCopy = function (btn) {
+    var source = btn.parentNode ? btn.parentNode.querySelector('.copy-src') : null;
+    var text;
+    try { text = JSON.parse(source.textContent); } catch (e) { report(btn, false); return false; }
+    if (typeof text !== 'string') { report(btn, false); return false; }
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(function () { report(btn, true); }, function () { report(btn, legacyCopy(text)); });
+    } else {
+      report(btn, legacyCopy(text));
+    }
+    return true;
+  };
+  document.addEventListener('click', function (ev) {
+    var btn = ev.target && ev.target.closest ? ev.target.closest('button[data-copy-answer]') : null;
+    if (btn) window.fobCopy(btn);
+  });
+})();
+"""
+
+
+def copy_button_html(text: str, label: str, copied: str, failed: str, icon: str = "") -> str:
+    """The "Copy answer" button and, beside it, the text it copies (JSON in a hidden element, HTML-escaped). The click
+    is handled by :data:`COPY_JS`; nothing here is executable, whatever characters the answer contains."""
+    esc = lambda value: html.escape(value, quote=True)                                     # noqa: E731
+    return ('<button type="button" class="icon-btn" data-copy-answer aria-label="%s" data-copied="%s" data-copy-failed="%s">'
+            '%s<span class="copy-lbl">%s</span></button><span class="copy-src" hidden style="display:none">%s</span>'
+            % (esc(label), esc(copied), esc(failed), icon, html.escape(label), html.escape(json.dumps(text), quote=False)))
+
+
+__all__ = ["COPY_JS", "answer_html", "copy_button_html", "plain_text"]

@@ -242,7 +242,10 @@ def guest_chip_html(lang: str, display_name: Optional[str]) -> str:
 
 
 def about_html(lang: str) -> str:
-    return '<details class="about"><summary>%s</summary><div>%s</div></details>' % (esc(t(lang, "about_lead").rstrip(".")), esc(t(lang, "about")))
+    # The second paragraph says which data leaves this server: model-assisted answers send the question and the retrieved
+    # passages to the model provider. It states only what the code does; it makes no retention promise for the provider.
+    return '<details class="about"><summary>%s</summary><div>%s</div><div class="about-processing">%s</div></details>' % (
+        esc(t(lang, "about_lead").rstrip(".")), esc(t(lang, "about")), esc(t(lang, "about_processing")))
 
 
 def same_page_with(request: Request, **params: str) -> str:
