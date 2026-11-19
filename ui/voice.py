@@ -190,7 +190,7 @@ LOCAL_VOICE_JS = r"""
   if (window.fobVoice) return;
   const emit = (payload) => { try { emitEvent('fob_voice', payload); } catch (e) { /* page gone */ } };
   const supported = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
-  const V = { active: false, lang: '', rec: null, stream: null, chunks: [], ctx: null, timers: [], heard: false, outcome: '' };
+  const V = { active: false, lang: '', rec: null, stream: null, chunks: [], ctx: null, timers: [], heard: false, outcome: '', peak: 0 };
   V.supported = () => supported;
   const clearTimers = () => { V.timers.forEach((t) => { clearTimeout(t); clearInterval(t); }); V.timers = []; };
   const release = () => {
@@ -203,7 +203,7 @@ LOCAL_VOICE_JS = r"""
     emit({kind: 'interim', text: '…', lang: lang});
     let res;
     try {
-      const r = await fetch('/api/voice/transcribe?lang=' + encodeURIComponent(lang), {method: 'POST', headers: {'Content-Type': 'application/octet-stream', 'X-FOB-Voice': '1'}, body: blob});
+      const r = await fetch('/api/voice/transcribe?lang=' + encodeURIComponent(lang), {method: 'POST', headers: {'Content-Type': 'application/octet-stream', 'X-FOB-Voice': '1', 'X-FOB-Voice-Peak': String(Math.round((V.peak || 0) * 10000) / 10000)}, body: blob});
       res = await r.json();
     } catch (e) { res = {error: 'network'}; }
     if (res && res.text) { emit({kind: 'final', text: res.text, lang: lang}); emit({kind: 'end', lang: lang}); }
@@ -216,7 +216,7 @@ LOCAL_VOICE_JS = r"""
   V.start = async (lang, noResultMs, capMs) => {
     if (!supported) { emit({kind: 'unsupported', lang: lang}); return 'unsupported'; }
     if (V.active) { emit({kind: 'busy', lang: lang}); return 'busy'; }
-    V.active = true; V.lang = lang; V.heard = false; V.outcome = ''; V.chunks = [];
+    V.active = true; V.lang = lang; V.heard = false; V.outcome = ''; V.chunks = []; V.peak = 0;
     emit({kind: 'starting', lang: lang});
     try {
       V.stream = await navigator.mediaDevices.getUserMedia({audio: {echoCancellation: true, noiseSuppression: true, channelCount: 1}});
@@ -236,26 +236,33 @@ LOCAL_VOICE_JS = r"""
       const outcome = V.outcome, chunks = V.chunks.slice(), mime = rec.mimeType || type || 'audio/webm';
       release();
       if (outcome === 'cancel') { V.active = false; V.rec = null; emit({kind: 'cancelled', lang: lang}); return; }
-      if (outcome === 'timeout') { V.active = false; V.rec = null; emit({kind: 'error', code: 'timeout', lang: lang}); return; }
       upload(new Blob(chunks, {type: mime}), lang).finally(() => { V.active = false; V.rec = null; V.chunks = []; });
     };
-    // silence detection: after speech was heard, about 1.3 s of quiet ends the question
+    // silence detection: the level of the first 0.4 s is taken as background noise; speech is a level clearly above it.
+    // After speech was heard, about 1.3 s of quiet ends the question. The detector only decides WHEN to stop: the
+    // recording is always transcribed (faster-whisper's own voice detection decides whether anything was said).
     try {
       const AC = window.AudioContext || window.webkitAudioContext;
       V.ctx = new AC();
+      if (V.ctx.state === 'suspended') { V.ctx.resume().catch(() => {}); }
       const src = V.ctx.createMediaStreamSource(V.stream), an = V.ctx.createAnalyser();
       an.fftSize = 1024; src.connect(an);
-      const buf = new Float32Array(an.fftSize);
-      let quietSince = 0;
+      const buf = new Float32Array(an.fftSize), t0 = performance.now();
+      let quietSince = 0, floor = 0, floorN = 0;
       V.timers.push(setInterval(() => {
+        if (V.ctx && V.ctx.state === 'suspended') { V.ctx.resume().catch(() => {}); return; }
         an.getFloatTimeDomainData(buf);
         let s = 0; for (let i = 0; i < buf.length; i++) s += buf[i] * buf[i];
         const rms = Math.sqrt(s / buf.length), now = performance.now();
-        if (rms > 0.02) { V.heard = true; quietSince = 0; }
+        if (rms > V.peak) V.peak = rms;
+        if (now - t0 < 400) { floor += rms; floorN += 1; return; }
+        const threshold = Math.max(0.004, 3 * (floorN ? floor / floorN : 0));
+        if (rms > threshold) { V.heard = true; quietSince = 0; }
         else if (V.heard) { if (!quietSince) quietSince = now; else if (now - quietSince > 1300) V.stop(); }
       }, 100));
-    } catch (e) { /* no analyser: the Stop button and the cap still end the recording */ }
-    V.timers.push(setTimeout(() => { if (V.active && !V.heard) { V.outcome = 'timeout'; try { rec.stop(); } catch (e) {} } }, noResultMs || 12000));
+    } catch (e) { /* no analyser: the Stop button and the time limits still end the recording */ }
+    // nothing detected for the no-result time: stop and let the recogniser decide (it reports no-speech if it was silence)
+    V.timers.push(setTimeout(() => { if (V.active && !V.heard) V.stop(); }, noResultMs || 12000));
     V.timers.push(setTimeout(() => { V.stop(); }, capMs || 60000));
     rec.start(250);
     emit({kind: 'listening', lang: lang});

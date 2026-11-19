@@ -142,6 +142,9 @@ def register(app: Any) -> None:
             return JSONResponse({"error": "too-large"}, status_code=413)
         body = await request.body()
         result = await run.io_bound(transcribe, body, request.query_params.get("lang", "en-US"))
+        # one line per question for diagnosis: size, microphone peak level, outcome (never the words themselves)
+        log.warning("voice: %d bytes, mic peak %s, %s", len(body), request.headers.get("x-fob-voice-peak", "?"),
+                    ("text %d chars in %s s (audio %s s)" % (len(result["text"]), result.get("seconds"), result.get("audio_seconds"))) if "text" in result else result.get("error"))
         return JSONResponse(result, headers={"Cache-Control": "no-store"})
 
 

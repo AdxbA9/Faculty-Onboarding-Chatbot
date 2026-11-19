@@ -49,8 +49,9 @@ def test_local_controller_keeps_the_page_contract():
         assert "kind: '%s'" % kind in js
     assert "/api/voice/transcribe" in js and "'X-FOB-Voice': '1'" in js
     assert "getUserMedia" in js and "MediaRecorder" in js
-    # a cancelled or silent recording is never uploaded
-    assert "outcome === 'cancel'" in js and "outcome === 'timeout'" in js
+    # a cancelled recording is never uploaded; a recording the level meter did not hear is still transcribed
+    assert "outcome === 'cancel'" in js and "outcome === 'timeout'" not in js
+    assert "V.ctx.resume()" in js and "X-FOB-Voice-Peak" in js
     # never sends the question by itself: the controller only reports text, the page appends it to the draft
     assert "send" not in js.lower().replace("x-fob-voice", "")
 
