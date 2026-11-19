@@ -1,0 +1,14 @@
+.gradle/
+.kotlin/
+build/
+app/build/
+local.properties
+.idea/
+*.iml
+captures/
+.cxx/
+# signing material never belongs in the repository
+*.jks
+*.keystore
+keystore.properties
+*.apk

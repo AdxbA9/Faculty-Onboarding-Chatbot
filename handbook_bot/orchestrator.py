@@ -55,7 +55,7 @@ import logging
 import re
 import sys
 import time
-from typing import Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import numpy as np
 
@@ -79,6 +79,8 @@ from .config import (
     MAX_LLM_CALLS,
     MAX_VERIFY_RETRIES,
     MIN_RERANK_SCORE,
+    REFUSAL_RESCUE,
+    REFUSAL_RESCUE_PAGES,
     PLANNER_ENABLED,
     VERIFY_ANSWERS,
 )
@@ -608,6 +610,74 @@ def _synthesize(question: str, evidence: EvidenceResult, groq_client, budget: LL
     return draft
 
 
+#: Longest page text handed to the model by the refusal rescue (characters per page).
+_RESCUE_PAGE_CHARS = 3000
+_RESCUE_ROUTES = ("policy", "policy_yesno", "list")
+_RESCUE_FEEDBACK = (
+    "the previous answer was the refusal sentence, but it was written from short excerpts. The full text of the most "
+    "relevant pages has now been added at the end of the context. If that text clearly and directly answers the "
+    "question, answer from it in its own words and cite its page; if it does not, reply with the refusal sentence again."
+)
+
+
+def _without_claims(answer: str, claims: List[str]) -> Optional[str]:
+    """``answer`` without the sentences the verifier could not ground, or None when that is not safely possible:
+    a claim that cannot be located in the answer, or a remainder that is too short to be an answer (under 40
+    characters or under a third of the draft)."""
+    text = answer or ""
+    for claim in claims:
+        words = [re.escape(word) for word in str(claim).split()]
+        if not words:
+            return None
+        found = re.search(r"\s+".join(words), text, re.I)
+        if found is None:
+            return None
+        text = text[:found.start()] + text[found.end():]
+    # a removed clause leaves its separator behind ("... other work. ; using it ..."): the next clause starts a sentence
+    text = re.sub(r"([.!?])[ \t]*[;,:][ \t]*(\w)", lambda m: m.group(1) + " " + m.group(2).upper(), text)
+    text = re.sub(r"(?m)^([ \t]*(?:[-*•][ \t]+)?)[;,:.][ \t]*(\w)", lambda m: m.group(1) + m.group(2).upper(), text)
+    text = re.sub(r"[ \t]+([.;,:])", r"\1", text)
+    lines = [re.sub(r"[ \t]{2,}", " ", line).strip() for line in text.splitlines()]
+    lines = [line for line in lines if not line or re.sub(r"^(?:[-*•]|\d+[.)])\s*", "", line).strip(" .;:,")]   # no empty bullets
+    trimmed = re.sub(r"\n{3,}", "\n\n", "\n".join(lines)).strip()
+    trimmed = re.sub(r"^[,;:\s]+", "", trimmed)
+    if len(trimmed) < 40 or len(trimmed) * 3 < len((answer or "").strip()):
+        return None
+    return trimmed
+
+
+def _page_items(items: List[Dict], chunks: List[str], metadata: List[Dict], limit: int) -> List[Dict]:
+    """Full-page evidence items for the best ``limit`` distinct pages of ``items`` (rerank order), rebuilt from the
+    indexed chunks of that page of that document: its paragraphs in printed order, or its rows when the page has no
+    paragraph chunk. The text is the indexed text itself, so the verifier checks a draft against the same words."""
+    wanted: List[Tuple[Any, Any]] = []
+    for item in items:
+        key = (item["meta"].get("source_id"), item["meta"].get("page"))
+        if key not in wanted:
+            wanted.append(key)
+        if len(wanted) >= max(0, limit):
+            break
+    out: List[Dict] = []
+    for source, page in wanted:
+        on_page = [(meta, chunk) for chunk, meta in zip(chunks, metadata)
+                   if meta.get("page") == page and meta.get("source_id") == source]
+        kind = "paragraph" if any(meta.get("chunk_type") == "paragraph" for meta, _c in on_page) else "row"
+        parts = [chunk for meta, chunk in sorted(((m, c) for m, c in on_page if m.get("chunk_type") == kind),
+                                                 key=lambda pair: pair[0].get("chunk_id_on_page") or 0)]
+        text = "\n".join(str(part) for part in parts).strip()[:_RESCUE_PAGE_CHARS]
+        if not text or any(text == str(item.get("chunk") or "").strip() for item in items):
+            continue
+        template = next(item for item in items
+                        if (item["meta"].get("source_id"), item["meta"].get("page")) == (source, page))
+        meta = dict(template["meta"])
+        meta["chunk_type"] = "page"
+        page_item = dict(template)
+        page_item["chunk"] = text
+        page_item["meta"] = meta
+        out.append(page_item)
+    return out
+
+
 def _llm_failure_reply(trace: List[TraceEntry]) -> str:
     """The reply for a draft the model could not produce: the budget notice, the model-configuration notice (D-119)
     or the outage notice, read from the last synthesis trace entry."""
@@ -726,6 +796,28 @@ def run(
         if draft is None:
             reply = _llm_failure_reply(trace)
             return _finish(QAResult(answer=reply, evidence=display_evidence, used_llm=used_llm, **common))
+        # ---- 3b. Refusal rescue (config.REFUSAL_RESCUE) ------------------------
+        # The excerpts passed the evidence threshold and the model still refused: spend the one retry on a draft that
+        # also sees the full text of the best pages. A second refusal, a failed call or an unchanged context keeps
+        # the first draft; an answer continues to the verifier below, checked against the wider evidence.
+        # Policy prose only: a calendar page prints several semesters' tables and a directory page several columns, and
+        # a draft that reads the wrong table is grounded text the verifier cannot tell from the right one (measured:
+        # the Fall 2025/2026 final-exam question was answered with another table's dates). Those routes keep the refusal.
+        if (REFUSAL_RESCUE and route in _RESCUE_ROUTES and (draft.answer or "").strip() == REFUSAL
+                and budget.retry_allowance > 0 and budget.retries == 0):
+            page_items = _page_items(items, chunks, metadata, REFUSAL_RESCUE_PAGES)
+            if page_items:
+                wider = dataclasses.replace(evidence, items=list(items) + page_items)
+                t_rescue = time.perf_counter()
+                second = _synthesize(question, wider, groq_client, budget, trace, feedback=_RESCUE_FEEDBACK)
+                timings["generation_ms"] = timings.get("generation_ms", 0.0) + _ms(t_rescue)
+                rescued = second is not None and (second.answer or "").strip() != REFUSAL
+                trace.append(TraceEntry("refusal_rescue", "answered" if rescued else "kept_refusal", False, 0.0,
+                                        {"pages_added": _item_pages(page_items)}))
+                if rescued:
+                    draft, evidence, items = second, wider, wider.items
+                    allowed_pages = sorted(set(_item_pages(items)))
+                    common = dict(query_type=route, items=items, num_candidates=num_candidates, num_reranked=len(items))
 
     # ---- 4. Verify, with at most one retry -----------------------------------
     retried = False
@@ -793,6 +885,22 @@ def run(
                         draft, verdict, retried, kept = second, second_verdict, True, True
                 trace.append(TraceEntry("exception_guard", "retry_kept" if kept else "retry_not_kept", False, 0.0,
                                         {"exceptions": len(missed), "pages": sorted({str(pg) for _s, pg in missed})}))
+        # ---- 4a. Keep the supported sentences (config.REFUSAL_RESCUE) ---------------
+        # A draft rejected because SOME of its sentences are not in the evidence used to become the refusal sentence,
+        # which threw away the sentences that are. The unsupported ones are removed and the remainder is verified
+        # again by the same verifier; it is served only when that check accepts it. No model request is made.
+        if (REFUSAL_RESCUE and not verdict.accepted and not retry_outage and used_llm and verdict.unsupported_claims
+                and (draft.answer or "").strip() != REFUSAL):
+            trimmed = _without_claims(draft.answer, verdict.unsupported_claims)
+            if trimmed:
+                kept_draft = dataclasses.replace(draft, answer=trimmed)
+                llm_evidence = dataclasses.replace(evidence, used_extractor=False, extractor_answer=None)
+                trimmed_verdict = _verify(check, impl, question, kept_draft, llm_evidence, _item_pages(items),
+                                          is_retry=True, trace=trace, sub_questions=sub_questions)
+                trace.append(TraceEntry("unsupported_trim", "kept" if trimmed_verdict.accepted else "refused", False, 0.0,
+                                        {"removed": len(verdict.unsupported_claims), "chars": len(trimmed)}))
+                if trimmed_verdict.accepted:
+                    draft, verdict = kept_draft, trimmed_verdict
         if retry_outage:
             answer, cited = _llm_failure_reply(trace), []
         else:

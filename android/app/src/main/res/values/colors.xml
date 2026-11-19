@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Same values as ui/pwa.py (THEME_COLOR, BACKGROUND_COLOR) and the offline page. -->
+    <color name="brand">#0B7A52</color>
+    <color name="page_background">#F3F5F4</color>
+    <color name="icon_background">#FFFFFF</color>
+</resources>

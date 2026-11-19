@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Long-press the app icon: the same three shortcuts as the web app manifest (ui/pwa.py). The path and query of the
+     data URI are opened on the server (MainActivity.startUrlFor). -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutId="new_chat"
+        android:shortcutShortLabel="@string/sc_new_chat">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="fobapp://open/?new=1"
+            android:targetClass="app.fob.uosfaculty.MainActivity"
+            android:targetPackage="app.fob.uosfaculty" />
+    </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutId="checklist"
+        android:shortcutShortLabel="@string/sc_checklist">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="fobapp://open/onboarding"
+            android:targetClass="app.fob.uosfaculty.MainActivity"
+            android:targetPackage="app.fob.uosfaculty" />
+    </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutId="resources"
+        android:shortcutShortLabel="@string/sc_resources">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="fobapp://open/resources"
+            android:targetClass="app.fob.uosfaculty.MainActivity"
+            android:targetPackage="app.fob.uosfaculty" />
+    </shortcut>
+</shortcuts>

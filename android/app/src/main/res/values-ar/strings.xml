@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sc_new_chat">محادثة جديدة</string>
+    <string name="sc_checklist">قائمة مهام التهيئة</string>
+    <string name="sc_resources">المصادر والمستندات</string>
+    <string name="no_app_for_link">لا يوجد تطبيق على هذا الجهاز يمكنه فتح هذا الرابط.</string>
+</resources>

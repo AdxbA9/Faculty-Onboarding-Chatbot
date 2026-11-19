@@ -136,6 +136,13 @@ html[lang="ar"] .bubble, html[lang="ar"] .hero p, html[lang="ar"] .about, html[l
 .answer-lang .q-field__native, .answer-lang .q-field__control { min-height: 26px !important; font-size: 12.5px; color: var(--text-2); }
 .answer-lang .q-field__control::before { border-color: var(--border) !important; }
 .answer-lang .q-select__dropdown-icon { color: var(--text-3); font-size: 18px; }
+.suggest-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 8px 0 2px; }
+.suggest-label { font-size: 12.5px; color: var(--text-3); margin-inline-end: 2px; }
+.suggest-btn.q-btn { border: 1px solid var(--border); border-radius: var(--radius-pill); background: var(--surface);
+  color: var(--brand-text); font-size: 13px; padding: 2px 12px; min-height: 30px; text-transform: none; }
+.suggest-btn.q-btn:hover { background: var(--brand-soft); border-color: transparent; }
+.spell-note { font-size: 12.5px; color: var(--text-3); margin: 0 0 6px 2px; }
+.spell-note em { color: var(--text-2); font-style: italic; }
 .translation-note { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-3); }
 .translation-note svg { width: 14px; height: 14px; flex: none; }
 details.original { border: 1px dashed var(--border); border-radius: var(--radius-md); background: var(--surface-2); }
@@ -1034,6 +1041,133 @@ html[data-motion="reduced"] *, html[data-motion="reduced"] *::before, html[data-
     .topbar-brand { display: none !important; }
     .topbar-right { gap: 6px; }
     .topbar-lang.q-btn { padding: 0 8px; min-width: 40px; }
+}
+
+/* ================================================================
+   PHONES (mobile pass): touch targets, readable sizes, keyboard, safe areas
+   After every earlier block on purpose, so it refines them. Nothing here applies to a desktop window with a mouse.
+   ================================================================ */
+/* A long table keeps whole words and scrolls sideways inside its own box instead of squeezing its columns
+   (the bubble's ``overflow-wrap: anywhere`` let every cell shrink to one letter per line). All widths. */
+.answer table { overflow-wrap: normal; word-break: normal; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+.answer th, .answer td { overflow-wrap: break-word; }
+.answer pre { max-width: 100%; -webkit-overflow-scrolling: touch; }
+.answer a, .ev-text, .ev-meta, .res-link { overflow-wrap: anywhere; }
+.answer img { max-width: 100%; height: auto; }
+
+/* The shell follows the visible viewport (``--app-h`` is set by the shell script while the on-screen keyboard is open),
+   so the message box stays above the keyboard; the notch and the home indicator are respected in standalone mode. */
+@media (max-width: 900px) {
+    html, body { overscroll-behavior: none; }
+    .app-shell { height: var(--app-h, 100dvh); }
+    .ob-root { min-height: 0; height: var(--app-h, 100dvh); }
+    .topbar { height: auto; min-height: 56px; padding-top: env(safe-area-inset-top, 0px);
+        padding-inline-start: max(12px, env(safe-area-inset-left, 0px)); padding-inline-end: max(12px, env(safe-area-inset-right, 0px)); }
+    .composer-wrap { padding-bottom: max(10px, env(safe-area-inset-bottom, 0px)); }
+    .page-main { padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px)); }
+    .app-shell.nav-open .sidebar { padding-top: calc(18px + env(safe-area-inset-top, 0px)); padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+        overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+    .drawer-close { top: calc(14px + env(safe-area-inset-top, 0px)); }
+    .chat-scroll, .page-scroll { overscroll-behavior-y: contain; -webkit-overflow-scrolling: touch; }
+}
+
+/* Touch targets of at least 44 px and text of at least 12 px, on a phone-width window or any touch-first device */
+@media (max-width: 640px), (pointer: coarse) {
+    /* top bar and drawer */
+    .topbar-btn.q-btn, .nav-toggle, .drawer-close { width: 44px; height: 44px; min-height: 44px; }
+    .topbar-lang.q-btn { width: auto; min-width: 44px; }
+    .nav-item { min-height: 46px; font-size: 15px; }
+    .nav-item svg { width: 20px; height: 20px; }
+    .nav-section, .brand-org { font-size: 12px; }
+    .session-item.q-btn { min-height: 44px; }
+    .session-menu-btn.q-btn { width: 44px; height: 44px; min-height: 44px; opacity: 1; }
+    .sb-view-all { display: inline-flex; align-items: center; min-height: 44px; padding: 0 6px; font-size: 13px; }
+    .about summary { display: flex; align-items: center; min-height: 44px; }
+    .guest-chip { min-height: 52px; }
+    .guest-sub { font-size: 12px; }
+    .q-menu .q-item { min-height: 44px; }
+
+    /* chat */
+    .example-btn.q-btn { min-height: 44px; }
+    .mic-btn.q-btn, .voice-cancel-btn.q-btn { width: 44px; height: 44px; min-height: 44px; }
+    .send-btn.q-btn { width: 44px; height: 44px; min-height: 44px; }
+    .composer { padding: 6px 6px 6px 12px; gap: 6px; }
+    .composer .q-field__control { min-height: 44px; }
+    .composer .q-field__native { padding: 10px 0; }
+    details.evidence summary { min-height: 44px; }
+    .icon-btn { height: 44px; padding: 0 12px; font-size: 13px; }
+    .msg-time, .msg-meta, .msg-meta .msg-time, .msg-toolbar .msg-time, .msg-row time, .sources-label { font-size: 12px; }
+    .avatar.user { font-size: 12px; }
+    .chip { height: 30px; }
+    a.chip, button.chip { height: auto; min-height: 44px; white-space: normal; text-align: start; padding: 6px 12px; line-height: 1.35; }
+    .chat-context a { display: inline-flex; align-items: center; min-height: 44px; }
+
+    /* pages */
+    .link-btn { min-height: 44px; padding: 8px 18px; }
+    .ob-btn.q-btn { min-height: 44px; }
+    .quiet-link, .ob-link, .res-link { display: inline-flex; align-items: center; min-height: 44px; }
+    .ob-evidence summary { min-height: 44px; }
+    .seg.q-btn-group > .q-btn { min-height: 44px; }
+    .icon-action.q-btn { width: 44px; height: 44px; min-height: 44px; }
+    .hs-title.q-btn { min-height: 44px; }
+    .hs-row { gap: 8px; padding: 8px 8px 8px 12px; }
+    html[dir="rtl"] .hs-row { padding: 8px 12px 8px 8px; }
+    .hs-actions { gap: 0; }
+    .page-main .q-btn:not(.q-btn--round), .fob-dialog .q-btn { min-height: 44px; }
+    .page-main .q-field--dense .q-field__control, .fob-dialog .q-field--dense .q-field__control { min-height: 44px; }
+    .page-main .q-field--dense .q-field__marginal, .fob-dialog .q-field--dense .q-field__marginal { height: 44px; }
+    .kind, .ob-status-pill, .rf-type, .ob-stat dt { font-size: 12px; }
+    .ob-ev-count { font-size: 12px; }
+    .q-field__counter, .q-field__bottom { font-size: 12px; }
+
+    /* the step dots of a procedure: the dot keeps its size, the button around it is a full touch target */
+    .pr-dots { gap: 0; margin-inline: -15px; }
+    .pr-dot, .pr-dot.current, .pr-dot.conditional, .pr-dot.after { position: relative; width: 44px; height: 44px; border: 0; background: transparent; border-radius: 50%; }
+    .pr-dot::before { content: ""; position: absolute; top: 50%; left: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; box-sizing: border-box;
+        border-radius: 50%; border: 2px solid var(--border-strong); background: var(--surface); }
+    .pr-dot.current::before { background: var(--brand); border-color: var(--brand); }
+    .pr-dot.conditional::before { border-style: dashed; }
+    .pr-dot.after::before { border-color: var(--text-3); }
+
+    /* a hint longer than its field ends with an ellipsis instead of a cut letter */
+    input.q-field__native, input.q-field__native::placeholder { text-overflow: ellipsis; }
+    /* iOS zooms the page when a focused field has text smaller than 16 px */
+    .composer .q-field__native, .q-field__native, .q-field__input, input, textarea, select { font-size: 16px; }
+}
+
+@media (max-width: 540px) {
+    /* a long title wraps to two lines instead of being cut after a few letters */
+    .topbar .topbar-title { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-height: 1.2; overflow: hidden; }
+    .topbar-right { gap: 6px; }
+    .status-pill { height: 44px; padding: 0 6px; border-color: transparent; background: transparent; }
+    /* the two language pickers sit side by side under the message box: label above, choice below */
+    .composer-foot { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; gap: 0 10px; margin-top: 4px; }
+    .composer-foot .composer-help { grid-column: 1 / -1; }
+    .composer-foot .answer-lang { display: flex; flex-direction: column; align-items: stretch; gap: 0; min-width: 0; margin: 0; }
+    .composer-foot .answer-lang .lbl, .composer-foot .voice-lang .lbl { display: block; font-size: 12px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .composer-foot .answer-lang .q-field__control, .composer-foot .answer-lang .q-field__marginal { min-height: 44px; height: 44px; }
+    .composer-foot .answer-lang .q-field__native { min-height: 44px; padding: 0; align-items: center; font-size: 14px; }
+    .composer-foot .answer-lang .q-field__native span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .answer table { font-size: 13.5px; }
+    /* a soft edge shadow shows that a wide table continues sideways; it fades out at either end of the scroll */
+    .answer table { background:
+        linear-gradient(to right, var(--surface) 40%, transparent) left center / 28px 100% no-repeat local,
+        linear-gradient(to left, var(--surface) 40%, transparent) right center / 28px 100% no-repeat local,
+        radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, .16), transparent) left center / 10px 100% no-repeat scroll,
+        radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, .16), transparent) right center / 10px 100% no-repeat scroll; }
+    .answer th { background: transparent; box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--surface-2) 70%, transparent); }
+    .answer th, .answer td { min-width: 104px; padding: 8px 10px; }
+    .answer ul, .answer ol { padding-inline-start: 20px; }
+    .evidence-list { padding: 4px 12px 12px 12px; }
+    .fob-dialog.q-card { width: calc(100vw - 24px); max-width: calc(100vw - 24px); max-height: calc(var(--app-h, 100dvh) - 24px); overflow-y: auto; }
+    .dialog-actions .q-btn { flex: 1 1 auto; }
+}
+
+/* While the on-screen keyboard is open (class set by the shell script) the room goes to the conversation */
+@media (max-width: 900px) {
+    html.kb-open .composer-foot .answer-lang, html.kb-open .voice-privacy { display: none; }
+    html.kb-open .composer-wrap { padding-bottom: 8px; }
+    html.kb-open .hero { padding-top: 8px; }
 }
 </style>
 """

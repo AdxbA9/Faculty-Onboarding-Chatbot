@@ -133,10 +133,72 @@ def ask_with_diagnostics(kb: KnowledgeBase, question: str, *, answer_language: s
     ``answer_language`` reaches the core exactly as before PF-11. ``ARABIC_SUPPORT=0`` switches the layer off entirely.
     """
     text = question or ""
+    small = _small_talk(text, answer_language)
+    if small is not None:
+        return small
+    original = text
+    text, changes = _correct_spelling(kb, text)
     if _config.ARABIC_SUPPORT and (answer_language == "ar" or _has_arabic(text)):
         from handbook_bot import bilingual                         # lazy: an English question never imports the layer
-        return bilingual.answer(text, core=lambda q: _ask_core(kb, q), client=kb.groq_client, answer_language=answer_language)
-    return _ask_core(kb, text)
+        result, diagnostics = bilingual.answer(text, core=lambda q: _ask_core(kb, q), client=kb.groq_client, answer_language=answer_language)
+    else:
+        result, diagnostics = _ask_core(kb, text)
+    return _with_spelling(result, diagnostics, original, text, changes)
+
+
+def _correct_spelling(kb: KnowledgeBase, text: str) -> Tuple[str, Dict[str, str]]:
+    """Fix clear typos in the English words of a question (``handbook_bot.spelling``). ``SPELL_CORRECTION=0`` turns it
+    off; any failure leaves the question exactly as typed."""
+    if os.getenv("SPELL_CORRECTION", "1").strip().lower() in ("0", "false", "no", "off"):
+        return text, {}
+    try:
+        from handbook_bot import spelling
+        speller = spelling.speller_for(kb)
+        if speller is None:
+            return text, {}
+        return speller.correct(text)
+    except Exception as exc:                                       # never let the helper break a question
+        _log.warning("spelling correction skipped: %s", type(exc).__name__)
+        return text, {}
+
+
+def _with_spelling(result: QAResult, diagnostics: Dict[str, Any], original: str, corrected: str,
+                   changes: Dict[str, str]) -> Tuple[QAResult, Dict[str, Any]]:
+    """Mark a corrected question on a COPY of the result (results may be cached and shared between questions)."""
+    if not changes or result is None:
+        return result, diagnostics
+    try:
+        import dataclasses
+        result = dataclasses.replace(result)
+    except Exception:
+        pass
+    try:
+        result.spelling = {"original": original, "corrected": corrected, "changes": dict(changes)}
+    except Exception:
+        pass
+    diagnostics = dict(diagnostics or {})
+    diagnostics["spelling"] = dict(changes)
+    return result, diagnostics
+
+
+def _small_talk(text: str, answer_language: str = "auto") -> Optional[Tuple[QAResult, Dict[str, Any]]]:
+    """Greetings, thanks, goodbyes, "who are you", "what can you do": answered with a friendly, varied reply in the
+    user's language, without retrieval or the language model. A message that also asks a real question is not small
+    talk and returns None. ``SMALL_TALK=0`` in the environment switches this layer off."""
+    if os.getenv("SMALL_TALK", "1").strip().lower() in ("0", "false", "no", "off"):
+        return None
+    from handbook_bot import conversation
+    intent = conversation.detect(text)
+    if intent is None:
+        return None
+    if answer_language in ("en", "ar"):
+        lang = answer_language
+    else:
+        lang = "ar" if (_config.ARABIC_SUPPORT and _has_arabic(text)) else "en"
+    result = QAResult(answer=conversation.reply(intent, lang), query_type="smalltalk", best_section="Conversation",
+                      timings={"total_ms": 0.0})
+    result.answer_language = lang
+    return result, {"mode": plan_f_mode(), "served": "smalltalk", "attempted": False, "small_talk": intent}
 
 
 def _has_arabic(text: str) -> bool:

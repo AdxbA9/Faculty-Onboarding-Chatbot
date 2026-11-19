@@ -1,0 +1,319 @@
+{
+ "run_at": "2026-11-11 15:54:46",
+ "browser": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+ "base_url": "http://127.0.0.1:8501",
+ "results": [
+  {
+   "id": "TC-01",
+   "module": "Chat UI",
+   "title": "Application loads and shows the first-use screen",
+   "preconditions": "App started with `python app.py`; browser opens http://localhost:8501",
+   "steps": [
+    "Open http://localhost:8501/?lang=en"
+   ],
+   "test_data": "-",
+   "expected": "Page loads with the UOS header, sidebar navigation, welcome screen with example questions and a message composer with a Send button.",
+   "actual": "Page loaded=True, title='UOS Faculty Onboarding Chatbot', composer=True, send button=True, sidebar=True.",
+   "status": "Pass",
+   "screenshot": "TC01_landing.png"
+  },
+  {
+   "id": "TC-02",
+   "module": "Question answering",
+   "title": "Contact lookup returns the HR phone number with a source",
+   "preconditions": "TC-01 passed",
+   "steps": [
+    "Type the question in the composer",
+    "Press Enter"
+   ],
+   "test_data": "What is the phone number of the Human Resources Department?",
+   "expected": "The bot answers with the Human Resources phone number exactly as printed in the handbook and shows a Sources row.",
+   "actual": "Answered=True in 2.7s. Answer: \"Human Resources (contact directory): telephone +971 6 5050023.\". Sources: Verified · Institutional Navigation, UOS Faculty Handbook 2025/26, Page 54 · Contact Information",
+   "status": "Pass",
+   "screenshot": "TC02_hr_contact.png"
+  },
+  {
+   "id": "TC-03",
+   "module": "Question answering",
+   "title": "Supporting evidence panel can be expanded",
+   "preconditions": "TC-02 answer is on screen",
+   "steps": [
+    "Click 'Supporting evidence' under the answer"
+   ],
+   "test_data": "-",
+   "expected": "The evidence list expands and shows the handbook passages and page numbers used for the answer.",
+   "actual": "Evidence panel found and opened=True.",
+   "status": "Pass",
+   "screenshot": "TC03_evidence.png"
+  },
+  {
+   "id": "TC-04",
+   "module": "Question answering",
+   "title": "Handbook policy question is answered with citations",
+   "preconditions": "New chat; GROQ_API_KEY configured",
+   "steps": [
+    "Click New chat",
+    "Type the question",
+    "Press Enter"
+   ],
+   "test_data": "How many office hours must full-time faculty hold, and what is the teaching load per semester?",
+   "expected": "A grounded answer stating office-hour and teaching-load rules from the Faculty Handbook, with page citations.",
+   "actual": "Answered=True in 2.7s. Answer: \"Full-Time Faculty: Full-time faculty members in academic and career/technical programs are required to schedule a minimum of five office hours per week, spread over a minimum of two days. These office hours provide dedicated time for students to discuss course\". Sources: Verified · Teaching & Learning, UOS Faculty Handbook 2025/26, Page 79 · Responsibility to Office Hours",
+   "status": "Pass",
+   "screenshot": "TC04_policy.png"
+  },
+  {
+   "id": "TC-05",
+   "module": "Question answering",
+   "title": "Blackboard how-to question is answered from the attendance guide",
+   "preconditions": "New chat",
+   "steps": [
+    "Click New chat",
+    "Type the question",
+    "Press Enter"
+   ],
+   "test_data": "How do I take attendance in Blackboard?",
+   "expected": "Step-by-step answer taken from the Blackboard Attendance guide, citing that guide.",
+   "actual": "Answered=True in 4.3s. Answer: \"To take attendance in Blackboard Ultra, go to the Course Content page, select Mark attendance in the Details & Actions panel, then click Add Attendance; set your grade schema (present, late, absent) and grade display option (points, percentage, letters), and s\". Sources: Attendance Tool in Blackboard Ultra, Page 1 · Access Attendance:",
+   "status": "Pass",
+   "screenshot": "TC05_blackboard_attendance.png"
+  },
+  {
+   "id": "TC-06",
+   "module": "Safety / grounding",
+   "title": "Out-of-scope question is politely refused (no hallucination)",
+   "preconditions": "New chat",
+   "steps": [
+    "Click New chat",
+    "Type the question",
+    "Press Enter"
+   ],
+   "test_data": "What is the weather in Sharjah today?",
+   "expected": "The bot states the question is outside the approved university documents and does not invent an answer.",
+   "actual": "Answered=True. Response: \"No supporting evidence found  I do not have this information.  The approved documents do not state this, or the question needs rewording. Try naming the policy, procedure, office or date you mean.\"",
+   "status": "Pass",
+   "screenshot": "TC06_out_of_scope.png"
+  },
+  {
+   "id": "TC-07",
+   "module": "Safety / grounding",
+   "title": "Vague request gets a clarification / guidance response",
+   "preconditions": "New chat",
+   "steps": [
+    "Click New chat",
+    "Type the message",
+    "Press Enter"
+   ],
+   "test_data": "I need help.",
+   "expected": "The bot asks the user to be more specific or explains what topics it can help with, without making up policy.",
+   "actual": "Answered=True. Response: \"No supporting evidence found  I do not have this information.  The approved documents do not state this, or the question needs rewording. Try naming the policy, procedure, office or date you mean.\"",
+   "status": "Pass",
+   "screenshot": "TC07_vague.png"
+  },
+  {
+   "id": "TC-08",
+   "module": "Input validation",
+   "title": "Empty message is not sent",
+   "preconditions": "New chat, empty composer",
+   "steps": [
+    "Click into the empty message box",
+    "Press Enter"
+   ],
+   "test_data": "(empty)",
+   "expected": "Nothing is sent; no user bubble or answer appears.",
+   "actual": "User messages before=0, after=0.",
+   "status": "Pass",
+   "screenshot": "TC08_empty_message.png"
+  },
+  {
+   "id": "TC-09",
+   "module": "Input validation",
+   "title": "Shift+Enter inserts a new line instead of sending",
+   "preconditions": "Composer focused",
+   "steps": [
+    "Type 'line one'",
+    "Press Shift+Enter",
+    "Type 'line two'"
+   ],
+   "test_data": "line one / line two",
+   "expected": "The message box contains two lines and nothing is sent.",
+   "actual": "Textarea value='line one\\nline two', sent=False.",
+   "status": "Pass",
+   "screenshot": "TC09_shift_enter.png"
+  },
+  {
+   "id": "TC-10",
+   "module": "Bilingual (Arabic)",
+   "title": "Arabic question is answered in Arabic with a right-to-left layout",
+   "preconditions": "Interface switched to Arabic (?lang=ar)",
+   "steps": [
+    "Open the chat in Arabic",
+    "Type the Arabic question",
+    "Press Enter"
+   ],
+   "test_data": "ما هو رقم هاتف قسم الموارد البشرية؟ (What is the HR phone number?)",
+   "expected": "The page is right-to-left and the bot answers in Arabic with the HR phone number preserved exactly.",
+   "actual": "Direction=rtl, answered=True. Answer: \"الموارد البشرية (دليل الاتصال): هاتف +971 6 5050023.\"",
+   "status": "Pass",
+   "screenshot": "TC10_arabic_question.png"
+  },
+  {
+   "id": "TC-11",
+   "module": "Bilingual (Arabic)",
+   "title": "Language button switches the interface back to English and keeps the conversation",
+   "preconditions": "TC-10 conversation on screen",
+   "steps": [
+    "Click the language button (English) in the header"
+   ],
+   "test_data": "-",
+   "expected": "The interface switches to English, left-to-right, and the Arabic conversation is still shown.",
+   "actual": "Button clicked=True, lang=en, direction=ltr, messages kept=2.",
+   "status": "Pass",
+   "screenshot": "TC11_language_switch.png"
+  },
+  {
+   "id": "TC-12",
+   "module": "Saved conversations",
+   "title": "Previous conversations are saved and listed on the History page",
+   "preconditions": "TC-02 to TC-10 conversations were created",
+   "steps": [
+    "Open Conversation history from the sidebar"
+   ],
+   "test_data": "-",
+   "expected": "The History page lists the earlier conversations with titles taken from their first question.",
+   "actual": "Earlier conversation titles found on page=True.",
+   "status": "Pass",
+   "screenshot": "TC12_history.png"
+  },
+  {
+   "id": "TC-13",
+   "module": "Saved conversations",
+   "title": "A saved conversation reopens after page reload without re-asking",
+   "preconditions": "Browser reloaded",
+   "steps": [
+    "Reload the page",
+    "Click the 'What is the phone number…' conversation in the sidebar"
+   ],
+   "test_data": "-",
+   "expected": "The stored question and answer are shown again from the database.",
+   "actual": "Messages displayed after reopening=2.",
+   "status": "Pass",
+   "screenshot": "TC13_reopen_conversation.png"
+  },
+  {
+   "id": "TC-14",
+   "module": "Onboarding",
+   "title": "Onboarding checklist lists the onboarding tasks with overall progress",
+   "preconditions": "-",
+   "steps": [
+    "Open 'Onboarding checklist' from the sidebar"
+   ],
+   "test_data": "-",
+   "expected": "A dashboard of onboarding tasks (Teaching, Faculty services, Institutional) with a progress ring.",
+   "actual": "Task cards=12, progress=0%.",
+   "status": "Pass",
+   "screenshot": "TC14_onboarding_checklist.png"
+  },
+  {
+   "id": "TC-15",
+   "module": "Onboarding",
+   "title": "Marking a task completed updates the progress",
+   "preconditions": "Checklist open",
+   "steps": [
+    "Click 'Mark completed' on the 'HR pre-joining documents' task"
+   ],
+   "test_data": "-",
+   "expected": "The task status becomes Completed, a 'Saved' note appears and the completed counter / percentage increases.",
+   "actual": "Clicked=True, progress 0% -> 8%, completed count=1.",
+   "status": "Pass",
+   "screenshot": "TC15_task_completed.png"
+  },
+  {
+   "id": "TC-16",
+   "module": "Onboarding",
+   "title": "Guided procedure moves step by step with Next",
+   "preconditions": "-",
+   "steps": [
+    "Open Guided procedures > 'Send an Announcement' (Blackboard)",
+    "Click Next twice"
+   ],
+   "test_data": "-",
+   "expected": "The navigator starts at Step 1 and shows Step 3 after two clicks, with the exact guide text for each step.",
+   "actual": "Counter before='STEP 1 OF 8', after='STEP 3 OF 8'.",
+   "status": "Pass",
+   "screenshot": "TC16_guided_procedure.png"
+  },
+  {
+   "id": "TC-17",
+   "module": "Resources",
+   "title": "Resource finder search returns the matching document",
+   "preconditions": "-",
+   "steps": [
+    "Open 'Resources & documents'",
+    "Type 'iThenticate' in the search box"
+   ],
+   "test_data": "iThenticate",
+   "expected": "The iThenticate guidelines document is listed first.",
+   "actual": "Results=2, first result='Document'.",
+   "status": "Fail",
+   "screenshot": "TC17_resource_finder.png"
+  },
+  {
+   "id": "TC-18",
+   "module": "Settings",
+   "title": "Theme button switches between light and dark mode",
+   "preconditions": "-",
+   "steps": [
+    "Click the dark/light mode button in the header"
+   ],
+   "test_data": "-",
+   "expected": "The whole interface switches to the dark theme.",
+   "actual": "Theme before=light, after=dark.",
+   "status": "Pass",
+   "screenshot": "TC18_dark_mode.png"
+  },
+  {
+   "id": "TC-19",
+   "module": "Settings",
+   "title": "Settings page shows language, theme and accessibility options",
+   "preconditions": "-",
+   "steps": [
+    "Open 'Settings' from the sidebar"
+   ],
+   "test_data": "-",
+   "expected": "Settings for interface/answer language, theme, larger text and reduced motion are shown.",
+   "actual": "Options found: Language, Theme, Text size, motion, Voice.",
+   "status": "Pass",
+   "screenshot": "TC19_settings.png"
+  },
+  {
+   "id": "TC-20",
+   "module": "Guest profile",
+   "title": "Guest profile page shows what this browser has saved",
+   "preconditions": "-",
+   "steps": [
+    "Open 'Guest profile' from the sidebar"
+   ],
+   "test_data": "-",
+   "expected": "The page shows the guest identity, saved conversation count / onboarding progress and an optional display name.",
+   "actual": "Page text starts: \"Skip to the content | UNIVERSITY OF SHARJAH | Faculty Onboarding Assistant | New chat | WORKSPACE | Assistant chat | Onboarding checklist | Guided procedures | Resources & documents | Conversation history | YOUR GUEST SE\"",
+   "status": "Pass",
+   "screenshot": "TC20_guest_profile.png"
+  },
+  {
+   "id": "TC-21",
+   "module": "Responsive design",
+   "title": "Phone-width layout has no horizontal overflow and a slide-in menu",
+   "preconditions": "Viewport 375 x 812 (iPhone size)",
+   "steps": [
+    "Open the chat at phone width",
+    "Tap the menu button"
+   ],
+   "test_data": "-",
+   "expected": "The page fits the screen without sideways scrolling and the navigation opens as a slide-in drawer.",
+   "actual": "Horizontal overflow=False; menu opened.",
+   "status": "Pass",
+   "screenshot": "TC21_mobile_menu.png"
+  }
+ ]
+}

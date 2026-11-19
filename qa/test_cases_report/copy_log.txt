@@ -1,0 +1,22 @@
+start 11/11/2026 17:23:50.03 
+source C:\Users\USER\Desktop\Senior Project(Testing)\Senior Project(Testing)\Senior Project(milestone 4)\Senior Project\Faculty-Onboarding-Chatbot 
+
+-------------------------------------------------------------------------------
+   ROBOCOPY     ::     Robust File Copy for Windows                              
+-------------------------------------------------------------------------------
+
+  Started : Wednesday, 11 November 2026 5:23:50 PM
+   Source : C:\Users\USER\Desktop\Senior Project(Testing)\Senior Project(Testing)\Senior Project(milestone 4)\Senior Project\Faculty-Onboarding-Chatbot\
+     Dest : C:\fob\
+
+    Files : *.*
+	    
+ Exc Dirs : .venv
+	    .venv_tests
+	    .venv_broken_backup
+	    __pycache__
+	    .pytest_cache
+	    
+  Options : *.* /NDL /NFL /S /E /DCOPY:DA /COPY:DAT /NP /R:1 /W:1 
+
+------------------------------------------------------------------------------

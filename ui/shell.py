@@ -30,7 +30,7 @@ from urllib.parse import quote, urlencode
 from fastapi import Request
 from nicegui import run, ui
 
-from . import i18n
+from . import i18n, pwa
 from .i18n import t
 from .styles import GLOBAL_CSS, ICONS
 
@@ -60,6 +60,8 @@ SHELL_JS = r"""
     if (!shell) return;
     var want = (open === undefined) ? !shell.classList.contains('nav-open') : !!open;
     shell.classList.toggle('nav-open', want);
+    var behind = shell.querySelector('main.main');
+    if (behind) behind.inert = want && window.matchMedia('(max-width: 900px)').matches;
     document.querySelectorAll('.nav-toggle').forEach(function (b) { b.setAttribute('aria-expanded', want ? 'true' : 'false'); });
     if (want) {
       setTimeout(function () { var a = document.querySelector('#app-nav .nav-item.active') || document.querySelector('#app-nav .nav-item'); if (a) a.focus(); }, 40);
@@ -115,6 +117,58 @@ SHELL_JS = r"""
       });
     });
   };
+  // Mobile pass: a swipe towards the edge the drawer came from closes it, and it never stays open on a wide window.
+  var swipe = null;
+  document.addEventListener('touchstart', function (e) {
+    swipe = (document.querySelector('.app-shell.nav-open') && e.touches.length === 1) ? {x: e.touches[0].clientX, y: e.touches[0].clientY} : null;
+  }, {passive: true});
+  document.addEventListener('touchend', function (e) {
+    if (!swipe || !e.changedTouches.length) return;
+    var dx = e.changedTouches[0].clientX - swipe.x, dy = e.changedTouches[0].clientY - swipe.y;
+    var rtl = document.documentElement.getAttribute('dir') === 'rtl';
+    swipe = null;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > 2 * Math.abs(dy) && (rtl ? dx > 0 : dx < 0)) window.fobNav(false);
+  }, {passive: true});
+  try { window.matchMedia('(max-width: 900px)').addEventListener('change', function (m) { if (!m.matches) window.fobNav(false); }); } catch (err) {}
+  // Mobile pass: the on-screen keyboard. The shell is sized to the visible viewport while a text field is being edited
+  // (CSS reads --app-h and html.kb-open), so the message box sits directly above the keyboard on iOS, where the keyboard
+  // covers the page instead of resizing it, as well as on Android. Pinch-zoom is left alone.
+  var vv = window.visualViewport, root = document.documentElement, tallest = 0, lastWidth = 0;
+  function editing() {
+    var el = document.activeElement;
+    if (!el) return null;
+    if (el.tagName === 'TEXTAREA' || el.isContentEditable) return el;
+    return (el.tagName === 'INPUT' && !/^(checkbox|radio|button|submit|reset|range|file|color)$/i.test(el.type || '')) ? el : null;
+  }
+  window.fobFit = function () {
+    if (!vv || vv.scale > 1.01) return;
+    var h = Math.round(vv.height), w = Math.round(vv.width);
+    if (w !== lastWidth) { lastWidth = w; tallest = 0; }            // rotation: measure again
+    if (h > tallest) tallest = h;
+    var el = editing(), open = !!el && (tallest - h) > 120;
+    var was = root.classList.contains('kb-open');
+    root.classList.toggle('kb-open', open);
+    if (open) {
+      root.style.setProperty('--app-h', h + 'px');
+      if (vv.offsetTop > 0 || window.scrollY > 0) window.scrollTo(0, 0);
+      if (!was) {
+        setTimeout(function () {
+          var log = document.querySelector('.chat-scroll');
+          if (log && el.closest('.composer')) log.scrollTop = log.scrollHeight;
+          else if (el.scrollIntoView && !el.closest('.composer')) el.scrollIntoView({block: 'center'});
+        }, 60);
+      }
+    } else if (was || root.style.getPropertyValue('--app-h')) {
+      root.style.removeProperty('--app-h');
+    }
+  };
+  if (vv) {
+    vv.addEventListener('resize', window.fobFit);
+    vv.addEventListener('scroll', window.fobFit);
+    document.addEventListener('focusin', function () { setTimeout(window.fobFit, 250); });
+    document.addEventListener('focusout', function () { setTimeout(window.fobFit, 250); });
+    window.fobFit();
+  }
   new MutationObserver(function () { window.fobTimes(); window.fobTel(); }).observe(document.documentElement, {childList: true, subtree: true});
   document.addEventListener('DOMContentLoaded', function () { window.fobTimes(); window.fobTel(); });
 })();
@@ -296,6 +350,7 @@ class Page:
         """Build the shared shell and return the content container of this page."""
         lang = self.lang
         ui.add_head_html(GLOBAL_CSS)
+        ui.add_head_html(pwa.HEAD_HTML)
         ui.add_head_html(SHELL_JS)
         self.apply_html()
         root = ui.element("div").classes("app-root ob-root")

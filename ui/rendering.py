@@ -21,6 +21,7 @@ _SAFE_SCHEME = re.compile(r"^(?:https?://|mailto:)", re.I)
 _TAG = re.compile(r"<[^>]+>")
 _BLOCKQUOTE_MARK = re.compile(r"(?m)^([ \t]{0,3})(>+)")
 _BQ = "\x00"
+_PDF_BULLET = re.compile("(?m)^([ \\t]*)o[ \\t]+(?=[\"'\u201c\u2018(A-Z])")
 #: Block elements get ``dir="auto"`` so an Arabic lead-in and an English quotation each read in their own direction
 #: (post-freeze PF-11); the attribute is added only where none is present.
 _BLOCK_OPEN = re.compile(r"<(p|li|blockquote|h[1-6]|td|th|pre)((?:\s(?![^>]*\bdir=)[^>]*)?)>", re.I)
@@ -40,6 +41,9 @@ def answer_html(text: str) -> str:
     """The answer as safe HTML: escaped, Markdown-rendered, links filtered."""
     if not text:
         return ""
+    # Display only (the stored answer stays the exact quotation): the PDF's hollow list bullet is extracted as the
+    # letter "o" (``o "E" Lecturer is mainly devoted ...``); at the start of a line it is shown as a bullet.
+    text = _PDF_BULLET.sub(lambda m: m.group(1) + "• ", text)
     # Markdown's blockquote marker is a ">" at the start of a line; it is kept as Markdown, everything else is escaped.
     protected = _BLOCKQUOTE_MARK.sub(lambda m: m.group(1) + _BQ * len(m.group(2)), text)
     rendered = prepare_content(html.escape(protected, quote=False).replace(_BQ, ">"), _EXTRAS)

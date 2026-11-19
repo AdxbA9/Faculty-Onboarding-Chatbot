@@ -16,3 +16,6 @@ var/
 *.bak
 .nicegui/
 backups/
+
+# the zip for teammates (make_zip.ps1)
+dist/

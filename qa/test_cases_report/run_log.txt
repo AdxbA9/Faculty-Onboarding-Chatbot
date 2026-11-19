@@ -1,0 +1,23 @@
+app up after 52s
+TC-01 PASS  Application loads and shows the first-use screen | Page loaded=True, title='UOS Faculty Onboarding Chatbot', composer=True, send button=True, sidebar=True.
+TC-02 PASS  Contact lookup returns the HR phone number with a source | Answered=True in 2.7s. Answer: "Human Resources (contact directory): telephone +971 6 5050023.". Sources: Verified · Institutional Navigation, UOS Faculty Handb
+TC-03 PASS  Supporting evidence panel can be expanded | Evidence panel found and opened=True.
+TC-04 PASS  Handbook policy question is answered with citations | Answered=True in 2.7s. Answer: "Full-Time Faculty: Full-time faculty members in academic and career/technical programs are required to schedule a minimum of fiv
+TC-05 PASS  Blackboard how-to question is answered from the attendance guide | Answered=True in 4.3s. Answer: "To take attendance in Blackboard Ultra, go to the Course Content page, select Mark attendance in the Details & Actions panel, th
+TC-06 PASS  Out-of-scope question is politely refused (no hallucination) | Answered=True. Response: "No supporting evidence found  I do not have this information.  The approved documents do not state this, or the question needs rewordi
+TC-07 PASS  Vague request gets a clarification / guidance response | Answered=True. Response: "No supporting evidence found  I do not have this information.  The approved documents do not state this, or the question needs rewordi
+TC-08 PASS  Empty message is not sent | User messages before=0, after=0.
+TC-09 PASS  Shift+Enter inserts a new line instead of sending | Textarea value='line one\nline two', sent=False.
+TC-10 PASS  Arabic question is answered in Arabic with a right-to-left layout | Direction=rtl, answered=True. Answer: "الموارد البشرية (دليل الاتصال): هاتف +971 6 5050023."
+TC-11 PASS  Language button switches the interface back to English and keeps the conversation | Button clicked=True, lang=en, direction=ltr, messages kept=2.
+TC-12 PASS  Previous conversations are saved and listed on the History page | Earlier conversation titles found on page=True.
+TC-13 PASS  A saved conversation reopens after page reload without re-asking | Messages displayed after reopening=2.
+TC-14 PASS  Onboarding checklist lists the onboarding tasks with overall progress | Task cards=12, progress=0%.
+TC-15 PASS  Marking a task completed updates the progress | Clicked=True, progress 0% -> 8%, completed count=1.
+TC-16 PASS  Guided procedure moves step by step with Next | Counter before='STEP 1 OF 8', after='STEP 3 OF 8'.
+TC-17 FAIL  Resource finder search returns the matching document | Results=2, first result='Document'.
+TC-18 PASS  Theme button switches between light and dark mode | Theme before=light, after=dark.
+TC-19 PASS  Settings page shows language, theme and accessibility options | Options found: Language, Theme, Text size, motion, Voice.
+TC-20 PASS  Guest profile page shows what this browser has saved | Page text starts: "Skip to the content | UNIVERSITY OF SHARJAH | Faculty Onboarding Assistant | New chat | WORKSPACE | Assistant chat | Onboarding checklist | G
+TC-21 PASS  Phone-width layout has no horizontal overflow and a slide-in menu | Horizontal overflow=False; menu opened.
+finished: 21 cases

@@ -58,6 +58,15 @@ def _print_banner() -> None:
         problem = _model_warning()
         if problem:
             warnings.append(problem)
+    try:                                               # a missing optional package must be visible, not silent
+        from handbook_bot import spelling
+        if not spelling.available() and os.getenv("SPELL_CORRECTION", "1").strip().lower() not in {"0", "false", "no", "off"}:
+            warnings.append(
+                "Typo correction is off because the 'pyspellchecker' package is not\n"
+                "    installed. Run SETUP.bat (or: pip install -r requirements.txt)."
+            )
+    except Exception:
+        pass
     if os.getenv("ENABLE_OCR", "").strip().lower() in {"1", "true", "yes", "on"}:
         warnings.append(
             "OCR is enabled. The FIRST run will take several extra minutes\n"

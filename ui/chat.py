@@ -58,7 +58,7 @@ from handbook_bot.arabic_answers import localize_reply
 from persistence import StoreError, get_store
 from persistence.secret import storage_secret
 
-from . import i18n, presentation, rendering, voice
+from . import i18n, presentation, pwa, rendering, voice
 from .i18n import t
 from .shell import SHELL_JS, about_html, brand_html, drawer_close_html, guest_chip_html, html_props, nav_html, nav_toggle_html, time_html
 from .pipeline import groq_is_configured, load_knowledge_base, preflight
@@ -295,15 +295,21 @@ def _title_for(question: str) -> str:
     return (q[:42].rstrip() + "…") if len(q) > 44 else q
 
 
-def notice_for(content: str, lang: str) -> Optional[Dict[str, str]]:
-    """The labelled notice for a backend sentence in the interface language: kind, label, the sentence to show (the
-    Arabic counterpart of the canonical English sentence when the interface is Arabic) and the page's hint."""
+def notice_for(content: str, lang: str, seed: Optional[int] = None) -> Optional[Dict[str, str]]:
+    """The labelled notice for a backend sentence in the interface language: kind, label, the sentence to show and the
+    page's hint. A refusal ("empty") is worded by ``handbook_bot.conversation``: a friendly sentence and tip from a
+    rotating pool (``seed`` picks the variant, so a re-rendered bubble keeps its wording). The backend's decision is
+    unchanged; only its wording on the page varies. Other notices show the backend sentence (Arabic when needed)."""
     notice = presentation.notice_kind(content)
     if not notice:
         return None
     kind = notice[0]
     label_key, hint_key = _NOTICE_KEYS.get(kind, ("notice_error", "hint_error"))
     label = t(lang, "notice_config_problem") if (kind == "config" and "configuration" in notice[1].lower()) else t(lang, label_key)
+    if kind == "empty":
+        from handbook_bot import conversation
+        text, hint = conversation.friendly_refusal(lang, 0 if seed is None else seed)
+        return {"kind": kind, "label": label, "text": text, "hint": hint}
     text = content
     if lang == "ar":
         text = localize_reply(content) or (t("ar", "error_text") if content.strip() == presentation.ERROR_TEXT else content)
@@ -332,6 +338,7 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
         pass
 
     ui.add_head_html(GLOBAL_CSS)
+    ui.add_head_html(pwa.HEAD_HTML)
     ui.add_head_html(SHELL_JS)
     ui.query("html").props(html_props(state["theme"], state["lang"], state.get("text_size"), state.get("reduced_motion")))
 
@@ -1050,13 +1057,24 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
                         ui.html('<div class="typing" role="status" aria-live="polite"><span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>'
                                 f'<span>{html.escape(_searching(lang))}</span></div>')
                     return
-                notice = notice_for(content, lang)
+                kind_now = presentation.notice_kind(content)
+                if kind_now and kind_now[0] == "empty" and "notice_seed" not in msg:
+                    state["notice_seq"] = state.get("notice_seq", -1) + 1      # each refusal gets the next wording
+                    msg["notice_seed"] = state["notice_seq"]
+                notice_lang = "ar" if getattr(result, "answer_language", None) == "ar" else lang
+                spelling = getattr(result, "spelling", None) if result is not None else None
+                if isinstance(spelling, dict) and spelling.get("corrected"):
+                    ui.html(f'<div class="spell-note" dir="auto">{html.escape(t(lang, "spell_note"))} '
+                            f'<em>{html.escape(spelling["corrected"])}</em></div>')
+                notice = notice_for(content, notice_lang, msg.get("notice_seed"))
                 if notice:
                     kind = notice["kind"]
                     icon = ICONS["alert"] if kind in ("error", "outage", "config", "limit") else ICONS["info"]
                     ui.html(f'<div class="bubble assistant notice {kind}" role="status" dir="auto"><div class="notice-head">{icon}<span>{html.escape(notice["label"])}</span></div>'
                             f'<p class="notice-text" dir="auto">{html.escape(notice["text"])}</p>'
                             + (f'<p class="notice-hint">{html.escape(notice["hint"])}</p>' if notice["hint"] else "") + '</div>')
+                    if kind == "empty":
+                        _render_suggestions(notice_lang, msg.get("notice_seed") or 0)
                 else:
                     answer_lang = getattr(result, "answer_language", "en") if result is not None else "en"
                     with ui.element("div").classes("bubble assistant").props('dir="auto" lang="%s"' % answer_lang):
@@ -1069,6 +1087,21 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
                     _render_storage_note(msg)
                     if state["debug"]:
                         _render_debug(msg)
+
+    def _render_suggestions(lang: str, seed: int) -> None:
+        """Two example questions under a refusal, so the user always has a next step (they rotate with the refusal)."""
+        pool = EXAMPLE_QUESTIONS_AR if lang == "ar" else EXAMPLE_QUESTIONS
+        if not pool:
+            return
+        picks = list(dict.fromkeys(pool[(seed * 2 + k) % len(pool)] for k in range(2)))
+        with ui.element("div").classes("suggest-row"):
+            ui.html(f'<span class="suggest-label">{html.escape(t(lang, "suggest_label"))}</span>')
+            for question in picks:
+                def _make_click(q: str):
+                    async def _click() -> None:
+                        asyncio.create_task(_submit(q))
+                    return _click
+                ui.button(question, on_click=_make_click(question)).props('flat no-caps dense').classes("suggest-btn").mark("suggestion")
 
     def _render_chat() -> None:
         container = refs.get("chat")
@@ -1464,12 +1497,14 @@ def start_app(port: int = 8501, host: Optional[str] = None) -> None:
 
     app.on_startup(_ensure_kb_loaded)
     app.on_startup(_sync_onboarding_catalog)
+    pwa.register(app)                                    # manifest, service worker, offline page (installable web app)
     register_pages()
 
     ui.run(
         host=host,
         port=port,
         title=APP_TITLE,
+        viewport=pwa.VIEWPORT,
         dark=None,
         reload=False,
         show=False,

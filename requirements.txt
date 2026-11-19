@@ -19,6 +19,9 @@ pillow>=10.0
 # --- LLM client ---
 groq>=0.9
 
+# --- Spelling correction for typed questions (pure Python, bundles an English dictionary) ---
+pyspellchecker>=0.8
+
 # --- Config ---
 python-dotenv>=1.0
 

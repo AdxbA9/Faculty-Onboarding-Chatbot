@@ -26,6 +26,14 @@ import pytest
 
 import test_plan_f_runtime as T
 from conftest import KB_CORPUS, GROUNDED_LEAVE, LEAVE_QUESTION, FakeEmbedder, FakeGroqClient, FakeReranker
+
+
+@pytest.fixture(autouse=True)
+def _seam_only(monkeypatch):
+    """These tests pin the Plan F seam itself ("Hello" included), so the small-talk and spelling layers in front of it
+    are switched off here; tests/test_conversation.py and tests/test_spelling.py cover those layers."""
+    monkeypatch.setenv("SMALL_TALK", "0")
+    monkeypatch.setenv("SPELL_CORRECTION", "0")
 from handbook_bot import config
 from handbook_bot import plan_f_runtime as PF
 from handbook_bot.qa import QAResult, answer_question

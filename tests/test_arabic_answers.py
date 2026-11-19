@@ -125,7 +125,15 @@ def test_an_english_question_takes_exactly_the_pre_pf11_path():
     assert "language" not in diag
 
 
+def test_an_arabic_greeting_gets_a_friendly_arabic_small_talk_reply():
+    from handbook_bot import conversation
+    result, diag = pipeline.ask_with_diagnostics(_kb(None), "السلام عليكم")
+    assert result.query_type == "smalltalk" and result.answer_language == "ar" and diag["served"] == "smalltalk"
+    assert result.answer in conversation.REPLIES["ar"]["greeting"]
+
+
 def test_the_arabic_refusal_and_greeting_keep_the_canonical_sentence_and_flag_the_language(monkeypatch):
+    monkeypatch.setenv("SMALL_TALK", "0")                   # the bilingual layer's own greeting path, small talk off
     monkeypatch.setattr(config, "ARABIC_QUERY_MODEL_FALLBACK", False)
     result, _ = pipeline.ask_with_diagnostics(_kb(None), "السلام عليكم")
     assert result.answer == GREETING_REPLY and result.answer_language == "ar" and result.translation["status"] == "fixed"

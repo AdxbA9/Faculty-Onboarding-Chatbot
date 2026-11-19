@@ -1,0 +1,386 @@
+start 11/11/2026 15:48:05.52 
+Requirement already satisfied: aiofiles==25.1.0 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 1)) (25.1.0)
+Requirement already satisfied: aiohappyeyeballs==2.7.1 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 2)) (2.7.1)
+Collecting aiohttp==3.14.3 (from -r qa\test_cases_report\pins.txt (line 3))
+  Downloading aiohttp-3.14.3-cp311-cp311-win_amd64.whl.metadata (8.5 kB)
+Requirement already satisfied: aiosignal==1.4.0 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 4)) (1.4.0)
+Collecting annotated-doc==0.0.5 (from -r qa\test_cases_report\pins.txt (line 5))
+  Downloading annotated_doc-0.0.5-py3-none-any.whl.metadata (6.5 kB)
+Requirement already satisfied: annotated-types==0.8.0 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 6)) (0.8.0)
+Collecting anyio==4.15.1 (from -r qa\test_cases_report\pins.txt (line 7))
+  Downloading anyio-4.15.1-py3-none-any.whl.metadata (4.7 kB)
+Requirement already satisfied: attrs==26.1.0 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 8)) (26.1.0)
+Requirement already satisfied: bidict==0.24.1 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 9)) (0.24.1)
+Collecting certifi==2026.7.22 (from -r qa\test_cases_report\pins.txt (line 10))
+  Downloading certifi-2026.7.22-py3-none-any.whl.metadata (2.5 kB)
+Collecting click==8.5.0 (from -r qa\test_cases_report\pins.txt (line 11))
+  Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+Requirement already satisfied: cloudpickle==3.1.2 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 12)) (3.1.2)
+Requirement already satisfied: colorama==0.4.6 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 13)) (0.4.6)
+Requirement already satisfied: distro==1.9.0 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 14)) (1.9.0)
+Requirement already satisfied: docutils==0.23 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 15)) (0.23)
+Collecting faiss-cpu==1.15.1 (from -r qa\test_cases_report\pins.txt (line 16))
+  Downloading faiss_cpu-1.15.1-cp311-cp311-win_amd64.whl.metadata (7.8 kB)
+Collecting fastapi==0.141.1 (from -r qa\test_cases_report\pins.txt (line 17))
+  Downloading fastapi-0.141.1-py3-none-any.whl.metadata (27 kB)
+Collecting filelock==4.0.3 (from -r qa\test_cases_report\pins.txt (line 18))
+  Downloading filelock-4.0.3-py3-none-any.whl.metadata (2.0 kB)
+Requirement already satisfied: flatbuffers==25.12.19 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 19)) (25.12.19)
+Requirement already satisfied: frozenlist==1.8.0 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 20)) (1.8.0)
+Requirement already satisfied: fsspec==2026.9.0 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 21)) (2026.9.0)
+Requirement already satisfied: groq==1.7.0 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 22)) (1.7.0)
+Requirement already satisfied: h11==0.16.0 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 23)) (0.16.0)
+Collecting hf-xet==1.6.0 (from -r qa\test_cases_report\pins.txt (line 24))
+  Downloading hf_xet-1.6.0-cp38-abi3-win_amd64.whl.metadata (4.9 kB)
+Requirement already satisfied: httpcore==1.0.9 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 25)) (1.0.9)
+Collecting httptools==0.8.0 (from -r qa\test_cases_report\pins.txt (line 26))
+  Downloading httptools-0.8.0-cp311-cp311-win_amd64.whl.metadata (3.7 kB)
+Requirement already satisfied: httpx==0.28.1 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 27)) (0.28.1)
+Collecting huggingface-hub==1.33.0 (from -r qa\test_cases_report\pins.txt (line 28))
+  Downloading huggingface_hub-1.33.0-py3-none-any.whl.metadata (16 kB)
+Requirement already satisfied: idna==3.20 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 29)) (3.20)
+Requirement already satisfied: ifaddr==0.2.0 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 30)) (0.2.0)
+Collecting iniconfig==2.3.0 (from -r qa\test_cases_report\pins.txt (line 31))
+  Downloading iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+Requirement already satisfied: itsdangerous==2.2.0 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 32)) (2.2.0)
+Requirement already satisfied: jinja2==3.1.6 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 33)) (3.1.6)
+Requirement already satisfied: joblib==1.6.0 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 34)) (1.6.0)
+Collecting markdown-it-py==4.2.0 (from -r qa\test_cases_report\pins.txt (line 35))
+  Downloading markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+Requirement already satisfied: markdown2==2.5.5 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 36)) (2.5.5)
+Collecting markupsafe==3.0.3 (from -r qa\test_cases_report\pins.txt (line 37))
+  Downloading markupsafe-3.0.3-cp311-cp311-win_amd64.whl.metadata (2.8 kB)
+Requirement already satisfied: mdurl==0.1.2 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 38)) (0.1.2)
+Requirement already satisfied: mpmath==1.3.0 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 39)) (1.3.0)
+Collecting multidict==6.9.1 (from -r qa\test_cases_report\pins.txt (line 40))
+  Downloading multidict-6.9.1-cp311-cp311-win_amd64.whl.metadata (5.4 kB)
+Collecting narwhals==2.26.0 (from -r qa\test_cases_report\pins.txt (line 41))
+  Downloading narwhals-2.26.0-py3-none-any.whl.metadata (15 kB)
+Requirement already satisfied: networkx==3.6.1 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 42)) (3.6.1)
+Requirement already satisfied: nicegui==2.24.2 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 43)) (2.24.2)
+Requirement already satisfied: numpy==2.4.6 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 44)) (2.4.6)
+Collecting onnxruntime==1.30.0 (from -r qa\test_cases_report\pins.txt (line 45))
+  Downloading onnxruntime-1.30.0-cp311-cp311-win_amd64.whl.metadata (5.9 kB)
+Requirement already satisfied: opencv-python==5.0.0.93 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 46)) (5.0.0.93)
+Collecting orjson==3.12.0 (from -r qa\test_cases_report\pins.txt (line 47))
+  Downloading orjson-3.12.0-cp311-cp311-win_amd64.whl.metadata (43 kB)
+Requirement already satisfied: packaging==26.3 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 48)) (26.3)
+Collecting pillow==12.3.0 (from -r qa\test_cases_report\pins.txt (line 49))
+  Downloading pillow-12.3.0-cp311-cp311-win_amd64.whl.metadata (9.3 kB)
+Collecting pluggy==1.6.0 (from -r qa\test_cases_report\pins.txt (line 50))
+  Downloading pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+Requirement already satisfied: propcache==0.5.4 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 51)) (0.5.4)
+Requirement already satisfied: protobuf==7.36.2 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 52)) (7.36.2)
+Requirement already satisfied: pscript==0.7.7 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 53)) (0.7.7)
+Requirement already satisfied: pyclipper==1.4.0 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 54)) (1.4.0)
+Collecting pydantic-core==2.46.5 (from -r qa\test_cases_report\pins.txt (line 55))
+  Downloading pydantic_core-2.46.5-cp311-cp311-win_amd64.whl.metadata (6.7 kB)
+Collecting pydantic==2.13.5 (from -r qa\test_cases_report\pins.txt (line 56))
+  Downloading pydantic-2.13.5-py3-none-any.whl.metadata (110 kB)
+Requirement already satisfied: pygments==2.21.0 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 57)) (2.21.0)
+Collecting pymupdf==1.28.2 (from -r qa\test_cases_report\pins.txt (line 58))
+  Downloading pymupdf-1.28.2-cp310-abi3-win_amd64.whl.metadata (26 kB)
+Collecting pypdf==6.19.0 (from -r qa\test_cases_report\pins.txt (line 59))
+  Downloading pypdf-6.19.0-py3-none-any.whl.metadata (7.5 kB)
+Requirement already satisfied: pytest-asyncio==1.4.1.post1 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 60)) (1.4.1.post1)
+Collecting pytest==9.1.1 (from -r qa\test_cases_report\pins.txt (line 61))
+  Downloading pytest-9.1.1-py3-none-any.whl.metadata (7.6 kB)
+Collecting python-dotenv==1.2.3 (from -r qa\test_cases_report\pins.txt (line 62))
+  Downloading python_dotenv-1.2.3-py3-none-any.whl.metadata (29 kB)
+Collecting python-engineio==4.14.0 (from -r qa\test_cases_report\pins.txt (line 63))
+  Downloading python_engineio-4.14.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting python-multipart==0.0.32 (from -r qa\test_cases_report\pins.txt (line 64))
+  Downloading python_multipart-0.0.32-py3-none-any.whl.metadata (2.1 kB)
+Collecting python-socketio==5.17.0 (from -r qa\test_cases_report\pins.txt (line 65))
+  Downloading python_socketio-5.17.0-py3-none-any.whl.metadata (3.6 kB)
+Requirement already satisfied: pyyaml==6.0.3 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 66)) (6.0.3)
+Requirement already satisfied: rapidocr-onnxruntime==1.4.4 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 67)) (1.4.4)
+Collecting regex==2026.9.10 (from -r qa\test_cases_report\pins.txt (line 68))
+  Downloading regex-2026.9.10-cp311-cp311-win_amd64.whl.metadata (41 kB)
+Requirement already satisfied: rich==15.0.0 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 69)) (15.0.0)
+Requirement already satisfied: safetensors==0.8.0 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 70)) (0.8.0)
+Requirement already satisfied: scikit-learn==1.9.1 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 71)) (1.9.1)
+Requirement already satisfied: scipy==1.17.1 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 72)) (1.17.1)
+Collecting sentence-transformers==6.1.0 (from -r qa\test_cases_report\pins.txt (line 73))
+  Downloading sentence_transformers-6.1.0-py3-none-any.whl.metadata (20 kB)
+Collecting shapely==2.1.2 (from -r qa\test_cases_report\pins.txt (line 74))
+  Downloading shapely-2.1.2-cp311-cp311-win_amd64.whl.metadata (7.1 kB)
+Requirement already satisfied: shellingham==1.5.4 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 75)) (1.5.4)
+Requirement already satisfied: simple-websocket==1.1.0 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 76)) (1.1.0)
+Requirement already satisfied: six==1.17.0 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 77)) (1.17.0)
+Requirement already satisfied: sniffio==1.3.1 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 78)) (1.3.1)
+Collecting starlette==1.7.0 (from -r qa\test_cases_report\pins.txt (line 79))
+  Downloading starlette-1.7.0-py3-none-any.whl.metadata (6.6 kB)
+Requirement already satisfied: sympy==1.14.0 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 80)) (1.14.0)
+Collecting threadpoolctl==3.7.0 (from -r qa\test_cases_report\pins.txt (line 81))
+  Downloading threadpoolctl-3.7.0-py3-none-any.whl.metadata (24 kB)
+Collecting tokenizers==0.23.2 (from -r qa\test_cases_report\pins.txt (line 82))
+  Downloading tokenizers-0.23.2-cp310-abi3-win_amd64.whl.metadata (10 kB)
+Collecting torch==2.14.0 (from -r qa\test_cases_report\pins.txt (line 83))
+  Downloading torch-2.14.0-cp311-cp311-win_amd64.whl.metadata (38 kB)
+Requirement already satisfied: tqdm==4.70.1 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 84)) (4.70.1)
+Collecting transformers==5.17.0 (from -r qa\test_cases_report\pins.txt (line 85))
+  Downloading transformers-5.17.0-py3-none-any.whl.metadata (32 kB)
+Collecting typer==0.27.2 (from -r qa\test_cases_report\pins.txt (line 86))
+  Downloading typer-0.27.2-py3-none-any.whl.metadata (16 kB)
+Requirement already satisfied: typing-extensions==4.16.0 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 87)) (4.16.0)
+Collecting typing-inspection==0.4.4 (from -r qa\test_cases_report\pins.txt (line 88))
+  Downloading typing_inspection-0.4.4-py3-none-any.whl.metadata (2.6 kB)
+Collecting uvicorn==0.53.0 (from -r qa\test_cases_report\pins.txt (line 89))
+  Downloading uvicorn-0.53.0-py3-none-any.whl.metadata (6.6 kB)
+Requirement already satisfied: vbuild==0.8.2 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 90)) (0.8.2)
+Requirement already satisfied: watchfiles==1.3.0 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 91)) (1.3.0)
+Collecting websockets==17.1 (from -r qa\test_cases_report\pins.txt (line 92))
+  Downloading websockets-17.1-cp311-cp311-win_amd64.whl.metadata (6.5 kB)
+Requirement already satisfied: wsproto==1.3.2 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 93)) (1.3.2)
+Requirement already satisfied: yarl==1.25.1 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from -r qa\test_cases_report\pins.txt (line 94)) (1.25.1)
+Requirement already satisfied: setuptools>=77.0.3 in C:\Users\USER\AppData\Local\fobv\Lib\site-packages (from torch==2.14.0->-r qa\test_cases_report\pins.txt (line 83)) (84.2.1)
+Downloading aiohttp-3.14.3-cp311-cp311-win_amd64.whl (481 kB)
+Downloading multidict-6.9.1-cp311-cp311-win_amd64.whl (59 kB)
+Downloading annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
+Downloading certifi-2026.7.22-py3-none-any.whl (136 kB)
+Downloading click-8.5.0-py3-none-any.whl (125 kB)
+Downloading faiss_cpu-1.15.1-cp311-cp311-win_amd64.whl (16.3 MB)
+   ---------------------------------------- 16.3/16.3 MB 15.3 MB/s  0:00:01
+Downloading fastapi-0.141.1-py3-none-any.whl (131 kB)
+Downloading filelock-4.0.3-py3-none-any.whl (108 kB)
+Downloading pydantic-2.13.5-py3-none-any.whl (472 kB)
+Downloading hf_xet-1.6.0-cp38-abi3-win_amd64.whl (4.0 MB)
+   ---------------------------------------- 4.0/4.0 MB 80.2 MB/s  0:00:00
+Downloading httptools-0.8.0-cp311-cp311-win_amd64.whl (90 kB)
+Downloading huggingface_hub-1.33.0-py3-none-any.whl (846 kB)
+   ---------------------------------------- 846.4/846.4 kB ?  0:00:00
+Downloading iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+Downloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+Downloading markupsafe-3.0.3-cp311-cp311-win_amd64.whl (15 kB)
+Downloading narwhals-2.26.0-py3-none-any.whl (474 kB)
+Downloading onnxruntime-1.30.0-cp311-cp311-win_amd64.whl (14.3 MB)
+   ---------------------------------------- 14.3/14.3 MB 9.7 MB/s  0:00:01
+Downloading orjson-3.12.0-cp311-cp311-win_amd64.whl (122 kB)
+Downloading pillow-12.3.0-cp311-cp311-win_amd64.whl (7.2 MB)
+   ---------------------------------------- 7.2/7.2 MB 88.2 MB/s  0:00:00
+Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
+Downloading pydantic_core-2.46.5-cp311-cp311-win_amd64.whl (2.0 MB)
+   ---------------------------------------- 2.0/2.0 MB 118.6 MB/s  0:00:00
+Downloading pymupdf-1.28.2-cp310-abi3-win_amd64.whl (19.8 MB)
+   ---------------------------------------- 19.8/19.8 MB 65.9 MB/s  0:00:00
+Downloading pypdf-6.19.0-py3-none-any.whl (395 kB)
+Downloading pytest-9.1.1-py3-none-any.whl (386 kB)
+Downloading python_dotenv-1.2.3-py3-none-any.whl (22 kB)
+Downloading python_engineio-4.14.0-py3-none-any.whl (60 kB)
+Downloading python_multipart-0.0.32-py3-none-any.whl (30 kB)
+Downloading python_socketio-5.17.0-py3-none-any.whl (82 kB)
+Downloading regex-2026.9.10-cp311-cp311-win_amd64.whl (278 kB)
+Downloading sentence_transformers-6.1.0-py3-none-any.whl (740 kB)
+   ---------------------------------------- 740.6/740.6 kB 29.9 MB/s  0:00:00
+Downloading transformers-5.17.0-py3-none-any.whl (12.3 MB)
+   ---------------------------------------- 12.3/12.3 MB 85.3 MB/s  0:00:00
+Downloading tokenizers-0.23.2-cp310-abi3-win_amd64.whl (2.9 MB)
+   ---------------------------------------- 2.9/2.9 MB 83.9 MB/s  0:00:00
+Downloading shapely-2.1.2-cp311-cp311-win_amd64.whl (1.7 MB)
+   ---------------------------------------- 1.7/1.7 MB 91.3 MB/s  0:00:00
+Downloading starlette-1.7.0-py3-none-any.whl (78 kB)
+Downloading threadpoolctl-3.7.0-py3-none-any.whl (26 kB)
+Downloading torch-2.14.0-cp311-cp311-win_amd64.whl (124.1 MB)
+   ---------------------------------------- 124.1/124.1 MB 11.4 MB/s  0:00:10
+Downloading typer-0.27.2-py3-none-any.whl (123 kB)
+Downloading typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+Downloading uvicorn-0.53.0-py3-none-any.whl (87 kB)
+Downloading websockets-17.1-cp311-cp311-win_amd64.whl (217 kB)
+Installing collected packages: websockets, typing-inspection, threadpoolctl, shapely, regex, python-multipart, python-dotenv, pypdf, pymupdf, pydantic-core, pluggy, pillow, orjson, onnxruntime, narwhals, multidict, markupsafe, markdown-it-py, iniconfig, httptools, hf-xet, filelock, faiss-cpu, click, certifi, anyio, annotated-doc, uvicorn, starlette, pytest, pydantic, typer, torch, python-engineio, fastapi, aiohttp, python-socketio, huggingface-hub, tokenizers, transformers, sentence-transformers
+  Attempting uninstall: websockets
+    Found existing installation: websockets 17.4
+    Uninstalling websockets-17.4:
+      Successfully uninstalled websockets-17.4
+  Attempting uninstall: typing-inspection
+    Found existing installation: typing-inspection 0.4.5
+    Uninstalling typing-inspection-0.4.5:
+      Successfully uninstalled typing-inspection-0.4.5
+  Attempting uninstall: threadpoolctl
+    Found existing installation: threadpoolctl 3.8.0
+    Uninstalling threadpoolctl-3.8.0:
+      Successfully uninstalled threadpoolctl-3.8.0
+  Attempting uninstall: shapely
+    Found existing installation: shapely 2.2.0
+    Uninstalling shapely-2.2.0:
+      Successfully uninstalled shapely-2.2.0
+  Attempting uninstall: regex
+    Found existing installation: regex 2026.11.9
+    Uninstalling regex-2026.11.9:
+      Successfully uninstalled regex-2026.11.9
+  Attempting uninstall: python-multipart
+    Found existing installation: python-multipart 0.0.33
+    Uninstalling python-multipart-0.0.33:
+      Successfully uninstalled python-multipart-0.0.33
+  Attempting uninstall: python-dotenv
+    Found existing installation: python-dotenv 1.2.4
+    Uninstalling python-dotenv-1.2.4:
+      Successfully uninstalled python-dotenv-1.2.4
+  Attempting uninstall: pypdf
+    Found existing installation: pypdf 7.0.1
+    Uninstalling pypdf-7.0.1:
+      Successfully uninstalled pypdf-7.0.1
+  Attempting uninstall: pymupdf
+    Found existing installation: pymupdf 2.1
+    Uninstalling pymupdf-2.1:
+      Successfully uninstalled pymupdf-2.1
+  Attempting uninstall: pydantic-core
+    Found existing installation: pydantic_core 2.50.4
+    Uninstalling pydantic_core-2.50.4:
+      Successfully uninstalled pydantic_core-2.50.4
+  Attempting uninstall: pluggy
+    Found existing installation: pluggy 1.7.0
+    Uninstalling pluggy-1.7.0:
+      Successfully uninstalled pluggy-1.7.0
+  Attempting uninstall: pillow
+    Found existing installation: pillow 13.0.0
+    Uninstalling pillow-13.0.0:
+      Successfully uninstalled pillow-13.0.0
+  Attempting uninstall: orjson
+    Found existing installation: orjson 3.13.0
+    Uninstalling orjson-3.13.0:
+      Successfully uninstalled orjson-3.13.0
+  Attempting uninstall: onnxruntime
+    Found existing installation: onnxruntime 1.31.1
+    Uninstalling onnxruntime-1.31.1:
+      Successfully uninstalled onnxruntime-1.31.1
+  Attempting uninstall: narwhals
+    Found existing installation: narwhals 2.28.0
+    Uninstalling narwhals-2.28.0:
+      Successfully uninstalled narwhals-2.28.0
+  Attempting uninstall: multidict
+    Found existing installation: multidict 7.2.1
+    Uninstalling multidict-7.2.1:
+      Successfully uninstalled multidict-7.2.1
+  Attempting uninstall: markupsafe
+    Found existing installation: MarkupSafe 3.0.4
+    Uninstalling MarkupSafe-3.0.4:
+      Successfully uninstalled MarkupSafe-3.0.4
+  Attempting uninstall: markdown-it-py
+    Found existing installation: markdown-it-py 4.3.0
+    Uninstalling markdown-it-py-4.3.0:
+      Successfully uninstalled markdown-it-py-4.3.0
+  Attempting uninstall: iniconfig
+    Found existing installation: iniconfig 2.3.1
+    Uninstalling iniconfig-2.3.1:
+      Successfully uninstalled iniconfig-2.3.1
+  Attempting uninstall: httptools
+    Found existing installation: httptools 0.9.0
+    Uninstalling httptools-0.9.0:
+      Successfully uninstalled httptools-0.9.0
+  Attempting uninstall: hf-xet
+    Found existing installation: hf-xet 1.8.0
+    Uninstalling hf-xet-1.8.0:
+      Successfully uninstalled hf-xet-1.8.0
+  Attempting uninstall: filelock
+    Found existing installation: filelock 4.2.10
+    Uninstalling filelock-4.2.10:
+      Successfully uninstalled filelock-4.2.10
+  Attempting uninstall: faiss-cpu
+    Found existing installation: faiss-cpu 1.16.0
+    Uninstalling faiss-cpu-1.16.0:
+      Successfully uninstalled faiss-cpu-1.16.0
+  Attempting uninstall: click
+    Found existing installation: click 8.5.1
+    Uninstalling click-8.5.1:
+      Successfully uninstalled click-8.5.1
+  Attempting uninstall: certifi
+    Found existing installation: certifi 2026.10.23
+    Uninstalling certifi-2026.10.23:
+      Successfully uninstalled certifi-2026.10.23
+  Attempting uninstall: anyio
+    Found existing installation: anyio 4.16.0
+    Uninstalling anyio-4.16.0:
+      Successfully uninstalled anyio-4.16.0
+  Attempting uninstall: annotated-doc
+    Found existing installation: annotated-doc 0.0.6
+    Uninstalling annotated-doc-0.0.6:
+      Successfully uninstalled annotated-doc-0.0.6
+  Attempting uninstall: uvicorn
+    Found existing installation: uvicorn 0.54.0
+    Uninstalling uvicorn-0.54.0:
+      Successfully uninstalled uvicorn-0.54.0
+  Attempting uninstall: starlette
+    Found existing installation: starlette 1.10.0
+    Uninstalling starlette-1.10.0:
+      Successfully uninstalled starlette-1.10.0
+  Attempting uninstall: pytest
+    Found existing installation: pytest 9.2.0
+    Uninstalling pytest-9.2.0:
+      Successfully uninstalled pytest-9.2.0
+  Attempting uninstall: pydantic
+    Found existing installation: pydantic 2.14.3
+    Uninstalling pydantic-2.14.3:
+      Successfully uninstalled pydantic-2.14.3
+  Attempting uninstall: typer
+    Found existing installation: typer 0.29.1
+    Uninstalling typer-0.29.1:
+      Successfully uninstalled typer-0.29.1
+  Attempting uninstall: torch
+    Found existing installation: torch 2.15.0
+    Uninstalling torch-2.15.0:
+      Successfully uninstalled torch-2.15.0
+  Attempting uninstall: python-engineio
+    Found existing installation: python-engineio 4.15.1
+    Uninstalling python-engineio-4.15.1:
+      Successfully uninstalled python-engineio-4.15.1
+  Attempting uninstall: fastapi
+    Found existing installation: fastapi 0.162.4
+    Uninstalling fastapi-0.162.4:
+      Successfully uninstalled fastapi-0.162.4
+  Attempting uninstall: aiohttp
+    Found existing installation: aiohttp 3.14.5
+    Uninstalling aiohttp-3.14.5:
+      Successfully uninstalled aiohttp-3.14.5
+  Attempting uninstall: python-socketio
+    Found existing installation: python-socketio 5.18.1
+    Uninstalling python-socketio-5.18.1:
+      Successfully uninstalled python-socketio-5.18.1
+  Attempting uninstall: huggingface-hub
+    Found existing installation: huggingface_hub 2.4.0
+    Uninstalling huggingface_hub-2.4.0:
+      Successfully uninstalled huggingface_hub-2.4.0
+  Attempting uninstall: tokenizers
+    Found existing installation: tokenizers 0.23.3
+    Uninstalling tokenizers-0.23.3:
+      Successfully uninstalled tokenizers-0.23.3
+  Attempting uninstall: transformers
+    Found existing installation: transformers 5.22.2
+    Uninstalling transformers-5.22.2:
+      Successfully uninstalled transformers-5.22.2
+  Attempting uninstall: sentence-transformers
+    Found existing installation: sentence-transformers 6.2.0
+    Uninstalling sentence-transformers-6.2.0:
+      Successfully uninstalled sentence-transformers-6.2.0
+
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+pymupdf4llm 2.1 requires pymupdf==2.1, but you have pymupdf 1.28.2 which is incompatible.
+pymupdf-layout 2.1 requires pymupdf==2.1, but you have pymupdf 1.28.2 which is incompatible.
+Successfully installed aiohttp-3.14.3 annotated-doc-0.0.5 anyio-4.15.1 certifi-2026.7.22 click-8.5.0 faiss-cpu-1.15.1 fastapi-0.141.1 filelock-4.0.3 hf-xet-1.6.0 httptools-0.8.0 huggingface-hub-1.33.0 iniconfig-2.3.0 markdown-it-py-4.2.0 markupsafe-3.0.3 multidict-6.9.1 narwhals-2.26.0 onnxruntime-1.30.0 orjson-3.12.0 pillow-12.3.0 pluggy-1.6.0 pydantic-2.13.5 pydantic-core-2.46.5 pymupdf-1.28.2 pypdf-6.19.0 pytest-9.1.1 python-dotenv-1.2.3 python-engineio-4.14.0 python-multipart-0.0.32 python-socketio-5.17.0 regex-2026.9.10 sentence-transformers-6.1.0 shapely-2.1.2 starlette-1.7.0 threadpoolctl-3.7.0 tokenizers-0.23.2 torch-2.14.0 transformers-5.17.0 typer-0.27.2 typing-inspection-0.4.4 uvicorn-0.53.0 websockets-17.1
+pins done 15:49:08.10 
+warning: The `fitz` API is deprecated and will be removed in future. Use `import pymupdf` instead.
+IMPORTS OK
+app up after 52s
+TC-01 PASS  Application loads and shows the first-use screen | Page loaded=True, title='UOS Faculty Onboarding Chatbot', composer=True, send button=True, sidebar=True.
+TC-02 PASS  Contact lookup returns the HR phone number with a source | Answered=True in 2.7s. Answer: "Human Resources (contact directory): telephone +971 6 5050023.". Sources: Verified · Institutional Navigation, UOS Faculty Handb
+TC-03 PASS  Supporting evidence panel can be expanded | Evidence panel found and opened=True.
+TC-04 PASS  Handbook policy question is answered with citations | Answered=True in 2.7s. Answer: "Full-Time Faculty: Full-time faculty members in academic and career/technical programs are required to schedule a minimum of fiv
+TC-05 PASS  Blackboard how-to question is answered from the attendance guide | Answered=True in 4.3s. Answer: "To take attendance in Blackboard Ultra, go to the Course Content page, select Mark attendance in the Details & Actions panel, th
+TC-06 PASS  Out-of-scope question is politely refused (no hallucination) | Answered=True. Response: "No supporting evidence found  I do not have this information.  The approved documents do not state this, or the question needs rewordi
+TC-07 PASS  Vague request gets a clarification / guidance response | Answered=True. Response: "No supporting evidence found  I do not have this information.  The approved documents do not state this, or the question needs rewordi
+TC-08 PASS  Empty message is not sent | User messages before=0, after=0.
+TC-09 PASS  Shift+Enter inserts a new line instead of sending | Textarea value='line one\nline two', sent=False.
+TC-10 PASS  Arabic question is answered in Arabic with a right-to-left layout | Direction=rtl, answered=True. Answer: "الموارد البشرية (دليل الاتصال): هاتف +971 6 5050023."
+TC-11 PASS  Language button switches the interface back to English and keeps the conversation | Button clicked=True, lang=en, direction=ltr, messages kept=2.
+TC-12 PASS  Previous conversations are saved and listed on the History page | Earlier conversation titles found on page=True.
+TC-13 PASS  A saved conversation reopens after page reload without re-asking | Messages displayed after reopening=2.
+TC-14 PASS  Onboarding checklist lists the onboarding tasks with overall progress | Task cards=12, progress=0%.
+TC-15 PASS  Marking a task completed updates the progress | Clicked=True, progress 0% -> 8%, completed count=1.
+TC-16 PASS  Guided procedure moves step by step with Next | Counter before='STEP 1 OF 8', after='STEP 3 OF 8'.
+TC-17 FAIL  Resource finder search returns the matching document | Results=2, first result='Document'.
+TC-18 PASS  Theme button switches between light and dark mode | Theme before=light, after=dark.
+TC-19 PASS  Settings page shows language, theme and accessibility options | Options found: Language, Theme, Text size, motion, Voice.
+TC-20 PASS  Guest profile page shows what this browser has saved | Page text starts: "Skip to the content | UNIVERSITY OF SHARJAH | Faculty Onboarding Assistant | New chat | WORKSPACE | Assistant chat | Onboarding checklist | G
+TC-21 PASS  Phone-width layout has no horizontal overflow and a slide-in menu | Horizontal overflow=False; menu opened.
+finished: 21 cases

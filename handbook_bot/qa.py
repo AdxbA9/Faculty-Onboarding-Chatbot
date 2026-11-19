@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import dataclasses
 import logging
+import os
 import re
 import time
 from dataclasses import dataclass, field
@@ -208,17 +209,53 @@ def transient_error(exc: BaseException) -> bool:
     return isinstance(status, int) and 500 <= status < 600
 
 
-def _backoff_seconds(attempt: int, exc: BaseException) -> float:
-    """0.8 s, then 1.6 s; a Retry-After of at most 5 s from a 429 is honoured."""
+def _announced_wait(exc: BaseException) -> Optional[float]:
+    """The ``Retry-After`` seconds of a failed request, or None when the response carries none."""
     response = getattr(exc, "response", None)
     headers = getattr(response, "headers", None) or {}
     try:
         after = float(headers.get("retry-after", "")) if hasattr(headers, "get") else None
     except (TypeError, ValueError):
-        after = None
-    if after is not None and 0 <= after <= 5:
-        return after
+        return None
+    return after if after is not None and after >= 0 else None
+
+
+def _retry_after_max() -> float:
+    try:
+        return max(0.0, float(os.getenv("LLM_RETRY_AFTER_MAX", "30")))
+    except ValueError:
+        return 30.0
+
+
+def _backoff_seconds(attempt: int, exc: BaseException) -> float:
+    """How long to wait before repeating a request.
+
+    A rate limit (HTTP 429) tells the client when the quota is back (``Retry-After``); that wait is honoured up to
+    ``LLM_RETRY_AFTER_MAX`` seconds (default 30), because repeating sooner fails again and the user then sees "the
+    service did not respond" for a question that a short wait would have answered. Without the header a rate limit
+    waits 2 s, then 5 s; any other transient failure 0.8 s, then 1.6 s.
+    """
+    after = _announced_wait(exc)
+    longest = _retry_after_max()
+    if after is not None:
+        return min(after + 0.25, longest)                 # ask_groq never repeats a request whose wait exceeds the cap
+    from .groq_check import RATE_LIMIT, error_kind
+    if error_kind(exc) == RATE_LIMIT:
+        return min(longest, 5.0 if attempt == 0 else 15.0)
     return min(4.0, 0.8 * (2 ** attempt))
+
+
+def _reasoning_options() -> Dict[str, Any]:
+    """``reasoning_effort`` for a reasoning model, when ``LLM_REASONING_EFFORT`` (low | medium | high) is set.
+
+    The hidden reasoning of ``openai/gpt-oss-*`` counts against the account's tokens-per-minute limit (8,000 on the
+    free tier): at the default effort one answer uses 3,000-5,000 tokens, so a second question within the minute is
+    rate-limited. ``low`` is enough for answering from supplied context. The option is sent only to models that
+    accept it; any other model gets the request exactly as before."""
+    effort = os.getenv("LLM_REASONING_EFFORT", "").strip().lower()
+    if effort in ("low", "medium", "high") and GROQ_MODEL.lower().startswith("openai/gpt-oss"):
+        return {"reasoning_effort": effort}
+    return {}
 
 
 def ask_groq(client, prompt: str) -> str:
@@ -250,6 +287,7 @@ def ask_groq(client, prompt: str) -> str:
                 model=GROQ_MODEL,
                 temperature=LLM_TEMPERATURE,
                 max_tokens=LLM_MAX_TOKENS + LLM_REASONING_TOKENS,
+                **_reasoning_options(),
                 messages=[
                     {
                         "role": "system",
@@ -263,6 +301,12 @@ def ask_groq(client, prompt: str) -> str:
             )
             break
         except Exception as exc:
+            wait = _announced_wait(exc)
+            if wait is not None and wait > _retry_after_max():
+                # e.g. the daily token quota (free tier: 200,000 tokens per day) is used up and returns in minutes
+                # or hours: repeating the request cannot help, so the user is told at once instead of after a minute
+                _log.warning("model quota exhausted: the service asks to wait %.0f minutes (rate limit); not repeating", wait / 60.0)
+                raise
             if attempt + 1 >= attempts or not transient_error(exc):
                 raise
             from .groq_check import error_kind

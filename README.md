@@ -111,8 +111,16 @@ UOS_Handbook_Chatbot/
 ├── README.md
 ├── .env.example
 ├── .gitignore
-├── start.ps1               # One-shot setup + run for Windows
+├── SETUP.bat               # Windows: one-time setup (environment in %LOCALAPPDATA%\fobv, tested versions)
+├── START_CHATBOT.bat       # Windows: start the chatbot
+├── constraints.txt         # The library versions the final test run used
+├── start.ps1               # Setup + run from PowerShell
 ├── start.sh                # One-shot setup + run for macOS / Linux
+│
+├── eval/                   # Golden question set, runners (run_ui_eval.py = the page's own path) and scorer
+├── tests/                  # pytest suite
+├── qa/                     # QA scripts and recorded results of every phase
+├── archive/                # Earlier prototypes (MiniV1-V5) and pre-upgrade backups; not used by the app
 │
 ├── assets/
 │   └── logo.png            # UOS logo served as a static asset
@@ -132,6 +140,8 @@ UOS_Handbook_Chatbot/
 │   ├── records.py          # Answer <-> rows (faithful replay)
 │   ├── secret.py           # Stable cookie-signing secret
 │   └── manage.py           # python -m persistence.manage check|backup|restore|...
+│
+├── android/                # Android app: a WebView shell around the hosted website (see "Android app")
 │
 ├── ui/                     # UI layer (NiceGUI)
 │   ├── __init__.py
@@ -168,44 +178,39 @@ UOS_Handbook_Chatbot/
 
 ---
 
-## Quick start — Windows (PowerShell)
+## Quick start — Windows
 
-**Option A — helper script** (recommended):
+1. Install **Python 3.11** from https://www.python.org/downloads/ (tick "Add python.exe to PATH").
+2. Double-click **`SETUP.bat`**. It creates the Python environment, installs the tested library versions
+   (`constraints.txt`) and creates `.env`. The first time this downloads about 2 GB.
+3. Open `.env` in Notepad and paste your `GROQ_API_KEY`.
+4. Double-click **`START_CHATBOT.bat`**, wait for the "ready" line, then open **http://localhost:8501**.
+
+`.\start.ps1` does steps 2 and 4 from PowerShell.
+
+### "File path too long"
+
+Windows refuses paths longer than 260 characters, and the libraries (torch, transformers, onnxruntime) contain files
+that need 145 characters below the environment folder. An environment created inside the project (`.venv`) therefore
+fails as soon as the project sits in a deep folder such as `C:\Users\<name>\OneDrive - ...\Desktop\...`.
+
+- `SETUP.bat` avoids this: the environment is always created in `%LOCALAPPDATA%\fobv` (about 32 characters), wherever
+  the project folder is. Do not create a `.venv` inside the project on Windows.
+- Unzip the project into a short folder such as `C:\fob`. The longest path inside the project itself is under 100
+  characters.
+- The Android build output (`android\app\build`) has the longest paths in the repository; it is generated, ignored by
+  git and never part of the shared zip.
+
+**Manual install** (if you prefer your own commands):
 
 ```powershell
-.\start.ps1
-```
-
-The first time it creates `.venv`, installs dependencies, and copies
-`.env.example` → `.env`. Edit `.env`, paste your `GROQ_API_KEY`, and run
-the script a second time to launch the app.
-
-If PowerShell blocks the script, run this once:
-
-```powershell
-Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
-```
-
-If it was downloaded from the internet, also run:
-
-```powershell
-Unblock-File .\start.ps1
-```
-
-**Option B — manual**:
-
-```powershell
-.\start.ps1
-
-py -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+py -3.11 -m venv "$env:LOCALAPPDATA\fobv"
+& "$env:LOCALAPPDATA\fobv\Scripts\python.exe" -m pip install -r requirements.txt -c constraints.txt
 copy .env.example .env
 # Open .env in Notepad and paste your GROQ_API_KEY
-python app.py
+$env:PLAN_F_ENABLED = "1"; $env:PLAN_F_GUIDE_SCOPES = "1"
+& "$env:LOCALAPPDATA\fobv\Scripts\python.exe" -X utf8 app.py
 ```
-
-Then open **http://localhost:8501**.
 
 ---
 
@@ -648,3 +653,134 @@ Student project. Uses open models from Hugging Face, FAISS from Meta,
 the Groq API for inference, RapidOCR (ONNX) for image text, and
 NiceGUI for the interface. The University of Sharjah logo is the
 property of the University of Sharjah.
+
+## Conversation upgrade (November 2026)
+
+- **Friendly small talk (English + Arabic).** Greetings, thanks, goodbyes, "who are you", "how are you" and
+  "what can you do / I need help" get a warm reply from a rotating pool, so the same sentence is never repeated back
+  to back. Typos are tolerated (`thnaks`, `helo`, `شكراااا`). A message that also contains a real question still goes
+  to the normal answer pipeline. Code: `handbook_bot/conversation.py`; switch off with `SMALL_TALK=0`.
+- **Friendlier "not found" message.** When the documents do not support an answer, the page shows a varied, human
+  sentence and tip (in the answer's language) plus two clickable example questions, instead of the fixed
+  "I do not have this information." The backend decision is unchanged.
+- **Spelling correction.** Clear typos in English words are fixed towards the vocabulary of the loaded documents before
+  answering (`aproves confrence` -> `approves conference`), and the answer shows "Showing results for ...". Real English
+  words, names and acronyms are never changed (e.g. `paternity` stays `paternity`). Code: `handbook_bot/spelling.py`
+  (needs `pyspellchecker`); switch off with `SPELL_CORRECTION=0`.
+- **Start the app:** double-click `START_CHATBOT.bat`, then open http://localhost:8501.
+- Tests: `tests/test_conversation.py`, `tests/test_spelling.py` (plus the updated UI tests).
+
+## Final pass (November 2026): stability and accuracy
+
+What changed, why, and how it is switched on. `START_CHATBOT.bat`, `start.ps1` and `start.sh` set all of it; a manual
+`python app.py` needs the variables in `.env` (they are in `.env.example`).
+
+| Change | Problem it fixes | Setting |
+|---|---|---|
+| Wait for the rate limit | The Groq free tier allows 8,000 tokens per minute. A second question inside the minute got HTTP 429, the request was repeated after 1-2 seconds, failed again, and the user saw "the language-model service did not respond". The announced `Retry-After` is now honoured (cut to the cap). | `LLM_RETRY_AFTER_MAX` (seconds, default 30) |
+| Low reasoning effort | The hidden reasoning of `openai/gpt-oss-120b` counts against the same 8,000 tokens. `low` is enough for answering from supplied context and makes each answer smaller and faster. Sent only to `openai/gpt-oss-*` models. | `LLM_REASONING_EFFORT=low` |
+| Refusal rescue | Retrieval hands the model short excerpts. When they pass the evidence threshold and the model still refuses, the ONE retry is spent on a draft that also sees the full text of the best pages (policy questions only: a calendar or directory page holds several tables, and a draft that reads the wrong one cannot be told from a right one). | `REFUSAL_RESCUE=1` |
+| Keep the supported sentences | A draft with one sentence the verifier could not ground used to become the refusal sentence. The unsupported sentences are now removed and the rest is verified again; it is served only when that check accepts it. | `REFUSAL_RESCUE=1` |
+| Typo correction really on | `pyspellchecker` was missing from the environment, so typo correction was silently off. It is in `constraints.txt` and startup prints a NOTE when it is missing. | - |
+| List bullets | The PDF's hollow bullet is extracted as the letter "o" (`o "E" Lecturer ...`). It is shown as a bullet; the stored answer stays the exact quotation. | - |
+| Setup | `SETUP.bat` (environment in a short fixed folder, tested versions), see "File path too long". | - |
+
+**Measuring it.** `eval/run_ui_eval.py` asks a question set through the page's own entry point (small talk, typo
+correction, Arabic layer, specialists, verification), which `eval/run_eval.py` does not. `eval/extra_set.jsonl` adds
+Arabic, typos, small talk, out-of-scope questions and the Blackboard / iThenticate guides.
+
+```
+set PLAN_F_ENABLED=1& set PLAN_F_GUIDE_SCOPES=1& set REFUSAL_RESCUE=1& set LLM_REASONING_EFFORT=low
+python eval/run_ui_eval.py --tag final_ui --pause 2
+python eval/score.py eval/runs/<the new file>.jsonl --verbose
+```
+
+`score.py` grades by required words, so a correct paraphrase ("familiarizing themselves" for "familiarize") is
+counted as wrong; read the verbose output before quoting a number.
+
+**What was measured on 13 November 2026** (ACTIVE mode, `openai/gpt-oss-120b`, Groq free tier):
+
+- `pytest`: 7,918 tests pass on the final code.
+- Golden set (37 graded questions + 5 that must be refused), run after the rate-limit fix and before the refusal
+  rescue (`eval/runs/20261113_ui_golden_rate_limit_fix.jsonl`): no "service did not respond" answers, 5 of 5
+  out-of-scope questions refused, route 32/32, 19 answers fully correct and 12 partial by word matching. Reading the
+  answers: one is wrong (handbook-004 names "excellence, innovation, continuous improvement" instead of teaching,
+  research and service), four are false refusals (the vision, two calendar questions, the workload model), several
+  "partial" ones are correct paraphrases or incomplete lists.
+- Extra set with the rescue on (`eval/runs/20261113_ui_extra_with_rescue.jsonl`): typos, Arabic, small talk, the
+  guides and all five out-of-scope questions behave as intended; a long multi-part question and the Arabic annual-leave
+  question are still refused.
+- The rescue and the sentence trim were checked on the individual failing questions (the vision is now answered from
+  page 15; the AI-policy and sabbatical answers are served without their unsupported sentence). They were NOT
+  re-measured on the whole golden set: the test runs of that day used up the account's daily quota (200,000 tokens).
+  Run the three commands above on a fresh day to get that number.
+
+**Limits of the free Groq tier.** 8,000 tokens per minute and 200,000 tokens per day for the whole account: roughly
+one or two questions per minute and a few hundred model-written answers per day, shared by everyone who uses the same
+key. A short rate limit is waited out (the answer takes longer); when the daily quota is used up the service asks to
+wait minutes or hours, the request is not repeated, the user sees "the language-model service did not respond" at once
+and the log says `model quota exhausted`. Contact, calendar-row and quoted-guide answers do not use the model and keep
+working. Several concurrent users need a paid Groq tier or one key per deployment.
+
+**Sharing the project.** `.\make_zip.ps1` writes `dist\UOS_Chatbot.zip` without `.env`, saved conversations, git
+history, the archive and build output, and with the current embedding cache.
+
+## Using it on a phone / installing it as an app
+
+The website is a responsive, installable web app (PWA). The Android app in `android/` is a thin shell around the same
+website (see "Android app" below); there is no separate native user interface to maintain.
+
+- **Layout.** The phone rules are the last blocks of `ui/styles.py` ("PHONES (mobile pass)"): 44 px touch targets, text of at
+  least 12 px, 16 px form fields (so iOS does not zoom), tables that scroll sideways inside the answer, safe-area padding.
+  `ui/shell.py` (`SHELL_JS`) keeps the message box above the on-screen keyboard and closes the slide-in menu by swipe,
+  backdrop tap or Escape.
+- **Install.** `ui/pwa.py` serves `/manifest.webmanifest` (standalone display, theme colour `#0B7A52`), `/sw.js` (shows
+  `/offline.html` when the server cannot be reached; it never caches pages or answers) and the icons in `assets/icons/`.
+  Regenerate the icons after changing `assets/logo.png` with `python qa/mobile_pwa/make_icons.py`.
+- **Trying it from a phone.** The server listens on this computer only. To open it from a phone on the same network set
+  `APP_HOST=0.0.0.0` in `.env` and browse to `http://<this-computer's-IP>:8501` (the development server has no login, so do
+  this on a trusted network only). On iPhone use Share > "Add to Home Screen". Chrome on Android only offers "Install app"
+  over HTTPS (or on `localhost`), so a real deployment needs an HTTPS address.
+
+## Android app
+
+`android/` is a standard Android Studio project (Kotlin, one activity, package `app.fob.uosfaculty`, Android 7.0+). It
+opens the hosted chatbot full screen in a WebView; the Python server, its pages and its answers are unchanged, and the
+answer pipeline still runs on the server, never on the phone.
+
+What the shell adds to the website:
+
+- **Voice input.** Android's WebView has no Web Speech API, so `VoiceBridge.kt` supplies `webkitSpeechRecognition` from
+  the device's speech recogniser (English and Arabic, interim results). The page's microphone button and its state machine
+  (`ui/voice.py`) work as in Chrome: the transcript lands in the message box and nothing is sent until Send. Microphone
+  permission is asked on first use. The bridge is only exposed to the chatbot's own address.
+- **Only the chatbot loads inside the app.** Official pages, documents, `mailto:` and `tel:` links open in the app that
+  normally handles them.
+- **A bundled "cannot be reached" page** with Try again, the system back button, a loading bar, and launcher shortcuts
+  (New chat, Onboarding checklist, Resources & documents).
+- **The guest session cookie is kept**, so saved conversations and settings survive closing the app. The app has its own
+  cookie store: it does not share conversations with Chrome on the same phone.
+
+Build it:
+
+1. Install [Android Studio](https://developer.android.com/studio) (it brings the JDK, the Android SDK and Gradle).
+2. Set the chatbot's HTTPS address in `android/gradle.properties`: `FOB_SERVER_URL=https://...` (no trailing slash). A
+   release build refuses to start while the placeholder or an `http://` address is there.
+3. Open the `android` folder in Android Studio, let it sync, then Run on a phone or emulator, or
+   Build > Generate Signed App Bundle / APK for a release (create the signing key there; `android/.gitignore` keeps
+   keystores out of the repository).
+
+To try it before the server has an HTTPS address, start the server with `APP_HOST=0.0.0.0` and install a debug build that
+points at this computer (debug builds allow `http://`, release builds never do):
+
+```
+gradlew installDebug -PFOB_SERVER_URL=http://<this-computer's-IP>:8501
+```
+
+Without Android Studio, the command line needs a JDK 17 (`JAVA_HOME`) and the Android SDK (`ANDROID_HOME`, or `sdk.dir`
+in `android/local.properties`) with `platforms;android-35` and `build-tools;35.0.0`; then `gradlew assembleDebug` writes
+`android/app/build/outputs/apk/debug/app-debug.apk`.
+
+The launcher icon is `assets/icons/icon-maskable-512.png` (copied to `android/app/src/main/res/drawable-nodpi/
+ic_launcher_art.png`) and `icon-192.png`; copy them again after regenerating the icons. iPhone users keep using
+Share > "Add to Home Screen"; an iOS shell would need a Mac with Xcode.

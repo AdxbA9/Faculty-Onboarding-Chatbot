@@ -140,8 +140,10 @@ async def test_a_refusal_is_a_labelled_notice_without_sources_or_evidence(user: 
     await user.open("/")
     user.find(marker="composer").type("Something the documents do not cover")
     user.find(marker="send").click()
-    await _settle(user, "No supporting evidence found")
-    await user.should_see(REFUSAL)
+    from handbook_bot import conversation
+    await _settle(user, "Not found in the approved documents")
+    await user.should_see(conversation.REFUSALS["en"][0].split("t ", 1)[1])   # first refusal wording (past the apostrophe)
+    await user.should_not_see(REFUSAL)
     await user.should_not_see("Supporting evidence (")
     await user.should_not_see("Sources")
     await user.should_not_see("Copy answer")
@@ -294,8 +296,10 @@ async def test_a_refusal_in_the_arabic_interface_is_the_arabic_sentence_with_an_
     await user.open("/?lang=ar")
     user.find(marker="composer").type("سؤال بلا إجابة")
     user.find(marker="send").click()
-    await _settle(user, REPLIES_AR[REFUSAL])
-    await user.should_see("لا توجد أدلة داعمة")
+    from handbook_bot import conversation
+    await _settle(user, conversation.REFUSALS["ar"][0])
+    await user.should_see("غير موجود في الوثائق المعتمدة")
+    await user.should_not_see(REPLIES_AR[REFUSAL])
     await user.should_not_see("المصادر")
 
 
@@ -305,3 +309,20 @@ async def test_the_initial_language_follows_the_query_parameter(user: User, scri
     await user.should_not_see("New chat")
     await user.open("/?lang=en")
     await user.should_see("New chat")
+
+
+async def test_a_refusal_offers_example_questions_that_can_be_clicked(user: User, scripted: Scripted) -> None:
+    scripted.results.append(QAResult(answer=REFUSAL, pages=[]))
+    scripted.results.append(QAResult(answer=REFUSAL, pages=[]))
+    await user.open("/")
+    user.find(marker="composer").type("Something the documents do not cover")
+    user.find(marker="send").click()
+    await _settle(user, "Try asking:")
+    first = chat.EXAMPLE_QUESTIONS[0]
+    await user.should_see(first)
+    user.find(marker="suggestion", content=first).click()
+    for _ in range(50):
+        if first in scripted.questions:
+            break
+        await asyncio.sleep(0.05)
+    assert scripted.questions[-1] == first

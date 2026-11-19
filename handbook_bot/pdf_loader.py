@@ -38,7 +38,10 @@ from .text_utils import (
 )
 
 try:
-    import fitz  # PyMuPDF
+    try:
+        import pymupdf as fitz  # PyMuPDF >= 1.24 (the name ``fitz`` is deprecated there)
+    except ImportError:
+        import fitz  # older PyMuPDF
 except Exception:  # pragma: no cover
     fitz = None  # type: ignore[assignment]
 

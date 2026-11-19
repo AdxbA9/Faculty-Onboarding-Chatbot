@@ -63,7 +63,11 @@ def test_notices_are_localised_without_changing_the_backend_sentence():
     from handbook_bot.qa import REFUSAL
     en = chat.notice_for(REFUSAL, "en")
     ar = chat.notice_for(REFUSAL, "ar")
-    assert en["kind"] == ar["kind"] == "empty" and en["text"] == REFUSAL and ar["text"] == REPLIES_AR[REFUSAL]
+    from handbook_bot import conversation
+    # a refusal is shown with friendly, rotating wording in the interface language (the backend sentence is unchanged)
+    assert en["kind"] == ar["kind"] == "empty" and en["text"] in conversation.REFUSALS["en"] and ar["text"] in conversation.REFUSALS["ar"]
+    assert en["hint"] in conversation.TIPS["en"] and ar["hint"] in conversation.TIPS["ar"]
+    assert chat.notice_for(REFUSAL, "en", 1)["text"] != chat.notice_for(REFUSAL, "en", 2)["text"]
     assert has_arabic(ar["label"]) and has_arabic(ar["hint"]) and not has_arabic(en["label"])
     assert chat.notice_for("A real answer.", "ar") is None
 

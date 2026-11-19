@@ -93,6 +93,15 @@ PLANNER_ENABLED: bool = _env_bool("PLANNER_ENABLED", False)
 MAX_LLM_CALLS: int = _env_int("MAX_LLM_CALLS", 2)
 # The orchestrator clamps this to at most 1: a draft is retried once or not at all.
 MAX_VERIFY_RETRIES: int = _env_int("MAX_VERIFY_RETRIES", 1)
+# Refusal rescue (November 2026 final pass). Retrieval hands the model short excerpts (rows, row windows, paragraphs).
+# When the excerpts passed the evidence threshold and the model still answers with the refusal sentence, the answer
+# is often on the retrieved page but outside the excerpt (the vision statement on page 15, a calendar row on page 49).
+# With this on, the ONE retry of the question is spent on a second draft that also sees the full text of the best
+# REFUSAL_RESCUE_PAGES pages; that draft goes through the same verifier, against that same text. Off by default so the
+# measured behaviour of earlier phases is reproducible; the launchers (START_CHATBOT.bat, start.ps1, start.sh) and
+# .env.example switch it on.
+REFUSAL_RESCUE: bool = _env_bool("REFUSAL_RESCUE", False)
+REFUSAL_RESCUE_PAGES: int = _env_int("REFUSAL_RESCUE_PAGES", 5)
 # HTTP-level repeats of ONE logical answer call by the Groq SDK (429, 5xx,
 # timeouts, with back-off). 2 is the SDK default, stated here so it is a visible
 # setting. These repeats are not counted in llm_calls; set 0 to forbid them.

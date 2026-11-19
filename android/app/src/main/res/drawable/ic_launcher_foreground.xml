@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- assets/icons/icon-maskable-512.png (logo on white), pulled in a little so a round launcher mask never cuts the logo. -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_launcher_art"
+    android:inset="10%" />
