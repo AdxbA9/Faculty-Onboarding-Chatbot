@@ -19,6 +19,10 @@ pillow>=10.0
 # --- LLM client ---
 groq>=0.9
 
+# --- Voice input: local speech-to-text for the microphone button (https://github.com/SYSTRAN/faster-whisper) ---
+# Runs on this computer's CPU (int8). The first start downloads the base.en model (about 140 MB).
+faster-whisper>=1.2.1
+
 # --- Spelling correction for typed questions (pure Python, bundles an English dictionary) ---
 pyspellchecker>=0.8
 

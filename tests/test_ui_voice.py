@@ -194,8 +194,11 @@ async def test_the_voice_language_choice_changes_the_label_and_the_locale(user: 
 async def test_the_privacy_note_appears_on_first_use_only(user: User, scripted: Scripted) -> None:
     await user.open("/")
     await user.should_not_see("speech service")
+    await user.should_not_see("speech model")
     _state()["voice_start"]()
-    await user.should_see("your browser's speech service")
+    # the note names the engine actually in use: local speech model (faster-whisper) or the browser's speech service
+    from ui import local_speech
+    await user.should_see("own speech model" if local_speech.engine() == "local" else "your browser's speech service")
     assert _state()["voice_privacy_shown"] is True
 
 

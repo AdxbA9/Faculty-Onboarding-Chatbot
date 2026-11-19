@@ -181,5 +181,106 @@ VOICE_JS = r"""
 })();
 """
 
-__all__ = ["ERROR", "ERROR_KEYS", "IDLE", "LISTENING", "LOCALES", "MAX_UTTERANCE_MS", "NO_RESULT_TIMEOUT_MS", "READY", "STARTING", "STATES",
-           "UNSUPPORTED", "VOICE_JS", "VoiceMachine", "locale_for", "merge_draft"]
+#: The LOCAL controller (19 Nov 2026, engine ``local``): same ``window.fobVoice`` API and the same ``fob_voice`` events as
+#: :data:`VOICE_JS`, but the question is recorded with ``MediaRecorder`` and transcribed by THIS application with
+#: faster-whisper (``ui.local_speech``). Recording stops on the Stop button, after about 1.3 s of silence once speech was
+#: heard, or at the hard cap; with no speech at all it ends with ``timeout``. A cancelled recording is never uploaded.
+LOCAL_VOICE_JS = r"""
+(function () {
+  if (window.fobVoice) return;
+  const emit = (payload) => { try { emitEvent('fob_voice', payload); } catch (e) { /* page gone */ } };
+  const supported = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+  const V = { active: false, lang: '', rec: null, stream: null, chunks: [], ctx: null, timers: [], heard: false, outcome: '' };
+  V.supported = () => supported;
+  const clearTimers = () => { V.timers.forEach((t) => { clearTimeout(t); clearInterval(t); }); V.timers = []; };
+  const release = () => {
+    clearTimers();
+    if (V.stream) { V.stream.getTracks().forEach((t) => { try { t.stop(); } catch (e) {} }); V.stream = null; }
+    if (V.ctx) { try { V.ctx.close(); } catch (e) {} V.ctx = null; }
+  };
+  const finish = () => { release(); V.active = false; V.rec = null; V.chunks = []; };
+  const upload = async (blob, lang) => {
+    emit({kind: 'interim', text: '…', lang: lang});
+    let res;
+    try {
+      const r = await fetch('/api/voice/transcribe?lang=' + encodeURIComponent(lang), {method: 'POST', headers: {'Content-Type': 'application/octet-stream', 'X-FOB-Voice': '1'}, body: blob});
+      res = await r.json();
+    } catch (e) { res = {error: 'network'}; }
+    if (res && res.text) { emit({kind: 'final', text: res.text, lang: lang}); emit({kind: 'end', lang: lang}); }
+    else if (res && res.error === 'no-speech') { emit({kind: 'end', lang: lang}); }
+    else {
+      const map = {'too-large': 'timeout', 'bad-audio': 'bad-grammar', 'unavailable': 'network', 'forbidden': 'network'};
+      emit({kind: 'error', code: map[res && res.error] || 'network', lang: lang});
+    }
+  };
+  V.start = async (lang, noResultMs, capMs) => {
+    if (!supported) { emit({kind: 'unsupported', lang: lang}); return 'unsupported'; }
+    if (V.active) { emit({kind: 'busy', lang: lang}); return 'busy'; }
+    V.active = true; V.lang = lang; V.heard = false; V.outcome = ''; V.chunks = [];
+    emit({kind: 'starting', lang: lang});
+    try {
+      V.stream = await navigator.mediaDevices.getUserMedia({audio: {echoCancellation: true, noiseSuppression: true, channelCount: 1}});
+    } catch (e) {
+      const n = (e && e.name) || '';
+      emit({kind: 'error', code: (n === 'NotFoundError' || n === 'OverconstrainedError' || n === 'NotReadableError') ? 'audio-capture' : 'not-allowed', lang: lang});
+      finish(); return 'error';
+    }
+    if (!V.active) { finish(); return 'cancelled'; }
+    const types = ['audio/webm;codecs=opus', 'audio/webm', 'audio/ogg;codecs=opus', 'audio/mp4'];
+    const type = types.find((x) => { try { return MediaRecorder.isTypeSupported(x); } catch (e) { return false; } }) || '';
+    let rec;
+    try { rec = new MediaRecorder(V.stream, type ? {mimeType: type} : undefined); } catch (e) { emit({kind: 'unsupported', lang: lang}); finish(); return 'unsupported'; }
+    V.rec = rec;
+    rec.ondataavailable = (ev) => { if (ev.data && ev.data.size) V.chunks.push(ev.data); };
+    rec.onstop = () => {
+      const outcome = V.outcome, chunks = V.chunks.slice(), mime = rec.mimeType || type || 'audio/webm';
+      release();
+      if (outcome === 'cancel') { V.active = false; V.rec = null; emit({kind: 'cancelled', lang: lang}); return; }
+      if (outcome === 'timeout') { V.active = false; V.rec = null; emit({kind: 'error', code: 'timeout', lang: lang}); return; }
+      upload(new Blob(chunks, {type: mime}), lang).finally(() => { V.active = false; V.rec = null; V.chunks = []; });
+    };
+    // silence detection: after speech was heard, about 1.3 s of quiet ends the question
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      V.ctx = new AC();
+      const src = V.ctx.createMediaStreamSource(V.stream), an = V.ctx.createAnalyser();
+      an.fftSize = 1024; src.connect(an);
+      const buf = new Float32Array(an.fftSize);
+      let quietSince = 0;
+      V.timers.push(setInterval(() => {
+        an.getFloatTimeDomainData(buf);
+        let s = 0; for (let i = 0; i < buf.length; i++) s += buf[i] * buf[i];
+        const rms = Math.sqrt(s / buf.length), now = performance.now();
+        if (rms > 0.02) { V.heard = true; quietSince = 0; }
+        else if (V.heard) { if (!quietSince) quietSince = now; else if (now - quietSince > 1300) V.stop(); }
+      }, 100));
+    } catch (e) { /* no analyser: the Stop button and the cap still end the recording */ }
+    V.timers.push(setTimeout(() => { if (V.active && !V.heard) { V.outcome = 'timeout'; try { rec.stop(); } catch (e) {} } }, noResultMs || 12000));
+    V.timers.push(setTimeout(() => { V.stop(); }, capMs || 60000));
+    rec.start(250);
+    emit({kind: 'listening', lang: lang});
+    return 'started';
+  };
+  V.stop = () => { if (V.active && V.rec && V.rec.state === 'recording') { try { V.rec.stop(); } catch (e) {} return true; } return false; };
+  V.cancel = () => {
+    if (!V.active) return false;
+    V.outcome = 'cancel';
+    if (V.rec && V.rec.state === 'recording') { try { V.rec.stop(); } catch (e) {} }
+    else { finish(); emit({kind: 'cancelled', lang: V.lang}); }
+    return true;
+  };
+  V.isActive = () => V.active;
+  window.addEventListener('pagehide', () => { V.cancel(); });
+  window.addEventListener('beforeunload', () => { V.cancel(); });
+  window.fobVoice = V;
+})();
+"""
+
+
+def controller_js(engine: str) -> str:
+    """The browser controller for the configured engine: ``local`` (faster-whisper on this computer) or ``browser``."""
+    return LOCAL_VOICE_JS if engine == "local" else VOICE_JS
+
+
+__all__ = ["ERROR", "ERROR_KEYS", "IDLE", "LISTENING", "LOCALES", "LOCAL_VOICE_JS", "MAX_UTTERANCE_MS", "NO_RESULT_TIMEOUT_MS", "READY", "STARTING",
+           "STATES", "UNSUPPORTED", "VOICE_JS", "VoiceMachine", "controller_js", "locale_for", "merge_draft"]

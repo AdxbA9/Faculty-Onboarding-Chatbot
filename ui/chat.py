@@ -44,6 +44,7 @@ import asyncio
 import html
 import json
 import logging
+import threading
 import os
 import time
 import uuid
@@ -58,7 +59,7 @@ from handbook_bot.arabic_answers import localize_reply
 from persistence import StoreError, get_store
 from persistence.secret import storage_secret
 
-from . import i18n, presentation, pwa, rendering, voice
+from . import i18n, local_speech, presentation, pwa, rendering, voice
 from .i18n import t
 from .shell import SHELL_JS, about_html, brand_html, drawer_close_html, guest_chip_html, html_props, nav_html, nav_toggle_html, time_html
 from .pipeline import groq_is_configured, load_knowledge_base, preflight
@@ -593,7 +594,7 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
             state["voice_privacy_shown"] = True
             note = refs.get("voice_privacy")
             if note is not None:
-                _safe(setattr, note, "content", '<div class="voice-privacy">%s%s</div>' % (ICONS["info"], html.escape(t(L(), "voice_privacy"), quote=False)))
+                _safe(setattr, note, "content", '<div class="voice-privacy">%s%s</div>' % (ICONS["info"], html.escape(t(L(), "voice_privacy_local" if local_speech.engine() == "local" else "voice_privacy"), quote=False)))
         locale = voice.locale_for(state.get("voice_lang"), L())
         _js("window.fobVoice ? window.fobVoice.start(%s, %d, %d) : emitEvent('fob_voice', {kind: 'unsupported'});"
             % (json.dumps(locale), voice.NO_RESULT_TIMEOUT_MS, voice.MAX_UTTERANCE_MS))
@@ -1401,7 +1402,7 @@ def _build_page(developer: bool = False, lang: str = "en", explicit_lang: bool =
               '<a href="/onboarding?task=%s&lang=%s#task-%s">%s</a></div>' % (ICONS["check"], html.escape(t(lang, "chat_context")), html.escape(title),
                                                                              task.id, lang, task.id, html.escape(t(lang, "chat_open_task"))))
 
-    ui.add_body_html("<script>%s</script>" % voice.VOICE_JS)
+    ui.add_body_html("<script>%s</script>" % voice.controller_js(local_speech.engine()))
     ui.add_body_html("<script>%s</script>" % rendering.COPY_JS)
     refs["root"] = ui.element("div").classes("app-root")
     if _KB_STATE["kb"] is None and _KB_STATE["error"] is None:
@@ -1498,6 +1499,8 @@ def start_app(port: int = 8501, host: Optional[str] = None) -> None:
     app.on_startup(_ensure_kb_loaded)
     app.on_startup(_sync_onboarding_catalog)
     pwa.register(app)                                    # manifest, service worker, offline page (installable web app)
+    local_speech.register(app)                           # POST /api/voice/transcribe: microphone audio -> text on this computer
+    app.on_startup(lambda: threading.Thread(target=local_speech.warm_up, name="voice-warm-up", daemon=True).start())
     register_pages()
 
     ui.run(

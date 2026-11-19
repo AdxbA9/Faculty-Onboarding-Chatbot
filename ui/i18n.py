@@ -133,6 +133,7 @@ STRINGS: Dict[str, Dict[str, str]] = {
         "voice_err_unrecognised": "The speech could not be recognised. Try again, or type your question.",
         "voice_busy": "The microphone is already listening.",
         "voice_privacy": "Speech is recognised by your browser's speech service; the audio may be processed on that provider's servers. The page keeps only the text you see in the message box.",
+        "voice_privacy_local": "Speech is converted to text on this computer by the assistant's own speech model; the recording is not stored and is not sent to any other service. Review the text before you send it.",
         "voice_listening_label": "Listening",
         # ---- saved conversations, settings (PF-13) ----
         "no_conversations": "No saved conversations yet.",
@@ -490,6 +491,7 @@ STRINGS: Dict[str, Dict[str, str]] = {
         "voice_err_unrecognised": "تعذّر التعرف على الكلام. حاول مرة أخرى، أو اكتب سؤالك.",
         "voice_busy": "الميكروفون يستمع بالفعل.",
         "voice_privacy": "يتم التعرف على الكلام بواسطة خدمة الكلام في متصفحك؛ وقد تُعالج التسجيلات على خوادم مزوّد تلك الخدمة. لا تحتفظ الصفحة إلا بالنص الذي تراه في مربع الرسالة.",
+        "voice_privacy_local": "يُحوَّل الكلام إلى نص على هذا الحاسوب بواسطة نموذج الكلام الخاص بالمساعد؛ لا يُحفظ التسجيل ولا يُرسل إلى أي خدمة أخرى. راجع النص قبل إرساله.",
         "voice_listening_label": "جارٍ الاستماع",
         # ---- saved conversations, settings (PF-13) ----
         "no_conversations": "لا توجد محادثات محفوظة بعد.",
